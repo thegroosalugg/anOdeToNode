@@ -7,7 +7,7 @@ import page from './page';
 const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
   const { url, method } = req;
 
-  const ext = path.extname(url || ''); // extracts extension name from url
+  const     ext = path.extname(url || ''); // extracts extension name from url
   const isImage = ['.png', '.jpeg', '.jpg'].includes(ext);
 
   // Serve static files
@@ -27,15 +27,23 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
     res.setHeader('Content-Type', 'text/html');
     res.end(page(0));
   } else if (url === '/message' && method === 'POST') {
-    const pathname = path.join(
-      __dirname, // current directory
-     'messages', // subfolder in current dir
-     new Date().toISOString().replace(/[:.]/g, '-') + '.txt' // filename: unique by date, ':' & '.' replaced with '-'
-    );
-    fs.writeFileSync(pathname, 'stuff');
-    res.statusCode = 302;
-    res.setHeader('Location', '/');
-    res.end();
+    const body: Buffer[] = [];
+    req.on('data', (chunk: Buffer) => {
+      body.push(chunk); // pushes data chunks into array as the come
+    });
+    req.on('end', () => {
+      const parsedBody = Buffer.concat(body).toString(); // concatenate the buffer array to a string of key/value pair
+      const    message = parsedBody.split('=')[1]; // split string into an array at the '=' operator and access the value element [1]
+      const   pathname = path.join(
+        __dirname, // current directory
+        'messages', // subfolder in current dir
+        new Date().toISOString().replace(/[:.]/g, '-') + '.txt' // filename: unique by date, ':' & '.' replaced with '-'
+      );
+      fs.writeFileSync(pathname, message);
+      res.statusCode = 302;
+      res.setHeader('Location', '/'); // redirects
+      res.end();
+    })
   } else {
     res.statusCode = 404;
     res.end(page(1));
