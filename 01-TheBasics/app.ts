@@ -39,10 +39,15 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
         'messages', // subfolder in current dir
         new Date().toISOString().replace(/[:.]/g, '-') + '.txt' // filename: unique by date, ':' & '.' replaced with '-'
       );
-      fs.writeFileSync(pathname, message);
-      res.statusCode = 302;
-      res.setHeader('Location', '/'); // redirects
-      res.end();
+      fs.writeFile(pathname, message, (err) => { // async file writing
+        if (err) {
+          res.statusCode = 404;
+          return res.end('404 Not Found');
+        }
+        res.statusCode = 302;
+        res.setHeader('Location', '/'); // redirects
+        res.end();
+      });
     })
   } else {
     res.statusCode = 404;
