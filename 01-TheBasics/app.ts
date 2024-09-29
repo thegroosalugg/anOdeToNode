@@ -2,61 +2,43 @@
 import http, { IncomingMessage, ServerResponse } from 'http';
 import fs from 'fs';
 import path from 'path';
-
-const css = `
-body {
-  display: flex;
-  background: linear-gradient(to right, #3a7bd5, #3a6073);
-}
-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #FFFFFF;
-}
-img {
-  width: 250px;
-}`;
-
-const html = `
-<html>
-  <head>
-    <title>The Basics</title>
-    <style>${css}</style>
-  </head>
-  <body>
-    <main>
-      <h1>The Basics</h1>
-      <p>HTML supplied by Node</p>
-      <img src='/nodejs.png' alt='Node JS icon' />
-    </main>
-  </body>
-</html>`;
+import page from './page';
 
 const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
-  const { url } = req;
+  const { url, method } = req;
+
+  const ext = path.extname(url || ''); // extracts extension name from url
+  const isImage = ['.png', '.jpeg', '.jpg'].includes(ext);
 
   // Serve static files
-  if (url === '/nodejs.png') {
-    const filePath = path.join(__dirname, 'nodejs.png');
+  if (url && isImage) {
+    const filePath = path.join(__dirname, url);
     fs.readFile(filePath, (err, data) => {
       if (err) {
         res.statusCode = 404;
-        res.end('404 Not Found');
-        return;
+        return res.end('404 Not Found');
       }
       res.statusCode = 200;
-      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Content-Type', `image/${ext.slice(1)}`); // will return image/jpeg, image/png etc.
       res.end(data);
     });
   } else if (url === '/') {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/html');
-    res.end(html);
+    res.end(page(0));
+  } else if (url === '/message' && method === 'POST') {
+    const pathname = path.join(
+      __dirname, // current directory
+     'messages', // subfolder in current dir
+     new Date().toISOString().replace(/[:.]/g, '-') + '.txt' // filename: unique by date, ':' & '.' replaced with '-'
+    );
+    fs.writeFileSync(pathname, 'stuff');
+    res.statusCode = 302;
+    res.setHeader('Location', '/');
+    res.end();
   } else {
     res.statusCode = 404;
-    res.end('404 Not Found');
+    res.end(page(1));
   }
 });
 
