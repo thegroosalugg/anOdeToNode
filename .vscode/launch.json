@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch TypeScript",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/01-TheBasics/app.ts",
+      "outFiles": [
+        "${workspaceFolder}/01-TheBasics/**/*.js"
+      ],
+      "runtimeArgs": [
+        "-r",
+        "/home/thegroosalugg/.nvm/versions/node/v20.11.0/lib/node_modules/ts-node/register"
+      ]
+    }
+  ]
+}
