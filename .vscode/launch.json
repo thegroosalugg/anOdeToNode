@@ -12,10 +12,8 @@
       "outFiles": [
         "${workspaceFolder}/01-TheBasics/**/*.js"
       ],
-      "runtimeArgs": [
-        "-r",
-        "/home/thegroosalugg/.nvm/versions/node/v20.11.0/lib/node_modules/ts-node/register"
-      ]
+      "restart": true, // nodemon config
+      "runtimeExecutable": "nodemon", // set to nodemon or ts-node
     }
   ]
 }
