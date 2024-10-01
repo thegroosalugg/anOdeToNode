@@ -1,0 +1,24 @@
+{
+  "name": "thebasics",
+  "version": "1.0.0",
+  "description": "learning basic node server deployment",
+  "main": "app.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node app.ts",
+    "dev": "nodemon -x ts-node app.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thegroosalugg/anOdeToNode.git"
+  },
+  "author": "Victor Loginov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thegroosalugg/anOdeToNode/issues"
+  },
+  "homepage": "https://github.com/thegroosalugg/anOdeToNode#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
