@@ -1,4 +1,4 @@
-export const formCSS = `
+const formCSS = `
 .form {
   margin: auto;
   display: flex;
@@ -28,7 +28,7 @@ export const formCSS = `
   background: #FBD786;
   color: #000;
   border-color: #000;
-}`
+}`;
 
 const form = `
 <form action='/station' method='post' class='form' >
@@ -39,4 +39,4 @@ const form = `
   </section>
 <form/>`;
 
-export default form;
+export { formCSS, form };
