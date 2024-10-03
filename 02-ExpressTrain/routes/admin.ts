@@ -1,10 +1,10 @@
 import express from "express";
-import form from '../pages/index'
+import html from '../pages/index'
 
 const router = express.Router();
 
 router.use('/express-train', (req, res, next) => {
-  res.send(form);
+  res.send(html('form'));
 });
 
 router.post('/station', (req, res, next) => {

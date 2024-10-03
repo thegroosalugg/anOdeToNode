@@ -1,8 +1,21 @@
-const form = `
-<form action='/station' method='post'>
-  <label for='station'>The Express Train 🚂</label>
-  <input id='station' name='station' />
-  <button>All Aboard</button>
-<form/>`;
+import css from './styles'
+import form from "./form";
 
-export default form;
+const content = {
+  form,
+}
+
+const html = (key: keyof typeof content) => `
+<html>
+  <head>
+    <title>Express Train</title>
+    <style>${css(key)}</style>
+  </head>
+  <body>
+    <main>
+     ${content[key]}
+    </main>
+  </body>
+</html>`;
+
+export default html;
