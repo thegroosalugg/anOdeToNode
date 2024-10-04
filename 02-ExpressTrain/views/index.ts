@@ -1,8 +1,9 @@
+import cssReset from "../styles/cssReset";
+
 const defaultCSS = `
   body {
     display: flex;
     background: linear-gradient(to right, #f7797d, #FBD786, #C6FFDD);
-    margin: 0;
   }
   main {
     flex: 1;
@@ -12,7 +13,6 @@ const defaultCSS = `
     color: #FFFFFF;
   }
   a {
-    text-decoration: none;
     color: #FFFFFF;
     transition: 0.8s ease;
   }
@@ -24,12 +24,18 @@ const defaultCSS = `
 const html = (contentCSS: string, content: string) => `
   <html>
     <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Express Train</title>
-      <style>${defaultCSS}${contentCSS}</style>
+      <style>
+        ${cssReset}
+        ${defaultCSS}
+        ${contentCSS}
+      </style>
     </head>
     <body>
       <main>
-      ${content}
+        ${content}
       </main>
     </body>
   </html>
