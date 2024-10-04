@@ -31,7 +31,7 @@ const formCSS = `
 }`;
 
 const form = `
-<form action='/station' method='post' class='form' >
+<form action='/express/station' method='post' class='form' >
   <label for='station'>The Express Train 🚂</label>
   <section>
     <input id='station' name='station' />

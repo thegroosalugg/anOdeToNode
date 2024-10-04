@@ -24,7 +24,7 @@ const home = (station: string) => `
       ? station + (locations[station[0].toLowerCase() as keyof typeof locations] || '❓')
       : 'You are Home 🏡'
   }</h1>
-  <a href='/express-train'>Take the Express 🚂</a>
+  <a href='/express/train'>Take the Express 🚂</a>
 </section>`;
 
 export { homeCSS, home };

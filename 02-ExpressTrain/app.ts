@@ -9,7 +9,7 @@ const app = express();
 // replaces bodyparser.urlencoded
 app.use(express.urlencoded({ extended: false }));
 
-app.use(adminRoutes);
+app.use('/express', adminRoutes); // adds URL filter to all routes
 app.use(stationRoutes);
 
 app.use((req, res, next) => {

@@ -4,7 +4,7 @@ import { formCSS, form } from "../pages/form";
 
 const router = express.Router();
 
-router.use('/express-train', (req, res, next) => {
+router.use('/train', (req, res, next) => {
   res.send(html(formCSS, form));
 });
 
