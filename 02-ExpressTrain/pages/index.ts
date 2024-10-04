@@ -10,6 +10,14 @@ main {
   flex-direction: column;
   align-items: center;
   color: #FFFFFF;
+}
+a {
+  text-decoration: none;
+  color: #FFFFFF;
+  transition: 0.8s ease;
+}
+a:hover {
+  color: #000;
 }`;
 
 const html = (contentCSS: string, content: string) => `

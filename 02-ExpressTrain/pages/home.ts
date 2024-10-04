@@ -9,14 +9,6 @@ const homeCSS = `
 .home h1 {
   margin: 0;
   text-shadow: 0.5px 0.5px 1px #000;
-}
-.home a {
-  text-decoration: none;
-  color: #FFFFFF;
-  transition: 0.8s ease;
-}
-.home a:hover {
-  color: #000;
 }`;
 
 const locations = {
@@ -29,7 +21,7 @@ const home = (station: string) => `
 <section class='home'>
   <h1>${
     station
-      ? station + (locations[station[0].toLowerCase() as keyof typeof locations] || '🔮')
+      ? station + (locations[station[0].toLowerCase() as keyof typeof locations] || '❓')
       : 'You are Home 🏡'
   }</h1>
   <a href='/express-train'>Take the Express 🚂</a>
