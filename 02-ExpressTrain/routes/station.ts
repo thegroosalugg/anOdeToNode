@@ -1,6 +1,6 @@
 import express from "express";
-import html from "../pages";
-import { home, homeCSS } from "../pages/home";
+import html from "../views";
+import { home, homeCSS } from "../views/home";
 
 const router = express.Router();
 

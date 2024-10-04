@@ -1,8 +1,8 @@
 import express from 'express';
 import adminRoutes from './routes/admin';
 import stationRoutes from './routes/station';
-import html from './pages';
-import { error, errorCSS } from './pages/error';
+import html from './views';
+import { error, errorCSS } from './views/error';
 
 const app = express();
 
