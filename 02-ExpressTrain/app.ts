@@ -1,8 +1,7 @@
 import express from 'express';
-import { router as adminRoutes } from './routes/admin';
+import adminRoutes from './routes/admin';
 import stationRoutes from './routes/station';
-import html from './views';
-import { error, errorCSS } from './views/error';
+import errorController from './controllers/error';
 
 console.clear();
 
@@ -14,9 +13,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/express', adminRoutes); // adds URL filter to all routes
 app.use(stationRoutes);
 
-app.use((req, res, next) => {
-  res.status(404).send(html({ css: errorCSS, content: error, title: '404' }));
-});
+app.use(errorController);
 
 // express's app.listen consumes of http.createServer(app); & server.listen()
 app.listen(3000, () => {
