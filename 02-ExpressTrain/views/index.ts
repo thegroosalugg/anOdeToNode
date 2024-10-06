@@ -22,15 +22,16 @@ const bodyCSS = /*css*/`
 interface html {
         css: string;
     content: string;
+      title: string;
   isActive?: string;
 }
 
-const html = ({ css, content, isActive }: html ) => /*html*/`
+const html = ({ css, content, title, isActive }: html ) => /*html*/`
   <html>
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Express Train</title>
+      <title>${title}</title>
       <style>
         ${cssReset}
         ${bodyCSS}

@@ -15,7 +15,7 @@ app.use('/express', adminRoutes); // adds URL filter to all routes
 app.use(stationRoutes);
 
 app.use((req, res, next) => {
-  res.status(404).send(html({ css: errorCSS, content: error }));
+  res.status(404).send(html({ css: errorCSS, content: error, title: '404' }));
 });
 
 // express's app.listen consumes of http.createServer(app); & server.listen()

@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', (req, res, next) => {
   console.log(stations);
-  res.send(html({ css: homeCSS, content: home(stations), isActive: '/' }));
+  res.send(html({ css: homeCSS, content: home(stations), title: 'Express Train', isActive: '/' }));
 });
 
 export default router;

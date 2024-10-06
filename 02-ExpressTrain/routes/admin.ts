@@ -8,7 +8,7 @@ const router = express.Router();
 const stations: Station[] = [];
 
 router.use('/train', (req, res, next) => {
-  res.send(html({ css: formCSS, content: form, isActive: '/express' }));
+  res.send(html({ css: formCSS, content: form, title: 'Go To Station', isActive: '/express' }));
 });
 
 router.post('/station', (req, res, next) => {
