@@ -1,17 +1,19 @@
 import express from "express";
 import html from '../views/index'
 import { formCSS, form } from "../views/form";
+import Station from "../model/station";
 
 const router = express.Router();
+
+const stations: Station[] = [];
 
 router.use('/train', (req, res, next) => {
   res.send(html({ css: formCSS, content: form, isActive: '/express' }));
 });
 
 router.post('/station', (req, res, next) => {
-  console.log(req.body);
-  const station = req.body.station;
-  res.redirect(`/?station=${station}`); // Attach 'station' as a query parameter and redirect
+  stations.push({ name: req.body.station })
+  res.redirect('/');
 });
 
-export default router;
+export { stations, router };

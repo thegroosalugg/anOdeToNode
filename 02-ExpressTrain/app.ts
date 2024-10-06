@@ -1,5 +1,5 @@
 import express from 'express';
-import adminRoutes from './routes/admin';
+import { router as adminRoutes } from './routes/admin';
 import stationRoutes from './routes/station';
 import html from './views';
 import { error, errorCSS } from './views/error';
