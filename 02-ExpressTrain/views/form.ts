@@ -1,6 +1,6 @@
 const formCSS = /*css*/`
   .form {
-    margin: auto;
+    margin: 2rem auto;
     display: flex;
     flex-direction: column;
     gap: 0.2rem;

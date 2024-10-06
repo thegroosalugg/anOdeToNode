@@ -1,12 +1,13 @@
 const homeCSS = /*css*/`
   .home {
-    margin: auto;
+    margin: 2rem auto;
     display: flex;
     flex-direction: column;
     text-align: center;
   }
   .home h1 {
     text-shadow: 0.5px 0.5px 1px #000;
+    font-size: 1.5rem;
   }
 `;
 
