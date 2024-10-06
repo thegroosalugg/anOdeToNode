@@ -12,7 +12,6 @@ const bodyCSS = /*css*/`
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
     color: #FFFFFF;
   }
   a {
@@ -38,6 +37,7 @@ const html = ({ css, content, isActive }: html ) => /*html*/`
         ${navCSS}
         ${css}
       </style>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     </head>
     <body>
       ${navBar(isActive)}

@@ -4,6 +4,8 @@ import stationRoutes from './routes/station';
 import html from './views';
 import { error, errorCSS } from './views/error';
 
+console.clear();
+
 const app = express();
 
 // replaces bodyparser.urlencoded
