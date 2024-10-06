@@ -1,14 +1,14 @@
 {
-  "name": "01-thebasics",
+  "name": "02-expresstrain",
   "version": "1.0.0",
-  "description": "node basics",
+  "description": "begin to express",
   "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node app.ts",
     "dev": "nodemon -x ts-node app.ts"
   },
-  "devDependencies": {
-    "nodemon": "^3.1.7"
+  "dependencies": {
+    "express": "^4.21.0"
   }
 }
