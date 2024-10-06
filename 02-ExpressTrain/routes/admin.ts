@@ -1,7 +1,7 @@
-import express from "express";
-import html from '../views/index'
-import { formCSS, form } from "../views/form";
-import Station from "../model/station";
+import express from 'express';
+import html from '../views/index';
+import { formCSS, form } from '../views/form';
+import Station from '../model/station';
 
 const router = express.Router();
 
@@ -12,8 +12,11 @@ router.use('/train', (req, res, next) => {
 });
 
 router.post('/station', (req, res, next) => {
-  stations.push({ name: req.body.station })
-  res.redirect('/');
+  const station = req.body.station.trim();
+  if (station) {
+    stations.push({ name: station });
+    res.redirect('/');
+  }
 });
 
 export { stations, router };

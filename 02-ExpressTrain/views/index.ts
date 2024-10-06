@@ -1,5 +1,5 @@
-import cssReset from "../styles/cssReset";
-import { navCSS, navBar } from "./navBar";
+import cssReset from '../styles/cssReset';
+import { navCSS, navBar } from './navBar';
 
 const bodyCSS = /*css*/`
   body {
@@ -19,14 +19,14 @@ const bodyCSS = /*css*/`
   }
 `;
 
-interface html {
+interface HTML {
         css: string;
     content: string;
       title: string;
   isActive?: string;
 }
 
-const html = ({ css, content, title, isActive }: html ) => /*html*/`
+const html = ({ css, content, title, isActive }: HTML ) => /*html*/`
   <html>
     <head>
       <meta charset="UTF-8" />

@@ -12,6 +12,9 @@ const homeCSS = /*css*/ `
     text-shadow: 0.5px 0.5px 1px #000;
     font-size: 1.5rem;
   }
+  .home ul {
+    text-align: start;
+  }
 `;
 
 // prettier-ignore
@@ -29,8 +32,8 @@ const home = (stations: Station[]) => /*html*/ `
         .map(
           (station) =>
             `<li>${
-              station.name +
-              (locations[station.name[0].toLowerCase() as keyof typeof locations] || '❓')
+              (locations[station.name[0].toLowerCase() as keyof typeof locations] || '❓') +
+              station.name
             }</li>`
         )
         .join('')}  <!-- join removes commas -->
