@@ -1,9 +1,12 @@
 import cssReset from "../styles/cssReset";
+import { navCSS, navBar } from "./navBar";
 
-const defaultCSS = `
+const bodyCSS = /*css*/`
   body {
     display: flex;
-    background: linear-gradient(to right, #f7797d, #FBD786, #C6FFDD);
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(to right, #d3cce3, #e9e4f0);
   }
   main {
     flex: 1;
@@ -13,15 +16,17 @@ const defaultCSS = `
     color: #FFFFFF;
   }
   a {
-    color: #FFFFFF;
     transition: 0.8s ease;
-  }
-  a:hover {
-    color: #000;
   }
 `;
 
-const html = (contentCSS: string, content: string) => `
+interface html {
+        css: string;
+    content: string;
+  isActive?: string;
+}
+
+const html = ({ css, content, isActive }: html ) => /*html*/`
   <html>
     <head>
       <meta charset="UTF-8" />
@@ -29,11 +34,13 @@ const html = (contentCSS: string, content: string) => `
       <title>Express Train</title>
       <style>
         ${cssReset}
-        ${defaultCSS}
-        ${contentCSS}
+        ${bodyCSS}
+        ${navCSS}
+        ${css}
       </style>
     </head>
     <body>
+      ${navBar(isActive)}
       <main>
         ${content}
       </main>

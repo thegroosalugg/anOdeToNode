@@ -13,7 +13,7 @@ app.use('/express', adminRoutes); // adds URL filter to all routes
 app.use(stationRoutes);
 
 app.use((req, res, next) => {
-  res.status(404).send(html(errorCSS, error));
+  res.status(404).send(html({ css: errorCSS, content: error }));
 });
 
 // express's app.listen consumes of http.createServer(app); & server.listen()

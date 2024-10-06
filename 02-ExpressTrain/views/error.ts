@@ -1,11 +1,11 @@
-const errorCSS = `
+const errorCSS = /*css*/`
   .error {
     margin: auto ;
     text-align: center;
   }
 `;
 
-const error = `
+const error = /*html*/`
   <div class='error'>
     <h1>Page Not Found</h1>
     <a href ='/'>Go back</a>

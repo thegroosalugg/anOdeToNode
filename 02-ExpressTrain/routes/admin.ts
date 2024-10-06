@@ -5,7 +5,7 @@ import { formCSS, form } from "../views/form";
 const router = express.Router();
 
 router.use('/train', (req, res, next) => {
-  res.send(html(formCSS, form));
+  res.send(html({ css: formCSS, content: form, isActive: '/express' }));
 });
 
 router.post('/station', (req, res, next) => {

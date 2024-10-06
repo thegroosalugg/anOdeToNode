@@ -1,10 +1,9 @@
-const formCSS = `
+const formCSS = /*css*/`
   .form {
     margin: auto;
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
-    transform: scale(2);
   }
   .form label {
     text-shadow: 1px 1px 2px #000;
@@ -13,11 +12,8 @@ const formCSS = `
   .form section {
     display: flex;
   }
-  .form input, .form input:focus {
-    border-radius: 0;
-    outline: none;
-  }
   .form button {
+    padding: 0.2rem 0.3rem;
     background: #2980B9;
     color: #FFFFFF;
     border: 0.5px solid transparent;
@@ -31,7 +27,7 @@ const formCSS = `
   }
 `;
 
-const form = `
+const form = /*html*/`
   <form action='/express/station' method='post' class='form' >
     <label for='station'>The Express Train 🚂</label>
     <section>
