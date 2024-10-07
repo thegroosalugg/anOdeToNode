@@ -1,4 +1,4 @@
-import Station from '../model/station';
+import Station from '../models/station';
 
 const homeCSS = /*css*/ `
   .home {

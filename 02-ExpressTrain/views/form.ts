@@ -29,9 +29,9 @@ const formCSS = /*css*/`
 
 const form = /*html*/`
   <form action='/express/station' method='post' class='form' >
-    <label for='station'>The Express Train 🚂</label>
+    <label for='name'>The Express Train 🚂</label>
     <section>
-      <input id='station' name='station' />
+      <input id='name' name='name' />
       <button>All Aboard</button>
     </section>
   <form/>
