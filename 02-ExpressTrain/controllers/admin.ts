@@ -5,9 +5,10 @@ import { formCSS, form } from '../views/form';
 import { homeCSS, home } from '../views/home';
 
 const getStations: RequestHandler = (req, res, next) => {
-  const stations = Station.fetchAll();
-  console.log(stations); // *logData
-  res.send(html({ css: homeCSS, content: home(stations), title: 'Express Train', isActive: '/' }));
+  const stations = Station.fetchAll((stations: Station[]) => {
+    console.log(stations); // *logData
+    res.send(html({ css: homeCSS, content: home(stations), title: 'Express Train', isActive: '/' }));
+  });
 };
 
 // /express/train
