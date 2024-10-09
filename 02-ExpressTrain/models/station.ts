@@ -9,6 +9,19 @@ const filePath = path.join(
   'data', // data folder, sibling of app.ts
   'stations.json' // filename we want to read
 );
+
+type callbackFn = (stations: Station[]) => void;
+
+function readJSONFile(callback: callbackFn) {
+  // utf8 converts data Buffer to string format so it can be parsed
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      callback([]);
+    } else {
+      callback(JSON.parse(data));
+    }
+  });
+}
 class Station {
   name: string;
 
@@ -17,29 +30,17 @@ class Station {
   }
 
   save() {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      // utf8 converts data Buffer to string formate so it can be parsed
-      let stations = []; // create file if it doesn't exist
-      if (!err) {
-        // if no error when reading file, reasign stations to parsed json content
-        stations = JSON.parse(data);
-      }
+    readJSONFile((stations) => {
       stations.push(this); // save new class instance to array
       fs.writeFile(filePath, JSON.stringify(stations), (err) => {
-        // write file to JSON as string. Either existing readFile, or save new declared with 'let'
         console.log(err);
       });
     });
   }
 
   // static allows function to be called on the Model itself, rathen than an object instance
-  static fetchAll(callback: (stations: Station[]) => void) {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        callback([]);
-      }
-      callback(JSON.parse(data));
-    });
+  static fetchAll(callback: callbackFn) {
+    readJSONFile(callback);
   }
 }
 
