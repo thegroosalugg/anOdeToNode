@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "begin to express",
   "main": "app.ts",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node app.ts",
-    "dev": "nodemon -x ts-node app.ts"
+    "start": "tsx app.ts",
+    "dev": "nodemon -x tsx app.ts"
   },
   "dependencies": {
     "express": "^4.21.0"

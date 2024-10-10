@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "outDir": "./dist", // Compiled JS files will go here
-    "target": "es2016",
-    "module": "commonjs",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ESNext",
     "esModuleInterop": true,
     "strict": true
   },

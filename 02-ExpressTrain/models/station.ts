@@ -1,14 +1,7 @@
 import fs from 'fs';
-import path from 'path';
+import { join } from 'path';
 
-// finds the location of the file we want to read
-// path.join writes the directory of the file's location in the project folder structure
-// path.dirname(require.main.filename) returns the path of the main module that started the application
-const filePath = path.join(
-  path.dirname(require?.main?.filename || process.cwd()), // app/ts root dir
-  'data', // data folder, sibling of app.ts
-  'stations.json' // filename we want to read
-);
+const filePath = join(process.cwd(), 'data', 'stations.json');
 
 type callbackFn = (stations: Station[]) => void;
 
