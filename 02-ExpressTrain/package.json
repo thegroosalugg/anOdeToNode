@@ -7,9 +7,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsx app.ts",
-    "dev": "nodemon -x tsx app.ts"
+    "dev": "nodemon -x tsx app.ts",
+    "build": "tsc && tsc-alias"
   },
   "dependencies": {
     "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "tsc-alias": "^1.8.10"
   }
 }
