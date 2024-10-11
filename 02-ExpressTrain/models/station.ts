@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { join } from 'path';
 
-const filePath = join(process.cwd(), 'data', 'stations.json');
+const filePath = join(import.meta.dirname, '../', 'data', 'stations.json');
 
 type callbackFn = (stations: Station[]) => void;
 
@@ -15,6 +15,7 @@ function readJSONFile(callback: callbackFn) {
     }
   });
 }
+
 class Station {
   name: string;
 

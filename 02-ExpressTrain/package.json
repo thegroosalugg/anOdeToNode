@@ -6,9 +6,10 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsx app.ts",
-    "dev": "nodemon -x tsx app.ts",
-    "build": "tsc && tsc-alias"
+    "start": "clear && tsx app.ts",
+    "dev": "clear && nodemon -x tsx app.ts",
+    "build": "tsc && tsc-alias",
+    "preview": "clear && node dist/app.js"
   },
   "dependencies": {
     "express": "^4.21.0"
