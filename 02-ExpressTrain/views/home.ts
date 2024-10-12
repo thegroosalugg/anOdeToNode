@@ -1,4 +1,4 @@
-import Station from '../models/station';
+import Card from '../models/Card';
 
 const homeCSS = /*css*/ `
   .home {
@@ -24,16 +24,16 @@ const locations = {
   s: '☀️', t: '🚂', u: '☔️', v: '🌋', w: '🌊', x: '🏛️', y: '🛥️', z: '🏛️',
 };
 
-const home = (stations: Station[]) => /*html*/ `
+const home = (cards: Card[]) => /*html*/ `
   <section class='home'>
     <h1>You are Home</h1>
     <ul>
-      ${stations
+      ${cards
         .map(
-          (station) =>
+          (cards) =>
             `<li>${
-              (locations[station.name[0].toLowerCase() as keyof typeof locations] || '❓') +
-              station.name
+              (locations[cards.name[0].toLowerCase() as keyof typeof locations] || '❓') +
+              cards.name
             }</li>`
         )
         .join('')}  <!-- join removes commas -->

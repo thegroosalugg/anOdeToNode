@@ -1,9 +1,9 @@
 import fs from 'fs';
 import { join } from 'path';
 
-const filePath = join(import.meta.dirname, '../', 'data', 'stations.json');
+const filePath = join(import.meta.dirname, '../', 'data', 'cards.json');
 
-type callbackFn = (stations: Station[]) => void;
+type callbackFn = (cards: Card[]) => void;
 
 function readJSONFile(callback: callbackFn) {
   // utf8 converts data Buffer to string format so it can be parsed
@@ -16,11 +16,17 @@ function readJSONFile(callback: callbackFn) {
   });
 }
 
-class Station {
-  name: string;
+class Card {
+    name: string;
+    desc: string;
+  imgURL: string;
+   value: number;
 
-  constructor(name: string) {
-    this.name = name;
+  constructor(name: string, desc: string, imgURL: string, value: number) {
+    this.name   = name;
+    this.desc   = desc;
+    this.imgURL = imgURL;
+    this.value  = value;
   }
 
   save() {
@@ -38,4 +44,4 @@ class Station {
   }
 }
 
-export default Station;
+export default Card;

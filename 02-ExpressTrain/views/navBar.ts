@@ -33,11 +33,11 @@ const navCSS = /*css*/`
 const navBar = (isActive: string | undefined) => /*html*/`
   <nav class='nav'>
     <h1>Express Train</h1>
-    <a class=${isActive === '/'        && 'active'} href='/'>
+    <a class=${isActive === '/'         && 'active'} href='/'>
       <i class="fas fa-home"></i>
       <span>Home</span>
     </a>
-    <a class=${isActive === '/express' && 'active'} href='/express/train'>
+    <a class=${isActive === '/add-card' && 'active'} href='/admin/card'>
       <i class="fa-solid fa-train"></i>
       <span>Express</span>
     </a>

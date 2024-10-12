@@ -28,7 +28,7 @@ const formCSS = /*css*/`
 `;
 
 const form = /*html*/`
-  <form action='/express/station' method='post' class='form' >
+  <form action='/admin/add-card' method='post' class='form' >
     <label for='name'>The Express Train 🚂</label>
     <section>
       <input id='name' name='name' />

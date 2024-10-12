@@ -1,29 +1,29 @@
 import { RequestHandler } from 'express';
-import Station from '../models/station';
+import Card from '../models/Card';
 import html from '../views/index';
 import { formCSS, form } from '../views/form';
 import { homeCSS, home } from '../views/home';
 
-const getStations: RequestHandler = (req, res, next) => {
-  const stations = Station.fetchAll((stations: Station[]) => {
-    console.log(stations); // *logData
-    res.send(html({ css: homeCSS, content: home(stations), title: 'Express Train', isActive: '/' }));
+const getCards: RequestHandler = (req, res, next) => {
+  const cards = Card.fetchAll((cards: Card[]) => {
+    console.log(cards); // *logData
+    res.send(html({ css: homeCSS, content: home(cards), title: 'Express Train', isActive: '/' }));
   });
 };
 
-// /express/train
-const getAddStation: RequestHandler = (req, res, next) => {
-  res.send(html({ css: formCSS, content: form, title: 'Go To Station', isActive: '/express' }));
+// /admin/card
+const getAddCard: RequestHandler = (req, res, next) => {
+  res.send(html({ css: formCSS, content: form, title: 'See Card', isActive: '/add-card' }));
 };
 
-// /express/station
-const postAddStation: RequestHandler = (req, res, next) => {
+// /admin/add-card
+const postAddCard: RequestHandler = (req, res, next) => {
   const name = req.body.name.trim();
   if (name) {
-    const station = new Station(name);
+    const station = new Card(name, 'description', 'image', 1);
     station.save();
     res.redirect('/');
   }
 };
 
-export { getStations, getAddStation, postAddStation };
+export { getCards, getAddCard, postAddCard };

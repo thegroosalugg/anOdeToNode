@@ -1,8 +1,8 @@
 import express from 'express';
-import { getStations } from '../controllers/admin';
+import { getCards } from '../controllers/admin';
 
 const router = express.Router();
 
-router.get('/', getStations);
+router.get('/', getCards);
 
 export default router;
