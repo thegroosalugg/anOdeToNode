@@ -1,9 +1,9 @@
 import fs from 'fs';
 import { join } from 'path';
 
-const filePath = join(import.meta.dirname, '../', 'data', 'cards.json');
+const filePath = join(import.meta.dirname, '../', 'data', 'boards.json');
 
-type callbackFn = (cards: Card[]) => void;
+type callbackFn = (boards: Board[]) => void;
 
 function readJSONFile(callback: callbackFn) {
   // utf8 converts data Buffer to string format so it can be parsed
@@ -16,7 +16,7 @@ function readJSONFile(callback: callbackFn) {
   });
 }
 
-class Card {
+class Board {
     name: string;
     desc: string;
   imgURL: string;
@@ -30,9 +30,9 @@ class Card {
   }
 
   save() {
-    readJSONFile((stations) => {
-      stations.push(this); // save new class instance to array
-      fs.writeFile(filePath, JSON.stringify(stations), (err) => {
+    readJSONFile((boards) => {
+      boards.push(this); // save new class instance to array
+      fs.writeFile(filePath, JSON.stringify(boards), (err) => {
         console.log(err);
       });
     });
@@ -44,4 +44,4 @@ class Card {
   }
 }
 
-export default Card;
+export default Board;

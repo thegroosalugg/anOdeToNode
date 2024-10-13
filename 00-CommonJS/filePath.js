@@ -7,5 +7,5 @@ const path = require('path');
 const filePath = path.join(
   path.dirname(require?.main?.filename || process.cwd()), // app/ts root dir
   'data', // data folder, sibling of app.ts
-  'stations.json' // filename we want to read
+  'items.json' // filename we want to read
 );

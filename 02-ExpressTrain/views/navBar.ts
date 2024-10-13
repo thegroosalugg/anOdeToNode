@@ -37,7 +37,7 @@ const navBar = (isActive: string | undefined) => /*html*/`
       <i class="fas fa-home"></i>
       <span>Home</span>
     </a>
-    <a class=${isActive === '/add-card' && 'active'} href='/admin/card'>
+    <a class=${isActive === '/add-board' && 'active'} href='/admin/board'>
       <i class="fa-solid fa-train"></i>
       <span>Express</span>
     </a>
