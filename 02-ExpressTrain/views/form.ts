@@ -46,7 +46,7 @@ const input = (id: string, text?: boolean) => /*html*/ `
     ${
       text
         ? `<textarea rows=5 id=${id} name=${id}>Add a description</textarea>`
-        : `<input id=${id} name=${id} />`
+        : `<input id=${id} name=${id} autocomplete='off' />`
     }
   </section>
 `;
