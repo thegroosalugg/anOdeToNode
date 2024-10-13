@@ -55,13 +55,15 @@ const navButton = ({
 const navBar = (isActive: string | undefined) => /*html*/ `
   <nav class='nav'>
     <h1>Cool Mountain</h1>
-    ${navButton({ isActive, href: '/', icon: 'fa-solid fa-mountain-sun', label: 'Shop' })}
+    ${navButton({ isActive, href: '/', icon: 'fa-solid fa-mountain-sun',  label: 'Shop' })}
+    ${navButton({ isActive, href: '/', icon: 'fa-solid fa-user',          label: 'User' })}
     ${navButton({
       isActive,
-      href: '/admin/board',
+      href: '/admin/add-item',
       icon: 'fa-solid fa-person-snowboarding',
       label: 'New',
     })}
+    ${navButton({ isActive, href: '/', icon: 'fa-solid fa-cart-shopping', label: 'Cart' })}
   </nav>
 `;
 

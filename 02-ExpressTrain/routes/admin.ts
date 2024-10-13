@@ -1,10 +1,10 @@
 import express from 'express';
-import { getAddBoard, postAddBoard } from '../controllers/admin';
+import { getAddItem, postAddItem } from '../controllers/admin';
 
 const router = express.Router();
 
 // all routes prepend with /admin
-router.get('/board', getAddBoard);
-router.post('/add-board', postAddBoard);
+router.get('/add-item', getAddItem);
+router.post('/add-item', postAddItem);
 
 export default router;

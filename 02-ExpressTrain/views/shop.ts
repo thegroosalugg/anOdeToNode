@@ -1,4 +1,4 @@
-import Board from '../models/Board';
+import Item from '../models/Item';
 
 const shopCSS = /*css*/ `
   .shop {
@@ -51,18 +51,18 @@ const shopCSS = /*css*/ `
   }
 `;
 
-const shop = (boards: Board[]) => /*html*/ `
+const shop = (items: Item[]) => /*html*/ `
   <section class='shop'>
     <h1>Shop</h1>
     <ul>
-      ${boards
+      ${items
         .map(
-          ({ name, desc, imgURL, value }) => /*html*/ `
+          ({ name, desc, imgURL, price }) => /*html*/ `
           <li>
             <img src='${imgURL}' alt='${name}' />
             <div>
               <p>${name}</p>
-              <p>$${value.toFixed(2)}</p>
+              <p>$${price.toFixed(2)}</p>
             </div>
             <p>${desc}</p>
           </li>`

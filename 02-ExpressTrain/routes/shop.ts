@@ -1,8 +1,8 @@
 import express from 'express';
-import { getBoards } from '../controllers/admin';
+import { getItems } from '../controllers/shop';
 
 const router = express.Router();
 
-router.get('/', getBoards);
+router.get('/', getItems);
 
 export default router;

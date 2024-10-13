@@ -28,11 +28,11 @@ const formCSS = /*css*/`
 `;
 
 const form = /*html*/`
-  <form action='/admin/add-board' method='post' class='form' >
-    <label for='name'>The Express Train 🚂</label>
+  <form action='/admin/add-item' method='post' class='form' >
+    <label for='name'>Name</label>
     <section>
       <input id='name' name='name' />
-      <button>All Aboard</button>
+      <button>Add +</button>
     </section>
   </form>
 `;
