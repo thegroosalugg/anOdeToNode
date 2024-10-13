@@ -12,7 +12,6 @@ const bodyCSS = /*css*/`
     flex: 1;
     display: flex;
     flex-direction: column;
-    color: #FFFFFF;
   }
   a {
     transition: 0.8s ease;
