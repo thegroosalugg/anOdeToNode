@@ -1,5 +1,23 @@
 [
   { "name": "JaVa", "desc": "description", "imgURL": "/images/board_red_blue.png", "value": 500 },
-  { "name": "ScrypT", "desc": "description", "imgURL": "/images/board_red_blue.png", "value": 500 },
-  { "name": "ToKyo", "desc": "description", "imgURL": "/images/board_red_blue.png", "value": 500 }
+  { "name": "ScrypT", "desc": "description", "imgURL": "/images/board_green_orange.png", "value": 500 },
+  { "name": "ToKyo", "desc": "description", "imgURL": "/images/board_yellow_purple_.png", "value": 500 },
+  {
+    "name": "Sample",
+    "desc": "description",
+    "imgURL": "https://eur.lib-tech.com/media/catalog/product/cache/bd322120d976889db2881a06b8dbba23/2/0/2024-2025-Lib-Tech-TRS-Snowboard-Orange-Base.jpg",
+    "value": 500
+  },
+  {
+    "name": "MouNtAiN",
+    "desc": "description",
+    "imgURL": "https://eur.lib-tech.com/media/catalog/product/cache/bd322120d976889db2881a06b8dbba23/2/0/2024-2025-Lib-Tech-TRS-Snowboard-Orange-Base.jpg",
+    "value": 500
+  },
+  {
+    "name": "IceMelter",
+    "desc": "description",
+    "imgURL": "https://eur.lib-tech.com/media/catalog/product/cache/bd322120d976889db2881a06b8dbba23/2/0/2024-2025-Lib-Tech-TRS-Snowboard-Orange-Base.jpg",
+    "value": 500
+  }
 ]

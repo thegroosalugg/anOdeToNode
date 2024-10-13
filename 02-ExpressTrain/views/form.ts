@@ -34,7 +34,7 @@ const form = /*html*/`
       <input id='name' name='name' />
       <button>All Aboard</button>
     </section>
-  <form/>
+  </form>
 `;
 
 export { formCSS, form };
