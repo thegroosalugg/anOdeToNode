@@ -1,4 +1,4 @@
-const cssReset = `
+const cssReset = /*css*/ `
   *, *::before, *::after {
     box-sizing: border-box;
   }

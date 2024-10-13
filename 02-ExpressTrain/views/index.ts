@@ -1,4 +1,4 @@
-import cssReset from '../styles/cssReset';
+import cssReset from './cssReset';
 import { navCSS, navBar } from './navBar';
 
 const bodyCSS = /*css*/`
@@ -38,7 +38,7 @@ const html = ({ css, content, title, isActive }: HTML ) => /*html*/`
         ${navCSS}
         ${css}
       </style>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     </head>
     <body>
       ${navBar(isActive)}

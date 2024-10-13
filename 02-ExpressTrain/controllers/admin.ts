@@ -2,12 +2,12 @@ import { RequestHandler } from 'express';
 import Board from '../models/Board';
 import html from '../views/index';
 import { formCSS, form } from '../views/form';
-import { homeCSS, home } from '../views/home';
+import { shopCSS, shop } from '../views/shop';
 
 const getBoards: RequestHandler = (req, res, next) => {
   const boards = Board.fetchAll((boards: Board[]) => {
     console.log(boards); // *logData
-    res.send(html({ css: homeCSS, content: home(boards), title: 'Express Train', isActive: '/' }));
+    res.send(html({ css: shopCSS, content: shop(boards), title: 'Express Train', isActive: '/' }));
   });
 };
 
@@ -20,7 +20,7 @@ const getAddBoard: RequestHandler = (req, res, next) => {
 const postAddBoard: RequestHandler = (req, res, next) => {
   const name = req.body.name.trim();
   if (name) {
-    const board = new Board(name, 'description', 'image', 1);
+    const board = new Board(name, 'description', '/images/board_red_blue.png', 500);
     board.save();
     res.redirect('/');
   }

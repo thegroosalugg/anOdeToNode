@@ -1,5 +1,5 @@
 [
-  { "name": "JavaScript", "desc": "description", "imgURL": "image", "value": 1 },
-  { "name": "V", "desc": "description", "imgURL": "image", "value": 1 },
-  { "name": "Node", "desc": "description", "imgURL": "image", "value": 1 }
+  { "name": "JaVa", "desc": "description", "imgURL": "/images/board_red_blue.png", "value": 500 },
+  { "name": "ScrypT", "desc": "description", "imgURL": "/images/board_red_blue.png", "value": 500 },
+  { "name": "ToKyo", "desc": "description", "imgURL": "/images/board_red_blue.png", "value": 500 }
 ]
