@@ -6,7 +6,7 @@ const bodyCSS = /*css*/ `
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background: linear-gradient(to right, #d3cce3, #e9e4f0);
+    background: linear-gradient(to bottom, #f2fcfe, #ddf6fb, #c1f0f9, #92edff);
     font-family: 'Montserrat', sans-serif;
   }
   main {

@@ -5,7 +5,7 @@ const navCSS = /*css*/ `
     gap: 1rem;
     overflow: auto;
     padding: 0.5rem 1rem;
-    background: linear-gradient(to right, #203a43, #2c5364);
+    background: linear-gradient(to right, #151e28, #1183a0, #6dd5ed);
 
     h1 {
       color: #FFFFFF;
@@ -25,8 +25,8 @@ const navCSS = /*css*/ `
       transition: 0.8s ease;
 
       &:hover, &.active {
-        color: #f5af19;
-        border-color: #f5af19;
+        color: #ff7f58;
+        border-color: #ff7f58;
       }
 
       i {

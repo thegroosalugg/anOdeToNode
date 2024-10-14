@@ -3,7 +3,6 @@ import navTo from '../util/navTo';
 
 const storeCSS = /*css*/ `
   .store {
-    margin: 1rem auto;
     display: flex;
     flex-direction: column;
     color: #000000;
@@ -12,13 +11,16 @@ const storeCSS = /*css*/ `
       text-align: center;
       text-shadow: 0.5px 0.5px 1px #000;
       font-size: 1.5rem;
-      margin-bottom: 1rem;
+      font-weight: 200;
+      padding: 1rem;
+      background: #ff7f58;
     }
 
     ul {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
+      margin: 1rem;
       justify-content: center;
 
       li {

@@ -25,7 +25,7 @@ const formCSS = /*css*/ `
 
     button {
       padding: 0.2rem 0.3rem;
-      background: #2980B9;
+      background: #1183a0;
       color: #FFFFFF;
       border: 0.5px solid transparent;
       cursor: pointer;
@@ -33,7 +33,7 @@ const formCSS = /*css*/ `
 
       &:hover {
         color: #000000;
-        background: #FBD786;
+        background: #ff7f58;
         border-color: #000000;
       }
     }
