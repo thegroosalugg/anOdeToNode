@@ -1,4 +1,5 @@
 import Item from '../models/Item';
+import navTo from '../util/navTo';
 
 const shopCSS = /*css*/ `
   .shop {
@@ -11,6 +12,7 @@ const shopCSS = /*css*/ `
       text-align: center;
       text-shadow: 0.5px 0.5px 1px #000;
       font-size: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     ul {
@@ -23,9 +25,16 @@ const shopCSS = /*css*/ `
         display: flex;
         flex-direction: column;
         width: 200px;
+        background: #fff4f4;
+        box-shadow: 2.5px 2.5px 5px #000000;
 
         img {
           height: 200px;
+          cursor: pointer;
+        }
+
+        p {
+          font-weight: 400;
         }
 
         > div {
@@ -52,14 +61,14 @@ const shopCSS = /*css*/ `
 `;
 
 const shop = (items: Item[]) => /*html*/ `
-  <section class='shop'>
-    <h1>Shop</h1>
+  <section class="shop">
+    <h1>Mountain Store</h1>
     <ul>
       ${items
         .map(
-          ({ name, desc, imgURL, price }) => /*html*/ `
+          ({ id, name, desc, imgURL, price }) => /*html*/ `
           <li>
-            <img src='${imgURL}' alt='${name}' />
+            <img src="${imgURL}" alt="${name}" onClick="${navTo('/store/' + id)}" />
             <div>
               <p>${name}</p>
               <p>$${price.toFixed(2)}</p>

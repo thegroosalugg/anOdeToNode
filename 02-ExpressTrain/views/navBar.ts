@@ -12,6 +12,7 @@ const navCSS = /*css*/ `
       font-size: 1.5rem;
       margin: 0 2rem;
       text-wrap: nowrap;
+      font-weight: 500;
     }
 
     a {

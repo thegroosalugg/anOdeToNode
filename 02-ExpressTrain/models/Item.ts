@@ -17,12 +17,14 @@ function readJSONFile(callback: callbackFn) {
 }
 
 class Item {
+      id: string;
     name: string;
     desc: string;
   imgURL: string;
    price: number;
 
   constructor(name: string, desc: string, imgURL: string, price: number) {
+    this.id     = 'SB' + Math.floor(Math.random() * 100000)
     this.name   = name;
     this.desc   = desc;
     this.imgURL = imgURL;
