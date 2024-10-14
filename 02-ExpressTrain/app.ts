@@ -1,7 +1,7 @@
 import path from 'path';
 import express from 'express';
 import adminRoutes from './routes/admin';
-import shopRoutes from './routes/shop';
+import storeRoutes from './routes/store';
 import errorController from './controllers/error';
 
 const app = express();
@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: false })); // replaces bodyparser.urlenco
 app.use(express.static(path.join(import.meta.dirname, 'public'))); // allows serving of static paths
 
 app.use('/admin', adminRoutes); // adds URL filter to all routes
-app.use(shopRoutes);
+app.use(storeRoutes);
 
 app.use(errorController);
 

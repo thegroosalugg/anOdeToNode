@@ -1,9 +1,9 @@
 import Item from '../models/Item';
 import navTo from '../util/navTo';
 
-const shopCSS = /*css*/ `
-  .shop {
-    margin: 2rem auto;
+const storeCSS = /*css*/ `
+  .store {
+    margin: 1rem auto;
     display: flex;
     flex-direction: column;
     color: #000000;
@@ -60,8 +60,8 @@ const shopCSS = /*css*/ `
   }
 `;
 
-const shop = (items: Item[]) => /*html*/ `
-  <section class="shop">
+const store = (items: Item[]) => /*html*/ `
+  <section class="store">
     <h1>Mountain Store</h1>
     <ul>
       ${items
@@ -81,4 +81,4 @@ const shop = (items: Item[]) => /*html*/ `
   </section>
 `;
 
-export { shopCSS, shop };
+export { storeCSS, store };
