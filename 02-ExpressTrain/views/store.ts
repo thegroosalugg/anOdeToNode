@@ -74,14 +74,15 @@ const store = (items: Item[]) => /*html*/ `
       ${items
         .map(
           ({ id, name, desc, imgURL, price }) => /*html*/ `
-          <li>
-            <img src="${imgURL}" alt="${name}" onClick="${navTo('/store/' + id)}" />
-            <div>
-              <p>${name}</p>
-              <p>$${price.toFixed(2)}</p>
-            </div>
-            <p>${desc}</p>
-          </li>`
+            <li>
+              <img src="${imgURL}" alt="${name}" onClick="${navTo('/store/' + id)}" />
+              <div>
+                <p>${name}</p>
+                <p>$${price.toFixed(2)}</p>
+              </div>
+              <p>${desc}</p>
+            </li>
+          `
         )
         .join('')}  <!-- join removes commas -->
     </ul>

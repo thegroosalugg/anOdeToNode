@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 import Item from '../models/Item';
 import html from '../views/index';
 import { storeCSS, store } from '../views/store';
+import { itemPage, itemPageCSS } from '../views/itemPage';
 
 const getItems: RequestHandler = (req, res, next) => {
   Item.fetchAll((items) => {
@@ -14,9 +15,15 @@ const getItems: RequestHandler = (req, res, next) => {
 const getItemById: RequestHandler = (req, res, next) => {
   const { itemId } = req.params;
   Item.findById(itemId, (item) => {
-    console.log(itemId, item);
+    res.send(
+      html({
+             css: itemPageCSS,
+         content: itemPage(item),
+           title: item?.name || 'Page Not Found',
+        isActive: '/',
+      })
+    );
   });
-  res.redirect('/');
 };
 
 export { getItems, getItemById };
