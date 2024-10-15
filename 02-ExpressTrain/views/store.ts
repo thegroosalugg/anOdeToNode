@@ -28,7 +28,12 @@ const storeCSS = /*css*/ `
         flex-direction: column;
         width: 200px;
         background: #fff4f4;
-        box-shadow: 2.5px 2.5px 5px #000000;
+        box-shadow: 2.5px 2.5px 5px #474747;
+        transition: 0.5s ease-in-out;
+
+        &:hover {
+          box-shadow: 5px 5px 10px #000000;
+        }
 
         img {
           height: 200px;

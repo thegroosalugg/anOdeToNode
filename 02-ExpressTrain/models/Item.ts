@@ -44,6 +44,13 @@ class Item {
   static fetchAll(callback: callbackFn) {
     readJSONFile(callback);
   }
+
+  static findById(paramsId: string, callback: (item: Item | undefined) => void) {
+    readJSONFile((items) => {
+      const item = items.find(({ id }) => id === paramsId);
+      callback(item);
+    })
+  }
 }
 
 export default Item;

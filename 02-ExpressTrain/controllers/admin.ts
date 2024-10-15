@@ -7,7 +7,6 @@ import { storeCSS, store } from '../views/store';
 // /admin/items
 const getUserItems: RequestHandler = (req, res, next) => {
   const items = Item.fetchAll((items: Item[]) => {
-    console.log(items); // *logData
     res.send(html({ css: storeCSS, content: store(items), title: 'My Listings', isActive: '/admin/items' }));
   });
 };

@@ -4,10 +4,19 @@ import html from '../views/index';
 import { storeCSS, store } from '../views/store';
 
 const getItems: RequestHandler = (req, res, next) => {
-  const items = Item.fetchAll((items: Item[]) => {
-    console.log(items); // *logData
-    res.send(html({ css: storeCSS, content: store(items), title: 'Mountain Store', isActive: '/' }));
+  Item.fetchAll((items) => {
+    res.send(
+      html({ css: storeCSS, content: store(items), title: 'Mountain Store', isActive: '/' })
+    );
   });
 };
 
-export { getItems };
+const getItemById: RequestHandler = (req, res, next) => {
+  const { itemId } = req.params;
+  Item.findById(itemId, (item) => {
+    console.log(itemId, item);
+  });
+  res.redirect('/');
+};
+
+export { getItems, getItemById };

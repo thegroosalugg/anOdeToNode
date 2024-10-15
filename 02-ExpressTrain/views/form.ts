@@ -56,7 +56,7 @@ const form = /*html*/ `
     ${input('name')}
     ${input('price')}
     ${input('description', true)}
-    <button>Add +</button>
+    <button>Add <i class="fa-solid fa-square-plus"></i></button>
   </form>
 `;
 
