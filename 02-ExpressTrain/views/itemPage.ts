@@ -1,64 +1,59 @@
 import Item from '../models/Item';
 
 const itemPageCSS = /*css*/ `
-  .item {
-    display: flex;
-    flex-direction: column;
-    width: 200px;
-    background: #fff4f4;
-    box-shadow: 2.5px 2.5px 5px #474747;
-    transition: 0.5s ease-in-out;
+  .not-found {
+    margin: 5rem auto;
+    padding: 0 1rem;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
+  }
 
-    &:hover {
-      box-shadow: 5px 5px 10px #000000;
-    }
+  .snowboard-page {
+    flex: 1;
+    background: #e0dcdc;
 
-    img {
-      height: 200px;
-      cursor: pointer;
-    }
+    .banner {
+      background: linear-gradient(to right, #151e28, #30363e);
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
 
-    p {
-      font-weight: 400;
-    }
+      img {
+        margin: auto;
 
-    > div {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.3rem 0.3rem 0;
+        &:first-of-type {
+          width: 200px;
+        }
 
-      > p {
-        &:first-child {
-          max-width: 65%;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+        &:last-of-type {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          min-width: 1450px;
+          z-index: -1;
         }
       }
-    }
-
-    > p {
-      padding: 0 0.3rem 0.3rem;
     }
   }
 `;
 
 const itemPage = (item: Item | undefined) => {
+
   if (!item) {
-    return /*html*/ `<h1>The Item Doesn't Exist</h1>`
+    return /*html*/ `<h1 class="not-found">The Item Doesn't Exist</h1>`
   }
 
   const { name, imgURL, desc, price } = item;
 
   return /*html*/ `
-    <div class="item">
-      <img src="${imgURL}" alt="${name}" />
-      <div>
-        <p>${name}</p>
-        <p>$${price.toFixed(2)}</p>
+    <section class="snowboard-page">
+      <div class="banner">
+        <img src="/assets/snowboarder.png" alt="snowboarder" />
+        <img src="/assets/mountain.png"    alt="mountain" />
       </div>
-      <p>${desc}</p>
-    </div>
+    </section>
   `;
 }
 
