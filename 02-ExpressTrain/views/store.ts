@@ -37,30 +37,37 @@ const storeCSS = /*css*/ `
 
         img {
           height: 200px;
+          object-fit: cover;
           cursor: pointer;
         }
 
         p {
           font-weight: 400;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        > p {
+          padding: 0 0.5rem 0.5rem;
+          color: #878787;
         }
 
         > div {
           display: flex;
           justify-content: space-between;
-          padding: 0.3rem 0.3rem 0;
+          padding: 0.5rem;
 
           > p {
             &:first-child {
               max-width: 65%;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
+              font-weight: 600;
+            }
+            &:last-child {
+              font-weight: 500;
+              color: #3b3b3b;
             }
           }
-        }
-
-        > p {
-          padding: 0 0.3rem 0.3rem;
         }
       }
     }

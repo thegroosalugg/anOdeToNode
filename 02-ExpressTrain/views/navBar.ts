@@ -10,7 +10,7 @@ const navCSS = /*css*/ `
     h1 {
       color: #FFFFFF;
       font-size: 1.5rem;
-      margin: 0 2rem;
+      margin-right: 1rem;
       text-wrap: nowrap;
       font-weight: 500;
     }

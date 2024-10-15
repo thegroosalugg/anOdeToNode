@@ -3,40 +3,40 @@
     "id": "SB62250",
     "name": "JaVa",
     "desc": "description",
-    "imgURL": "/images/board_red_blue.png",
+    "imgURL": "/images/board_tall.jpg",
     "price": 500
   },
   {
     "id": "SB62251",
     "name": "ScrypT",
     "desc": "description",
-    "imgURL": "/images/board_green_orange.png",
+    "imgURL": "/images/board_wide.jpg",
     "price": 500
   },
   {
     "id": "SB62252",
     "name": "ToKyo",
     "desc": "description",
-    "imgURL": "/images/board_yellow_purple_.png",
+    "imgURL": "/images/board_red_blue.png",
     "price": 500
   },
   {
     "id": "SB62253",
-    "name": "Sample",
+    "name": "S4mpl3",
     "desc": "description",
-    "imgURL": "https://eur.lib-tech.com/media/catalog/product/cache/bd322120d976889db2881a06b8dbba23/2/0/2024-2025-Lib-Tech-TRS-Snowboard-Orange-Base.jpg",
+    "imgURL": "/images/board_green_orange.png",
     "price": 500
   },
   {
     "id": "SB62254",
-    "name": "MouNtAiN",
+    "name": "MouNt4iN",
     "desc": "description",
-    "imgURL": "https://eur.lib-tech.com/media/catalog/product/cache/bd322120d976889db2881a06b8dbba23/2/0/2024-2025-Lib-Tech-TRS-Snowboard-Orange-Base.jpg",
+    "imgURL": "/images/board_yellow_purple_.png",
     "price": 500
   },
   {
     "id": "SB62255",
-    "name": "IceMelter",
+    "name": "1C3 Shr3dd3r",
     "desc": "description",
     "imgURL": "https://eur.lib-tech.com/media/catalog/product/cache/bd322120d976889db2881a06b8dbba23/2/0/2024-2025-Lib-Tech-TRS-Snowboard-Orange-Base.jpg",
     "price": 500
