@@ -115,7 +115,7 @@ const itemPageCSS = /*css*/ `
           }
         }
 
-        .price {
+        .form {
           flex: 1;
           display: flex;
           flex-direction: column;
@@ -152,7 +152,7 @@ const itemPage = (item: Item | undefined) => {
     return /*html*/ `<h1 class="not-found">The Item Doesn't Exist</h1>`
   }
 
-  const { name, imgURL, desc, price } = item;
+  const { id, name, imgURL, desc, price } = item;
 
   return /*html*/ `
     <section class="snowboard-page">
@@ -172,10 +172,11 @@ const itemPage = (item: Item | undefined) => {
               <i class="fa-solid fa-truck-fast"></i>
               <i class="fa-solid fa-users-between-lines"></i>
           </div>
-          <div class="price">
+          <form class="form" action="/cart" method="post">
             <p>$${price.toFixed(2)}</p>
             <button>Add to Cart</button>
-          </div>
+            <input type="hidden" name="itemId" value="${id}" />
+          </form>
         </div>
       </div>
     </section>

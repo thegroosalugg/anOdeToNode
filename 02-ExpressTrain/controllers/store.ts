@@ -26,4 +26,21 @@ const getItemById: RequestHandler = (req, res, next) => {
   });
 };
 
-export { getItems, getItemById };
+const getCart: RequestHandler = (req, res, next) => {
+  res.send(
+    html({
+      css: 'h1 { text-align: center; color: #000; font-size: 2rem; font-weight: 500 } ',
+      content: '<h1>Cart</h1>',
+      title: 'Your Cart',
+      isActive: '/cart',
+    })
+  );
+};
+
+const postCart: RequestHandler = (req, res, next) => {
+  const { itemId } = req.body;
+  console.log(itemId);
+  res.redirect('/cart');
+}
+
+export { getItems, getItemById, getCart, postCart };
