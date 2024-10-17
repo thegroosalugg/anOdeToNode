@@ -41,7 +41,6 @@ const itemPageCSS = /*css*/ `
       display: flex;
       gap: 0.5rem;
       flex-wrap: wrap;
-      overflow: auto;
       justify-content: center;
       padding: 1rem;
 
@@ -49,7 +48,8 @@ const itemPageCSS = /*css*/ `
         flex: 1 1;
         width: 100%;
         max-width: 400px;
-        height: 100%;
+        object-fit: contain;
+        background-color: #000000;
         border: 1px solid #000000;
       }
 
@@ -57,6 +57,7 @@ const itemPageCSS = /*css*/ `
         flex: 1 1;
         width: 100%;
         max-width: 400px;
+        overflow: auto;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
@@ -65,6 +66,8 @@ const itemPageCSS = /*css*/ `
         > h1 {
           font-size: 3rem;
           padding: 1rem 1rem 0.5rem 1rem;
+          text-wrap: nowrap;
+          overflow-x: scroll;
         }
 
         > p {
@@ -94,6 +97,8 @@ const itemPageCSS = /*css*/ `
         .icons {
           display: flex;
           justify-content: space-evenly;
+          overflow-y: hidden;
+          overflow-x: scroll; /* if pushed out of viewport with web tools */
 
           i {
             padding: 0 1rem;
