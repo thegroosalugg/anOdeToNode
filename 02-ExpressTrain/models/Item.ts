@@ -1,22 +1,9 @@
 import fs from 'fs';
 import { join } from 'path';
+import readJSONFile from '../util/readJSONfile';
 
 const filePath = join(import.meta.dirname, '../', 'data', 'items.json');
-
-type callbackFn = (items: Item[]) => void;
-
-function readJSONFile(callback: callbackFn) {
-  // utf8 converts data Buffer to string format so it can be parsed
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-      callback([]);
-    } else {
-      callback(JSON.parse(data));
-    }
-  });
-}
-
-class Item {
+export default class Item {
       id: string;
     name: string;
     desc: string;
@@ -32,7 +19,7 @@ class Item {
   }
 
   save() {
-    readJSONFile((items) => {
+    readJSONFile(filePath, (items) => {
       items.push(this); // save new class instance to array
       fs.writeFile(filePath, JSON.stringify(items), (err) => {
         console.log(err);
@@ -41,16 +28,14 @@ class Item {
   }
 
   // static allows function to be called on the Model itself, rathen than an object instance
-  static fetchAll(callback: callbackFn) {
-    readJSONFile(callback);
+  static fetchAll(callback: (items: Item[]) => void) {
+    readJSONFile(filePath, callback);
   }
 
   static findById(paramsId: string, callback: (item: Item | undefined) => void) {
-    readJSONFile((items) => {
+    readJSONFile<Item>(filePath, (items) => {
       const item = items.find(({ id }) => id === paramsId);
       callback(item);
     })
   }
 }
-
-export default Item;
