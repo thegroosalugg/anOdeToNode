@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import Item from '../models/Item';
+import Cart from '../models/Cart';
 import html from '../views/index';
 import { storeCSS, store } from '../views/store';
 import { itemPage, itemPageCSS } from '../views/itemPage';
@@ -39,7 +40,11 @@ const getCart: RequestHandler = (req, res, next) => {
 
 const postCart: RequestHandler = (req, res, next) => {
   const { itemId } = req.body;
-  console.log(itemId);
+  Item.findById(itemId, (item) => {
+    if (item) {
+      Cart.addItem(itemId, item.price)
+    }
+  })
   res.redirect('/cart');
 }
 
