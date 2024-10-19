@@ -91,12 +91,25 @@ const input = (id: string, value: string, text?: boolean) => /*html*/ `
 `;
 
 const form = (item?: Item) => {
-  const { name = '', price = '', desc = '' } = item || {};
+  const { id = '', name = '', price = '', desc = '', imgURL = '' } = item || {};
   const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
 
   return /*html*/ `
-    <form action="/admin/add-item" method="post" class="form" style="background-image: url('${backgroundImg}')">
+    <form
+      action="/admin/${item ? 'edit' : 'add'}-item"
+      method="post"
+      class="form"
+      style="background-image: url('${backgroundImg}')"
+    >
       <h1>${item ? 'Edit' : 'New'} Listing</h1>
+      ${
+        item
+          ? /*html*/ `
+            <input type="hidden" name="id"     value="${id}" />
+            <input type="hidden" name="imgURL" value="${imgURL}" />
+            `
+          : ''
+      }
       ${input('name', name)}
       ${input('price', price + '')}
       ${input('description', desc, true)}

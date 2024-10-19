@@ -40,5 +40,12 @@
     "desc": "description",
     "imgURL": "https://eur.lib-tech.com/media/catalog/product/cache/bd322120d976889db2881a06b8dbba23/2/0/2024-2025-Lib-Tech-TRS-Snowboard-Orange-Base.jpg",
     "price": 500
+  },
+  {
+    "id": "SB93452",
+    "name": "UpdatedItem",
+    "desc": "Updated Description",
+    "imgURL": "/images/board_red_blue.png",
+    "price": 100.66
   }
 ]

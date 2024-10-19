@@ -3,6 +3,7 @@ import Item from '../models/Item';
 import html from '../views/index';
 import { formCSS, form } from '../views/form';
 import { storeCSS, store } from '../views/store';
+import trimBody from '../util/trimBody';
 
 // /admin/items
 const getUserItems: RequestHandler = (req, res, next) => {
@@ -25,10 +26,7 @@ const getAddItem: RequestHandler = (req, res, next) => {
 
 // /admin/add-item
 const postAddItem: RequestHandler = (req, res, next) => {
-  const trimBody = Object.fromEntries(
-    Object.entries(req.body).map(([key, value]) => [key, (value as string).replace(/\s+/g, ' ')])
-  );
-  const { name, description, price } = trimBody;
+  const { name, description, price } = trimBody(req.body);
 
   if (name && description && +price > 0) {
     const item = new Item(name, description, '/images/board_red_blue.png', +price);
@@ -37,6 +35,7 @@ const postAddItem: RequestHandler = (req, res, next) => {
   }
 };
 
+// /edit-item/:itemId
 const getEditItem: RequestHandler = (req, res, next) => {
   const { edit } = req.query
   if (edit === 'true') {
@@ -49,4 +48,16 @@ const getEditItem: RequestHandler = (req, res, next) => {
   }
 }
 
-export { getUserItems, getAddItem, postAddItem, getEditItem };
+// /edit-item
+const postEditItem: RequestHandler = (req, res, next) => {
+  const { id, imgURL, ...updatedFields } = req.body;
+  const { name, description, price } = trimBody(updatedFields);
+
+  if (id && imgURL && name && description && +price > 0) {
+    const item = new Item(name, description, imgURL, +price, id);
+    item.save();
+    res.redirect('/admin/items');
+  }
+}
+
+export { getUserItems, getAddItem, postAddItem, getEditItem, postEditItem };

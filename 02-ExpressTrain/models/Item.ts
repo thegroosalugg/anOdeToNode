@@ -10,8 +10,8 @@ export default class Item {
   imgURL: string;
    price: number;
 
-  constructor(name: string, desc: string, imgURL: string, price: number) {
-    this.id     = 'SB' + Math.floor(Math.random() * 100000)
+  constructor(name: string, desc: string, imgURL: string, price: number, id?: string) {
+    this.id     = id || 'SB' + Math.floor(Math.random() * 100000) // update existing item if ID passed, or create new
     this.name   = name;
     this.desc   = desc;
     this.imgURL = imgURL;
@@ -19,8 +19,15 @@ export default class Item {
   }
 
   save() {
-    readJSONFile(filePath, (items) => {
-      items.push(this); // save new class instance to array
+    readJSONFile<Item>(filePath, (items) => {
+      const itemIndex = items.findIndex(item => item.id === this.id)
+
+      if (itemIndex !== -1) {
+        items[itemIndex] = this; // overwrite existing item
+      } else {
+        items.push(this); // save new class instance to array
+      }
+
       fs.writeFile(filePath, JSON.stringify(items), (err) => {
         console.log(err);
       });
