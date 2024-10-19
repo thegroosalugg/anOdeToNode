@@ -8,7 +8,7 @@ import { itemPage, itemPageCSS } from '../views/itemPage';
 const getItems: RequestHandler = (req, res, next) => {
   Item.fetchAll((items) => {
     res.send(
-      html({ css: storeCSS, content: store(items), title: 'Mountain Store', isActive: '/' })
+      html({ css: storeCSS, content: store({ items }), title: 'Mountain Store', isActive: '/' })
     );
   });
 };

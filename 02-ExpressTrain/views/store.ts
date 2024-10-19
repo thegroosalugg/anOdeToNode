@@ -69,12 +69,45 @@ const storeCSS = /*css*/ `
             }
           }
         }
+
+        .admin-controls {
+          display: flex;
+
+          button {
+            flex-basis: 50%;
+            padding: 0.2rem;
+            background: transparent;
+            border: none;
+            border-top: 1px solid #474747;
+            transition: 0.5s ease-in-out;
+
+            &:first-child {
+              border-right: 0.5px solid #474747;
+            }
+
+            &:last-child {
+              border-left: 0.5px solid #474747;
+            }
+
+            &:hover {
+              color: #fff3f3;
+              background: #524e4e;
+            }
+          }
+        }
       }
     }
   }
 `;
 
-const store = (items: Item[]) => /*html*/ `
+const adminControls = (id: string) => /*html*/ `
+  <section class="admin-controls">
+    <button onClick="${navTo(`/admin/edit-item/${id}/?edit=true`)}">EDIT</button>
+    <button>DELETE</button>
+  </section>
+`;
+
+const store = ({ items, isAdmin }: { items: Item[], isAdmin?: boolean }) => /*html*/ `
   <section class="store">
     <h1>Mountain Store</h1>
     <ul>
@@ -88,6 +121,7 @@ const store = (items: Item[]) => /*html*/ `
                 <p>$${price.toFixed(2)}</p>
               </div>
               <p>${desc}</p>
+              ${isAdmin ? adminControls(id) : ''}
             </li>
           `
         )

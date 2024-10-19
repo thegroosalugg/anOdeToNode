@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserItems, getAddItem, postAddItem } from '../controllers/admin';
+import { getUserItems, getAddItem, postAddItem, getEditItem } from '../controllers/admin';
 
 const router = express.Router();
 
@@ -7,5 +7,6 @@ const router = express.Router();
 router.get('/items', getUserItems);
 router.get('/add-item', getAddItem);
 router.post('/add-item', postAddItem);
+router.get('/edit-item/:itemId', getEditItem);
 
 export default router;

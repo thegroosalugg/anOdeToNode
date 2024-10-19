@@ -6,8 +6,15 @@ import { storeCSS, store } from '../views/store';
 
 // /admin/items
 const getUserItems: RequestHandler = (req, res, next) => {
-  const items = Item.fetchAll((items: Item[]) => {
-    res.send(html({ css: storeCSS, content: store(items), title: 'My Listings', isActive: '/admin/items' }));
+  Item.fetchAll((items: Item[]) => {
+    res.send(
+      html({
+             css: storeCSS,
+         content: store({ items, isAdmin: true }),
+           title: 'My Listings',
+        isActive: '/admin/items',
+      })
+    );
   });
 };
 
@@ -30,4 +37,13 @@ const postAddItem: RequestHandler = (req, res, next) => {
   }
 };
 
-export { getUserItems, getAddItem, postAddItem };
+const getEditItem: RequestHandler = (req, res, next) => {
+  const { edit } = req.query
+  if (edit === 'true') {
+    res.send(html({ css: formCSS, content: form, title: 'Edit Listing', isActive: '/admin/items' }));
+  } else {
+    res.redirect('/');
+  }
+}
+
+export { getUserItems, getAddItem, postAddItem, getEditItem };
