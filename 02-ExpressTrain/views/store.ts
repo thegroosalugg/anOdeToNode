@@ -79,6 +79,7 @@ const storeCSS = /*css*/ `
             background: transparent;
             border: none;
             border-top: 1px solid #474747;
+            cursor: pointer;
             transition: 0.5s ease-in-out;
 
             &:first-child {
@@ -114,10 +115,10 @@ const storeCSS = /*css*/ `
 `;
 
 const adminControls = (id: string) => /*html*/ `
-  <section class="admin-controls">
-    <button onClick="${navTo(`/admin/edit-item/${id}/?edit=true`)}">EDIT</button>
-    <button>DELETE</button>
-  </section>
+  <form class="admin-controls" action="/admin/delete-item/${id}" method="post">
+    <button type="button" onClick="${navTo(`/admin/edit-item/${id}/?edit=true`)}">EDIT</button>
+    <button onclick="return confirm('Are you sure you want to delete this item?')">DELETE</button>
+  </form>
 `;
 
 const store = ({ items, isAdmin }: { items: Item[], isAdmin?: boolean }) => /*html*/ `

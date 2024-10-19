@@ -39,10 +39,20 @@ export default class Item {
     readJSONFile(filePath, callback);
   }
 
-  static findById(paramsId: string, callback: (item: Item | undefined) => void) {
+  static findById(itemId: string, callback: (item: Item | undefined) => void) {
     readJSONFile<Item>(filePath, (items) => {
-      const item = items.find(({ id }) => id === paramsId);
+      const item = items.find(({ id }) => id === itemId);
       callback(item);
+    })
+  }
+
+  static deleteItem(itemId: string) {
+    readJSONFile<Item>(filePath, (items) => {
+      const updatedItems = items.filter(({ id }) => id !== itemId);
+
+      fs.writeFile(filePath, JSON.stringify(updatedItems), (err) => {
+        console.log(err);
+      });
     })
   }
 }

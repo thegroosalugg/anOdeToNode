@@ -31,7 +31,7 @@ const postAddItem: RequestHandler = (req, res, next) => {
   if (name && description && +price > 0) {
     const item = new Item(name, description, '/images/board_red_blue.png', +price);
     item.save();
-    res.redirect('/');
+    res.redirect('/admin/items');
   }
 };
 
@@ -60,4 +60,11 @@ const postEditItem: RequestHandler = (req, res, next) => {
   }
 }
 
-export { getUserItems, getAddItem, postAddItem, getEditItem, postEditItem };
+// /delete-item
+const postDeleteItem: RequestHandler = (req, res, next) => {
+  const { itemId } = req.params;
+  Item.deleteItem(itemId);
+  res.redirect('/admin/items')
+}
+
+export { getUserItems, getAddItem, postAddItem, getEditItem, postEditItem, postDeleteItem };
