@@ -98,6 +98,19 @@ const storeCSS = /*css*/ `
       }
     }
   }
+
+  @media screen and (min-width: 320px) and (max-width: 440px) and (min-resolution: 2dppx) and (orientation: portrait) {
+    .store {
+      ul {
+        li {
+          width: 125px;
+          img {
+            height: 125px;
+          }
+        }
+      }
+    }
+  }
 `;
 
 const adminControls = (id: string) => /*html*/ `
