@@ -7,7 +7,12 @@ import errorController from './controllers/error';
 const app = express();
 
 app.use(express.urlencoded({ extended: false })); // replaces bodyparser.urlencoded
-app.use(express.static(path.join(import.meta.dirname, 'public'))); // allows serving of static paths
+
+ // allows serving of static paths
+app.use(express.static(path.join(import.meta.dirname, 'public'), {
+  maxAge: '1d', // Cache static assets for 1 day to improve load times
+  etag: false  // Disable ETag generation for simpler cache management
+}));
 
 app.use('/admin', adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
