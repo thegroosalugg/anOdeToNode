@@ -20,7 +20,7 @@ const getUserItems: RequestHandler = (req, res, next) => {
 
 // /admin/add-item
 const getAddItem: RequestHandler = (req, res, next) => {
-  res.send(html({ css: formCSS, content: form, title: 'New Listing', isActive: '/admin/add-item' }));
+  res.send(html({ css: formCSS, content: form(), title: 'New Listing', isActive: '/admin/add-item' }));
 };
 
 // /admin/add-item
@@ -40,7 +40,10 @@ const postAddItem: RequestHandler = (req, res, next) => {
 const getEditItem: RequestHandler = (req, res, next) => {
   const { edit } = req.query
   if (edit === 'true') {
-    res.send(html({ css: formCSS, content: form, title: 'Edit Listing', isActive: '/admin/items' }));
+    const { itemId } = req.params;
+    Item.findById(itemId, (item) => {
+      res.send(html({ css: formCSS, content: form(item), title: 'Edit Listing', isActive: '/admin/items' }));
+    })
   } else {
     res.redirect('/');
   }

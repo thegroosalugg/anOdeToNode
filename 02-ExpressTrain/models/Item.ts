@@ -15,7 +15,7 @@ export default class Item {
     this.name   = name;
     this.desc   = desc;
     this.imgURL = imgURL;
-    this.price  = price;
+    this.price  = +price.toFixed(2);
   }
 
   save() {
