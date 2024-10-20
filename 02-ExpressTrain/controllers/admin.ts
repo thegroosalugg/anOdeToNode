@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import Item from '../models/Item';
 import html from '../views/index';
 import { formCSS, form } from '../views/form';
-import { storeCSS, store } from '../views/store';
+import { storeCSS, storePage } from '../views/storePage';
 import trimBody from '../util/trimBody';
 
 // /admin/items
@@ -11,7 +11,7 @@ const getUserItems: RequestHandler = (req, res, next) => {
     res.send(
       html({
              css: storeCSS,
-         content: store({ items, isAdmin: true }),
+         content: storePage({ items, isAdmin: true }),
            title: 'My Listings',
         isActive: '/admin/items',
       })

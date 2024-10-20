@@ -121,7 +121,7 @@ const adminControls = (id: string) => /*html*/ `
   </form>
 `;
 
-const store = ({ items, isAdmin }: { items: Item[], isAdmin?: boolean }) => /*html*/ `
+const storePage = ({ items, isAdmin }: { items: Item[], isAdmin?: boolean }) => /*html*/ `
   <section class="store">
     <h1>Mountain Store</h1>
     <ul>
@@ -144,4 +144,4 @@ const store = ({ items, isAdmin }: { items: Item[], isAdmin?: boolean }) => /*ht
   </section>
 `;
 
-export { storeCSS, store };
+export { storeCSS, storePage };

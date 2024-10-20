@@ -172,7 +172,7 @@ const itemPage = (item: Item | undefined) => {
               <i class="fa-solid fa-truck-fast"></i>
               <i class="fa-solid fa-users-between-lines"></i>
           </div>
-          <form class="form" action="/cart" method="post">
+          <form class="form" action="/cart/add" method="post">
             <p>$${price.toFixed(2)}</p>
             <button>Add to Cart</button>
             <input type="hidden" name="itemId" value="${id}" />

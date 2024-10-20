@@ -2,13 +2,14 @@ import { RequestHandler } from 'express';
 import Item from '../models/Item';
 import Cart from '../models/Cart';
 import html from '../views/index';
-import { storeCSS, store } from '../views/store';
-import { itemPage, itemPageCSS } from '../views/itemPage';
+import {    storeCSS, storePage } from '../views/storePage';
+import {     cartCSS,  cartPage } from '../views/cartPage';
+import { itemPageCSS,  itemPage } from '../views/itemPage';
 
 const getItems: RequestHandler = (req, res, next) => {
   Item.fetchAll((items) => {
     res.send(
-      html({ css: storeCSS, content: store({ items }), title: 'Mountain Store', isActive: '/' })
+      html({ css: storeCSS, content: storePage({ items }), title: 'Mountain Store', isActive: '/' })
     );
   });
 };
@@ -30,9 +31,9 @@ const getItemById: RequestHandler = (req, res, next) => {
 const getCart: RequestHandler = (req, res, next) => {
   res.send(
     html({
-      css: 'h1 { text-align: center; color: #000; font-size: 2rem; font-weight: 500 } ',
-      content: '<h1>Cart</h1>',
-      title: 'Your Cart',
+           css: cartCSS,
+       content: cartPage([]),
+         title: 'Your Cart',
       isActive: '/cart',
     })
   );
@@ -48,4 +49,10 @@ const postAddToCart: RequestHandler = (req, res, next) => {
   res.redirect('/cart');
 }
 
-export { getItems, getItemById, getCart, postAddToCart };
+const postRemoveFromCart: RequestHandler = (req, res, next) => {
+  const { itemId } = req.body;
+  Cart.removeItem(itemId);
+  res.redirect('/cart')
+}
+
+export { getItems, getItemById, getCart, postAddToCart, postRemoveFromCart };
