@@ -115,9 +115,10 @@ const storeCSS = /*css*/ `
 `;
 
 const adminControls = (id: string) => /*html*/ `
-  <form class="admin-controls" action="/admin/delete-item/${id}" method="post">
+  <form class="admin-controls" action="/admin/delete-item" method="post">
     <button type="button" onClick="${navTo(`/admin/edit-item/${id}/?edit=true`)}">EDIT</button>
     <button onclick="return confirm('Are you sure you want to delete this item?')">DELETE</button>
+    <input type="hidden" name="itemId" value="${id}" />
   </form>
 `;
 

@@ -9,6 +9,6 @@ router.get('/add-item', getAddItem);
 router.post('/add-item', postAddItem);
 router.get('/edit-item/:itemId', getEditItem);
 router.post('/edit-item', postEditItem);
-router.post('/delete-item/:itemId', postDeleteItem);
+router.post('/delete-item', postDeleteItem);
 
 export default router;

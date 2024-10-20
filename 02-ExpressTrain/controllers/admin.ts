@@ -35,7 +35,7 @@ const postAddItem: RequestHandler = (req, res, next) => {
   }
 };
 
-// /edit-item/:itemId
+// admin//edit-item/:itemId
 const getEditItem: RequestHandler = (req, res, next) => {
   const { edit } = req.query
   if (edit === 'true') {
@@ -48,7 +48,7 @@ const getEditItem: RequestHandler = (req, res, next) => {
   }
 }
 
-// /edit-item
+// /admin//edit-item
 const postEditItem: RequestHandler = (req, res, next) => {
   const { id, imgURL, ...updatedFields } = req.body;
   const { name, description, price } = trimBody(updatedFields);
@@ -60,9 +60,9 @@ const postEditItem: RequestHandler = (req, res, next) => {
   }
 }
 
-// /delete-item
+// /admin//delete-item
 const postDeleteItem: RequestHandler = (req, res, next) => {
-  const { itemId } = req.params;
+  const { itemId } = req.body;
   Item.deleteItem(itemId);
   res.redirect('/admin/items')
 }
