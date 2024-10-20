@@ -90,6 +90,14 @@ const input = (id: string, value: string, text?: boolean) => /*html*/ `
   </section>
 `;
 
+const validate = `
+  if (!document.querySelector('input').value || !document.querySelector('textarea').value) {
+    alert('All fields are required');
+  } else if (isNaN(document.getElementById('price').value)) {
+    alert('Price must be a number');
+  }
+`;
+
 const form = (item?: Item) => {
   const { id = '', name = '', price = '', desc = '', imgURL = '' } = item || {};
   const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
@@ -113,7 +121,7 @@ const form = (item?: Item) => {
       ${input('name', name)}
       ${input('price', price + '')}
       ${input('description', desc, true)}
-      <button>
+      <button onclick="${validate}">
         ${
           item
             ? /*html*/ `Update <i class="fa-solid fa-check"></i>`
