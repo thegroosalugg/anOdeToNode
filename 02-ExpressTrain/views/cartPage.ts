@@ -4,7 +4,7 @@ const cartCSS = /*css*/ `
 
 `;
 
-const cartPage = (items: (Item & { quantity: number })[]) => {
+const cartPage = (items: (Omit<Item, 'save'> & { quantity: number })[]) => {
 
   return /*html*/ `
 

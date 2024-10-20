@@ -29,14 +29,26 @@ const getItemById: RequestHandler = (req, res, next) => {
 };
 
 const getCart: RequestHandler = (req, res, next) => {
-  res.send(
-    html({
-           css: cartCSS,
-       content: cartPage([]),
-         title: 'Your Cart',
-      isActive: '/cart',
+  Cart.getItems((cart) => {
+    Item.fetchAll((items) => {
+      const cartItems = [] as (Omit<Item, 'save'> & { quantity: number })[];
+                            // omits save function from new type and adds quantity
+      for (const cartItem of cart) {
+        const item = items.find((item) => item.id === cartItem.id)
+        if (item) {
+          cartItems.push({ ...item, quantity: cartItem.quantity })
+        }
+      }
+      res.send(
+        html({
+               css: cartCSS,
+           content: cartPage(cartItems),
+             title: 'Your Cart',
+          isActive: '/cart',
+        })
+      );
     })
-  );
+  })
 };
 
 const postAddToCart: RequestHandler = (req, res, next) => {
@@ -52,7 +64,7 @@ const postAddToCart: RequestHandler = (req, res, next) => {
 const postRemoveFromCart: RequestHandler = (req, res, next) => {
   const { itemId } = req.body;
   Cart.removeItem(itemId);
-  res.redirect('/cart')
+  res.redirect('/cart');
 }
 
 export { getItems, getItemById, getCart, postAddToCart, postRemoveFromCart };

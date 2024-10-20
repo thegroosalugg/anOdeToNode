@@ -10,6 +10,10 @@ interface CartItem {
 }
 
 export default class Cart {
+  static getItems(callback: (cart: CartItem[]) => void) {
+    readJSONFile(filePath, callback)
+  }
+
   static addItem(id: string) {
     readJSONFile<CartItem>(filePath, (cart) => {
       const itemIndex = cart.findIndex((item: CartItem) => item.id === id);
