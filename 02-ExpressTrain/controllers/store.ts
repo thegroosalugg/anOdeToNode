@@ -38,14 +38,14 @@ const getCart: RequestHandler = (req, res, next) => {
   );
 };
 
-const postCart: RequestHandler = (req, res, next) => {
+const postAddToCart: RequestHandler = (req, res, next) => {
   const { itemId } = req.body;
   Item.findById(itemId, (item) => {
     if (item) {
-      Cart.addItem(itemId, item.price)
+      Cart.addItem(itemId)
     }
   })
   res.redirect('/cart');
 }
 
-export { getItems, getItemById, getCart, postCart };
+export { getItems, getItemById, getCart, postAddToCart };
