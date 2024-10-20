@@ -55,7 +55,7 @@ const postAddToCart: RequestHandler = (req, res, next) => {
   const { itemId } = req.body;
   Item.findById(itemId, (item) => {
     if (item) {
-      Cart.addItem(itemId)
+      Cart.update(itemId, 1)
     }
   })
   res.redirect('/cart');
@@ -63,7 +63,7 @@ const postAddToCart: RequestHandler = (req, res, next) => {
 
 const postRemoveFromCart: RequestHandler = (req, res, next) => {
   const { itemId } = req.body;
-  Cart.removeItem(itemId);
+  Cart.update(itemId, -1)
   res.redirect('/cart');
 }
 

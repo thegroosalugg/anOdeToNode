@@ -57,7 +57,6 @@ const itemPageCSS = /*css*/ `
         flex: 1 1;
         width: 100%;
         max-width: 400px;
-        overflow: auto;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
@@ -121,6 +120,7 @@ const itemPageCSS = /*css*/ `
           flex-direction: column;
           align-items: end;
           padding: 1rem;
+          overflow: auto;
 
           > p {
             margin-top: auto;

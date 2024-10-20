@@ -20,10 +20,10 @@ export default class Item {
 
   save() {
     readJSONFile<Item>(filePath, (items) => {
-      const itemIndex = items.findIndex(item => item.id === this.id)
+      const index = items.findIndex(item => item.id === this.id)
 
-      if (itemIndex !== -1) {
-        items[itemIndex] = this; // overwrite existing item
+      if (index !== -1) {
+        items[index] = this; // overwrite existing item
       } else {
         items.push(this); // save new class instance to array
       }

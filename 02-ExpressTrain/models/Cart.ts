@@ -14,25 +14,19 @@ export default class Cart {
     readJSONFile(filePath, callback)
   }
 
-  static addItem(id: string) {
+  static update(id: string, quantity: 1 | -1) {
     readJSONFile<CartItem>(filePath, (cart) => {
-      const itemIndex = cart.findIndex((item: CartItem) => item.id === id);
+      const index = cart.findIndex((item: CartItem) => item.id === id);
 
-      if (itemIndex !== -1) {
-        cart[itemIndex].quantity += 1;
-      } else {
-        cart = [{ id, quantity: 1 }, ...cart];
+      if (index !== -1) {
+        cart[index].quantity += quantity;
+
+        if (cart[index].quantity === 0) {
+          cart.splice(index, 1)
+        }
+      } else if (quantity === 1) {
+        cart = [{ id, quantity }, ...cart];
       }
-
-      fs.writeFile(filePath, JSON.stringify(cart), (err) => {
-        console.log(err);
-      });
-    });
-  }
-
-  static removeItem(id: string) {
-    readJSONFile<CartItem>(filePath, (cart) => {
-      cart.filter((item: CartItem) => item.id !== id);
 
       fs.writeFile(filePath, JSON.stringify(cart), (err) => {
         console.log(err);
