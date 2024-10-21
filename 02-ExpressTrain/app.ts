@@ -1,22 +1,23 @@
+import path from 'path';
 import express from 'express';
-import { router as adminRoutes } from './routes/admin';
-import stationRoutes from './routes/station';
-import html from './views';
-import { error, errorCSS } from './views/error';
-
-console.clear();
+import adminRoutes from './routes/admin';
+import storeRoutes from './routes/store';
+import errorController from './controllers/error';
 
 const app = express();
 
-// replaces bodyparser.urlencoded
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false })); // replaces bodyparser.urlencoded
 
-app.use('/express', adminRoutes); // adds URL filter to all routes
-app.use(stationRoutes);
+ // allows serving of static paths
+app.use(express.static(path.join(import.meta.dirname, 'public'), {
+  maxAge: '1d', // Cache static assets for 1 day to improve load times
+  etag: false  // Disable ETag generation for simpler cache management
+}));
 
-app.use((req, res, next) => {
-  res.status(404).send(html({ css: errorCSS, content: error, title: '404' }));
-});
+app.use('/admin', adminRoutes); // adds URL filter to all routes
+app.use(storeRoutes);
+
+app.use(errorController);
 
 // express's app.listen consumes of http.createServer(app); & server.listen()
 app.listen(3000, () => {

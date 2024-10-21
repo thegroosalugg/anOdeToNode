@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "description": "begin to express",
   "main": "app.ts",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node app.ts",
-    "dev": "nodemon -x ts-node app.ts"
+    "start": "clear && tsx app.ts",
+    "dev": "clear && nodemon -x tsx app.ts",
+    "build": "tsc && tsc-alias",
+    "preview": "clear && node dist/app.js"
   },
   "dependencies": {
     "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "tsc-alias": "^1.8.10"
   }
 }

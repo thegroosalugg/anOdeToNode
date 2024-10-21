@@ -1,22 +1,14 @@
 import express from 'express';
-import html from '../views/index';
-import { formCSS, form } from '../views/form';
-import Station from '../model/station';
+import { getUserItems, getAddItem, postAddItem, getEditItem, postEditItem, postDeleteItem } from '../controllers/admin';
 
 const router = express.Router();
 
-const stations: Station[] = [];
+// all routes prepend with /admin
+router.get('/items', getUserItems);
+router.get('/add-item', getAddItem);
+router.post('/add-item', postAddItem);
+router.get('/edit-item/:itemId', getEditItem);
+router.post('/edit-item', postEditItem);
+router.post('/delete-item', postDeleteItem);
 
-router.use('/train', (req, res, next) => {
-  res.send(html({ css: formCSS, content: form, title: 'Go To Station', isActive: '/express' }));
-});
-
-router.post('/station', (req, res, next) => {
-  const station = req.body.station.trim();
-  if (station) {
-    stations.push({ name: station });
-    res.redirect('/');
-  }
-});
-
-export { stations, router };
+export default router;

@@ -1,18 +1,18 @@
-import cssReset from '../styles/cssReset';
+import cssReset from './cssReset';
 import { navCSS, navBar } from './navBar';
 
-const bodyCSS = /*css*/`
+const bodyCSS = /*css*/ `
   body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background: linear-gradient(to right, #d3cce3, #e9e4f0);
+    background: linear-gradient(to bottom, #f2fcfe, #ddf6fb, #c1f0f9, #92edff);
+    font-family: 'Montserrat', sans-serif;
   }
   main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    color: #FFFFFF;
   }
   a {
     transition: 0.8s ease;
@@ -26,7 +26,7 @@ interface HTML {
   isActive?: string;
 }
 
-const html = ({ css, content, title, isActive }: HTML ) => /*html*/`
+const html = ({ css, content, title, isActive }: HTML) => /*html*/ `
   <html>
     <head>
       <meta charset="UTF-8" />
@@ -38,7 +38,13 @@ const html = ({ css, content, title, isActive }: HTML ) => /*html*/`
         ${navCSS}
         ${css}
       </style>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet"
+      >
     </head>
     <body>
       ${navBar(isActive)}
