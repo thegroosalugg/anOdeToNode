@@ -1,5 +1,5 @@
-import Item from "../models/Item";
-import navTo from "../util/navTo";
+import Item from '../models/Item';
+import navTo from '../util/navTo';
 
 const cartCSS = /*css*/ `
   .cart {
@@ -12,6 +12,15 @@ const cartCSS = /*css*/ `
 
     * {
       font-weight: 500;
+    }
+
+    .empty {
+      font-size: 1.2rem;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
     h1 {
@@ -58,7 +67,7 @@ const cartCSS = /*css*/ `
         }
 
         h2 {
-          min-width: 100px;
+          min-width: 90px;
           font-size: 1rem;
           align-self: center;
           text-align: center;
@@ -125,30 +134,35 @@ const cartButton = (id: string, type: 'add' | 'remove') => /*html*/ `
 `;
 
 const cartPage = (items: (Omit<Item, 'save'> & { quantity: number })[]) => {
-  const cartTotal = items.reduce((total,  { price, quantity }) => total + price * quantity, 0).toFixed(2);
+  const cartTotal = items
+    .reduce((total, { price, quantity }) => total + price * quantity, 0)
+    .toFixed(2);
 
   return /*html*/ `
     <section class="cart">
       <h1>Your Cart</h1>
       <ul>
-        ${items
-          .map(
-            ({ id, name, imgURL, price, quantity }) => /*html*/ `
-              <li>
-                <img src="${imgURL}" alt="${name}" onClick="${navTo('/store/' + id)}" />
-                <h2>${name}</h2>
-                <div class="controls">
-                  <div>
-                    ${cartButton(id, 'remove')}
-                    <p>${quantity}</p>
-                    ${cartButton(id, 'add')}
-                  </div>
-                  <p>$${(quantity * price).toFixed(2)}</p>
-                </div>
-              </li>
-            `
-          )
-          .join('')}  <!-- join removes commas -->
+        ${
+          items.length === 0
+            ? /*html*/ `<h4 class="empty">Your Cart is Empty</h4>`
+            : items.map(
+                ({ id, name, imgURL, price, quantity }) => /*html*/ `
+                  <li>
+                    <img src="${imgURL}" alt="${name}" onClick="${navTo('/store/' + id)}" />
+                    <h2>${name}</h2>
+                    <div class="controls">
+                      <div>
+                        ${cartButton(id, 'remove')}
+                        <p>${quantity}</p>
+                        ${cartButton(id, 'add')}
+                      </div>
+                      <p>$${(quantity * price).toFixed(2)}</p>
+                    </div>
+                  </li>
+                `
+              )
+            .join('')
+        }  <!-- join removes commas -->
       </ul>
       <h3>$${cartTotal}</h3>
     </section>
