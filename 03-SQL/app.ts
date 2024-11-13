@@ -1,10 +1,19 @@
 import path from 'path';
 import express from 'express';
+import betterSqlite3 from 'better-sqlite3';
 import adminRoutes from './routes/admin';
 import storeRoutes from './routes/store';
 import errorController from './controllers/error';
 
 const app = express();
+const db = betterSqlite3('./data/mountain.db');
+
+try {
+  const result = db.prepare('SELECT * FROM items').all();
+  console.log(result);
+} catch (error) {
+  console.log(error);
+}
 
 app.use(express.urlencoded({ extended: false })); // replaces bodyparser.urlencoded
 
