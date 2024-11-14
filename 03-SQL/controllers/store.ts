@@ -16,7 +16,7 @@ const getItems: RequestHandler = (req, res, next) => {
 
 const getItemById: RequestHandler = (req, res, next) => {
   const { itemId } = req.params;
-  Item.findById(itemId, (item) => {
+  Item.findById(+itemId, (item) => {
     res.send(
       html({
              css: itemPageCSS,

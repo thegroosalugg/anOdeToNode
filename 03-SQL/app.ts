@@ -8,16 +8,6 @@ import errorController from './controllers/error';
 const app = express();
 const db = new sqlite3.Database('./data/mountain.db');
 
-// better-sqlite3: uses .prepare(), .all(), .get(), .run()
-//        sqlite3: uses    .each(), .all(), .get(), .run()
-db.all('SELECT * FROM items', (err, items) => {
-  if (err) {
-    console.error('Error reading data from the database:', err);
-    return;
-  }
-  console.log(items);
-});
-
 app.use(express.urlencoded({ extended: false })); // replaces bodyparser.urlencoded
 
  // allows serving of static paths

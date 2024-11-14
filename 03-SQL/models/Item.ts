@@ -1,17 +1,17 @@
-import fs from 'fs';
-import { join } from 'path';
-import readJSONFile from '../util/readJSONfile';
+import sqlite3 from 'sqlite3';
+const db = new sqlite3.Database('./data/mountain.db');
+// better-sqlite3: uses .prepare(), .all(), .get(), .run()
+//        sqlite3: uses    .each(), .all(), .get(), .run()
 
-const filePath = join(import.meta.dirname, '../', 'data', 'items.json');
 export default class Item {
-      id: string;
+      id: number;
     name: string;
     desc: string;
   imgURL: string;
    price: number;
 
-  constructor(name: string, desc: string, imgURL: string, price: number, id?: string) {
-    this.id     = id || 'SB' + Math.floor(Math.random() * 100000) // update existing item if ID passed, or create new
+  constructor(name: string, desc: string, imgURL: string, price: number, id?: number) {
+    this.id     = id || Math.floor(Math.random() * 100000) // update existing item if ID passed, or create new
     this.name   = name;
     this.desc   = desc;
     this.imgURL = imgURL;
@@ -19,40 +19,28 @@ export default class Item {
   }
 
   save() {
-    readJSONFile<Item>(filePath, (items) => {
-      const index = items.findIndex(item => item.id === this.id)
 
-      if (index !== -1) {
-        items[index] = this; // overwrite existing item
+  }
+
+  static fetchAll(callback: (items: Item[]) => void) {
+    db.all('SELECT * FROM items', (err, items: Item[]) => {
+      if (err) {
+        console.error('Class Item/FetchAll Error:', err);
+        callback([]);
       } else {
-        items.push(this); // save new class instance to array
+        callback(items);
       }
-
-      fs.writeFile(filePath, JSON.stringify(items), (err) => {
-        console.log('class Item/save/ERR:', err);
-      });
     });
   }
 
-  // static allows function to be called on the Model itself, rathen than an object instance
-  static fetchAll(callback: (items: Item[]) => void) {
-    readJSONFile(filePath, callback);
-  }
-
-  static findById(itemId: string, callback: (item: Item | undefined) => void) {
-    readJSONFile<Item>(filePath, (items) => {
-      const item = items.find(({ id }) => id === itemId);
+  static findById(id: number, callback: (item: Item | undefined) => void) {
+    db.get('SELECT * FROM items WHERE id = ?', id, (err, item: Item) => {
+      if (err)  console.error('Class Item/findById Error:', err);
       callback(item);
-    })
+    });
   }
 
   static deleteItem(itemId: string) {
-    readJSONFile<Item>(filePath, (items) => {
-      const updatedItems = items.filter(({ id }) => id !== itemId);
 
-      fs.writeFile(filePath, JSON.stringify(updatedItems), (err) => {
-        console.log('class Item/static deleteItem/ERR:', err);
-      });
-    })
   }
 }
