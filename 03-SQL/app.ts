@@ -1,19 +1,22 @@
 import path from 'path';
 import express from 'express';
-import betterSqlite3 from 'better-sqlite3';
+import sqlite3 from 'sqlite3';
 import adminRoutes from './routes/admin';
 import storeRoutes from './routes/store';
 import errorController from './controllers/error';
 
 const app = express();
-const db = betterSqlite3('./data/mountain.db');
+const db = new sqlite3.Database('./data/mountain.db');
 
-try {
-  const result = db.prepare('SELECT * FROM items').all();
-  console.log(result);
-} catch (error) {
-  console.log(error);
-}
+// better-sqlite3: uses .prepare(), .all(), .get(), .run()
+//        sqlite3: uses    .each(), .all(), .get(), .run()
+db.all('SELECT * FROM items', (err, items) => {
+  if (err) {
+    console.error('Error reading data from the database:', err);
+    return;
+  }
+  console.log(items);
+});
 
 app.use(express.urlencoded({ extended: false })); // replaces bodyparser.urlencoded
 
