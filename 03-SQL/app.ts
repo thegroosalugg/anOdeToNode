@@ -1,10 +1,12 @@
 import path from 'path';
 import express from 'express';
+import sqlite3 from 'sqlite3';
 import adminRoutes from './routes/admin';
 import storeRoutes from './routes/store';
 import errorController from './controllers/error';
 
 const app = express();
+const db = new sqlite3.Database('./data/mountain.db');
 
 app.use(express.urlencoded({ extended: false })); // replaces bodyparser.urlencoded
 
