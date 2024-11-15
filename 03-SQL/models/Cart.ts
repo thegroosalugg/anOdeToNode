@@ -1,36 +1,35 @@
-import fs from 'fs';
-import { join } from 'path';
-import readJSONFile from '../util/readJSONfile';
-
-const filePath = join(import.meta.dirname, '../', 'data', 'cart.json');
-
+import sqlite3 from 'sqlite3';
+const db = new sqlite3.Database('./data/mountain.db');
 interface CartItem {
-        id: string;
+        id: number;
   quantity: number;
 }
 
 export default class Cart {
   static getItems(callback: (cart: CartItem[]) => void) {
-    readJSONFile(filePath, callback)
+    db.all('SELECT * FROM cart', (err, items: CartItem[]) => {
+      if (err) {
+        console.error('Class Item/FetchAll Error:', err);
+        callback([]);
+      } else {
+        callback(items);
+      }
+    });
   }
 
-  static update(id: string, quantity: 1 | -1) {
-    readJSONFile<CartItem>(filePath, (cart) => {
-      const index = cart.findIndex((item: CartItem) => item.id === id);
+  static update(id: number, quantity: 1 | -1) {
+    db.get('SELECT * FROM cart WHERE id = ?', id, (err, item: CartItem) => {
+      if (item) {
+        item.quantity += quantity;
 
-      if (index !== -1) {
-        cart[index].quantity += quantity;
-
-        if (cart[index].quantity === 0) {
-          cart.splice(index, 1)
+        if (item.quantity === 0) {
+          db.run('DELETE FROM cart WHERE id = ?', id);
+        } else {
+          db.run('UPDATE cart SET quantity = ? WHERE id = ?', [item.quantity, id]);
         }
       } else if (quantity === 1) {
-        cart = [{ id, quantity }, ...cart];
+        db.run('INSERT INTO cart (id) VALUES (?)', [id]);
       }
-
-      fs.writeFile(filePath, JSON.stringify(cart), (err) => {
-        console.log('class Cart/static update/ERR:', err);
-      });
     });
   }
 }

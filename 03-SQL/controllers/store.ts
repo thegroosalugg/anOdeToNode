@@ -34,7 +34,7 @@ const getCart: RequestHandler = (req, res, next) => {
       const cartItems = [] as (Omit<Item, 'save'> & { quantity: number })[];
                             // omits save function from new type and adds quantity
       for (const cartItem of cart) {
-        const item = items.find((item) => item.id!.toString() === cartItem.id)
+        const item = items.find((item) => item.id === cartItem.id)
         if (item) {
           cartItems.push({ ...item, quantity: cartItem.quantity })
         }
