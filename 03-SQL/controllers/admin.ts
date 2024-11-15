@@ -40,7 +40,7 @@ const getEditItem: RequestHandler = (req, res, next) => {
   const { edit } = req.query
   if (edit === 'true') {
     const { itemId } = req.params;
-    Item.findById(itemId, (item) => {
+    Item.findById(+itemId, (item) => {
       res.send(html({ css: formCSS, content: form(item), title: 'Edit Listing', isActive: '/admin/items' }));
     })
   } else {
@@ -54,7 +54,7 @@ const postEditItem: RequestHandler = (req, res, next) => {
   const { name, description, price } = trimBody(updatedFields);
 
   if (id && imgURL && name && description && +price > 0) {
-    const item = new Item(name, description, imgURL, +price, id);
+    const item = new Item(name, description, imgURL, +price, +id);
     item.save();
     res.redirect('/admin/items');
   }
@@ -63,7 +63,7 @@ const postEditItem: RequestHandler = (req, res, next) => {
 // /admin//delete-item
 const postDeleteItem: RequestHandler = (req, res, next) => {
   const { itemId } = req.body;
-  Item.deleteItem(itemId);
+  Item.deleteItem(+itemId);
   res.redirect('/admin/items')
 }
 
