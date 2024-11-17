@@ -7,15 +7,7 @@ import errorController from './controllers/error';
 
 const app = express();
 
-sequelize.authenticate()
-  .then(() => {
-    console.log('Sequelize connected to DB');
-  })
-  .catch(err => {
-    console.error('Sequelize Error:', err);
-  });
-
-app.use(express.urlencoded({ extended: false })); // replaces bodyparser.urlencoded
+app.use(express.urlencoded({ extended: false }));
 
  // allows serving of static paths
 app.use(express.static(path.join(import.meta.dirname, '../', 'public'), {
@@ -25,10 +17,15 @@ app.use(express.static(path.join(import.meta.dirname, '../', 'public'), {
 
 app.use('/admin', adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
-
 app.use(errorController);
 
-// express's app.listen consumes of http.createServer(app); & server.listen()
-app.listen(3000, () => {
-  console.log('Server is on track to port 3000');
-});
+sequelize
+  .sync()
+  .then((result) => {
+    app.listen(3000, () => {
+      console.log('Server is on track to port 3000');
+    });
+  })
+  .catch((err) => {
+    console.log('Server Error:', err);
+  });

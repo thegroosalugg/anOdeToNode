@@ -7,16 +7,16 @@ import {     cartCSS,  cartPage } from '../views/cartPage';
 import { itemPageCSS,  itemPage } from '../views/itemPage';
 
 const getItems: RequestHandler = (req, res, next) => {
-  Item.fetchAll((items) => {
+  Item.findAll().then((items) => {
     res.send(
       html({ css: storeCSS, content: storePage({ items }), title: 'Mountain Store', isActive: '/' })
     );
-  });
+  }).catch(err => console.log('getItems Error:', err));
 };
 
 const getItemById: RequestHandler = (req, res, next) => {
   const { itemId } = req.params;
-  Item.findById(+itemId, (item) => {
+  Item.findByPk(+itemId).then(item => {
     res.send(
       html({
              css: itemPageCSS,
@@ -30,9 +30,8 @@ const getItemById: RequestHandler = (req, res, next) => {
 
 const getCart: RequestHandler = (req, res, next) => {
   Cart.getItems((cart) => {
-    Item.fetchAll((items) => {
-      const cartItems = [] as (Omit<Item, 'save'> & { quantity: number })[];
-                            // omits save function from new type and adds quantity
+    Item.findAll().then((items) => {
+      const cartItems = [];
       for (const cartItem of cart) {
         const item = items.find((item) => item.id === cartItem.id)
         if (item) {
@@ -53,7 +52,7 @@ const getCart: RequestHandler = (req, res, next) => {
 
 const postAddToCart: RequestHandler = (req, res, next) => {
   const { itemId } = req.body;
-  Item.findById(itemId, (item) => {
+  Item.findByPk(+itemId).then(item => {
     if (item) {
       Cart.update(itemId, 1)
     }
