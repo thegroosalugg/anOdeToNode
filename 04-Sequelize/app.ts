@@ -4,6 +4,8 @@ import sequelize from './data/database';
 import adminRoutes from './routes/admin';
 import storeRoutes from './routes/store';
 import errorController from './controllers/error';
+import Item from './models/Item';
+import User from './models/User';
 
 const app = express();
 
@@ -18,6 +20,9 @@ app.use(express.static(path.join(import.meta.dirname, '../', 'public'), {
 app.use('/admin', adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
 app.use(errorController);
+
+Item.belongsTo(User, {onDelete: 'CASCADE'});
+User.hasMany(Item);
 
 sequelize
   .sync()

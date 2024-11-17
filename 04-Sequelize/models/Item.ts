@@ -1,6 +1,6 @@
 import {
-  Model, INTEGER, STRING, REAL,
-  InferAttributes, InferCreationAttributes, CreationOptional,
+  INTEGER, STRING, REAL,
+  Model, InferAttributes, InferCreationAttributes, CreationOptional,
 } from 'sequelize';
 import sequelize from '../data/database';
 
