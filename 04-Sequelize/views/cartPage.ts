@@ -124,7 +124,7 @@ const cartCSS = /*css*/ `
   }
 `;
 
-const cartButton = (id: string, type: 'add' | 'remove') => /*html*/ `
+const cartButton = (id: number, type: 'add' | 'remove') => /*html*/ `
   <form class="form" action="/cart/${type}" method="post">
     <input type="hidden" name="itemId" value="${id}" />
     <button>
@@ -133,7 +133,7 @@ const cartButton = (id: string, type: 'add' | 'remove') => /*html*/ `
   </form>
 `;
 
-const cartPage = (items: (Omit<Item, 'save'> & { quantity: number })[]) => {
+const cartPage = (items: (Item & { quantity: number })[]) => {
   const cartTotal = items
     .reduce((total, { price, quantity }) => total + price * quantity, 0)
     .toFixed(2);

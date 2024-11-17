@@ -59,19 +59,24 @@ const getEditItem: RequestHandler = (req, res, next) => {
 // /admin//edit-item
 const postEditItem: RequestHandler = (req, res, next) => {
   const { id, imgURL, ...updatedFields } = req.body;
-  const { name, description, price } = trimBody(updatedFields);
+  const { name, description: desc, price: str } = trimBody(updatedFields);
+  const price = +str;
 
-  if (id && imgURL && name && description && +price > 0) {
-    const item = new Item(name, description, imgURL, +price, +id);
-    item.save();
-    res.redirect('/admin/items');
+  if (id && imgURL && name && desc && price > 0) {
+    Item.findByPk(id)
+      .then((item) => {
+        if (item) {
+          item.update({ name, desc, price });
+          res.redirect('/admin/items');
+        }
+      })
+      .catch((err) => console.log('PostEditItem Error:', err));
   }
-}
+};
 
 // /admin//delete-item
 const postDeleteItem: RequestHandler = (req, res, next) => {
-  const { itemId } = req.body;
-  Item.deleteItem(+itemId);
+  Item.destroy({ where: { id: +req.body.itemId }});
   res.redirect('/admin/items')
 }
 

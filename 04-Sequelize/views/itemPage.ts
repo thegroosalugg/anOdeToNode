@@ -146,7 +146,7 @@ const itemPageCSS = /*css*/ `
   }
 `;
 
-const itemPage = (item: Item | undefined) => {
+const itemPage = (item: Item | null) => {
 
   if (!item) {
     return /*html*/ `<h1 class="not-found">The Item Doesn't Exist</h1>`

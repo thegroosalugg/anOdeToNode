@@ -16,7 +16,7 @@ const getItems: RequestHandler = (req, res, next) => {
 
 const getItemById: RequestHandler = (req, res, next) => {
   const { itemId } = req.params;
-  Item.findByPk(+itemId).then(item => {
+  Item.findByPk(+itemId).then((item) => {
     res.send(
       html({
              css: itemPageCSS,
@@ -41,7 +41,7 @@ const getCart: RequestHandler = (req, res, next) => {
       res.send(
         html({
                css: cartCSS,
-           content: cartPage(cartItems),
+           content: cartPage(cartItems as (Item & { quantity: number })[]),
              title: 'Your Cart',
           isActive: '/cart',
         })

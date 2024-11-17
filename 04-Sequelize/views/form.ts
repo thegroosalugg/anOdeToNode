@@ -91,14 +91,18 @@ const input = (id: string, value: string, text?: boolean) => /*html*/ `
 `;
 
 const validate = `
-  if (!document.querySelector('input').value || !document.querySelector('textarea').value) {
+  if (
+    !document.getElementById( 'name').value ||
+    !document.getElementById('price').value ||
+    !document.querySelector('textarea').value
+  ) {
     alert('All fields are required');
   } else if (isNaN(document.getElementById('price').value)) {
     alert('Price must be a number');
   }
 `;
 
-const form = (item?: Item) => {
+const form = (item?: Item | null) => {
   const { id = '', name = '', price = '', desc = '', imgURL = '' } = item || {};
   const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
 
