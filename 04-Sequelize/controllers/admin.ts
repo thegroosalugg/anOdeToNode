@@ -35,10 +35,11 @@ const getAddItem: RequestHandler = (req, res, next) => {
 
 // /admin/add-item
 const postAddItem: RequestHandler = (req, res, next) => {
-  const { name, description, price } = trimBody(req.body);
+  const { name, description: desc, price: str } = trimBody(req.body);
+  const price = +str;
 
-  if (name && description && +price > 0) {
-    Item.create({ name, desc: description, imgURL: randomIMG(), price: +price });
+  if (name && desc && price > 0) {
+    Item.create({ name, desc, imgURL: randomIMG(), price, userId: req.user?.id });
     res.redirect('/admin/items');
   }
 };

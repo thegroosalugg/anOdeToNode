@@ -17,6 +17,15 @@ app.use(express.static(path.join(import.meta.dirname, '../', 'public'), {
   etag: false  // Disable ETag generation for simpler cache management
 }));
 
+app.use((req, res, next) => {
+  User.findByPk(1)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log('App.ts findUser error:', err));
+});
+
 app.use('/admin', adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
 app.use(errorController);
@@ -26,7 +35,16 @@ User.hasMany(Item);
 
 sequelize
   .sync()
-  .then((result) => {
+  .then(() => {
+    return User.findByPk(1);
+  })
+  .then((user) => {
+    if (!user) {
+      return User.create({ name: 'Jock', email: 'jock@email.com' });
+    }
+    return user;
+  })
+  .then(() => {
     app.listen(3000, () => {
       console.log('Server is on track to port 3000');
     });

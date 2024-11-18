@@ -92,9 +92,9 @@ const input = (id: string, value: string, text?: boolean) => /*html*/ `
 
 const validate = `
   if (
-    !document.getElementById( 'name').value ||
-    !document.getElementById('price').value ||
-    !document.querySelector('textarea').value
+    !document.getElementById( 'name').value.trim() ||
+    !document.getElementById('price').value.trim() ||
+    !document.querySelector('textarea').value.trim()
   ) {
     alert('All fields are required');
   } else if (isNaN(document.getElementById('price').value)) {

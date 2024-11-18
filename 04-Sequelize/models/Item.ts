@@ -10,6 +10,7 @@ class Item extends Model<InferAttributes<Item>, InferCreationAttributes<Item>> {
   declare   desc: string;
   declare imgURL: string;
   declare  price: number;
+  declare userId: CreationOptional<number>;
 }
 
 Item.init(
@@ -19,6 +20,7 @@ Item.init(
       desc: { type: STRING,   allowNull: false },
     imgURL: { type: STRING,   allowNull: false },
      price: { type: REAL,     allowNull: false },
+    userId: { type: INTEGER },
   },
   { sequelize, modelName: 'item' }
 );
