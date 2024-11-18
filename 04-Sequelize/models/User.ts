@@ -1,13 +1,15 @@
 import {
   INTEGER, STRING,
-  Model, InferAttributes, InferCreationAttributes, CreationOptional,
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, HasManyCreateAssociationMixin
 } from 'sequelize';
 import sequelize from '../data/database';
+import Item from './Item';
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-  declare     id: CreationOptional<number>;
-  declare   name: string;
-  declare  email: string;
+  declare         id: CreationOptional<number>;
+  declare       name: string;
+  declare      email: string;
+  declare createItem: HasManyCreateAssociationMixin<Item>;
 }
 
 User.init(

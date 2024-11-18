@@ -38,9 +38,11 @@ const postAddItem: RequestHandler = (req, res, next) => {
   const { name, description: desc, price: str } = trimBody(req.body);
   const price = +str;
 
-  if (name && desc && price > 0) {
-    Item.create({ name, desc, imgURL: randomIMG(), price, userId: req.user?.id });
-    res.redirect('/admin/items');
+  if (req.user && name && desc && price > 0) {
+    req.user
+      .createItem({ name, desc, imgURL: randomIMG(), price })
+      .then(() => res.redirect('/admin/items'))
+      .catch((err) => console.log('postAddItem error:', err));
   }
 };
 
