@@ -1,5 +1,4 @@
 import { RequestHandler } from 'express';
-import Item from '../models/Item';
 import html from '../views/index';
 import { formCSS, form } from '../views/form';
 import { storeCSS, storePage } from '../views/storePage';
@@ -16,16 +15,23 @@ const randomIMG = () => {
 
 // /admin/items
 const getUserItems: RequestHandler = (req, res, next) => {
-  Item.findAll().then((items) => {
-    res.send(
-      html({
-             css: storeCSS,
-         content: storePage({ items, isAdmin: true }),
-           title: 'My Listings',
-        isActive: '/admin/items',
+  if (req.user) {
+    req.user
+      .getItems()
+      .then((items) => {
+        res.send(
+          html({
+                 css: storeCSS,
+             content: storePage({ items, isAdmin: true }),
+               title: 'My Listings',
+            isActive: '/admin/items',
+          })
+        );
       })
-    );
-  }).catch(err => console.log('getUserItems Error:', err));
+      .catch((err) => console.log('getUserItems Error:', err));
+  } else {
+    res.redirect('/');
+  }
 };
 
 // /admin/add-item
@@ -51,8 +57,8 @@ const getEditItem: RequestHandler = (req, res, next) => {
   const { edit } = req.query
   if (edit === 'true') {
     const { itemId } = req.params;
-    Item.findByPk(+itemId).then(item => {
-      res.send(html({ css: formCSS, content: form(item), title: 'Edit Listing', isActive: '/admin/items' }));
+    req.user?.getItems({ where: { id: +itemId }}).then(items => {
+      res.send(html({ css: formCSS, content: form(items[0]), title: 'Edit Listing', isActive: '/admin/items' }));
     })
   } else {
     res.redirect('/');
@@ -65,22 +71,31 @@ const postEditItem: RequestHandler = (req, res, next) => {
   const { name, description: desc, price: str } = trimBody(updatedFields);
   const price = +str;
 
-  if (id && imgURL && name && desc && price > 0) {
-    Item.findByPk(id)
-      .then((item) => {
+  if (req.user && id && imgURL && name.trim() && desc.trim() && price > 0) {
+    req.user.getItems({ where: { id }})
+      .then(([item]) => {
         if (item) {
           item.update({ name, desc, price });
           res.redirect('/admin/items');
         }
       })
       .catch((err) => console.log('PostEditItem Error:', err));
+  } else {
+    res.redirect('/');
   }
 };
 
 // /admin//delete-item
 const postDeleteItem: RequestHandler = (req, res, next) => {
-  Item.destroy({ where: { id: +req.body.itemId }});
-  res.redirect('/admin/items')
-}
+  req.user
+    ?.getItems({ where: { id: +req.body.itemId } })
+    .then((items) => {
+      if (items.length > 0) {
+        items[0].destroy();
+      }
+      res.redirect('/admin/items');
+    })
+    .catch((err) => console.log('Delete error:', err));
+};
 
 export { getUserItems, getAddItem, postAddItem, getEditItem, postEditItem, postDeleteItem };

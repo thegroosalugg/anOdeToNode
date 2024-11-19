@@ -124,7 +124,7 @@ const adminControls = (id: number) => /*html*/ `
 
 const storePage = ({ items, isAdmin }: { items: Item[], isAdmin?: boolean }) => /*html*/ `
   <section class="store">
-    <h1>Mountain Store</h1>
+    <h1>${isAdmin ? 'My Listings' : 'Mountain Store'}</h1>
     <ul>
       ${items
         .map(
