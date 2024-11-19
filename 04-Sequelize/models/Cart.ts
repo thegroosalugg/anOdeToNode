@@ -1,35 +1,16 @@
-import sqlite3 from 'sqlite3';
-const db = new sqlite3.Database('./data/mountain.db');
-interface CartItem {
-        id: number;
-  quantity: number;
+import {
+  INTEGER,
+  Model, InferAttributes, InferCreationAttributes, CreationOptional,
+  // HasManyCreateAssociationMixin, HasManyGetAssociationsMixin
+} from 'sequelize';
+import sequelize from '../data/database';
+class Cart extends Model<InferAttributes<Cart>, InferCreationAttributes<Cart>> {
+  declare id: CreationOptional<number>;
 }
 
-export default class Cart {
-  static getItems(callback: (cart: CartItem[]) => void) {
-    // db.all('SELECT * FROM cart', (err, items: CartItem[]) => {
-    //   if (err) {
-    //     console.error('Class Item/FetchAll Error:', err);
-    //     callback([]);
-    //   } else {
-    //     callback(items);
-    //   }
-    // });
-  }
+Cart.init(
+  { id: { type: INTEGER, primaryKey: true, autoIncrement: true }},
+  { sequelize, modelName: 'cart' }
+);
 
-  static update(id: number, quantity: 1 | -1) {
-    // db.get('SELECT * FROM cart WHERE id = ?', id, (err, item: CartItem) => {
-    //   if (item) {
-    //     item.quantity += quantity;
-
-    //     if (item.quantity === 0) {
-    //       db.run('DELETE FROM cart WHERE id = ?', id);
-    //     } else {
-    //       db.run('UPDATE cart SET quantity = ? WHERE id = ?', [item.quantity, id]);
-    //     }
-    //   } else if (quantity === 1) {
-    //     db.run('INSERT INTO cart (id) VALUES (?)', [id]);
-    //   }
-    // });
-  }
-}
+export default Cart;

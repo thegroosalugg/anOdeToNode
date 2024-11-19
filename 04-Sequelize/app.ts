@@ -6,6 +6,8 @@ import storeRoutes from './routes/store';
 import errorController from './controllers/error';
 import Item from './models/Item';
 import User from './models/User';
+import Cart from './models/Cart';
+import CartItem from './models/CartItem';
 
 const app = express();
 
@@ -32,6 +34,10 @@ app.use(errorController);
 
 Item.belongsTo(User, {onDelete: 'CASCADE'});
 User.hasMany(Item);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Item, { through: CartItem });
+Item.belongsToMany(Cart, { through: CartItem });
 
 sequelize
   .sync()
