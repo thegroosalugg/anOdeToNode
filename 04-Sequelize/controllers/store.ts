@@ -1,6 +1,5 @@
 import { RequestHandler } from 'express';
 import Item from '../models/Item';
-import CartItem from '../models/CartItem';
 import html from '../views/index';
 import {    storeCSS, storePage } from '../views/storePage';
 import {     cartCSS,  cartPage } from '../views/cartPage';
@@ -46,24 +45,41 @@ const getCart: RequestHandler = (req, res, next) => {
 const postAddToCart: RequestHandler = (req, res, next) => {
   const { itemId } = req.body;
   req.user?.getCart().then((cart) => {
-    cart.getItems({ where: { id: itemId } }).then(([item]) => {
-      if (item) {
-        console.log(item);
-      } else {
-        Item.findByPk(itemId).then((item) => {
-          if (item) {
-            cart.addItem(item, { through: { quantity: 1 } }).then(() => res.redirect('/cart'));
-          }
-        });
-      }
-    });
+    cart
+      .getItems({ where: { id: itemId } })
+      .then(([item]) => {
+        if (item) {
+          const quantity = item.cartItem.quantity + 1;
+          item.cartItem.update({ quantity });
+        } else {
+          Item.findByPk(itemId).then((item) => {
+            if (item) {
+              cart.addItem(item, { through: { quantity: 1 } });
+            }
+          });
+        }
+      })
+      .then(() => res.redirect('/cart'));
   });
 };
 
 const postRemoveFromCart: RequestHandler = (req, res, next) => {
   const { itemId } = req.body;
-  // Cart.update(itemId, -1)
-  res.redirect('/cart');
+  req.user?.getCart().then((cart) => {
+    cart
+      .getItems({ where: { id: itemId } })
+      .then(([item]) => {
+        if (item) {
+          const quantity = item.cartItem.quantity - 1;
+          if (quantity === 0) {
+            item.cartItem.destroy();
+          } else {
+            item.cartItem.update({ quantity });
+          }
+        }
+      })
+      .then(() => res.redirect('/cart'));
+  });
 }
 
 export { getItems, getItemById, getCart, postAddToCart, postRemoveFromCart };

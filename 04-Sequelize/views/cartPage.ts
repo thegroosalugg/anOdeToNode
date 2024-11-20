@@ -135,10 +135,13 @@ const cartButton = (id: number, type: 'add' | 'remove') => /*html*/ `
 `;
 
 const cartPage = (items: (Item & { cartItem: CartItem })[]) => {
-  console.log('CART', items[0].cartItem.quantity)
-  const cartTotal = items
-    .reduce((total, { price, cartItem }) => total + price * cartItem.quantity, 0)
-    .toFixed(2);
+  let cartTotal = '0';
+
+  if (items.length > 0) {
+    cartTotal = items
+      .reduce((total, { price, cartItem }) => total + price * cartItem.quantity, 0)
+      .toFixed(2);
+  }
 
   return /*html*/ `
     <section class="cart">
