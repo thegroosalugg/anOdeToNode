@@ -1,3 +1,4 @@
+import CartItem from '../models/CartItem';
 import Item from '../models/Item';
 import navTo from '../util/navTo';
 
@@ -133,9 +134,10 @@ const cartButton = (id: number, type: 'add' | 'remove') => /*html*/ `
   </form>
 `;
 
-const cartPage = (items: (Item & { quantity: number })[]) => {
+const cartPage = (items: (Item & { cartItem: CartItem })[]) => {
+  console.log('CART', items[0].cartItem.quantity)
   const cartTotal = items
-    .reduce((total, { price, quantity }) => total + price * quantity, 0)
+    .reduce((total, { price, cartItem }) => total + price * cartItem.quantity, 0)
     .toFixed(2);
 
   return /*html*/ `
@@ -146,17 +148,17 @@ const cartPage = (items: (Item & { quantity: number })[]) => {
           items.length === 0
             ? /*html*/ `<h4 class="empty">Your Cart is Empty</h4>`
             : items.map(
-                ({ id, name, imgURL, price, quantity }) => /*html*/ `
+                ({ id, name, imgURL, price, cartItem }) => /*html*/ `
                   <li>
                     <img src="${imgURL}" alt="${name}" onClick="${navTo('/store/' + id)}" />
                     <h2>${name}</h2>
                     <div class="controls">
                       <div>
                         ${cartButton(id, 'remove')}
-                        <p>${quantity}</p>
+                        <p>${cartItem.quantity}</p>
                         ${cartButton(id, 'add')}
                       </div>
-                      <p>$${(quantity * price).toFixed(2)}</p>
+                      <p>$${(cartItem.quantity * price).toFixed(2)}</p>
                     </div>
                   </li>
                 `

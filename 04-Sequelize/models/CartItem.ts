@@ -15,7 +15,7 @@ CartItem.init(
           id: { type: INTEGER, primaryKey: true, autoIncrement: true },
     quantity: { type: INTEGER, defaultValue: 1 }
   },
-  { sequelize, modelName: 'cart-item' }
+  { sequelize, modelName: 'cartItem' }
 );
 
 export default CartItem;

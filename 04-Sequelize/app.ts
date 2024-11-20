@@ -46,7 +46,9 @@ sequelize
   })
   .then((user) => {
     if (!user) {
-      return User.create({ name: 'Jock', email: 'jock@email.com' });
+      return User.create({ name: 'Jock', email: 'jock@email.com' }).then((newUser) => {
+        return newUser.createCart().then(() => newUser);
+      });
     }
     return user;
   })

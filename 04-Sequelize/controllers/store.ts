@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import Item from '../models/Item';
-import Cart from '../models/Cart';
+import CartItem from '../models/CartItem';
 import html from '../views/index';
 import {    storeCSS, storePage } from '../views/storePage';
 import {     cartCSS,  cartPage } from '../views/cartPage';
@@ -29,40 +29,40 @@ const getItemById: RequestHandler = (req, res, next) => {
 };
 
 const getCart: RequestHandler = (req, res, next) => {
-  Cart.getItems((cart) => {
-    Item.findAll().then((items) => {
-      const cartItems = [];
-      for (const cartItem of cart) {
-        const item = items.find((item) => item.id === cartItem.id)
-        if (item) {
-          cartItems.push({ ...item, quantity: cartItem.quantity })
-        }
-      }
+  req.user?.getCart().then((cart) => {
+    return cart.getItems().then((items) => {
       res.send(
         html({
                css: cartCSS,
-           content: cartPage(cartItems as (Item & { quantity: number })[]),
+           content: cartPage(items),
              title: 'Your Cart',
           isActive: '/cart',
         })
       );
     })
-  })
+  }).catch(err => console.log('getCart Error:', err));
 };
 
 const postAddToCart: RequestHandler = (req, res, next) => {
   const { itemId } = req.body;
-  Item.findByPk(+itemId).then(item => {
-    if (item) {
-      Cart.update(itemId, 1)
-    }
-  })
-  res.redirect('/cart');
-}
+  req.user?.getCart().then((cart) => {
+    cart.getItems({ where: { id: itemId } }).then(([item]) => {
+      if (item) {
+        console.log(item);
+      } else {
+        Item.findByPk(itemId).then((item) => {
+          if (item) {
+            cart.addItem(item, { through: { quantity: 1 } }).then(() => res.redirect('/cart'));
+          }
+        });
+      }
+    });
+  });
+};
 
 const postRemoveFromCart: RequestHandler = (req, res, next) => {
   const { itemId } = req.body;
-  Cart.update(itemId, -1)
+  // Cart.update(itemId, -1)
   res.redirect('/cart');
 }
 

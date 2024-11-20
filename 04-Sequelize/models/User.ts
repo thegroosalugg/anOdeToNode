@@ -1,10 +1,13 @@
 import {
   INTEGER, STRING,
   Model, InferAttributes, InferCreationAttributes, CreationOptional,
-  HasManyCreateAssociationMixin, HasManyGetAssociationsMixin
+  HasManyCreateAssociationMixin, HasManyGetAssociationsMixin,
+  HasOneCreateAssociationMixin,
+  HasOneGetAssociationMixin
 } from 'sequelize';
 import sequelize from '../data/database';
 import Item from './Item';
+import Cart from './Cart';
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare         id: CreationOptional<number>;
@@ -12,6 +15,8 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare      email: string;
   declare createItem: HasManyCreateAssociationMixin<Item>;
   declare   getItems: HasManyGetAssociationsMixin<Item>;
+  declare createCart: HasOneCreateAssociationMixin<Cart>;
+  declare    getCart: HasOneGetAssociationMixin<Cart>;
 }
 
 User.init(
