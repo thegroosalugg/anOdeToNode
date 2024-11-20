@@ -5,8 +5,6 @@ const cssReset = /*css*/ `
   * {
     margin: 0;
     padding: 0;
-    text-decoration: none;
-    list-style: none;
   }
   body {
     line-height: 1;
@@ -23,10 +21,19 @@ const cssReset = /*css*/ `
   p, h1, h2, h3, h4, h5, h6 {
     overflow-wrap: break-word;
     font-size: inherit;
-    font-weight: 100;
+    font-weight: 400;
+  }
+  a {
+    text-decoration: none;
+  }
+  ul, ol {
+    list-style: none;
   }
   span {
     display: inline-block;
+  }
+  button {
+    cursor: pointer;
   }
   #root, #__next {
     isolation: isolate;

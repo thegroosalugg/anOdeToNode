@@ -8,15 +8,18 @@ import {
 import sequelize from '../data/database';
 import Item from './Item';
 import Cart from './Cart';
+import Order from './Order';
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare         id: CreationOptional<number>;
   declare       name: string;
   declare      email: string;
-  declare createItem: HasManyCreateAssociationMixin<Item>;
-  declare   getItems: HasManyGetAssociationsMixin<Item>;
-  declare createCart: HasOneCreateAssociationMixin<Cart>;
-  declare    getCart: HasOneGetAssociationMixin<Cart>;
+  declare  createItem: HasManyCreateAssociationMixin<Item>;
+  declare    getItems: HasManyGetAssociationsMixin<Item>;
+  declare  createCart: HasOneCreateAssociationMixin<Cart>;
+  declare     getCart: HasOneGetAssociationMixin<Cart>;
+  declare createOrder: HasManyCreateAssociationMixin<Order>;
+  declare   getOrders: HasManyGetAssociationsMixin<Order>;
 }
 
 User.init(

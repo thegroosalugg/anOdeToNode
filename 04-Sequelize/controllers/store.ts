@@ -82,4 +82,25 @@ const postRemoveFromCart: RequestHandler = (req, res, next) => {
   });
 }
 
-export { getItems, getItemById, getCart, postAddToCart, postRemoveFromCart };
+const postCreateOrder: RequestHandler = (req, res, next) => {
+  req.user
+    ?.getCart()
+    .then((cart) => {
+      return cart.getItems();
+    })
+    .then((items) => {
+      return req.user
+        ?.createOrder()
+        .then((order) => {
+          order.addItems(items.map((item) => {
+            item.orderItem = { quantity: item.cartItem.quantity }
+            return item;
+          }));
+        })
+        .catch((err) => console.log('createOrder Error:', err));
+    })
+    .then(() => res.redirect('/'))
+    .catch((err) => console.log('postOrder Error:', err));
+};
+
+export { getItems, getItemById, getCart, postAddToCart, postRemoveFromCart, postCreateOrder };

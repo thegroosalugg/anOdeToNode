@@ -116,11 +116,32 @@ const cartCSS = /*css*/ `
       }
     }
 
+    .order-button {
+      padding: 0.5rem;
+
+      button {
+        width: 80%;
+        height: 1.8rem;
+        display: block;
+        margin: auto;
+        padding: 0.25rem;
+        text-transform: uppercase;
+        border: 1px solid #000;
+        background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+        color: #efefef;
+        transition: 0.5s ease-in-out;
+
+        &:hover {
+          font-size: 1rem;
+        }
+      }
+    }
+
     h3 {
         color: #000000;
         text-align: end;
         margin: 0 1rem;
-        padding: 1rem;
+        padding: 0 1rem 1rem;
     }
   }
 `;
@@ -169,6 +190,15 @@ const cartPage = (items: (Item & { cartItem: CartItem })[]) => {
             .join('')
         }  <!-- join removes commas -->
       </ul>
+      ${
+        items.length > 0
+          ? /*html*/ `
+          <form action="new-order" method="post" class="order-button">
+            <button>Place Order</button>
+          </form>
+        `
+          : ''
+      }
       <h3>$${cartTotal}</h3>
     </section>
     <script>

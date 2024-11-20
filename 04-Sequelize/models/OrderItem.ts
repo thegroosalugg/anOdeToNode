@@ -4,17 +4,17 @@ import {
 } from 'sequelize';
 import sequelize from '../data/database';
 
-class CartItem extends Model<InferAttributes<CartItem>, InferCreationAttributes<CartItem>> {
+class OrderItem extends Model<InferAttributes<OrderItem>, InferCreationAttributes<OrderItem>> {
   declare       id: CreationOptional<number>;
   declare quantity: number;
 }
 
-CartItem.init(
+OrderItem.init(
   {
           id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-    quantity: { type: INTEGER, defaultValue: 1 }
+    quantity: { type: INTEGER }
   },
-  { sequelize, modelName: 'cartItem' }
+  { sequelize, modelName: 'orderItem' }
 );
 
-export default CartItem;
+export default OrderItem;

@@ -8,6 +8,8 @@ import Item from './models/Item';
 import User from './models/User';
 import Cart from './models/Cart';
 import CartItem from './models/CartItem';
+import Order from './models/Order';
+import OrderItem from './models/OrderItem';
 
 const app = express();
 
@@ -38,9 +40,14 @@ User.hasOne(Cart);
 Cart.belongsTo(User);
 Cart.belongsToMany(Item, { through: CartItem });
 Item.belongsToMany(Cart, { through: CartItem });
+User.hasMany(Order);
+Order.belongsTo(User);
+Order.belongsToMany(Item, { through: OrderItem });
+Item.belongsToMany(Order, { through: OrderItem });
 
 sequelize
   .sync()
+  // .sync({ force: true })
   .then(() => {
     return User.findByPk(1);
   })
