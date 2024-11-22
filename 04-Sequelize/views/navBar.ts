@@ -43,9 +43,9 @@ const navButton = ({
   label,
 }: {
   isActive: string | undefined;
-  href: string;
-  icon: string;
-  label: string;
+      href: string;
+      icon: string;
+     label: string;
 }) => /*html*/ `
   <a class='${isActive === href ? 'active' : ''}' href=${href}>
     <i class='${icon}'></i>

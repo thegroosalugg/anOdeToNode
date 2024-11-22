@@ -174,7 +174,7 @@ const cartPage = (items: (Item & { cartItem: CartItem })[]) => {
             : items.map(
                 ({ id, name, imgURL, price, cartItem }) => /*html*/ `
                   <li>
-                    <img src="${imgURL}" alt="${name}" onClick="${navTo('/store/' + id)}" />
+                    <img src="${imgURL}" alt="${name}" onclick="${navTo('/store/' + id)}" />
                     <h2>${name}</h2>
                     <div class="controls">
                       <div>

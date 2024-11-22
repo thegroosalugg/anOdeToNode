@@ -1,5 +1,5 @@
 import express from 'express';
-import { getItems, getItemById, getCart, postAddToCart, postRemoveFromCart, postCreateOrder } from '../controllers/store';
+import { getItems, getItemById, getCart, postAddToCart, postRemoveFromCart, getOrders, postCreateOrder } from '../controllers/store';
 
 const router = express.Router();
 
@@ -8,6 +8,7 @@ router.get('/store/:itemId', getItemById); // must load after controllers prepen
 router.get('/cart', getCart);
 router.post('/cart/add', postAddToCart);
 router.post('/cart/remove', postRemoveFromCart);
+router.get('/orders', getOrders);
 router.post('/new-order', postCreateOrder);
 
 export default router;

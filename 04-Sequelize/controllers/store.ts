@@ -4,6 +4,7 @@ import html from '../views/index';
 import {    storeCSS, storePage } from '../views/storePage';
 import {     cartCSS,  cartPage } from '../views/cartPage';
 import { itemPageCSS,  itemPage } from '../views/itemPage';
+import {  ordersCSS, ordersPage } from '../views/ordersPage';
 
 const getItems: RequestHandler = (req, res, next) => {
   Item.findAll().then((items) => {
@@ -82,6 +83,19 @@ const postRemoveFromCart: RequestHandler = (req, res, next) => {
   });
 }
 
+const getOrders: RequestHandler = (req, res, next) => {
+  req.user?.getOrders().then((orders) => {
+    res.send(
+      html({
+             css: ordersCSS,
+         content: ordersPage(orders),
+           title: 'Your Orders',
+        isActive: '/admin/items',
+      })
+    );
+  });
+};
+
 const postCreateOrder: RequestHandler = (req, res, next) => {
   req.user
     ?.getCart()
@@ -103,4 +117,4 @@ const postCreateOrder: RequestHandler = (req, res, next) => {
     .catch((err) => console.log('postOrder Error:', err));
 };
 
-export { getItems, getItemById, getCart, postAddToCart, postRemoveFromCart, postCreateOrder };
+export { getItems, getItemById, getCart, postAddToCart, postRemoveFromCart, getOrders, postCreateOrder };
