@@ -17,14 +17,12 @@ const getItems: RequestHandler = (req, res, next) => {
 const getItemById: RequestHandler = (req, res, next) => {
   const { itemId } = req.params;
   Item.findByPk(+itemId).then((item) => {
-    res.send(
-      html({
-             css: itemPageCSS,
-         content: itemPage(item),
-           title: item?.name || 'Page Not Found',
-        isActive: '/',
-      })
-    );
+    res.render('root', {
+         title: item?.name || 'Not Found',
+      isActive: '/',
+          view: 'itempage',
+        locals: { item },
+    });
   });
 };
 

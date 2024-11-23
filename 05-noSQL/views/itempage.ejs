@@ -1,0 +1,10 @@
+<% const { id, name, desc, imgURL, price } = item %>
+
+<img src="<%= imgURL %>" alt="<%= name %>" style="width: 150px" />
+<form class="form" action="/cart/add" method="post">
+  <p>  <%= name             %></p>
+  <p>$ <%= price.toFixed(2) %></p>
+  <p>  <%= desc             %></p>
+  <button>Add to Cart</button>
+  <input type="hidden" name="itemId" value="<%= id %>" />
+</form>

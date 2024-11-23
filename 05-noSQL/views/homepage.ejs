@@ -1,12 +1,14 @@
 <ul>
   <% items.forEach(({ id, name, desc, imgURL, price }) => { %>
-    <li>
-      <img src="<%= imgURL %>" alt="<%= name %>" style="width: 50px;" />
-      <div>
-        <p><%= name %></p>
-        <p>$ <%= price.toFixed(2) %></p>
-      </div>
-      <p><%= desc %></p>
-    </li>
+  <li>
+    <a href="/store/<%= id %>">
+      <img src="<%= imgURL %>" alt="<%= name %>" style="width: 50px" />
+    </a>
+    <div>
+      <p>  <%= name %></p>
+      <p>$ <%= price.toFixed(2) %></p>
+    </div>
+    <p><%= desc %></p>
+  </li>
   <% }); %>
 </ul>
