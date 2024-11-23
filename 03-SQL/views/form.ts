@@ -91,7 +91,11 @@ const input = (id: string, value: string, text?: boolean) => /*html*/ `
 `;
 
 const validate = `
-  if (!document.querySelector('input').value || !document.querySelector('textarea').value) {
+  if (
+    !document.getElementById( 'name').value.trim() ||
+    !document.getElementById('price').value.trim() ||
+    !document.querySelector('textarea').value.trim()
+  ) {
     alert('All fields are required');
   } else if (isNaN(document.getElementById('price').value)) {
     alert('Price must be a number');

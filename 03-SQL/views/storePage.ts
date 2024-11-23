@@ -114,7 +114,7 @@ const storeCSS = /*css*/ `
   }
 `;
 
-const adminControls = (id: string) => /*html*/ `
+const adminControls = (id: number) => /*html*/ `
   <form class="admin-controls" action="/admin/delete-item" method="post">
     <button type="button" onClick="${navTo(`/admin/edit-item/${id}/?edit=true`)}">EDIT</button>
     <button onclick="return confirm('Are you sure you want to delete this item?')">DELETE</button>
@@ -124,7 +124,7 @@ const adminControls = (id: string) => /*html*/ `
 
 const storePage = ({ items, isAdmin }: { items: Item[], isAdmin?: boolean }) => /*html*/ `
   <section class="store">
-    <h1>Mountain Store</h1>
+    <h1>${isAdmin ? 'My Listings' : 'Mountain Store'}</h1>
     <ul>
       ${items
         .map(
@@ -136,7 +136,7 @@ const storePage = ({ items, isAdmin }: { items: Item[], isAdmin?: boolean }) => 
                 <p>$${price.toFixed(2)}</p>
               </div>
               <p>${desc}</p>
-              ${isAdmin ? adminControls(id) : ''}
+              ${isAdmin ? adminControls(id!) : ''}
             </li>
           `
         )

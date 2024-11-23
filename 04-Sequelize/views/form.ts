@@ -102,7 +102,7 @@ const validate = `
   }
 `;
 
-const form = (item?: Item) => {
+const form = (item?: Item | null) => {
   const { id = '', name = '', price = '', desc = '', imgURL = '' } = item || {};
   const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
 

@@ -16,6 +16,21 @@ const storeCSS = /*css*/ `
       background: #ff7f58;
     }
 
+    > button {
+      width: fit-content;
+      color: #efefef;
+      background: linear-gradient(to right, #000000, #434343);
+      align-self: flex-end;
+      padding: 0.5rem;
+      margin: 1rem 1rem 0;
+      font-size: 1.2rem;
+      transition: 0.2s ease-in-out;
+
+      &:hover {
+        transform: scale(0.95);
+      }
+    }
+
     ul {
       display: flex;
       flex-wrap: wrap;
@@ -114,9 +129,9 @@ const storeCSS = /*css*/ `
   }
 `;
 
-const adminControls = (id: string) => /*html*/ `
+const adminControls = (id: number) => /*html*/ `
   <form class="admin-controls" action="/admin/delete-item" method="post">
-    <button type="button" onClick="${navTo(`/admin/edit-item/${id}/?edit=true`)}">EDIT</button>
+    <button type="button" onclick="${navTo(`/admin/edit-item/${id}/?edit=true`)}">EDIT</button>
     <button onclick="return confirm('Are you sure you want to delete this item?')">DELETE</button>
     <input type="hidden" name="itemId" value="${id}" />
   </form>
@@ -124,7 +139,7 @@ const adminControls = (id: string) => /*html*/ `
 
 const storePage = ({ items, isAdmin }: { items: Item[], isAdmin?: boolean }) => /*html*/ `
   <section class="store">
-    <h1>${isAdmin ? 'My Listings' : 'Mountain Store'}</h1>
+    ${isAdmin ? `<button onclick="${navTo('/orders')}">MY ORDERS</button>` : '<h1>Mountain Store</h1>'}
     <ul>
       ${items
         .map(
