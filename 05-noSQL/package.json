@@ -1,0 +1,25 @@
+{
+  "name": "02-expresstrain",
+  "version": "1.0.0",
+  "description": "begin to express",
+  "main": "app.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "clear && tsx app.ts",
+    "dev": "clear && nodemon -x tsx app.ts",
+    "build": "tsc && tsc-alias",
+    "preview": "clear && node dist/app.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "sequelize": "^6.37.5",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/sqlite3": "^3.1.11",
+    "tailwindcss": "^3.4.15",
+    "tsc-alias": "^1.8.10"
+  }
+}
