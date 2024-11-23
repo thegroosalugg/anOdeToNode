@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import Item from '../models/Item';
+import Cart from '../models/Cart';
 import html from '../views/index';
 import {    storeCSS, storePage } from '../views/storePage';
 import {     cartCSS,  cartPage } from '../views/cartPage';
@@ -84,7 +85,7 @@ const postRemoveFromCart: RequestHandler = (req, res, next) => {
 }
 
 const getOrders: RequestHandler = (req, res, next) => {
-  req.user?.getOrders().then((orders) => {
+  req.user?.getOrders({include: [{ model: Item }]}).then((orders) => {
     res.send(
       html({
              css: ordersCSS,
@@ -97,9 +98,11 @@ const getOrders: RequestHandler = (req, res, next) => {
 };
 
 const postCreateOrder: RequestHandler = (req, res, next) => {
+  let fetchedCart: Cart;
   req.user
     ?.getCart()
     .then((cart) => {
+      fetchedCart = cart;
       return cart.getItems();
     })
     .then((items) => {
@@ -113,7 +116,8 @@ const postCreateOrder: RequestHandler = (req, res, next) => {
         })
         .catch((err) => console.log('createOrder Error:', err));
     })
-    .then(() => res.redirect('/'))
+    .then(() => fetchedCart.setItems([]))
+    .then(() => res.redirect('/orders'))
     .catch((err) => console.log('postOrder Error:', err));
 };
 

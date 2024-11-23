@@ -118,6 +118,7 @@ const cartCSS = /*css*/ `
 
     .order-button {
       padding: 0.5rem;
+      padding-bottom: 0;
 
       button {
         width: 80%;
@@ -140,8 +141,7 @@ const cartCSS = /*css*/ `
     h3 {
         color: #000000;
         text-align: end;
-        margin: 0 1rem;
-        padding: 0 1rem 1rem;
+        margin: 1rem;
     }
   }
 `;

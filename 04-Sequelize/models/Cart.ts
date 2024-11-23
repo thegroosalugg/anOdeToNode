@@ -6,6 +6,7 @@ import {
   CreationOptional,
   HasManyGetAssociationsMixin,
   BelongsToManyAddAssociationMixin,
+  BelongsToManySetAssociationsMixin,
 } from 'sequelize';
 import sequelize from '../data/database';
 import Item from './Item';
@@ -18,6 +19,7 @@ class Cart extends Model<InferAttributes<Cart>, InferCreationAttributes<Cart>> {
   declare getItems: HasManyGetAssociationsMixin<
     Item & { cartItem: CartItem } & { orderItem: Partial<OrderItem> }
   >;
+  declare setItems: BelongsToManySetAssociationsMixin<Item, number>;
 }
 
 Cart.init(
