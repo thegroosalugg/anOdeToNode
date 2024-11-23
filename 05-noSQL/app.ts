@@ -13,6 +13,8 @@ import OrderItem from './models/OrderItem';
 
 const app = express();
 
+app.set('view engine', 'ejs');
+
 app.use(express.urlencoded({ extended: false }));
 
  // allows serving of static paths
