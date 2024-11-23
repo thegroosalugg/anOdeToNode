@@ -9,6 +9,7 @@ import sequelize from '../data/database';
 import Item from './Item';
 import Cart from './Cart';
 import Order from './Order';
+import OrderItem from './OrderItem';
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare         id: CreationOptional<number>;
@@ -19,7 +20,9 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare  createCart: HasOneCreateAssociationMixin<Cart>;
   declare     getCart: HasOneGetAssociationMixin<Cart>;
   declare createOrder: HasManyCreateAssociationMixin<Order>;
-  declare   getOrders: HasManyGetAssociationsMixin<Order>;
+  declare   getOrders: HasManyGetAssociationsMixin<
+    Order & { items: (Item & { orderItem: OrderItem })[] }
+  >;
 }
 
 User.init(

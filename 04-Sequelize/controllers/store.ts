@@ -85,7 +85,7 @@ const postRemoveFromCart: RequestHandler = (req, res, next) => {
 }
 
 const getOrders: RequestHandler = (req, res, next) => {
-  req.user?.getOrders({include: [{ model: Item }]}).then((orders) => {
+  req.user?.getOrders({include: ['items']}).then((orders) => {
     res.send(
       html({
              css: ordersCSS,

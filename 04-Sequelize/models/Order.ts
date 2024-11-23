@@ -5,13 +5,10 @@ import {
 } from 'sequelize';
 import sequelize from '../data/database';
 import Item from './Item';
-import OrderItem from './OrderItem';
-import CartItem from './CartItem';
 
 class Order extends Model<InferAttributes<Order>, InferCreationAttributes<Order>> {
   declare       id: CreationOptional<number>;
   declare addItems: BelongsToManyAddAssociationsMixin<Item, number>;
-  declare getItems: HasManyGetAssociationsMixin<Item>;
 }
 
 Order.init(
