@@ -1,6 +1,8 @@
+<% const activeTab = (href) => href === isActive ? 'active' : '' %>
+
 <nav>
-  <a href='/'>Home</a>
-  <a href='/admin/items'>User</a>
-  <a href='/admin/add-item'>New Listing</a>
-  <a href='/cart'>Cart</a>
+  <a href="/"               class="<%= activeTab('/')               %>"> Home    </a>
+  <a href="/admin/items"    class="<%= activeTab('/admin/items')    %>"> User    </a>
+  <a href="/admin/add-item" class="<%= activeTab('/admin/add-item') %>"> NewItem </a>
+  <a href="/cart"           class="<%= activeTab('/cart')           %>"> Cart    </a>
 </nav>

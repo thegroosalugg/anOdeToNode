@@ -1,0 +1,12 @@
+<ul>
+  <% items.forEach(({ id, name, desc, imgURL, price }) => { %>
+    <li>
+      <img src="<%= imgURL %>" alt="<%= name %>" style="width: 50px;" />
+      <div>
+        <p><%= name %></p>
+        <p>$ <%= price.toFixed(2) %></p>
+      </div>
+      <p><%= desc %></p>
+    </li>
+  <% }); %>
+</ul>

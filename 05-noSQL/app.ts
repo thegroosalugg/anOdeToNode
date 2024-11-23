@@ -17,11 +17,14 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: false }));
 
- // allows serving of static paths
+ // set to public folder in repo root, for all projects
 app.use(express.static(path.join(import.meta.dirname, '../', 'public'), {
   maxAge: '1d', // Cache static assets for 1 day to improve load times
   etag: false  // Disable ETag generation for simpler cache management
 }));
+
+// public folder specific to project
+app.use(express.static(path.join(import.meta.dirname, 'public')));
 
 app.use((req, res, next) => {
   User.findByPk(1)

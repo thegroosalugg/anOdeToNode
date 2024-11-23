@@ -2,17 +2,16 @@ import { RequestHandler } from 'express';
 import Item from '../models/Item';
 import Cart from '../models/Cart';
 import html from '../views/index';
-import {    storeCSS, storePage } from '../views/storePage';
 import {     cartCSS,  cartPage } from '../views/cartPage';
 import { itemPageCSS,  itemPage } from '../views/itemPage';
 import {  ordersCSS, ordersPage } from '../views/ordersPage';
 
 const getItems: RequestHandler = (req, res, next) => {
-  Item.findAll().then((items) => {
-    res.send(
-      html({ css: storeCSS, content: storePage({ items }), title: 'Mountain Store', isActive: '/' })
-    );
-  }).catch(err => console.log('getItems Error:', err));
+  Item.findAll()
+    .then((items) => {
+      res.render('root', { title: 'Home', isActive: '/', view: 'homepage', locals: { items } });
+    })
+    .catch((err) => console.log('getItems Error:', err));
 };
 
 const getItemById: RequestHandler = (req, res, next) => {
