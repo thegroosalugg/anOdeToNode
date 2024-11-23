@@ -13,12 +13,12 @@ import Item from './Item';
 import CartItem from './CartItem';
 import OrderItem from './OrderItem';
 
+export type clientCartItem = Item & { cartItem: CartItem } & { orderItem: Partial<OrderItem> };
+
 class Cart extends Model<InferAttributes<Cart>, InferCreationAttributes<Cart>> {
   declare       id: CreationOptional<number>;
   declare  addItem: BelongsToManyAddAssociationMixin<Item, number>;
-  declare getItems: HasManyGetAssociationsMixin<
-    Item & { cartItem: CartItem } & { orderItem: Partial<OrderItem> }
-  >;
+  declare getItems: HasManyGetAssociationsMixin<clientCartItem>;
   declare setItems: BelongsToManySetAssociationsMixin<Item, number>;
 }
 

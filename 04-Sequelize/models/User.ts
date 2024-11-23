@@ -11,6 +11,8 @@ import Cart from './Cart';
 import Order from './Order';
 import OrderItem from './OrderItem';
 
+export type clientOrder = Order & { items: (Item & { orderItem: OrderItem })[] };
+
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare         id: CreationOptional<number>;
   declare       name: string;
@@ -20,9 +22,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare  createCart: HasOneCreateAssociationMixin<Cart>;
   declare     getCart: HasOneGetAssociationMixin<Cart>;
   declare createOrder: HasManyCreateAssociationMixin<Order>;
-  declare   getOrders: HasManyGetAssociationsMixin<
-    Order & { items: (Item & { orderItem: OrderItem })[] }
-  >;
+  declare   getOrders: HasManyGetAssociationsMixin<clientOrder>;
 }
 
 User.init(

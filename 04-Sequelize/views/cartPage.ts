@@ -1,5 +1,4 @@
-import CartItem from '../models/CartItem';
-import Item from '../models/Item';
+import { clientCartItem } from '../models/Cart';
 import navTo from '../util/navTo';
 
 const cartCSS = /*css*/ `
@@ -155,7 +154,7 @@ const cartButton = (id: number, type: 'add' | 'remove') => /*html*/ `
   </form>
 `;
 
-const cartPage = (items: (Item & { cartItem: CartItem })[]) => {
+const cartPage = (items: clientCartItem[]) => {
   let cartTotal = '0';
 
   if (items.length > 0) {

@@ -1,12 +1,10 @@
-import Item from '../models/Item';
-import Order from '../models/Order';
-import OrderItem from '../models/OrderItem';
+import { clientOrder } from '../models/User';
 
 const ordersCSS = /*css*/ `
 
 `;
 
-const ordersPage = (orders: (Order & { items: (Item & { orderItem: OrderItem })[] })[]) => {
+const ordersPage = (orders: clientOrder[]) => {
   console.log(orders);
 
   return /*html*/ `
