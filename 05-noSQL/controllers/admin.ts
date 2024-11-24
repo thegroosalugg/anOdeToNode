@@ -16,8 +16,9 @@ const getUserItems: RequestHandler = (req, res, next) => {
     req.user
       .getItems()
       .then((items) => {
-        res.render('root', {
+        res.render('body', {
              title: 'Dashboard',
+               css: 'itemsAll',
           isActive: '/admin/items',
               view: 'itemsAll',
             locals: { items, isAdmin: true },
@@ -31,8 +32,9 @@ const getUserItems: RequestHandler = (req, res, next) => {
 
 // /admin/add-item
 const getAddItem: RequestHandler = (req, res, next) => {
-  res.render('root', {
+  res.render('body', {
        title: 'New Listing',
+         css: 'form',
     isActive: '/admin/add-item',
         view: 'form',
       locals: { item: null }
@@ -58,8 +60,9 @@ const getEditItem: RequestHandler = (req, res, next) => {
   if (edit === 'true') {
     const { itemId } = req.params;
     req.user?.getItems({ where: { id: +itemId }}).then(( [item] ) => {
-      res.render('root', {
+      res.render('body', {
            title: 'Edit Listing',
+             css: 'form',
         isActive: '/admin/add-item',
             view: 'form',
           locals: { item }

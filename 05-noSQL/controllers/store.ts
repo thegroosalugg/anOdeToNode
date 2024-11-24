@@ -5,8 +5,9 @@ import Cart from '../models/Cart';
 const getItems: RequestHandler = (req, res, next) => {
   Item.findAll()
     .then((items) => {
-      res.render('root', {
+      res.render('body', {
            title: 'Home',
+             css: 'itemsAll',
         isActive: '/',
             view: 'itemsAll',
           locals: { items, isAdmin: false },
@@ -18,8 +19,9 @@ const getItems: RequestHandler = (req, res, next) => {
 const getItemById: RequestHandler = (req, res, next) => {
   const { itemId } = req.params;
   Item.findByPk(+itemId).then((item) => {
-    res.render('root', {
+    res.render('body', {
          title: item?.name || 'Not Found',
+           css: 'itemId',
       isActive: '/',
           view: 'itemId',
         locals: { item },
@@ -32,8 +34,9 @@ const getCart: RequestHandler = (req, res, next) => {
     ?.getCart()
     .then((cart) => {
       return cart.getItems().then((items) => {
-        res.render('root', {
+        res.render('body', {
              title: 'Your Cart',
+               css: 'cart',
           isActive: '/cart',
               view: 'cart',
             locals: { items },
@@ -85,8 +88,9 @@ const postRemoveFromCart: RequestHandler = (req, res, next) => {
 
 const getOrders: RequestHandler = (req, res, next) => {
   req.user?.getOrders({ include: ['items'] }).then((orders) => {
-    res.render('root', {
+    res.render('body', {
          title: 'Your Orders',
+           css: 'orders',
       isActive: '/admin/items',
           view: 'orders',
         locals: { orders },
