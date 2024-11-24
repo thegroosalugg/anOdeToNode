@@ -8,7 +8,7 @@ const getItems: RequestHandler = (req, res, next) => {
       res.render('root', {
            title: 'Home',
         isActive: '/',
-            view: 'homepage',
+            view: 'itemsAll',
           locals: { items },
       });
     })
@@ -21,7 +21,7 @@ const getItemById: RequestHandler = (req, res, next) => {
     res.render('root', {
          title: item?.name || 'Not Found',
       isActive: '/',
-          view: 'itempage',
+          view: 'itemId',
         locals: { item },
     });
   });
@@ -88,7 +88,7 @@ const getOrders: RequestHandler = (req, res, next) => {
     res.render('root', {
          title: 'Your Orders',
       isActive: '/admin/items',
-          view: 'orderspage',
+          view: 'orders',
         locals: { orders },
     });
   });

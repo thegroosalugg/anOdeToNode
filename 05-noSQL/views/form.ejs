@@ -1,0 +1,42 @@
+<%
+const { id = '', name = '', price = '', desc = '', imgURL = '' } = item || {};
+const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
+%>
+
+<form
+  action="/admin/<%= item ? 'edit' : 'add' %>-item"
+  method="post"
+  style="background-image: url('<%= backgroundImg %>');"
+>
+  <h1><%= item ? 'Edit' : 'New' %> Listing</h1>
+
+  <% if (item) { %>
+    <input type="hidden" name="id" value="<%= id %>" />
+    <input type="hidden" name="imgURL" value="<%= imgURL %>" />
+  <% } %>
+
+  <section>
+    <label for="name">name</label>
+    <input id="name" name="name" value="<%= name %>" autocomplete="off" />
+  </section>
+
+  <section>
+    <label for="price">price</label>
+    <input id="price" name="price" value="<%= price %>" autocomplete="off" />
+  </section>
+
+  <section>
+    <label for="description">description</label>
+    <textarea rows="5" id="description" name="description">
+      <%= desc ? desc : 'Add a description' %>
+    </textarea>
+  </section>
+
+  <button>
+    <% if (item) { %>
+      Update <i class="fa-solid fa-check"></i>
+    <% } else { %>
+      Add <i class="fa-solid fa-plus"></i>
+    <% } %>
+  </button>
+</form>

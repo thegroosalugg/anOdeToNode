@@ -1,7 +1,4 @@
 import { RequestHandler } from 'express';
-import html from '../views/index';
-import { formCSS, form } from '../views/form';
-import { storeCSS, storePage } from '../views/storePage';
 import trimBody from '../util/trimBody';
 
 const images = ['four_awesome', 'green_orange', 'red_blue', 'sleek_black', 'tall.jpg', 'wide.jpg', 'yellow_purple', 'yellow_purple_2'];
@@ -19,14 +16,12 @@ const getUserItems: RequestHandler = (req, res, next) => {
     req.user
       .getItems()
       .then((items) => {
-        res.send(
-          html({
-                 css: storeCSS,
-             content: storePage({ items, isAdmin: true }),
-               title: 'My Listings',
-            isActive: '/admin/items',
-          })
-        );
+        res.render('root', {
+             title: 'Dashboard',
+          isActive: '/admin/items',
+              view: 'itemsAll',
+            locals: { items },
+        });
       })
       .catch((err) => console.log('getUserItems Error:', err));
   } else {
@@ -36,7 +31,12 @@ const getUserItems: RequestHandler = (req, res, next) => {
 
 // /admin/add-item
 const getAddItem: RequestHandler = (req, res, next) => {
-  res.send(html({ css: formCSS, content: form(), title: 'New Listing', isActive: '/admin/add-item' }));
+  res.render('root', {
+       title: 'New Listing',
+    isActive: '/admin/add-item',
+        view: 'form',
+      locals: { item: null }
+  });
 };
 
 // /admin/add-item
@@ -57,8 +57,13 @@ const getEditItem: RequestHandler = (req, res, next) => {
   const { edit } = req.query
   if (edit === 'true') {
     const { itemId } = req.params;
-    req.user?.getItems({ where: { id: +itemId }}).then(items => {
-      res.send(html({ css: formCSS, content: form(items[0]), title: 'Edit Listing', isActive: '/admin/items' }));
+    req.user?.getItems({ where: { id: +itemId }}).then(( [item] ) => {
+      res.render('root', {
+           title: 'Edit Listing',
+        isActive: '/admin/add-item',
+            view: 'form',
+          locals: { item }
+      });
     })
   } else {
     res.redirect('/');
