@@ -27,18 +27,19 @@ const getItemById: RequestHandler = (req, res, next) => {
 };
 
 const getCart: RequestHandler = (req, res, next) => {
-  req.user?.getCart().then((cart) => {
-    return cart.getItems().then((items) => {
-      res.send(
-        html({
-               css: cartCSS,
-           content: cartPage(items),
+  req.user
+    ?.getCart()
+    .then((cart) => {
+      return cart.getItems().then((items) => {
+        res.render('root', {
              title: 'Your Cart',
           isActive: '/cart',
-        })
-      );
+              view: 'cart',
+            locals: { items },
+        });
+      });
     })
-  }).catch(err => console.log('getCart Error:', err));
+    .catch((err) => console.log('getCart Error:', err));
 };
 
 const postAddToCart: RequestHandler = (req, res, next) => {
