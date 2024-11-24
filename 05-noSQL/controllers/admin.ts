@@ -41,7 +41,7 @@ const getAddItem: RequestHandler = (req, res, next) => {
 
 // /admin/add-item
 const postAddItem: RequestHandler = (req, res, next) => {
-  const { name, description: desc, price: str } = trimBody(req.body);
+  const { name, desc, price: str } = trimBody(req.body);
   const price = +str;
 
   if (req.user && name && desc && price > 0) {
@@ -52,7 +52,7 @@ const postAddItem: RequestHandler = (req, res, next) => {
   }
 };
 
-// admin//edit-item/:itemId
+// admin/edit-item/:itemId
 const getEditItem: RequestHandler = (req, res, next) => {
   const { edit } = req.query
   if (edit === 'true') {
@@ -73,10 +73,10 @@ const getEditItem: RequestHandler = (req, res, next) => {
 // /admin//edit-item
 const postEditItem: RequestHandler = (req, res, next) => {
   const { id, imgURL, ...updatedFields } = req.body;
-  const { name, description: desc, price: str } = trimBody(updatedFields);
+  const { name, desc, price: str } = trimBody(updatedFields);
   const price = +str;
 
-  if (req.user && id && imgURL && name.trim() && desc.trim() && price > 0) {
+  if (req.user && id && imgURL && name && desc && price > 0) {
     req.user.getItems({ where: { id }})
       .then(([item]) => {
         if (item) {

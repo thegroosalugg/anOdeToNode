@@ -1,6 +1,6 @@
 <%
-const { id = '', name = '', price = '', desc = '', imgURL = '' } = item || {};
-const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
+  const { id = '', name = '', price = '', desc = '', imgURL = '' } = item || {};
+  const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
 %>
 
 <form
@@ -11,8 +11,8 @@ const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
   <h1><%= item ? 'Edit' : 'New' %> Listing</h1>
 
   <% if (item) { %>
-    <input type="hidden" name="id" value="<%= id %>" />
-    <input type="hidden" name="imgURL" value="<%= imgURL %>" />
+  <input type="hidden" name="id" value="<%= id %>" />
+  <input type="hidden" name="imgURL" value="<%= imgURL %>" />
   <% } %>
 
   <section>
@@ -26,17 +26,15 @@ const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
   </section>
 
   <section>
-    <label for="description">description</label>
-    <textarea rows="5" id="description" name="description">
-      <%= desc ? desc : 'Add a description' %>
-    </textarea>
+    <label for="desc">description</label>
+    <textarea rows="5" id="desc" name="desc"><%= desc || 'Add a description' %></textarea>
   </section>
 
   <button>
     <% if (item) { %>
-      Update <i class="fa-solid fa-check"></i>
+    Update <i class="fa-solid fa-check"></i>
     <% } else { %>
-      Add <i class="fa-solid fa-plus"></i>
+    Add <i class="fa-solid fa-plus"></i>
     <% } %>
   </button>
 </form>
