@@ -1,0 +1,22 @@
+<ul>
+  <% orders.forEach((order) => { %>
+  <li>
+    <h2>Order ID: <%= order.id %></h2>
+    <ul>
+      <% order.items.forEach(({ name, price, imgURL, orderItem }, index) => { %>
+      <li>
+        <img
+          src="<%= imgURL %>"
+          alt="<%= name %>"
+          style="width: 50px;"
+        />
+        <p><%= name %></p>
+        <p>$<%= price.toFixed(2) %></p>
+        <p>x <%= orderItem.quantity %></p>
+        <p>$<%= (orderItem.quantity * price).toFixed(2) %></p>
+      </li>
+      <% }) %>
+    </ul>
+  </li>
+  <% }) %>
+</ul>

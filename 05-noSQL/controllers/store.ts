@@ -1,15 +1,16 @@
 import { RequestHandler } from 'express';
 import Item from '../models/Item';
 import Cart from '../models/Cart';
-import html from '../views/index';
-import {     cartCSS,  cartPage } from '../views/cartPage';
-import { itemPageCSS,  itemPage } from '../views/itemPage';
-import {  ordersCSS, ordersPage } from '../views/ordersPage';
 
 const getItems: RequestHandler = (req, res, next) => {
   Item.findAll()
     .then((items) => {
-      res.render('root', { title: 'Home', isActive: '/', view: 'homepage', locals: { items } });
+      res.render('root', {
+           title: 'Home',
+        isActive: '/',
+            view: 'homepage',
+          locals: { items },
+      });
     })
     .catch((err) => console.log('getItems Error:', err));
 };
@@ -83,15 +84,13 @@ const postRemoveFromCart: RequestHandler = (req, res, next) => {
 }
 
 const getOrders: RequestHandler = (req, res, next) => {
-  req.user?.getOrders({include: ['items']}).then((orders) => {
-    res.send(
-      html({
-             css: ordersCSS,
-         content: ordersPage(orders),
-           title: 'Your Orders',
-        isActive: '/admin/items',
-      })
-    );
+  req.user?.getOrders({ include: ['items'] }).then((orders) => {
+    res.render('root', {
+         title: 'Your Orders',
+      isActive: '/admin/items',
+          view: 'orderspage',
+        locals: { orders },
+    });
   });
 };
 
