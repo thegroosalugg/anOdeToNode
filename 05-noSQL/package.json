@@ -7,9 +7,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "clear && tsx app.ts",
-    "dev": "clear && nodemon -x tsx app.ts",
+    "dev": "clear && nodemon -x tsx app.ts & npm run build:css",
     "build": "tsc && tsc-alias",
-    "preview": "clear && node dist/app.js"
+    "preview": "clear && node dist/app.js",
+    "build:css": "tailwindcss -i public/styles/tailwind.css -o public/styles/styles.css --watch"
   },
   "dependencies": {
     "ejs": "^3.1.10",
