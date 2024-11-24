@@ -20,7 +20,7 @@ const getUserItems: RequestHandler = (req, res, next) => {
              title: 'Dashboard',
           isActive: '/admin/items',
               view: 'itemsAll',
-            locals: { items },
+            locals: { items, isAdmin: true },
         });
       })
       .catch((err) => console.log('getUserItems Error:', err));

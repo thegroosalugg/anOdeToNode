@@ -9,7 +9,7 @@ const getItems: RequestHandler = (req, res, next) => {
            title: 'Home',
         isActive: '/',
             view: 'itemsAll',
-          locals: { items },
+          locals: { items, isAdmin: false },
       });
     })
     .catch((err) => console.log('getItems Error:', err));
