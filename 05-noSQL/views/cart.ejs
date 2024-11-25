@@ -1,40 +1,42 @@
-<h1>Your Cart</h1>
-<ul>
-  <% if (items.length === 0) { %>
-  <h4>Your Cart is Empty</h4>
-  <% } else { %> <% items.forEach(({ id, name, imgURL, price, cartItem }) => { %>
-  <li>
-    <a href="/store/<%= id %>">
-      <img src="<%= imgURL %>" alt="<%= name %>" style="width: 50px;" />
-    </a>
-    <h2><%= name %></h2>
-    <div>
-      <div>
-        <form action="/cart/remove" method="post">
-          <input type="hidden" name="itemId" value="<%= id %>" />
-          <button>
-            <i class="fa-solid fa-minus"></i>
-          </button>
-        </form>
-        <p><%= cartItem.quantity %></p>
-        <form action="/cart/add" method="post">
-          <input type="hidden" name="itemId" value="<%= id %>" />
-          <button>
-            <i class="fa-solid fa-plus"></i>
-          </button>
-        </form>
+<section class="cart">
+  <h1>Your Cart</h1>
+  <ul>
+    <% if (items.length === 0) { %>
+    <h4>Your Cart is Empty</h4>
+    <% } else { %> <% items.forEach(({ id, name, imgURL, price, cartItem }) => { %>
+    <li>
+      <a href="/store/<%= id %>">
+        <img src="<%= imgURL %>" alt="<%= name %>" style="width: 50px;" />
+      </a>
+      <h2><%= name %></h2>
+      <div class="controls">
+        <div>
+          <form action="/cart/remove" method="post">
+            <input type="hidden" name="itemId" value="<%= id %>" />
+            <button>
+              <i class="fa-solid fa-minus"></i>
+            </button>
+          </form>
+          <p><%= cartItem.quantity %></p>
+          <form action="/cart/add" method="post">
+            <input type="hidden" name="itemId" value="<%= id %>" />
+            <button>
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </form>
+        </div>
+        <p>$<%= (cartItem.quantity * price).toFixed(2) %></p>
       </div>
-      <p>$<%= (cartItem.quantity * price).toFixed(2) %></p>
-    </div>
-  </li>
-  <% }); %> <% } %>
-</ul>
-<% if (items.length > 0) { %>
-<form action="new-order" method="post">
-  <button>Place Order</button>
-</form>
-<% } %>
-<h3>
-  $<%= items.reduce((total, { price, cartItem }) => total + price * cartItem.quantity, 0).toFixed(2)
-  %>
-</h3>
+    </li>
+    <% }); %> <% } %>
+  </ul>
+  <% if (items.length > 0) { %>
+  <form class="order-button" action="new-order" method="post">
+    <button>Place Order</button>
+  </form>
+  <% } %>
+  <h3>
+    $<%= items.reduce((total, { price, cartItem }) => total + price * cartItem.quantity, 0).toFixed(2)
+    %>
+  </h3>
+</section>
