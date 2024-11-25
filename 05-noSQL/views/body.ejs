@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('includes/head', { title, css }) %>
+  <%- include('includes/head', { title, css: typeof css !== 'undefined' ? css : view }) %>
   <body>
     <%- include('includes/nav') %>
     <%- include(view, locals) %>

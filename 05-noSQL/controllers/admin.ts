@@ -18,7 +18,6 @@ const getUserItems: RequestHandler = (req, res, next) => {
       .then((items) => {
         res.render('body', {
              title: 'Dashboard',
-               css: 'itemsAll',
           isActive: '/admin/items',
               view: 'itemsAll',
             locals: { items, isAdmin: true },
@@ -34,7 +33,6 @@ const getUserItems: RequestHandler = (req, res, next) => {
 const getAddItem: RequestHandler = (req, res, next) => {
   res.render('body', {
        title: 'New Listing',
-         css: 'form',
     isActive: '/admin/items',
         view: 'form',
       locals: { item: null }
@@ -62,7 +60,6 @@ const getEditItem: RequestHandler = (req, res, next) => {
     req.user?.getItems({ where: { id: +itemId }}).then(( [item] ) => {
       res.render('body', {
            title: 'Edit Listing',
-             css: 'form',
         isActive: '/admin/items',
             view: 'form',
           locals: { item }

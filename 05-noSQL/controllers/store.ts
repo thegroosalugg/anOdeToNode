@@ -7,7 +7,6 @@ const getItems: RequestHandler = (req, res, next) => {
     .then((items) => {
       res.render('body', {
            title: 'Home',
-             css: 'itemsAll',
         isActive: '/',
             view: 'itemsAll',
           locals: { items, isAdmin: false },
@@ -22,7 +21,6 @@ const getItemById: RequestHandler = (req, res, next) => {
   Item.findByPk(+itemId || undefined).then((item) => {
     res.render('body', {
          title: item?.name || 'Not Found',
-           css: 'itemId',
       isActive: '/',
           view: 'itemId',
         locals: { item },
@@ -37,7 +35,6 @@ const getCart: RequestHandler = (req, res, next) => {
       return cart.getItems().then((items) => {
         res.render('body', {
              title: 'Your Cart',
-               css: 'cart',
           isActive: '/cart',
               view: 'cart',
             locals: { items },
@@ -91,7 +88,6 @@ const getOrders: RequestHandler = (req, res, next) => {
   req.user?.getOrders({ include: ['items'] }).then((orders) => {
     res.render('body', {
          title: 'Your Orders',
-           css: 'orders',
       isActive: '/admin/items',
           view: 'orders',
         locals: { orders },
