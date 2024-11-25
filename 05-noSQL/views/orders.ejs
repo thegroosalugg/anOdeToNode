@@ -5,11 +5,7 @@
     <ul>
       <% order.items.forEach(({ name, price, imgURL, orderItem }, index) => { %>
       <li>
-        <img
-          src="<%= imgURL %>"
-          alt="<%= name %>"
-          style="width: 50px;"
-        />
+        <img src="<%= imgURL %>" alt="<%= name %>" />
         <p><%= name %></p>
         <p>$<%= price.toFixed(2) %></p>
         <p>x <%= orderItem.quantity %></p>

@@ -6,7 +6,7 @@
     <% } else { %> <% items.forEach(({ id, name, imgURL, price, cartItem }) => { %>
     <li>
       <a href="/store/<%= id %>">
-        <img src="<%= imgURL %>" alt="<%= name %>" style="width: 50px;" />
+        <img src="<%= imgURL %>" alt="<%= name %>" />
       </a>
       <h2><%= name %></h2>
       <div class="controls">
