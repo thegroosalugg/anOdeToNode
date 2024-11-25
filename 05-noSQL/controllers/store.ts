@@ -18,7 +18,8 @@ const getItems: RequestHandler = (req, res, next) => {
 
 const getItemById: RequestHandler = (req, res, next) => {
   const { itemId } = req.params;
-  Item.findByPk(+itemId).then((item) => {
+  // sequelize crashes with strings, where as SQL will returned undefined
+  Item.findByPk(+itemId || undefined).then((item) => {
     res.render('body', {
          title: item?.name || 'Not Found',
            css: 'itemId',

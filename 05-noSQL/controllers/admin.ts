@@ -35,7 +35,7 @@ const getAddItem: RequestHandler = (req, res, next) => {
   res.render('body', {
        title: 'New Listing',
          css: 'form',
-    isActive: '/admin/add-item',
+    isActive: '/admin/items',
         view: 'form',
       locals: { item: null }
   });
@@ -63,7 +63,7 @@ const getEditItem: RequestHandler = (req, res, next) => {
       res.render('body', {
            title: 'Edit Listing',
              css: 'form',
-        isActive: '/admin/add-item',
+        isActive: '/admin/items',
             view: 'form',
           locals: { item }
       });
