@@ -3,6 +3,12 @@
   const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
 %>
 
+<div class="user-actions">
+  <a href="/orders">Orders</a>
+  <a href="/admin/items">Listings</a>
+  <a href="/admin/add-item">New Listing</a>
+</div>
+
 <form
   action="/admin/<%= item ? 'edit' : 'add' %>-item"
   method="post"

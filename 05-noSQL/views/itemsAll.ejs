@@ -1,7 +1,10 @@
 <section class="store">
   <% if (isAdmin) { %>
-  <a href="/orders">MY ORDERS</a>
-  <a href="/admin/add-item">NewItem</a>
+    <div class="user-actions">
+      <a href="/orders">Orders</a>
+      <a href="/admin/items">Listings</a>
+      <a href="/admin/add-item">New Listing</a>
+    </div>
   <% } else { %>
   <h1>Store</h1>
   <% } %>
