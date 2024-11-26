@@ -1,13 +1,11 @@
+<% if (isAdmin) { %>
+  <%- include('userNav') %>
+<% } %>
+
 <section class="store">
-  <% if (isAdmin) { %>
-    <div class="user-actions">
-      <a href="/orders">Orders</a>
-      <a href="/admin/items">Listings</a>
-      <a href="/admin/add-item">New Listing</a>
-    </div>
-  <% } else { %>
+<% if (!isAdmin) { %>
   <h1>Store</h1>
-  <% } %>
+<% } %>
   <ul>
     <% items.forEach(({ id, name, desc, imgURL, price }) => { %>
     <li>

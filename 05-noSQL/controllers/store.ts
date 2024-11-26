@@ -9,6 +9,7 @@ const getItems: RequestHandler = (req, res, next) => {
            title: 'Home',
         isActive: '/',
             view: 'itemsAll',
+          styles: ['itemsAll'],
           locals: { items, isAdmin: false },
       });
     })
@@ -23,6 +24,7 @@ const getItemById: RequestHandler = (req, res, next) => {
          title: item?.name || 'Not Found',
       isActive: '/',
           view: 'itemId',
+        styles: ['itemId'],
         locals: { item },
     });
   });
@@ -37,6 +39,7 @@ const getCart: RequestHandler = (req, res, next) => {
              title: 'Your Cart',
           isActive: '/cart',
               view: 'cart',
+            styles: ['cart'],
             locals: { items },
         });
       });
@@ -90,6 +93,7 @@ const getOrders: RequestHandler = (req, res, next) => {
          title: 'Your Orders',
       isActive: '/admin/items',
           view: 'orders',
+        styles: ['orders', 'userNav'],
         locals: { orders },
     });
   });

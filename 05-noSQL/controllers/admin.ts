@@ -20,6 +20,7 @@ const getUserItems: RequestHandler = (req, res, next) => {
              title: 'Dashboard',
           isActive: '/admin/items',
               view: 'itemsAll',
+            styles: ['itemsAll', 'userNav'],
             locals: { items, isAdmin: true },
         });
       })
@@ -35,6 +36,7 @@ const getAddItem: RequestHandler = (req, res, next) => {
        title: 'New Listing',
     isActive: '/admin/items',
         view: 'form',
+      styles: ['form', 'userNav'],
       locals: { item: null }
   });
 };
@@ -62,6 +64,7 @@ const getEditItem: RequestHandler = (req, res, next) => {
            title: 'Edit Listing',
         isActive: '/admin/items',
             view: 'form',
+          styles: ['form', 'userNav'],
           locals: { item }
       });
     })
