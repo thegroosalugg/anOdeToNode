@@ -117,3 +117,16 @@
     }
   }
 }
+
+@media screen and (pointer: coarse) and (max-width: 960px) {
+  .store {
+    ul {
+      li {
+        width: 125px;
+        a img {
+          height: 125px;
+        }
+      }
+    }
+  }
+}

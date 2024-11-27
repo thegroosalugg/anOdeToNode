@@ -17,10 +17,10 @@
     padding: 0.5rem;
     border-radius: 3px;
     box-shadow: 2px 2px 4px #454545;
-    background: linear-gradient(to right, #ece9e6, #ffffff);
+    background: linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea);
 
     > h2 {
-      color: #000C40;
+      color: #000c40;
       text-shadow: 0.5px 0.5px 1px #000;
       margin-bottom: 0.3rem;
     }
@@ -33,7 +33,12 @@
       > li {
         width: 99%;
         display: grid;
-        grid-template-columns: minmax(30px, 1fr) minmax(75px, 6fr) minmax(75px, 1fr) minmax(30px, 1fr) minmax(75px, 1fr);
+        grid-template-columns:
+          minmax(30px, 1fr)
+          minmax(70px, 6fr)
+          minmax(70px, 1fr)
+          minmax(30px, 1fr)
+          minmax(70px, 1fr);
         gap: 0.5rem;
 
         img {
@@ -50,6 +55,20 @@
 
           &:nth-of-type(1) {
             text-align: start;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (pointer: coarse) and (max-width: 568px) {
+  .orders {
+    > li {
+      > ul {
+        > li {
+          p {
+            font-size: smaller;
           }
         }
       }
