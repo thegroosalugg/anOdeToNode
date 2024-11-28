@@ -3,7 +3,7 @@ import express from 'express';
 import adminRoutes from './routes/admin';
 import storeRoutes from './routes/store';
 import errorController from './controllers/error';
-import mongoConnect from './data/database';
+import { mongoConnect } from './data/database';
 
 const app = express();
 
@@ -29,14 +29,14 @@ app.use((req, res, next) => {
   //     next();
   //   })
   //   .catch((err) => console.log('App.ts findUser error:', err));
+  next();
 });
 
-// app.use('/admin', adminRoutes); // adds URL filter to all routes
-// app.use(storeRoutes);
+app.use('/admin', adminRoutes); // adds URL filter to all routes
+app.use(storeRoutes);
 app.use(errorController);
 
-mongoConnect((client) => {
-  console.log('Mongo Client', client);
+mongoConnect(() => {
   app.listen(3000, () => {
     console.log('Server is on track to port 3000');
   });

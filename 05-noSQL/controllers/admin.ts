@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import Item from '../models/Item';
 import trimBody from '../util/trimBody';
 
 const images = ['four_awesome', 'green_orange', 'red_blue', 'sleek_black', 'tall.jpg', 'wide.jpg', 'yellow_purple', 'yellow_purple_2'];
@@ -46,9 +47,10 @@ const postAddItem: RequestHandler = (req, res, next) => {
   const { name, desc, price: str } = trimBody(req.body);
   const price = +str;
 
-  if (req.user && name && desc && price > 0) {
-    req.user
-      .createItem({ name, desc, imgURL: randomIMG(), price })
+  if (name && desc && price > 0) {
+    const item = new Item(name, desc, randomIMG(), price);
+    item
+      .save()
       .then(() => res.redirect('/admin/items'))
       .catch((err) => console.log('postAddItem error:', err));
   }

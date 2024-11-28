@@ -1,26 +1,24 @@
-import {
-  INTEGER, STRING, REAL,
-  Model, InferAttributes, InferCreationAttributes, CreationOptional,
-} from 'sequelize';
-import sequelize from '../data/database';
+import { getDb } from "../data/database";
 
-class Item extends Model<InferAttributes<Item>, InferCreationAttributes<Item>> {
-  declare     id: CreationOptional<number>;
-  declare   name: string;
-  declare   desc: string;
-  declare imgURL: string;
-  declare  price: number;
+export default class Item {
+    name: string;
+    desc: string;
+  imgURL: string;
+   price: number;
+
+  constructor(name: string, desc: string, imgURL: string, price: number) {
+    this.name   = name;
+    this.desc   = desc;
+    this.imgURL = imgURL;
+    this.price  = +price.toFixed(2);
+  }
+
+  save() {
+    const db = getDb();
+    return db
+      .collection('items')
+      .insertOne(this)
+      .then((result) => console.log('Item Saved', result))
+      .catch((err) => console.log('Item Save Error', err));
+  }
 }
-
-Item.init(
-  {
-        id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-      name: { type: STRING,   allowNull: false },
-      desc: { type: STRING,   allowNull: false },
-    imgURL: { type: STRING,   allowNull: false },
-     price: { type: REAL,     allowNull: false },
-  },
-  { sequelize, modelName: 'item' }
-);
-
-export default Item;
