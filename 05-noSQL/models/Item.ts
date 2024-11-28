@@ -13,12 +13,13 @@ export default class Item {
     this.price  = +price.toFixed(2);
   }
 
-  save() {
+  async save() {
     const db = getDb();
-    return db
-      .collection('items')
-      .insertOne(this)
-      .then((result) => console.log('Item Saved', result))
-      .catch((err) => console.log('Item Save Error', err));
+    try {
+      const result = await db.collection('items').insertOne(this);
+      console.log('Item Saved', result);
+    } catch (err) {
+      console.log('Item Save Error', err);
+    }
   }
 }
