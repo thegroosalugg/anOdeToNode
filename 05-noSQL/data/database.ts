@@ -1,8 +1,14 @@
-import { Sequelize } from 'sequelize';
+import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: './data/mountain.db',
-});
+const mongoConnect = (callback: (client: MongoClient) => void) => {
+  MongoClient.connect(process.env.MONGO_URI!)
+    .then((client) => {
+      console.log('Mongo Connected');
+      callback(client);
+    })
+    .catch((err) => console.log('Mongo Error:', err));
+};
 
-export default sequelize;
+export default mongoConnect;
