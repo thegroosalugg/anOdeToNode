@@ -1,4 +1,4 @@
-<% const { id, name, desc, imgURL, price } = item || {} %>
+<% const { _id, name, desc, imgURL, price } = item || {} %>
 
 <% if (!item) { %>
   <h1 class="not-found">The Item Doesn't Exist</h1>
@@ -23,7 +23,7 @@
         <form class="form" action="/cart/add" method="post">
           <p>$<%= price.toFixed(2) %></p>
           <button>Add to Cart</button>
-          <input type="hidden" name="itemId" value="<%= id %>" />
+          <input type="hidden" name="itemId" value="<%= _id %>" />
         </form>
       </div>
     </div>

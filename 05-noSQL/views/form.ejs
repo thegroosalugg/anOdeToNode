@@ -1,5 +1,5 @@
 <%
-  const { id = '', name = '', price = '', desc = '', imgURL = '' } = item || {};
+  const { _id = '', name = '', price = '', desc = '', imgURL = '' } = item || {};
   const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
 %>
 
@@ -14,7 +14,7 @@
   <h1><%= item ? 'Edit' : 'New' %> Listing</h1>
 
   <% if (item) { %>
-  <input type="hidden" name="id" value="<%= id %>" />
+  <input type="hidden" name="id"     value="<%= _id %>" />
   <input type="hidden" name="imgURL" value="<%= imgURL %>" />
   <% } %>
 

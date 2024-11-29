@@ -2,18 +2,19 @@ import { RequestHandler } from 'express';
 import Item from '../models/Item';
 import Cart from '../models/Cart';
 
-const getItems: RequestHandler = (req, res, next) => {
-  Item.findAll()
-    .then((items) => {
-      res.render('body', {
-           title: 'Home',
-        isActive: '/',
-            view: 'itemsAll',
-          styles: ['itemsAll'],
-          locals: { items, isAdmin: false },
-      });
-    })
-    .catch((err) => console.log('getItems Error:', err));
+const getItems: RequestHandler = async (req, res, next) => {
+  try {
+    const items = await Item.fetchAll();
+    res.render('body', {
+         title: 'Home',
+      isActive: '/',
+          view: 'itemsAll',
+        styles: ['itemsAll'],
+        locals: { items, isAdmin: false },
+    });
+  } catch (error) {
+    console.log('getItems Error:', error);
+  }
 };
 
 const getItemById: RequestHandler = (req, res, next) => {

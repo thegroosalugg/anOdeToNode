@@ -16,10 +16,18 @@ export default class Item {
   async save() {
     const db = getDb();
     try {
-      const result = await db.collection('items').insertOne(this);
-      console.log('Item Saved', result);
-    } catch (err) {
-      console.log('Item Save Error', err);
+      await db.collection('items').insertOne(this);
+    } catch (error) {
+      console.log('Item Save Error', error);
+    }
+  }
+
+  static async fetchAll() {
+    const db = getDb();
+    try {
+      return await db.collection('items').find().toArray();
+    } catch (error) {
+      console.log('Item Save Error', error);
     }
   }
 }

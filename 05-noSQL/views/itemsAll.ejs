@@ -7,9 +7,9 @@
   <h1>Store</h1>
 <% } %>
   <ul>
-    <% items.forEach(({ id, name, desc, imgURL, price }) => { %>
+    <% items.forEach(({ _id, name, desc, imgURL, price }) => { %>
     <li>
-      <a href="/store/<%= id %>">
+      <a href="/store/<%= _id %>">
         <img src="<%= imgURL %>" alt="<%= name %>" />
       </a>
       <div>
@@ -19,13 +19,13 @@
       <p><%= desc %></p>
       <% if (isAdmin) { %>
       <form action="/admin/delete-item" method="post" class="admin-controls">
-        <a href="/admin/edit-item/<%= id %>/?edit=true">
+        <a href="/admin/edit-item/<%= _id %>/?edit=true">
           EDIT
         </a>
         <button onclick="return confirm('Are you sure you want to delete this item?')">
           DELETE
         </button>
-        <input type="hidden" name="itemId" value="<%= id %>" />
+        <input type="hidden" name="itemId" value="<%= _id %>" />
       </form>
       <% } %>
     </li>

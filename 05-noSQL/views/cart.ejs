@@ -3,23 +3,23 @@
   <ul>
     <% if (items.length === 0) { %>
     <h4>Your Cart is Empty</h4>
-    <% } else { %> <% items.forEach(({ id, name, imgURL, price, cartItem }) => { %>
+    <% } else { %> <% items.forEach(({ _id, name, imgURL, price, cartItem }) => { %>
     <li>
-      <a href="/store/<%= id %>">
+      <a href="/store/<%= _id %>">
         <img src="<%= imgURL %>" alt="<%= name %>" />
       </a>
       <h2><%= name %></h2>
       <div class="controls">
         <div>
           <form action="/cart/remove" method="post">
-            <input type="hidden" name="itemId" value="<%= id %>" />
+            <input type="hidden" name="itemId" value="<%= _id %>" />
             <button>
               <i class="fa-solid fa-minus"></i>
             </button>
           </form>
           <p><%= cartItem.quantity %></p>
           <form action="/cart/add" method="post">
-            <input type="hidden" name="itemId" value="<%= id %>" />
+            <input type="hidden" name="itemId" value="<%= _id %>" />
             <button>
               <i class="fa-solid fa-plus"></i>
             </button>

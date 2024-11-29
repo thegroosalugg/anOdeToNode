@@ -8,7 +8,7 @@
   <% } else { %>
   <% } orders.forEach((order) => { %>
   <li>
-    <h2>Order ID: <%= order.id %></h2>
+    <h2>Order ID: <%= order._id %></h2>
     <ul>
       <% order.items.forEach(({ name, price, imgURL, orderItem }, index) => { %>
       <li>

@@ -4,6 +4,7 @@ import adminRoutes from './routes/admin';
 import storeRoutes from './routes/store';
 import errorController from './controllers/error';
 import { mongoConnect } from './data/database';
+import User from './models/User';
 
 const app = express();
 
@@ -23,12 +24,8 @@ app.use(
 app.use(express.static(path.join(import.meta.dirname, 'public')));
 
 app.use((req, res, next) => {
-  // User.findByPk(1)
-  //   .then((user) => {
-  //     req.user = user;
-  //     next();
-  //   })
-  //   .catch((err) => console.log('App.ts findUser error:', err));
+  // temp middleware set user to always true so controllers don't need re-writing
+  req.user = true as unknown as User;
   next();
 });
 

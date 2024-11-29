@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import User from '../models/User';
 import Item from '../models/Item';
 import trimBody from '../util/trimBody';
 
@@ -12,20 +13,20 @@ const randomIMG = () => {
 };
 
 // /admin/items
-const getUserItems: RequestHandler = (req, res, next) => {
+const getUserItems: RequestHandler = async (req, res, next) => {
   if (req.user) {
-    req.user
-      .getItems()
-      .then((items) => {
-        res.render('body', {
-             title: 'Dashboard',
-          isActive: '/admin/items',
-              view: 'itemsAll',
-            styles: ['itemsAll', 'userNav'],
-            locals: { items, isAdmin: true },
-        });
-      })
-      .catch((err) => console.log('getUserItems Error:', err));
+    try {
+      const items = await Item.fetchAll();
+      res.render('body', {
+           title: 'Dashboard',
+        isActive: '/admin/items',
+            view: 'itemsAll',
+          styles: ['itemsAll', 'userNav'],
+          locals: { items, isAdmin: true },
+      });
+    } catch (error) {
+      console.log('getUserItems Error:', error);
+    }
   } else {
     res.redirect('/');
   }
