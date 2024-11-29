@@ -17,10 +17,10 @@ const getItems: RequestHandler = async (req, res, next) => {
   }
 };
 
-const getItemById: RequestHandler = (req, res, next) => {
+const getItemById: RequestHandler = async (req, res, next) => {
   const { itemId } = req.params;
-  // sequelize crashes with strings, where as SQL will returned undefined
-  Item.findByPk(+itemId || undefined).then((item) => {
+  try {
+    const item = await Item.findById(itemId);
     res.render('body', {
          title: item?.name || 'Not Found',
       isActive: '/',
@@ -28,7 +28,9 @@ const getItemById: RequestHandler = (req, res, next) => {
         styles: ['itemId'],
         locals: { item },
     });
-  });
+  } catch (error) {
+    console.log('getItemById Error:', error);
+  }
 };
 
 const getCart: RequestHandler = (req, res, next) => {
