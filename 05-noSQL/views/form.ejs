@@ -14,7 +14,7 @@
   <h1><%= item ? 'Edit' : 'New' %> Listing</h1>
 
   <% if (item) { %>
-  <input type="hidden" name="id"     value="<%= _id %>" />
+  <input type="hidden" name="_id"     value="<%= _id %>" />
   <input type="hidden" name="imgURL" value="<%= imgURL %>" />
   <% } %>
 

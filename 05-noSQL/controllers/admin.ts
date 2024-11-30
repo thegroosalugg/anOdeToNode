@@ -1,5 +1,4 @@
 import { RequestHandler } from 'express';
-import User from '../models/User';
 import Item from '../models/Item';
 import trimBody from '../util/trimBody';
 
@@ -48,67 +47,85 @@ const postAddItem: RequestHandler = async (req, res, next) => {
   const { name, desc, price: str } = trimBody(req.body);
   const price = +str;
 
-  if (name && desc && price > 0) {
+  if (req.user && name && desc && price > 0) {
     const item = new Item(name, desc, randomIMG(), price);
+
     try {
       await item.save();
       res.redirect('/admin/items');
-    } catch (err) {
-      console.log('postAddItem error:', err);
+    } catch (error) {
+      console.log('postAddItem error:', error);
     }
+
+  } else {
+    res.redirect('/');
   }
 };
 
 // admin/edit-item/:itemId
-const getEditItem: RequestHandler = (req, res, next) => {
-  const { edit } = req.query
+const getEditItem: RequestHandler = async (req, res, next) => {
+  const { edit } = req.query;
   if (edit === 'true') {
     const { itemId } = req.params;
-    req.user?.getItems({ where: { id: +itemId }}).then(( [item] ) => {
-      res.render('body', {
-           title: 'Edit Listing',
-        isActive: '/admin/items',
-            view: 'form',
-          styles: ['form', 'userNav'],
-          locals: { item }
-      });
-    })
+
+    try {
+      const item = await Item.findById(itemId);
+      if (item) {
+        res.render('body', {
+             title: 'Edit Listing',
+          isActive: '/admin/items',
+              view: 'form',
+            styles: ['form', 'userNav'],
+            locals: { item },
+        });
+      } else {
+        res.redirect('/');
+      }
+    } catch (error) {
+      console.log('getEditItem error:', error);
+    }
+
   } else {
     res.redirect('/');
   }
-}
+};
 
-// /admin//edit-item
-const postEditItem: RequestHandler = (req, res, next) => {
-  const { id, imgURL, ...updatedFields } = req.body;
+// /admin/edit-item
+const postEditItem: RequestHandler = async (req, res, next) => {
+  const { _id, imgURL, ...updatedFields } = req.body;
   const { name, desc, price: str } = trimBody(updatedFields);
   const price = +str;
 
-  if (req.user && id && imgURL && name && desc && price > 0) {
-    req.user.getItems({ where: { id }})
-      .then(([item]) => {
-        if (item) {
-          item.update({ name, desc, price });
-          res.redirect('/admin/items');
-        }
-      })
-      .catch((err) => console.log('PostEditItem Error:', err));
+  if (req.user && _id && imgURL && name && desc && price > 0) {
+
+    const item = new Item(name, desc, imgURL, price, _id);
+    try {
+      await item.save();
+      res.redirect('/admin/items');
+    } catch (error) {
+      console.log('postEditItem error:', error);
+    }
+
   } else {
     res.redirect('/');
   }
 };
 
 // /admin//delete-item
-const postDeleteItem: RequestHandler = (req, res, next) => {
-  req.user
-    ?.getItems({ where: { id: +req.body.itemId } })
-    .then((items) => {
-      if (items.length > 0) {
-        items[0].destroy();
-      }
+const postDeleteItem: RequestHandler = async (req, res, next) => {
+  if (req.user) {
+    const { itemId } = req.body;
+
+    try {
+      await Item.delete(itemId);
       res.redirect('/admin/items');
-    })
-    .catch((err) => console.log('Delete error:', err));
+    } catch (error) {
+      console.log('postDeleteItem error:', error);
+    }
+
+  } else {
+    res.redirect('/');
+  }
 };
 
 export { getUserItems, getAddItem, postAddItem, getEditItem, postEditItem, postDeleteItem };
