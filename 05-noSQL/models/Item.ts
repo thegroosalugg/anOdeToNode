@@ -36,7 +36,7 @@ export default class Item {
   static async fetchAll() {
     const db = getDb();
     try {
-      return await db.collection('items').find().toArray();
+      return await db.collection<Item>('items').find().toArray();
     } catch (error) {
       console.log('Item fetchAll Error', error);
     }
@@ -47,7 +47,8 @@ export default class Item {
     const _id = new ObjectId(itemId); // convert stringId to Mongo ObjectId
     const db = getDb();
     try {
-      return await db.collection('items').find({ _id }).next();
+      // find returns a 'cursor' and next fetches a single result & transforms it into a JS object
+      return await db.collection<Item>('items').find({ _id }).next();
     } catch (error) {
       console.log('Item findById Error', error);
     }
