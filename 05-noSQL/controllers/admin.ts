@@ -48,7 +48,8 @@ const postAddItem: RequestHandler = async (req, res, next) => {
   const price = +str;
 
   if (req.user && name && desc && price > 0) {
-    const item = new Item(name, desc, randomIMG(), price);
+    const userId = req.user._id;
+    const item = new Item({ name, desc, imgURL: randomIMG(), price, userId });
 
     try {
       await item.save();
@@ -58,7 +59,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
     }
 
   } else {
-    res.redirect('/');
+    res.redirect('/admin/add-item');
   }
 };
 
@@ -98,7 +99,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
 
   if (req.user && _id && imgURL && name && desc && price > 0) {
 
-    const item = new Item(name, desc, imgURL, price, _id);
+    const item = new Item({ name, desc, imgURL, price, _id });
     try {
       await item.save();
       res.redirect('/admin/items');
@@ -107,7 +108,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
     }
 
   } else {
-    res.redirect('/');
+    res.redirect('/admin/edit-item/' + _id + '/?edit=true');
   }
 };
 

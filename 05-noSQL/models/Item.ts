@@ -2,26 +2,42 @@ import { getDb } from "../data/database";
 import { ObjectId } from "mongodb";
 
 export default class Item {
-    name: string;
-    desc: string;
-  imgURL: string;
-   price: number;
-    _id?: ObjectId;
+     name: string;
+     desc: string;
+   imgURL: string;
+    price: number;
+     _id?: ObjectId;
+  userId?: ObjectId;
 
-  constructor(name: string, desc: string, imgURL: string, price: number, _id?: string) {
+  constructor({
+      name,
+      desc,
+    imgURL,
+     price,
+       _id,
+    userId,
+  }: {
+       name: string;
+       desc: string;
+     imgURL: string;
+      price: number;
+       _id?: string;
+    userId?: ObjectId;
+  }) {
     this.name   = name;
     this.desc   = desc;
     this.imgURL = imgURL;
     this.price  = +price.toFixed(2);
-    if (_id) this._id = new ObjectId(_id);
+    if (   _id) this._id    = new ObjectId(_id);
+    if (userId) this.userId = userId;
   }
-
   async save() {
     const db = getDb().collection('items');
     let query;
 
     if (this._id) {
-      query = db.updateOne({ _id: this._id }, { $set: this });
+      const { name, desc, imgURL, price } = this;
+      query = db.updateOne({ _id: this._id }, { $set: { name, desc, imgURL, price } });
     } else {
       query = db.insertOne(this);
     }

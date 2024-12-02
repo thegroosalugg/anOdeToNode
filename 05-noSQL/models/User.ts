@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 import { getDb } from "../data/database";
 
 export default class User {
+   _id?: ObjectId; // taken care of by Mongo. Explicitly added to handle server requests
    name: string;
   email: string;
 
