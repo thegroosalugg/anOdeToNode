@@ -11,15 +11,13 @@
       <h2><%= name %></h2>
       <div class="controls">
         <div>
-          <form action="/cart/remove" method="post">
-            <input type="hidden" name="itemId" value="<%= _id %>" />
+          <form action="/cart/<%= _id %>/remove" method="post">
             <button>
               <i class="fa-solid fa-minus"></i>
             </button>
           </form>
           <p><%= cartItem.quantity %></p>
-          <form action="/cart/add" method="post">
-            <input type="hidden" name="itemId" value="<%= _id %>" />
+          <form action="/cart/<%= _id %>/add" method="post">
             <button>
               <i class="fa-solid fa-plus"></i>
             </button>

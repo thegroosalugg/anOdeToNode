@@ -52,7 +52,7 @@ export default class User {
     if (index !== -1) {
       this.cart[index].quantity += quantity;
 
-      if (this.cart[index].quantity === 0) {
+      if (this.cart[index].quantity <= 0) {
         this.cart.splice(index, 1);
       }
     } else if (quantity === 1) {

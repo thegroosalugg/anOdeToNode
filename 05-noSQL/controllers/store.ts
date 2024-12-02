@@ -33,6 +33,7 @@ const getItemById: RequestHandler = async (req, res, next) => {
 };
 
 const getCart: RequestHandler = (req, res, next) => {
+  res.redirect('/');
   // req.user
   //   ?.getCart()
   //   .then((cart) => {
@@ -49,29 +50,19 @@ const getCart: RequestHandler = (req, res, next) => {
   //   .catch((err) => console.log('getCart Error:', err));
 };
 
-const postAddToCart: RequestHandler = async (req, res, next) => {
-  const { itemId } = req.body;
+// /cart/:itemId/:action
+const postUpdateCart: RequestHandler = async (req, res, next) => {
+  const { itemId, action } = req.params;
+  const quantity = { add: 1, remove: -1 }[action];
 
   try {
-    if (req.user) {
-      req.user.updateCart(itemId, 1);
-      res.redirect('/cart');
+    const item = await Item.findById(itemId);
+    if (item && req.user && (quantity === 1 || quantity === -1)) {
+      await req.user.updateCart(itemId, quantity);
     }
+    res.redirect('/cart');
   } catch (error) {
     console.log('postAddToCart Error:', error);
-  }
-};
-
-const postRemoveFromCart: RequestHandler = async (req, res, next) => {
-  const { itemId } = req.body;
-
-  try {
-    if (req.user) {
-      req.user.updateCart(itemId, -1);
-      res.redirect('/cart');
-    }
-  } catch (error) {
-    console.log('postRemoveFromCart Error:', error);
   }
 };
 
@@ -111,4 +102,4 @@ const postCreateOrder: RequestHandler = (req, res, next) => {
   //   .catch((err) => console.log('postOrder Error:', err));
 };
 
-export { getItems, getItemById, getCart, postAddToCart, postRemoveFromCart, getOrders, postCreateOrder };
+export { getItems, getItemById, getCart, postUpdateCart, getOrders, postCreateOrder };
