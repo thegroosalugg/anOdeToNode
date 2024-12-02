@@ -26,7 +26,7 @@ app.use(express.static(path.join(import.meta.dirname, 'public')));
 app.use((req, res, next) => {
   User.findById('674cbcd544c3f6817416b189')
     .then((user) => {
-      req.user = user;
+      req.user = new User(user!);
       console.log(req.user);
       next();
     })
