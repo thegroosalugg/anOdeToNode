@@ -27,7 +27,7 @@ app.use((req, res, next) => {
   User.findById('674cbcd544c3f6817416b189')
     .then((user) => {
       req.user = new User(user!);
-      console.log(req.user);
+      // console.log(req.user);
       next();
     })
     .catch((err) => console.log('App.ts findUser error:', err));

@@ -68,4 +68,32 @@ export default class User {
       console.log('User updateCart Error', error);
     }
   }
+
+  async getCart() {
+    const db = getDb();
+    const cartIds = this.cart.map(({ itemId }) => itemId);
+
+    try {
+      const items = await db
+        .collection('items')
+        .find({ _id: { $in: cartIds } })
+        .toArray();
+
+      // remove deleted items by other users from current user's cart and update
+      const foundIds = items.map(({ _id }) => _id.toString());
+      this.cart = this.cart.filter(({ itemId }) => foundIds.includes(itemId.toString()));
+      await getDb()
+        .collection('users')
+        .updateOne({ _id: this._id }, { $set: { cart: this.cart } });
+
+      return items.map((item) => {
+        const quantity = this.cart.find(
+          (cartItem) => cartItem.itemId.toString() === item._id.toString()
+        )?.quantity;
+        return { ...item, quantity };
+      });
+    } catch (error) {
+      console.log('User getCart Error', error);
+    }
+  }
 }

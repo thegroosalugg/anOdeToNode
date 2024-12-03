@@ -32,22 +32,21 @@ const getItemById: RequestHandler = async (req, res, next) => {
   }
 };
 
-const getCart: RequestHandler = (req, res, next) => {
-  res.redirect('/');
-  // req.user
-  //   ?.getCart()
-  //   .then((cart) => {
-  //     return cart.getItems().then((items) => {
-  //       res.render('body', {
-  //            title: 'Your Cart',
-  //         isActive: '/cart',
-  //             view: 'cart',
-  //           styles: ['cart'],
-  //           locals: { items },
-  //       });
-  //     });
-  //   })
-  //   .catch((err) => console.log('getCart Error:', err));
+const getCart: RequestHandler = async (req, res, next) => {
+  try {
+    let items = [];
+    if (req.user) items = await req.user.getCart() as any[];
+
+    res.render('body', {
+         title: 'Your Cart',
+      isActive: '/cart',
+          view: 'cart',
+        styles: ['cart'],
+        locals: { items },
+    });
+  } catch (error) {
+    console.log('getCart Error:', error);
+  }
 };
 
 // /cart/:itemId/:action
