@@ -80,25 +80,28 @@ export default class User {
         .find({ _id: { $in: cartIds } })
         .toArray();
 
-      let cartItems = [];
+      const  cartItems:   Item[] = [];
+      const deletedIds: string[] = [];
 
       for (const { itemId, quantity } of this.cart) {
-        const item = items.find(({ _id }) => _id.toString() === itemId.toString());
-        if (item) {
-          cartItems.push({ ...item, quantity });
+        const index = items.findIndex(({ _id }) => _id.toString() === itemId.toString());
+        if (index !== -1) {
+          cartItems.push({ ...items[index], quantity });
+        } else {
+          deletedIds.push(itemId.toString());
         }
       }
 
       // remove deleted items by other users from current user's cart and update
-      const foundIds = items.map(({ _id }) => _id.toString());
-      this.cart = this.cart.filter(({ itemId }) => foundIds.includes(itemId.toString()));
-      await getDb()
+      this.cart = this.cart.filter(({ itemId }) => !deletedIds.includes(itemId.toString()));
+      await db
         .collection('users')
         .updateOne({ _id: this._id }, { $set: { cart: this.cart } });
 
       return cartItems;
     } catch (error) {
       console.log('User getCart Error', error);
+      return [];
     }
   }
 }

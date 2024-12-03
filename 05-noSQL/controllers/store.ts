@@ -34,8 +34,8 @@ const getItemById: RequestHandler = async (req, res, next) => {
 
 const getCart: RequestHandler = async (req, res, next) => {
   try {
-    let items = [];
-    if (req.user) items = await req.user.getCart() as any[];
+    let items: Item[] = [];
+    if (req.user) items = await req.user.getCart();
 
     res.render('body', {
          title: 'Your Cart',

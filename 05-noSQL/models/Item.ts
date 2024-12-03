@@ -2,12 +2,13 @@ import { getDb } from "../data/database";
 import { ObjectId } from "mongodb";
 
 export default class Item {
-     name: string;
-     desc: string;
-   imgURL: string;
-    price: number;
-     _id?: ObjectId;
-  userId?: ObjectId;
+       name: string;
+       desc: string;
+     imgURL: string;
+      price: number;
+  quantity?: number;
+       _id?: ObjectId;
+    userId?: ObjectId;
 
   constructor({
       name,
