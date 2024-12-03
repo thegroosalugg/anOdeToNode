@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { getDb } from '../data/database';
+import Item from './Item';
 
 type CartItem = { itemId: ObjectId; quantity: number };
 
@@ -75,9 +76,18 @@ export default class User {
 
     try {
       const items = await db
-        .collection('items')
+        .collection<Item>('items')
         .find({ _id: { $in: cartIds } })
         .toArray();
+
+      let cartItems = [];
+
+      for (const { itemId, quantity } of this.cart) {
+        const item = items.find(({ _id }) => _id.toString() === itemId.toString());
+        if (item) {
+          cartItems.push({ ...item, quantity });
+        }
+      }
 
       // remove deleted items by other users from current user's cart and update
       const foundIds = items.map(({ _id }) => _id.toString());
@@ -86,12 +96,7 @@ export default class User {
         .collection('users')
         .updateOne({ _id: this._id }, { $set: { cart: this.cart } });
 
-      return items.map((item) => {
-        const quantity = this.cart.find(
-          (cartItem) => cartItem.itemId.toString() === item._id.toString()
-        )?.quantity;
-        return { ...item, quantity };
-      });
+      return cartItems;
     } catch (error) {
       console.log('User getCart Error', error);
     }
