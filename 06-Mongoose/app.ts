@@ -3,8 +3,10 @@ import express from 'express';
 import adminRoutes from './routes/admin';
 import storeRoutes from './routes/store';
 import errorController from './controllers/error';
-import { mongoConnect } from './data/database';
 import User from './models/User';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+       dotenv.config();
 
 const app = express();
 
@@ -24,9 +26,9 @@ app.use(
 app.use(express.static(path.join(import.meta.dirname, 'public')));
 
 app.use((req, res, next) => {
-  User.findById('674cbcd544c3f6817416b189')
+  User.findById('6750cc273674e2e9c7d28caf')
     .then((user) => {
-      req.user = new User(user!);
+      req.user = user;
       // console.log(req.user);
       next();
     })
@@ -37,8 +39,11 @@ app.use('/admin', adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
 app.use(errorController);
 
-mongoConnect(() => {
-  app.listen(3000, () => {
-    console.log('Server is on track to port 3000');
-  });
-});
+mongoose
+  .connect(process.env.MONGO_URI!)
+  .then(() => {
+    app.listen(3000, () => {
+      console.log('Server is on track to port 3000');
+    });
+  })
+  .catch((error) => console.log('Mongoose Error', error));

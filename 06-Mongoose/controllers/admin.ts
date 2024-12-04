@@ -15,7 +15,7 @@ const randomIMG = () => {
 const getUserItems: RequestHandler = async (req, res, next) => {
   if (req.user) {
     try {
-      const items = await Item.fetchAll();
+      const items = await Item.find({ userId: req.user._id });
       res.render('body', {
            title: 'Dashboard',
         isActive: '/admin/items',
@@ -98,10 +98,8 @@ const postEditItem: RequestHandler = async (req, res, next) => {
   const price = +str;
 
   if (req.user && _id && imgURL && name && desc && price > 0) {
-
-    const item = new Item({ name, desc, imgURL, price, _id });
     try {
-      await item.save();
+      await Item.updateOne({ _id }, { $set: { name, desc, imgURL, price }});
       res.redirect('/admin/items');
     } catch (error) {
       console.log('postEditItem error:', error);
@@ -118,7 +116,7 @@ const postDeleteItem: RequestHandler = async (req, res, next) => {
     const { itemId } = req.body;
 
     try {
-      await Item.delete(itemId);
+      await Item.deleteOne({ _id: itemId });
       res.redirect('/admin/items');
     } catch (error) {
       console.log('postDeleteItem error:', error);
