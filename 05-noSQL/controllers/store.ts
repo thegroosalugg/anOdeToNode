@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import Item from '../models/Item';
+import { Order } from '../models/User';
 
 const getItems: RequestHandler = async (req, res, next) => {
   try {
@@ -65,40 +66,31 @@ const postUpdateCart: RequestHandler = async (req, res, next) => {
   }
 };
 
-const getOrders: RequestHandler = (req, res, next) => {
-  // req.user?.getOrders({ include: ['items'] }).then((orders) => {
-  //   res.render('body', {
-  //        title: 'Your Orders',
-  //     isActive: '/admin/items',
-  //         view: 'orders',
-  //       styles: ['orders', 'userNav'],
-  //       locals: { orders },
-  //   });
-  // });
+const getOrders: RequestHandler = async (req, res, next) => {
+  try {
+    let orders: Order[] = [];
+    if (req.user) orders = await req.user.getOrders();
+    res.render('body', {
+         title: 'Your Orders',
+      isActive: '/admin/items',
+          view: 'orders',
+        styles: ['orders', 'userNav'],
+        locals: { orders },
+    });
+  } catch (error) {
+    console.log('getOrders Error:', error);
+  }
 };
 
-const postCreateOrder: RequestHandler = (req, res, next) => {
-  // let fetchedCart;
-  // req.user
-  //   ?.getCart()
-  //   .then((cart) => {
-  //     fetchedCart = cart;
-  //     return cart.getItems();
-  //   })
-  //   .then((items) => {
-  //     return req.user
-  //       ?.createOrder()
-  //       .then((order) => {
-  //         order.addItems(items.map((item) => {
-  //           item.orderItem = { quantity: item.cartItem.quantity }
-  //           return item;
-  //         }));
-  //       })
-  //       .catch((err) => console.log('createOrder Error:', err));
-  //   })
-  //   .then(() => fetchedCart.setItems([]))
-  //   .then(() => res.redirect('/orders'))
-  //   .catch((err) => console.log('postOrder Error:', err));
+const postCreateOrder: RequestHandler = async (req, res, next) => {
+  try {
+    if (req.user) {
+     await req.user.createOrder();
+     res.redirect('/orders');
+    }
+  } catch (error) {
+    console.log('postCreateOrder Error:', error);
+  }
 };
 
 export { getItems, getItemById, getCart, postUpdateCart, getOrders, postCreateOrder };

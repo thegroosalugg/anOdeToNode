@@ -2,28 +2,33 @@ import { ObjectId } from 'mongodb';
 import { getDb } from '../data/database';
 import Item from './Item';
 
-type CartItem = { itemId: ObjectId; quantity: number };
+       type CartItem = { itemId: ObjectId; quantity: number };
+export type    Order = { userId: ObjectId; name: string, email: string; items: Item[] };
 
 export default class User {
-   _id?: ObjectId; // taken care of by Mongo. Explicitly added to handle server requests
-   name: string;
-  email: string;
-   cart: CartItem[];
-
-   constructor({
-     name,
-    email,
-     cart,
-      _id,
-  }: {
+     _id?: ObjectId; // taken care of by Mongo. Explicitly added to handle server requests
      name: string;
     email: string;
-    cart?: CartItem[];
-     _id?: ObjectId;
+     cart: CartItem[];
+   orders:    Order[];
+
+   constructor({
+      name,
+     email,
+      cart,
+    orders,
+       _id,
+  }: {
+       name: string;
+      email: string;
+      cart?: CartItem[];
+    orders?:    Order[];
+       _id?: ObjectId;
   }) {
-    this.name  = name;
-    this.email = email;
-    this.cart  = cart || [];
+    this.name   = name;
+    this.email  = email;
+    this.cart   = cart   || [];
+    this.orders = orders || [];
     if (_id) this._id = _id;
   }
 
@@ -48,7 +53,7 @@ export default class User {
   }
 
   async updateCart(_id: string, quantity: 1 | -1) {
-    const index = this.cart.findIndex(( { itemId } ) => itemId.toString() === _id);
+    const index = this.cart.findIndex(({ itemId }) => itemId.toString() === _id);
 
     if (index !== -1) {
       this.cart[index].quantity += quantity;
@@ -101,6 +106,35 @@ export default class User {
       return cartItems;
     } catch (error) {
       console.log('User getCart Error', error);
+      return [];
+    }
+  }
+
+  async createOrder() {
+    const db = getDb();
+    const { _id, name, email } = this;
+    const items = await this.getCart();
+    const order = { userId: _id, name, email, items };
+    this.cart = [];
+
+    try {
+      await db.collection('orders').insertOne(order);
+      await db
+        .collection('users')
+        .updateOne({ _id: this._id }, { $set: { cart: this.cart } });
+    } catch (error) {
+      console.log('User createOrder Error', error);
+    }
+  }
+
+  async getOrders() {
+    try {
+      return await getDb()
+        .collection<Order>('orders')
+        .find({ userId: this._id })
+        .toArray();
+    } catch (error) {
+      console.log('User getOrders Error', error);
       return [];
     }
   }
