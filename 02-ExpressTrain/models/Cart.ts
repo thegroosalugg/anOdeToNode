@@ -22,7 +22,7 @@ export default class Cart {
         cart[index].quantity += quantity;
 
         if (cart[index].quantity === 0) {
-          cart.splice(index, 1)
+          cart.splice(index, 1);
         }
       } else if (quantity === 1) {
         cart = [{ id, quantity }, ...cart];
