@@ -1,29 +1,31 @@
-import { ObjectId } from "mongodb";
-import { model, Schema } from "mongoose";
+import { model, Schema } from 'mongoose';
+
+const { ObjectId } = Schema.Types;
 
 const required = true;
 
 const itemSchema = new Schema({
   name: {
     type: String,
-    required
+    required,
   },
   desc: {
     type: String,
-    required
+    required,
   },
   imgURL: {
     type: String,
-    required
+    required,
   },
   price: {
     type: Number,
-    required
+    required,
   },
   userId: {
     type: ObjectId,
-    required
+    ref: 'User',
+    required,
   },
-})
+});
 
 export default model('Item', itemSchema);
