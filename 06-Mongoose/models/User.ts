@@ -1,4 +1,5 @@
 import { Model, model, Types, Schema } from 'mongoose';
+import Item from './Item';
 
 const required = true;
 
@@ -10,6 +11,7 @@ interface IUser {
 
 interface IUserMethods {
   updateCart: (_id: string, quantity: 1 | -1) => void;
+     getCart: () => void;
 }
 
 type UserModel = Model<IUser, {}, IUserMethods>;
@@ -54,6 +56,34 @@ userSchema.methods.updateCart = async function(_id, quantity) {
     await this.save(); // mongoose function
   } catch (error) {
     console.log('User updateCart Error', error);
+  }
+};
+
+userSchema.methods.getCart = async function() {
+  const cartIds = this.cart.map(({ itemId }) => itemId);
+
+  try {
+    const items = await Item.find({ _id: { $in: cartIds } }).lean(); // lean returns plain JS objects
+
+    const  cartItems           = [];
+    const deletedIds: string[] = [];
+
+    for (const { itemId, quantity } of this.cart) {
+      const index = items.findIndex(({ _id }) => _id.toString() === itemId.toString());
+      if (index !== -1) {
+        cartItems.push({ ...items[index], quantity });
+      } else {
+        deletedIds.push(itemId.toString());
+      }
+    }
+
+    // remove deleted items by other users from current user's cart and update
+    this.cart = this.cart.filter(({ itemId }) => !deletedIds.includes(itemId.toString()));
+    await this.save();
+    return cartItems;
+  } catch (error) {
+    console.log('User getCart Error', error);
+    return [];
   }
 };
 

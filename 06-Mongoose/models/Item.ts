@@ -1,10 +1,22 @@
-import { model, Schema } from 'mongoose';
-
-const { ObjectId } = Schema.Types;
+import { Model, model, Types, Schema } from 'mongoose';
 
 const required = true;
 
-const itemSchema = new Schema({
+interface IItem {
+    name: string;
+    desc: string;
+  imgURL: string;
+   price: number;
+  userId: Types.ObjectId;
+}
+
+interface IItemMethods {
+  // to be continued...
+}
+
+type ItemModel = Model<IItem, {}, IItemMethods>;
+
+const itemSchema = new Schema<IItem, ItemModel, IItemMethods>({
   name: {
     type: String,
     required,
@@ -22,10 +34,10 @@ const itemSchema = new Schema({
     required,
   },
   userId: {
-    type: ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User',
     required,
   },
 });
 
-export default model('Item', itemSchema);
+export default model<IItem, ItemModel>('Item', itemSchema);
