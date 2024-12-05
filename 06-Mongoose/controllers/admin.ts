@@ -48,7 +48,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
   const price = +str;
 
   if (req.user && name && desc && price > 0) {
-    const userId = req.user._id;
+    const userId = req.user; // mongoose will extract just the Id due to schema ref
     const item = new Item({ name, desc, imgURL: randomIMG(), price, userId });
 
     try {
