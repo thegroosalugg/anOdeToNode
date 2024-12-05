@@ -1,10 +1,20 @@
-import { model, Schema } from 'mongoose';
-
-const { ObjectId } = Schema.Types;
+import { Model, model, Types, Schema } from 'mongoose';
 
 const required = true;
 
-const userSchema = new Schema({
+interface IUser {
+   name: string;
+  email: string;
+   cart: { itemId: Types.ObjectId | string; quantity: number }[];
+}
+
+interface IUserMethods {
+  updateCart: (_id: string, quantity: 1 | -1) => void;
+}
+
+type UserModel = Model<IUser, {}, IUserMethods>;
+
+const userSchema = new Schema<IUser, UserModel, IUserMethods>({
   name: {
     type: String,
     required,
@@ -16,7 +26,7 @@ const userSchema = new Schema({
   },
   cart: [
     {
-      itemId: { type: ObjectId, ref: 'Item', required },
+      itemId: { type: Schema.Types.ObjectId, ref: 'Item', required },
       quantity: {
         type: Number,
         min: 1,
@@ -26,10 +36,8 @@ const userSchema = new Schema({
   ],
 });
 
-userSchema.methods.updateCart = function(_id: string, quantity: 1 | -1) {
-  const index = this.cart.findIndex(
-    ({ itemId }: { itemId: typeof ObjectId }) => itemId.toString() === _id
-  );
+userSchema.methods.updateCart = async function(_id, quantity) {
+  const index = this.cart.findIndex(({ itemId }) => itemId.toString() === _id);
 
   if (index !== -1) {
     this.cart[index].quantity += quantity;
@@ -43,10 +51,10 @@ userSchema.methods.updateCart = function(_id: string, quantity: 1 | -1) {
   }
 
   try {
-    this.save(); // mongoose function
+    await this.save(); // mongoose function
   } catch (error) {
     console.log('User updateCart Error', error);
   }
-}
+};
 
-export default model('User', userSchema);
+export default model<IUser, UserModel>('User', userSchema);
