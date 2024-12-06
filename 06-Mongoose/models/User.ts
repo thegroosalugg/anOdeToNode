@@ -11,29 +11,18 @@ interface IUser {
 
 interface IUserMethods {
   updateCart: (_id: string, quantity: 1 | -1) => void;
-     getCart: () => void;
+     getCart: (                             ) => void;
 }
 
 type UserModel = Model<IUser, {}, IUserMethods>;
 
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
-  name: {
-    type: String,
-    required,
-  },
-  email: {
-    type: String,
-    unique: true,
-    required,
-  },
-  cart: [
+   name: { type: String, required },
+  email: { type: String, required, unique: true },
+   cart: [
     {
-      itemId: { type: Schema.Types.ObjectId, ref: 'Item', required },
-      quantity: {
-        type: Number,
-        min: 1,
-        required,
-      },
+        itemId: { type: Schema.Types.ObjectId, ref: 'Item', required },
+      quantity: { type: Number,                min: 1,      required },
     },
   ],
 });

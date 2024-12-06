@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import Item from '../models/Item';
+import Order from '../models/Order';
 
 const getItems: RequestHandler = async (req, res, next) => {
   try {
@@ -67,8 +68,7 @@ const postUpdateCart: RequestHandler = async (req, res, next) => {
 
 const getOrders: RequestHandler = async (req, res, next) => {
   try {
-    let orders = [];
-    if (req.user) orders = await req.user.getOrders();
+    const orders = await Order.find({ 'user._id': req.user._id });
     res.render('body', {
          title: 'Your Orders',
       isActive: '/admin/items',
@@ -84,8 +84,12 @@ const getOrders: RequestHandler = async (req, res, next) => {
 const postCreateOrder: RequestHandler = async (req, res, next) => {
   try {
     if (req.user) {
-     await req.user.createOrder();
-     res.redirect('/orders');
+      const { _id, name, email } = req.user;
+      const items = await req.user.getCart();
+      await new Order({ user: { _id, name, email }, items }).save();
+      req.user.cart = [];
+      await req.user.save();
+      res.redirect('/orders');
     }
   } catch (error) {
     console.log('postCreateOrder Error:', error);
