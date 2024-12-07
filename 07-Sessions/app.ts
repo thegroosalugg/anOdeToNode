@@ -1,19 +1,36 @@
 import path from 'path';
 import express from 'express';
+import session from 'express-session';
 import adminRoutes from './routes/admin';
 import storeRoutes from './routes/store';
 import authRoutes from './routes/auth';
 import errorController from './controllers/error';
-import User from './models/User';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
        dotenv.config();
+
+const inProduction = process.env.NODE_ENV === 'production';
 
 const app = express();
 
 app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: false }));
+
+app.set('trust proxy', 1); // trust first proxy. Required to work on Render.com
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET!,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: inProduction, // prevents client-side JavaScript from accessing the cookie.
+        secure: inProduction, // enables cookies over HTTPS only. Can't be used in dev.
+      sameSite: 'strict',     // sets cross origin requests
+    },
+  })
+);
 
 // set to public folder in repo root, for all projects
 app.use(
@@ -25,16 +42,6 @@ app.use(
 
 // public folder specific to project
 app.use(express.static(path.join(import.meta.dirname, 'public')));
-
-app.use((req, res, next) => {
-  User.findById('6750df45541bb5fbb4115baf')
-    .then((user) => {
-      req.user = user;
-      // console.log(req.user);
-      next();
-    })
-    .catch((err) => console.log('App.ts findUser error:', err));
-});
 
 app.use('/admin', adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
