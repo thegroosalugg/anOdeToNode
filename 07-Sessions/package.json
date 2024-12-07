@@ -1,0 +1,23 @@
+{
+  "name": "07-sessions",
+  "version": "1.0.0",
+  "description": "adding sessions",
+  "main": "app.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "clear && tsx app.ts",
+    "dev": "clear && nodemon -x tsx app.ts",
+    "build": "tsc && tsc-alias",
+    "preview": "clear && node dist/app.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "mongoose": "^8.8.3"
+  },
+  "devDependencies": {
+    "tsc-alias": "^1.8.10"
+  }
+}
