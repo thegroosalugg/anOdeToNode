@@ -2,6 +2,7 @@ import path from 'path';
 import express from 'express';
 import adminRoutes from './routes/admin';
 import storeRoutes from './routes/store';
+import authRoutes from './routes/auth';
 import errorController from './controllers/error';
 import User from './models/User';
 import mongoose from 'mongoose';
@@ -37,6 +38,7 @@ app.use((req, res, next) => {
 
 app.use('/admin', adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
+app.use(authRoutes);
 app.use(errorController);
 
 mongoose
