@@ -6,6 +6,7 @@ import storeRoutes from './routes/store';
 import authRoutes from './routes/auth';
 import errorController from './controllers/error';
 import mongoose from 'mongoose';
+import User from './models/User';
 import dotenv from 'dotenv';
        dotenv.config();
 
@@ -31,6 +32,26 @@ app.use(
     },
   })
 );
+
+// middleware sets sessions user to req.user for easier access in controllers
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+
+  User.findById(req.session.user._id)
+    .then((user) => {
+      if (!user) {
+        return next();
+      }
+      req.user = user;
+      next();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 
 // set to public folder in repo root, for all projects
 app.use(

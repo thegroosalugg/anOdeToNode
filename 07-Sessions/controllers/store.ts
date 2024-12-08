@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import Item from '../models/Item';
+import Item, { IItem } from '../models/Item';
 import Order from '../models/Order';
 
 const getItems: RequestHandler = async (req, res, next) => {
@@ -35,7 +35,7 @@ const getItemById: RequestHandler = async (req, res, next) => {
 
 const getCart: RequestHandler = async (req, res, next) => {
   try {
-    let items = [];
+    let items: IItem[] = [];
     if (req.user) items = await req.user.getCart();
 
     res.render('body', {
@@ -68,7 +68,7 @@ const postUpdateCart: RequestHandler = async (req, res, next) => {
 
 const getOrders: RequestHandler = async (req, res, next) => {
   try {
-    const orders = await Order.find({ 'user._id': req.user._id });
+    const orders = await Order.find({ 'user._id': req.user?._id });
     res.render('body', {
          title: 'Your Orders',
       isActive: '/admin/items',

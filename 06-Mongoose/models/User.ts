@@ -1,5 +1,5 @@
 import { Model, model, Types, Schema } from 'mongoose';
-import Item from './Item';
+import Item, { IItem } from './Item';
 
 const required = true;
 
@@ -10,8 +10,8 @@ interface IUser {
 }
 
 interface IUserMethods {
-  updateCart: (_id: string, quantity: 1 | -1) => void;
-     getCart: (                             ) => void;
+  updateCart: (_id: string, quantity: 1 | -1) => Promise<void>;
+     getCart: () => Promise<IItem[]>;
 }
 
 type UserModel = Model<IUser, {}, IUserMethods>;
@@ -54,7 +54,7 @@ userSchema.methods.getCart = async function() {
   try {
     const items = await Item.find({ _id: { $in: cartIds } }).lean(); // lean returns plain JS objects
 
-    const  cartItems           = [];
+    const  cartItems:  IItem[] = [];
     const deletedIds: string[] = [];
 
     for (const { itemId, quantity } of this.cart) {

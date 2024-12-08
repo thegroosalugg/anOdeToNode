@@ -3,12 +3,12 @@ import { Model, model, Types, Schema } from 'mongoose';
 const required = true;
 
 export interface IItem {
-       name: string;
-       desc: string;
-     imgURL: string;
-      price: number;
-  quantity?: number;
-     userId: Types.ObjectId;
+      name: string;
+      desc: string;
+    imgURL: string;
+     price: number;
+  quantity: number;
+    userId: Types.ObjectId;
 }
 
 interface IItemMethods {
