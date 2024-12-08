@@ -27,19 +27,23 @@ const getUserItems: RequestHandler = async (req, res, next) => {
       console.log('getUserItems Error:', error);
     }
   } else {
-    res.redirect('/');
+    res.redirect('/login');
   }
 };
 
 // /admin/add-item
 const getAddItem: RequestHandler = (req, res, next) => {
-  res.render('body', {
-       title: 'New Listing',
-    isActive: '/admin/items',
-        view: 'form',
-      styles: ['form', 'userNav'],
-      locals: { item: null }
-  });
+  if (req.user) {
+    res.render('body', {
+         title: 'New Listing',
+      isActive: '/admin/items',
+          view: 'form',
+        styles: ['form', 'userNav'],
+        locals: { item: null },
+    });
+  } else {
+    res.redirect('/login');
+  }
 };
 
 // /admin/add-item
@@ -66,7 +70,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
 // admin/edit-item/:itemId
 const getEditItem: RequestHandler = async (req, res, next) => {
   const { edit } = req.query;
-  if (edit === 'true') {
+  if (edit === 'true' && req.user) {
     const { itemId } = req.params;
 
     try {
@@ -87,7 +91,7 @@ const getEditItem: RequestHandler = async (req, res, next) => {
     }
 
   } else {
-    res.redirect('/');
+    res.redirect('/login');
   }
 };
 
@@ -123,7 +127,7 @@ const postDeleteItem: RequestHandler = async (req, res, next) => {
     }
 
   } else {
-    res.redirect('/');
+    res.redirect('/login');
   }
 };
 

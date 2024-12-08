@@ -2,14 +2,17 @@ import { RequestHandler } from 'express';
 import User from '../models/User';
 
 const getLogin: RequestHandler = async (req, res, next) => {
-  console.log(req.session);
-  res.render('body', {
-       title: 'Login',
-    isActive: '/login',
-        view: 'login',
-      styles: ['login'],
-      locals: {},
-  })
+  if (!req.user) {
+    res.render('body', {
+         title: 'Login',
+      isActive: '/login',
+          view: 'login',
+        styles: ['login'],
+        locals: {},
+    })
+  } else {
+    res.redirect('/admin/items')
+  }
 };
 
 const postLogin: RequestHandler = async (req, res, next) => {

@@ -34,19 +34,21 @@ const getItemById: RequestHandler = async (req, res, next) => {
 };
 
 const getCart: RequestHandler = async (req, res, next) => {
-  try {
-    let items: IItem[] = [];
-    if (req.user) items = await req.user.getCart();
-
-    res.render('body', {
-         title: 'Your Cart',
-      isActive: '/cart',
-          view: 'cart',
-        styles: ['cart'],
-        locals: { items },
-    });
-  } catch (error) {
-    console.log('getCart Error:', error);
+  if (req.user) {
+    try {
+      const items = await req.user.getCart();
+      res.render('body', {
+           title: 'Your Cart',
+        isActive: '/cart',
+            view: 'cart',
+          styles: ['cart'],
+          locals: { items },
+      });
+    } catch (error) {
+      console.log('getCart Error:', error);
+    }
+  } else {
+    res.redirect('/login');
   }
 };
 
@@ -67,32 +69,38 @@ const postUpdateCart: RequestHandler = async (req, res, next) => {
 };
 
 const getOrders: RequestHandler = async (req, res, next) => {
-  try {
-    const orders = await Order.find({ 'user._id': req.user?._id });
-    res.render('body', {
-         title: 'Your Orders',
-      isActive: '/admin/items',
-          view: 'orders',
-        styles: ['orders', 'userNav'],
-        locals: { orders },
-    });
-  } catch (error) {
-    console.log('getOrders Error:', error);
+  if (req.user) {
+    try {
+      const orders = await Order.find({ 'user._id': req.user._id });
+      res.render('body', {
+           title: 'Your Orders',
+        isActive: '/admin/items',
+            view: 'orders',
+          styles: ['orders', 'userNav'],
+          locals: { orders },
+      });
+    } catch (error) {
+      console.log('getOrders Error:', error);
+    }
+  } else {
+    res.redirect('/login');
   }
 };
 
 const postCreateOrder: RequestHandler = async (req, res, next) => {
-  try {
-    if (req.user) {
+  if (req.user) {
+    try {
       const { _id, name, email } = req.user;
       const items = await req.user.getCart();
       await new Order({ user: { _id, name, email }, items }).save();
       req.user.cart = [];
       await req.user.save();
       res.redirect('/orders');
+    } catch (error) {
+      console.log('postCreateOrder Error:', error);
     }
-  } catch (error) {
-    console.log('postCreateOrder Error:', error);
+  } else {
+    res.redirect('/login');
   }
 };
 
