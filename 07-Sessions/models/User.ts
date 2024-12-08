@@ -1,5 +1,6 @@
 import { Model, model, Types, Schema } from 'mongoose';
 import Item, { IItem } from './Item';
+import errorMsg from '../util/errorMsg';
 
 const required = true;
 
@@ -44,7 +45,7 @@ userSchema.methods.updateCart = async function(_id, quantity) {
   try {
     await this.save(); // mongoose function
   } catch (error) {
-    console.log('User updateCart Error', error);
+    errorMsg({ error, msg: 'userSchema updateCart'});
   }
 };
 
@@ -71,7 +72,7 @@ userSchema.methods.getCart = async function() {
     await this.save();
     return cartItems;
   } catch (error) {
-    console.log('User getCart Error', error);
+    errorMsg({ error, msg: 'userSchema getCart'});
     return [];
   }
 };

@@ -16,14 +16,14 @@ type OrderModel = Model<IOrder, {}, IOrderMethods>;
 
 const OrderSchema = new Schema<IOrder, OrderModel, IOrderMethods>({
   user: {
-      _id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+      _id: { type: Schema.Types.ObjectId, ref: 'User', required },
      name: { type: String, required },
-    email: { type: String, required, unique: true },
+    email: { type: String, required },
   },
   items: [
     {
       ...itemSchema.obj,
-      quantity: { type: Number, required: true, min: 1 },
+      quantity: { type: Number, required, min: 1 },
     },
   ],
 });

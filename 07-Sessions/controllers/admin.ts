@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 import Item from '../models/Item';
 import trimBody from '../util/trimBody';
+import errorMsg from '../util/errorMsg';
 
 const images = ['four_awesome', 'green_orange', 'red_blue', 'sleek_black', 'tall.jpg', 'wide.jpg', 'yellow_purple', 'yellow_purple_2'];
 
@@ -23,7 +24,8 @@ const getUserItems: RequestHandler = async (req, res, next) => {
         locals: { items, isAdmin: true },
     });
   } catch (error) {
-    console.log('getUserItems Error:', error);
+    errorMsg({ error, msg: 'getUserItems' });
+    res.redirect('/');
   }
 };
 
@@ -51,7 +53,8 @@ const postAddItem: RequestHandler = async (req, res, next) => {
       await item.save();
       res.redirect('/admin/items');
     } catch (error) {
-      console.log('postAddItem error:', error);
+      errorMsg({ error, msg: 'postAddItem' });
+      res.redirect('/');
     }
 
   } else {
@@ -82,7 +85,7 @@ const getEditItem: RequestHandler = async (req, res, next) => {
       res.redirect('/');
     }
   } catch (error) {
-    console.log('getEditItem error:', error);
+    errorMsg({ error, msg: 'getEditItem' });
     res.redirect('/');
   }
 };
@@ -98,7 +101,8 @@ const postEditItem: RequestHandler = async (req, res, next) => {
       await Item.updateOne({ _id }, { $set: { name, desc, imgURL, price }});
       res.redirect('/admin/items');
     } catch (error) {
-      console.log('postEditItem error:', error);
+      errorMsg({ error, msg: 'postEditItem' });
+      res.redirect('/');
     }
 
   } else {
@@ -113,7 +117,8 @@ const postDeleteItem: RequestHandler = async (req, res, next) => {
     await Item.deleteOne({ _id: itemId });
     res.redirect('/admin/items');
   } catch (error) {
-    console.log('postDeleteItem error:', error);
+    errorMsg({ error, msg: 'postDeleteItem' });
+    res.redirect('/');
   }
 };
 

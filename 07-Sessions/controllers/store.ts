@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
-import Item, { IItem } from '../models/Item';
+import Item from '../models/Item';
 import Order from '../models/Order';
+import errorMsg from '../util/errorMsg';
 
 const getItems: RequestHandler = async (req, res, next) => {
   try {
@@ -13,7 +14,8 @@ const getItems: RequestHandler = async (req, res, next) => {
         locals: { items, isAdmin: false },
     });
   } catch (error) {
-    console.log('***GET ITEMS ERROR***', error);
+    errorMsg({ error, msg: 'getItems' });
+    res.redirect('/');
   }
 };
 
@@ -29,7 +31,7 @@ const getItemById: RequestHandler = async (req, res, next) => {
         locals: { item },
     });
   } catch (error) {
-    console.log('***GET ITEM BY ID ERROR***', error);
+    errorMsg({ error, msg: 'getItemById' });
     res.redirect('/');
   }
 };
@@ -46,7 +48,8 @@ const getCart: RequestHandler = async (req, res, next) => {
         locals: { items },
     });
   } catch (error) {
-    console.log('***GET CART ERROR***', error);
+    errorMsg({ error, msg: 'getCart' });
+    res.redirect('/');
   }
 };
 
@@ -62,7 +65,8 @@ const postUpdateCart: RequestHandler = async (req, res, next) => {
     }
     res.redirect('/cart');
   } catch (error) {
-    console.log('postAddToCart Error:', error);
+    errorMsg({ error, msg: 'postUpdateCart' });
+    res.redirect('/');
   }
 };
 
@@ -78,7 +82,8 @@ const getOrders: RequestHandler = async (req, res, next) => {
         locals: { orders },
     });
   } catch (error) {
-    console.log('getOrders Error:', error);
+    errorMsg({ error, msg: 'getOrders' });
+    res.redirect('/');
   }
 };
 
@@ -93,7 +98,8 @@ const postCreateOrder: RequestHandler = async (req, res, next) => {
     await req.user.save();
     res.redirect('/orders');
   } catch (error) {
-    console.log('postCreateOrder Error:', error);
+    errorMsg({ error, msg: 'postCreateOrder' });
+    res.redirect('/');
   }
 };
 

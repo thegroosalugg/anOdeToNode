@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import User from '../models/User';
 
-const getLogin: RequestHandler = async (req, res, next) => {
+const getLogin: RequestHandler = (req, res, next) => {
   if (!req.user) {
     res.render('body', {
          title: 'Login',
