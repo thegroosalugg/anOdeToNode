@@ -18,7 +18,7 @@ const getLogin: RequestHandler = async (req, res, next) => {
 const postLogin: RequestHandler = async (req, res, next) => {
   const user = await User.findById('6750df45541bb5fbb4115baf');
   req.session.user = user;
-  res.redirect('/');
+  res.redirect('/admin/items');
 };
 
 const postLogout: RequestHandler = (req, res, next) => {

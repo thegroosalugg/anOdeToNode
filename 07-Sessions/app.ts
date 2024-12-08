@@ -9,6 +9,7 @@ import errorController from './controllers/error';
 import mongoose from 'mongoose';
 import User from './models/User';
 import dotenv from 'dotenv';
+import { authenticate } from './middleware/authenticate';
        dotenv.config();
 
 const inProduction = process.env.NODE_ENV === 'production';
@@ -77,7 +78,7 @@ app.use(
 // public folder specific to project
 app.use(express.static(path.join(import.meta.dirname, 'public')));
 
-app.use('/admin', adminRoutes); // adds URL filter to all routes
+app.use('/admin', authenticate, adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
 app.use(authRoutes);
 app.use(errorController);
