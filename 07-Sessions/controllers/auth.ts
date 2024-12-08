@@ -18,4 +18,18 @@ const postLogin: RequestHandler = async (req, res, next) => {
   res.redirect('/');
 };
 
-export { getLogin, postLogin };
+const postLogout: RequestHandler = (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log('postLogout destroy session error:', err);
+    }
+
+    // Clear user data from req and res locals
+    req.user = null;
+    res.locals.user = null;
+
+    res.redirect('/');
+  });
+};
+
+export { getLogin, postLogin, postLogout };

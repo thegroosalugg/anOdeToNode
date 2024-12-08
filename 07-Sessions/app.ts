@@ -44,6 +44,8 @@ app.use(
 
 // middleware sets sessions user to req.user for easier access in controllers
 app.use((req, res, next) => {
+  res.locals.user = null; // explicitly set as null every cycle to prevent undeclared keys
+
   if (!req.session.user) {
     return next();
   }
@@ -53,11 +55,13 @@ app.use((req, res, next) => {
       if (!user) {
         return next();
       }
-      req.user = user;
+      req.user = user; // sessions user set for all controller requests
+      const { _id, name, email } = user;
+      res.locals.user = { _id, name, email }; // locals user set for all EJS responses
       next();
     })
     .catch((err) => {
-      console.log(err);
+      console.log('App findById middleware error:', err);
     });
 });
 

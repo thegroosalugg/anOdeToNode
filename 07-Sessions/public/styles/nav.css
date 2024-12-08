@@ -14,11 +14,12 @@
     text-wrap: nowrap;
   }
 
-  a {
+  a, .nav-login button {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.1rem;
+    font-size: 1rem;
     color: #FFFFFF;
     border-bottom: 1px solid transparent;
 
@@ -35,10 +36,15 @@
     i {
       font-size: 1.3rem;
     }
+  }
 
-    &:last-of-type {
-      margin-right: 1rem;
-      margin-left: auto;
+  .nav-login {
+    margin-right: 1rem;
+    margin-left: auto;
+
+    button {
+      border: none;
+      background: none;
     }
   }
 }
