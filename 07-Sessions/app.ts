@@ -1,6 +1,7 @@
 import path from 'path';
 import express from 'express';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import adminRoutes from './routes/admin';
 import storeRoutes from './routes/store';
 import authRoutes from './routes/auth';
@@ -14,8 +15,10 @@ const inProduction = process.env.NODE_ENV === 'production';
 
 const app = express();
 
+// sets templating engine
 app.set('view engine', 'ejs');
 
+// allows parsing of data into req.body with simple key value pairs
 app.use(express.urlencoded({ extended: false }));
 
 app.set('trust proxy', 1); // trust first proxy. Required to work on Render.com
@@ -24,6 +27,12 @@ app.use(
     secret: process.env.SESSION_SECRET!,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+            mongoUrl: process.env.MONGO_URI,
+      collectionName: 'sessions',
+           serialize: (session) => session, // allows nested object structure in mongo
+         unserialize: (data) => data,       // reformats back to app readable format
+    }),
     cookie: {
         maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: inProduction, // prevents client-side JavaScript from accessing the cookie.

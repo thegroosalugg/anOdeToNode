@@ -13,6 +13,7 @@ import OrderItem from './models/OrderItem';
 
 const app = express();
 
+// allows parsing of data into req.body with simple key value pairs
 app.use(express.urlencoded({ extended: false }));
 
  // allows serving of static paths

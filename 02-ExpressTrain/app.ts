@@ -6,6 +6,7 @@ import errorController from './controllers/error';
 
 const app = express();
 
+// allows parsing of data into req.body with simple key value pairs
 app.use(express.urlencoded({ extended: false })); // replaces bodyparser.urlencoded
 
  // allows serving of static paths
