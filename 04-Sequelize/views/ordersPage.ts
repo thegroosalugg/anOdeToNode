@@ -32,8 +32,14 @@ const ordersCSS = /*css*/ `
         > li {
           width: 99%;
           display: grid;
-          grid-template-columns: minmax(30px, 1fr) minmax(75px, 6fr) minmax(75px, 1fr) minmax(30px, 1fr) minmax(75px, 1fr);
+          grid-template-columns:
+            minmax(30px, 1fr)
+            minmax(75px, 6fr)
+            minmax(75px, 1fr)
+            minmax(30px, 1fr)
+            minmax(75px, 1fr);
           gap: 0.5rem;
+          align-items: center;
 
           img {
             width: 30px;

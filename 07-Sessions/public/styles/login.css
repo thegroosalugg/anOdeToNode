@@ -1,0 +1,35 @@
+.login {
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: right;
+
+  > section {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+
+    input {
+      border: 1px solid #000;
+      border-radius: 2px;
+    }
+  }
+
+  > button {
+    margin-top: 0.5rem;
+    padding: 0.2rem;
+    font-size: 0.9rem;
+    background: #1183a0;
+    color: #FFFFFF;
+    border: 0.5px solid transparent;
+    border-radius: 3px;
+    transition: 0.3s step-start;
+
+    &:hover {
+      transform: scale(1.05);
+      font-weight: 500;
+      background: #c38c4e;
+    }
+  }
+}

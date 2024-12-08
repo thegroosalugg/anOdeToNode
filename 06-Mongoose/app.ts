@@ -10,8 +10,10 @@ import dotenv from 'dotenv';
 
 const app = express();
 
+// sets templating engine
 app.set('view engine', 'ejs');
 
+// allows parsing of data into req.body with simple key value pairs
 app.use(express.urlencoded({ extended: false }));
 
 // set to public folder in repo root, for all projects

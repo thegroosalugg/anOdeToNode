@@ -1,0 +1,40 @@
+<section class="cart">
+  <h1>Your Cart</h1>
+  <ul>
+    <% if (items.length === 0) { %>
+    <h4>Your Cart is Empty</h4>
+    <% } else { %> <% items.forEach(({ _id, name, imgURL, price, quantity }) => { %>
+    <li>
+      <a href="/store/<%= _id %>">
+        <img src="<%= imgURL %>" alt="<%= name %>" />
+      </a>
+      <h2><%= name %></h2>
+      <div class="controls">
+        <div>
+          <form action="/cart/<%= _id %>/remove" method="post">
+            <button>
+              <i class="fa-solid fa-minus"></i>
+            </button>
+          </form>
+          <p><%= quantity %></p>
+          <form action="/cart/<%= _id %>/add" method="post">
+            <button>
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </form>
+        </div>
+        <p>$<%= (quantity * price).toFixed(2) %></p>
+      </div>
+    </li>
+    <% }); %> <% } %>
+  </ul>
+  <% if (items.length > 0) { %>
+  <form class="order-button" action="new-order" method="post">
+    <button>Place Order</button>
+  </form>
+  <% } %>
+  <h3>
+    $<%= items.reduce((total, { price, quantity }) => total + price * quantity, 0).toFixed(2)
+    %>
+  </h3>
+</section>

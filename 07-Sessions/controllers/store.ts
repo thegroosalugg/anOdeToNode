@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
-import Item, { IItem } from '../models/Item';
+import Item from '../models/Item';
 import Order from '../models/Order';
+import errorMsg from '../util/errorMsg';
 
 const getItems: RequestHandler = async (req, res, next) => {
   try {
@@ -13,7 +14,8 @@ const getItems: RequestHandler = async (req, res, next) => {
         locals: { items, isAdmin: false },
     });
   } catch (error) {
-    console.log('getItems Error:', error);
+    errorMsg({ error, msg: 'getItems' });
+    res.redirect('/');
   }
 };
 
@@ -29,15 +31,15 @@ const getItemById: RequestHandler = async (req, res, next) => {
         locals: { item },
     });
   } catch (error) {
-    console.log('getItemById Error:', error);
+    errorMsg({ error, msg: 'getItemById' });
+    res.redirect('/');
   }
 };
 
+// prepended by authenticate middleware
 const getCart: RequestHandler = async (req, res, next) => {
   try {
-    let items: IItem[] = [];
-    if (req.user) items = await req.user.getCart();
-
+    const items = await req.user?.getCart();
     res.render('body', {
          title: 'Your Cart',
       isActive: '/cart',
@@ -46,11 +48,12 @@ const getCart: RequestHandler = async (req, res, next) => {
         locals: { items },
     });
   } catch (error) {
-    console.log('getCart Error:', error);
+    errorMsg({ error, msg: 'getCart' });
+    res.redirect('/');
   }
 };
 
-// /cart/:itemId/:action
+// /cart/:itemId/:action - prepended by authenticate middleware
 const postUpdateCart: RequestHandler = async (req, res, next) => {
   const { itemId, action } = req.params;
   const quantity = { add: 1, remove: -1 }[action];
@@ -62,37 +65,41 @@ const postUpdateCart: RequestHandler = async (req, res, next) => {
     }
     res.redirect('/cart');
   } catch (error) {
-    console.log('postAddToCart Error:', error);
+    errorMsg({ error, msg: 'postUpdateCart' });
+    res.redirect('/');
   }
 };
 
+// prepended by authenticate middleware
 const getOrders: RequestHandler = async (req, res, next) => {
   try {
     const orders = await Order.find({ 'user._id': req.user?._id });
     res.render('body', {
-         title: 'Your Orders',
+          title: 'Your Orders',
       isActive: '/admin/items',
           view: 'orders',
         styles: ['orders', 'userNav'],
         locals: { orders },
     });
   } catch (error) {
-    console.log('getOrders Error:', error);
+    errorMsg({ error, msg: 'getOrders' });
+    res.redirect('/');
   }
 };
 
+// prepended by authenticate middleware
 const postCreateOrder: RequestHandler = async (req, res, next) => {
+  if (!req.user) return;
   try {
-    if (req.user) {
-      const { _id, name, email } = req.user;
-      const items = await req.user.getCart();
-      await new Order({ user: { _id, name, email }, items }).save();
-      req.user.cart = [];
-      await req.user.save();
-      res.redirect('/orders');
-    }
+    const { _id, name, email } = req.user;
+    const items = await req.user.getCart();
+    await new Order({ user: { _id, name, email }, items }).save();
+    req.user.cart = [];
+    await req.user.save();
+    res.redirect('/orders');
   } catch (error) {
-    console.log('postCreateOrder Error:', error);
+    errorMsg({ error, msg: 'postCreateOrder' });
+    res.redirect('/');
   }
 };
 
