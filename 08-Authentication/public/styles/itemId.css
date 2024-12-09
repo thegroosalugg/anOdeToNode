@@ -58,6 +58,7 @@
       flex-direction: column;
       gap: 0.5rem;
       border: 1px solid #000000;
+      background: linear-gradient(to right, #dfe1e3, #eef2f3);
 
       > h1 {
         font-size: 3rem;
@@ -84,7 +85,7 @@
 
       > h2 {
         color: #faf8f8;
-        background: #8e1313;
+        background: #1e1e1e;
         text-align: center;
         padding: 0.5rem 1rem;
         font-weight: 300;
@@ -134,7 +135,8 @@
           transition: 0.5s ease-in-out;
 
           &:hover {
-            background: #d4cfcf;
+            color: #ffffff;
+            background: #414141;
           }
         }
       }

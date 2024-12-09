@@ -19,8 +19,9 @@
         <p><%= name %></p>
         <p>$<%= price.toFixed(2) %></p>
       </div>
+      <% if (!isAdmin) { %>
       <p><%= desc %></p>
-      <% if (isAdmin) { %>
+      <% } else { %>
       <form action="/admin/delete-item" method="post" class="admin-controls">
         <a href="/admin/edit-item/<%= _id %>/?edit=true">
           EDIT
