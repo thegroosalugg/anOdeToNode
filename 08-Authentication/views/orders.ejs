@@ -1,0 +1,33 @@
+<%- include('userNav') %>
+
+<% const border = (isTrue) => isTrue ? '0.5px solid #000' : 'none' %>
+
+<ul class="orders">
+  <% if (orders.length === 0) { %>
+  <h1>You have no orders</h1>
+  <% } else { %>
+  <% } orders.forEach((order) => { %>
+  <li>
+    <h2>Order ID: <%= order._id %></h2>
+    <ul>
+      <% order.items.forEach(({ name, price, imgURL, quantity }, index) => { %>
+      <li>
+        <img
+          src="<%= imgURL %>"
+          alt="<%= name %>"
+          <% /* this line removes style prop warnings */ %>
+          style="
+            border-top:    <%= border(index === 0)                      %>;
+            border-bottom: <%= border(index === order.items.length - 1) %>;
+          "
+        />
+        <p><%= name %></p>
+        <p>$<%= price.toFixed(2) %></p>
+        <p>x <%= quantity %></p>
+        <p>$<%= (quantity * price).toFixed(2) %></p>
+      </li>
+      <% }) %>
+    </ul>
+  </li>
+  <% }) %>
+</ul>
