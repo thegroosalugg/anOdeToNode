@@ -1,14 +1,19 @@
 import { RequestHandler } from 'express';
 import User from '../models/User';
+import errorMsg from '../util/errorMsg';
 
 const getLogin: RequestHandler = (req, res, next) => {
   if (!req.user) {
+    const { newuser } = req.query;
+    const signup = newuser === 'true';
+    const title = signup ? 'Sign Up' : 'Login';
+
     res.render('body', {
-         title: 'Login',
+         title,
       isActive: '/login',
           view: 'login',
         styles: ['login'],
-        locals: {},
+        locals: { signup },
     })
   } else {
     res.redirect('/admin/items')
@@ -35,4 +40,9 @@ const postLogout: RequestHandler = (req, res, next) => {
   });
 };
 
-export { getLogin, postLogin, postLogout };
+const postSignup: RequestHandler = async (req, res, next) => {
+  errorMsg({ error: '', msg: 'signup' })
+  res.redirect('/login');
+};
+
+export { getLogin, postLogin, postLogout, postSignup };
