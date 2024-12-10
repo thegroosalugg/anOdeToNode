@@ -3,9 +3,10 @@ body {
   flex-direction: column;
   min-height: 100vh;
   background: linear-gradient(to right, #ece9e6, #ffffff);
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Unlock", serif;
 }
 
 a, button {
   transition: 0.8s ease;
+  font-family: "Unlock", serif;
 }

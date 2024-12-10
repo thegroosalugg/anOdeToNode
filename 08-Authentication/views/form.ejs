@@ -3,7 +3,7 @@
   const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
 %>
 
-<%- include('userNav') %>
+<%- include('dashboard') %>
 
 <form
   action="/admin/<%= item ? 'edit' : 'add' %>-item"

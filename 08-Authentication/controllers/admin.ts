@@ -20,7 +20,7 @@ const getUserItems: RequestHandler = async (req, res, next) => {
          title: 'Dashboard',
       isActive: '/admin/items',
           view: 'itemsAll',
-        styles: ['itemsAll', 'userNav'],
+        styles: ['itemsAll', 'dashboard', 'userInfo'],
         locals: { items, isAdmin: true },
     });
   } catch (error) {
@@ -35,7 +35,7 @@ const getAddItem: RequestHandler = (req, res, next) => {
        title: 'New Listing',
     isActive: '/admin/items',
         view: 'form',
-      styles: ['form', 'userNav'],
+      styles: ['form', 'dashboard'],
       locals: { item: null },
   });
 };
@@ -78,7 +78,7 @@ const getEditItem: RequestHandler = async (req, res, next) => {
            title: 'Edit Listing',
         isActive: '/admin/items',
             view: 'form',
-          styles: ['form', 'userNav'],
+          styles: ['form', 'dashboard'],
           locals: { item },
       });
     } else {

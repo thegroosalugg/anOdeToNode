@@ -7,7 +7,6 @@
     text-align: center;
     text-shadow: 0.5px 0.5px 1px #000;
     font-size: 1.5rem;
-    font-weight: 200;
     padding: 1rem;
     background: #ff7f58;
   }
@@ -50,12 +49,12 @@
         width: inherit;
         img {
           height: 200px;
+          width: 100%;
           object-fit: cover;
         }
       }
 
       p {
-        font-weight: 400;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -69,15 +68,17 @@
       > div {
         display: flex;
         justify-content: space-between;
+        align-items: end;
         padding: 0.5rem;
 
         > p {
           &:first-child {
             max-width: 65%;
-            font-weight: 600;
+            font-weight: 500;
+            font-size: 1.2rem;
+            font-family: "Oswald", sans-serif;
           }
           &:last-child {
-            font-weight: 500;
             color: #3b3b3b;
           }
         }
@@ -94,7 +95,6 @@
           border-top: 1px solid #474747;
           text-align: center;
           font-size: 1rem;
-          font-weight: 500;
           color: #000;
           cursor: pointer;
           transition: 0.5s ease-in-out;
@@ -120,10 +120,11 @@
 @media screen and (pointer: coarse) and (max-width: 960px) {
   .store {
     ul {
+      grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
       li {
-        width: 125px;
+        width: 120px;
         a img {
-          height: 125px;
+          height: 120px;
         }
       }
     }

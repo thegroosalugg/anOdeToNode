@@ -44,7 +44,7 @@ const getCart: RequestHandler = async (req, res, next) => {
          title: 'Your Cart',
       isActive: '/cart',
           view: 'cart',
-        styles: ['cart'],
+        styles: ['cart', 'dashboard'],
         locals: { items },
     });
   } catch (error) {
@@ -78,7 +78,7 @@ const getOrders: RequestHandler = async (req, res, next) => {
           title: 'Your Orders',
       isActive: '/admin/items',
           view: 'orders',
-        styles: ['orders', 'userNav'],
+        styles: ['orders', 'dashboard', 'userInfo'],
         locals: { orders },
     });
   } catch (error) {
