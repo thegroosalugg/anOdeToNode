@@ -9,8 +9,8 @@ const getItems: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: 'Home',
       isActive: '/',
-          view: 'itemsAll',
-        styles: ['itemsAll'],
+          view: 'itemList',
+        styles: ['itemList'],
         locals: { items, isAdmin: false },
     });
   } catch (error) {
@@ -26,8 +26,8 @@ const getItemById: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: item?.name || 'Not Found',
       isActive: '/',
-          view: 'itemId',
-        styles: ['itemId'],
+          view: 'itemView',
+        styles: ['itemView'],
         locals: { item },
     });
   } catch (error) {
