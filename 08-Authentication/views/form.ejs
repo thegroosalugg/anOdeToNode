@@ -17,32 +17,37 @@
 
 <%- include('dashboard') %>
 
-<form
-  action="/admin/<%= item ? 'edit' : 'add' %>-item"
-  method="post"
-  class="form"
->
+<section class="edit-form-wrapper">
   <% if (item) { %>
-    <input type="hidden" name="_id"     value="<%= _id %>" />
-    <input type="hidden" name="imgURL" value="<%= imgURL %>" />
     <img src="<%= imgURL %>" alt="<%= name %>" />
-  <% } else { %>
-    <h1>Post a new listing</h1>
-  <% } %>
+  <% }  %>
 
-  <%= input('name') %>
-  <%= input('price') %>
-
-  <section>
-    <label for="desc">description</label>
-    <textarea rows="5" id="desc" name="desc"><%= desc %></textarea>
-  </section>
-
-  <button>
+  <form
+    action="/admin/<%= item ? 'edit' : 'add' %>-item"
+    method="post"
+    class="item-form"
+  >
     <% if (item) { %>
-    Update <i class="fa-solid fa-check"></i>
+      <input type="hidden" name="_id"     value="<%= _id %>" />
+      <input type="hidden" name="imgURL" value="<%= imgURL %>" />
     <% } else { %>
-    Add <i class="fa-solid fa-plus"></i>
+      <h1>Post a new listing</h1>
     <% } %>
-  </button>
-</form>
+
+    <%= input('name') %>
+    <%= input('price') %>
+
+    <section>
+      <label for="desc">description</label>
+      <textarea rows="5" id="desc" name="desc"><%= desc %></textarea>
+    </section>
+
+    <button>
+      <% if (item) { %>
+      Update <i class="fa-solid fa-check"></i>
+      <% } else { %>
+      Add <i class="fa-solid fa-plus"></i>
+      <% } %>
+    </button>
+  </form>
+</section>
