@@ -1,36 +1,41 @@
 <%
-  const { _id = '', name = '', price = '', desc = '', imgURL = '' } = item || {};
-  const backgroundImg = `/assets/logo${item ? 1 : 2}.png`;
-%>
+  const {
+       _id = '',
+      name = '...',
+     price = '0.00',
+      desc = 'This item is...',
+    imgURL = ''
+  } = item || {};
+  const data = { name, price };
+  const input = (id) => { %>
+  <section>
+    <% console.log(data[id]) %>
+    <label for="<%= id %>"><%= id %></label>
+    <input id="<%= id %>" name="<%= id %>" value="<%= data[id] %>" autocomplete="off" />
+  </section>
+<% } %>
 
 <%- include('dashboard') %>
 
 <form
   action="/admin/<%= item ? 'edit' : 'add' %>-item"
   method="post"
-  style="background-image: url('<%= backgroundImg %>');"
   class="form"
 >
-  <h1><%= item ? 'Edit' : 'New' %> Listing</h1>
-
   <% if (item) { %>
-  <input type="hidden" name="_id"     value="<%= _id %>" />
-  <input type="hidden" name="imgURL" value="<%= imgURL %>" />
+    <input type="hidden" name="_id"     value="<%= _id %>" />
+    <input type="hidden" name="imgURL" value="<%= imgURL %>" />
+    <img src="<%= imgURL %>" alt="<%= name %>" />
+  <% } else { %>
+    <h1>Post a new listing</h1>
   <% } %>
 
-  <section>
-    <label for="name">name</label>
-    <input id="name" name="name" value="<%= name %>" autocomplete="off" />
-  </section>
-
-  <section>
-    <label for="price">price</label>
-    <input id="price" name="price" value="<%= price %>" autocomplete="off" />
-  </section>
+  <%= input('name') %>
+  <%= input('price') %>
 
   <section>
     <label for="desc">description</label>
-    <textarea rows="5" id="desc" name="desc"><%= desc || 'Add a description' %></textarea>
+    <textarea rows="5" id="desc" name="desc"><%= desc %></textarea>
   </section>
 
   <button>

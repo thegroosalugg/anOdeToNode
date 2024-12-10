@@ -9,7 +9,7 @@
     margin: 0 auto;
     border: 1px solid #000;
     overflow-x: auto;
-    background: linear-gradient(to right, #f3f2f2, #fcfcfc);
+    background: linear-gradient(to right, #dedddd, #fcfcfc);
 
     p {
       display: grid;
