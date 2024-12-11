@@ -33,7 +33,7 @@
     }
 
     &:hover {
-      color: #611669;
+      color: #1b1b1b;
     }
 
     span {
@@ -49,7 +49,7 @@
     color: #FFFFFF;
     border: 0.5px solid transparent;
     border-radius: 3px;
-    transition: 0.3s step-start;
+    transition: 0.9s step-start;
 
     &.signup {
       background: #1183a0;
@@ -57,7 +57,7 @@
 
     &:hover {
       transform: scale(1.05);
-      background: #e08b29;
+      background: #272727;
     }
   }
 }

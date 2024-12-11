@@ -41,7 +41,7 @@
       <textarea rows="5" id="desc" name="desc"><%= desc %></textarea>
     </section>
 
-    <button>
+    <button class="<%= item ? 'update' : '' %>">
       <% if (item) { %>
       Update <i class="fa-solid fa-check"></i>
       <% } else { %>
