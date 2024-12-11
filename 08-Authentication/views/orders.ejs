@@ -1,11 +1,8 @@
 <%- include('dashboard') %>
 <%- include('userInfo') %>
 
-<% const detailRow = (text, value, n1, n2) => { %>
-  <p
-    class="detail-row"
-    <% /* remove EJS style warnings */ %>
-    style="grid-template-columns: <%= n1 %> <%= n2 %>;">
+<% const detailRow = (text, value, css = '') => { %>
+  <p class="detail-row <%= css %>">
     <span><%= text %></span>
     <span><%= value %></span>
   </p>
@@ -29,14 +26,14 @@
           <section>
             <img src="<%= imgURL %>" alt="<%= name %>" />
             <div>
-              <%= detailRow('Article:',     name, '60px', '60px') %>
-              <%= detailRow('Seller:', user.name, '60px', '60px') %>
+              <%= detailRow('Article:',     name) %>
+              <%= detailRow('Seller:', user.name) %>
             </div>
           </section>
           <section>
-            <%= detailRow('Price:', '$' +             price.toFixed(2),  '1fr', '60px') %>
-            <%= detailRow('Quantity:',     quantity,                     '1fr', '60px') %>
-            <%= detailRow('Total:', '$' + (quantity * price).toFixed(2), '1fr', '60px') %>
+            <%= detailRow('Price:', '$' +             price.toFixed(2),  'order-price') %>
+            <%= detailRow('Quantity:',     quantity,                     'order-price') %>
+            <%= detailRow('Total:', '$' + (quantity * price).toFixed(2), 'order-price') %>
           </section>
         </li>
         <% }) %>

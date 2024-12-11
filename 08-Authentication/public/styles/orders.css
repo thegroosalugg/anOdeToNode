@@ -85,9 +85,12 @@
 
 .detail-row {
   display: grid;
-  /* prop left here for readibility, but is set dynamically via style */
   grid-template-columns: 60px 60px;
   gap: 0.5rem;
+
+  &.order-price {
+    grid-template-columns: 1fr 60px;
+  }
 
   span {
     text-align: end;
@@ -96,7 +99,6 @@
     line-height: 1.45;
 
     &:last-of-type {
-      text-align: start;
       font-family: 'Oswald', sans-serif;
     }
 
