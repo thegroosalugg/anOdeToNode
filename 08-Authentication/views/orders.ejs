@@ -23,17 +23,13 @@
       <ul>
         <% items.forEach(({ name, price, imgURL, quantity }, index) => { %>
         <li>
+          <img src="<%= imgURL %>" alt="<%= name %>" />
           <section>
-            <img src="<%= imgURL %>" alt="<%= name %>" />
-            <div>
-              <%= detailRow('Article:',     name) %>
-              <%= detailRow('Seller:', user.name) %>
-            </div>
-          </section>
-          <section>
-            <%= detailRow('Price:', '$' +             price.toFixed(2),  'order-price') %>
-            <%= detailRow('Quantity:',     quantity,                     'order-price') %>
-            <%= detailRow('Total:', '$' + (quantity * price).toFixed(2), 'order-price') %>
+            <%= detailRow('Article:',                 name             ) %>
+            <%= detailRow('Seller:',             user.name             ) %>
+            <%= detailRow('Price:', '$' +             price.toFixed(2) ) %>
+            <%= detailRow('Quantity:',     quantity,                   ) %>
+            <%= detailRow('Total:', '$' + (quantity * price).toFixed(2)) %>
           </section>
         </li>
         <% }) %>

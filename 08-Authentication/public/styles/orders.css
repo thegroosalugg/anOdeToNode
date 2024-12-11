@@ -1,8 +1,8 @@
 .orders {
   display: grid;
-  gap: 0.8rem;
+  gap: 1.5rem;
   padding: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(248px, 496px));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 400px));
   align-items: start;
   justify-content: center;
 
@@ -30,11 +30,21 @@
     }
 
     > ul {
-      max-height: 300px;
+      max-height: 500px;
       overflow: auto;
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      padding: 0 5px;
+
+      &::-webkit-scrollbar {
+        width: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #070707;
+        border-radius: 5px;
+      }
 
       > li {
         display: flex;
@@ -50,30 +60,32 @@
         }
 
         img {
-          height: 100px;
-          width: 100px;
+          flex: 1 1;
+          max-width: 200px;
+          max-height: 128px;
           object-fit: cover;
-          background: #fefefe;
           border: 0.5px solid #000;
         }
 
         section {
-          align-self: start;
+          flex: 1 1;
+          max-width: 200px;
           display: flex;
           flex-direction: column;
-          gap: 0.2rem;
 
-          &:first-of-type {
-            flex-direction: row;
-          }
-
-          &:last-of-type {
+          .detail-row {
             background: #ffffff;
-            border: 1px solid #000;
-            padding: 0.3rem;
-            width: 231px;
 
-            p:last-of-type {
+            &:nth-of-type(1), &:nth-of-type(2) {
+              color: #ffffff;
+              background: #333333;
+            }
+
+            &:nth-of-type(3) {
+              margin-top: 0.1rem;
+            }
+
+            &:nth-of-type(5) {
               border-top: 1px solid #000;
             }
           }
@@ -85,18 +97,16 @@
 
 .detail-row {
   display: grid;
-  grid-template-columns: 60px 60px;
+  grid-template-columns: minmax(90px, 3fr) minmax(60px, 2fr);
   gap: 0.5rem;
-
-  &.order-price {
-    grid-template-columns: 1fr 60px;
-  }
 
   span {
     text-align: end;
     text-wrap: nowrap;
     overflow-x: scroll;
     line-height: 1.45;
+    border-left: 0.5rem solid transparent;
+    border-right: 0.5rem solid transparent;
 
     &:last-of-type {
       font-family: 'Oswald', sans-serif;
@@ -107,7 +117,7 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #767676;
+      background: #f5e9e9;
       border-radius: 5px;
     }
   }
