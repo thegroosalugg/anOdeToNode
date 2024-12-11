@@ -27,9 +27,9 @@ const postLogin: RequestHandler = async (req, res, next) => {
 };
 
 const postLogout: RequestHandler = (req, res, next) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.log('postLogout destroy session error:', err);
+  req.session.destroy((error) => {
+    if (error) {
+      errorMsg({ error, msg: 'postLogout'});
     }
 
     // Clear user data from req and res locals

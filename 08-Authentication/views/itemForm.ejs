@@ -9,7 +9,6 @@
   const data = { name, price };
   const input = (id) => { %>
   <section>
-    <% console.log(data[id]) %>
     <label for="<%= id %>"><%= id %></label>
     <input id="<%= id %>" name="<%= id %>" value="<%= data[id] %>" autocomplete="off" />
   </section>

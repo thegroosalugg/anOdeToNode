@@ -4,8 +4,9 @@ import { IItem, itemSchema } from './Item';
 const required = true;
 
 interface IOrder {
-    user: { _id: Types.ObjectId, name: string, email: string };
-   items: IItem[];
+       user: { _id: Types.ObjectId, name: string, email: string };
+      items: IItem[];
+  createdAt: Date;
 }
 
 interface IOrderMethods {
@@ -15,6 +16,7 @@ interface IOrderMethods {
 type OrderModel = Model<IOrder, {}, IOrderMethods>;
 
 const OrderSchema = new Schema<IOrder, OrderModel, IOrderMethods>({
+  createdAt: { type: Date, default: Date.now },
   user: {
       _id: { type: Schema.Types.ObjectId, ref: 'User', required },
      name: { type: String, required },

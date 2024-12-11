@@ -8,8 +8,9 @@ import authRoutes from './routes/auth';
 import errorController from './controllers/error';
 import mongoose from 'mongoose';
 import User from './models/User';
-import dotenv from 'dotenv';
 import { authenticate } from './middleware/authenticate';
+import errorMsg from './util/errorMsg';
+import dotenv from 'dotenv';
        dotenv.config();
 
 const inProduction = process.env.NODE_ENV === 'production';
@@ -61,8 +62,8 @@ app.use((req, res, next) => {
       res.locals.user = { _id, name, email }; // locals user set for all EJS responses
       next();
     })
-    .catch((err) => {
-      console.log('App findById middleware error:', err);
+    .catch((error) => {
+      errorMsg({ error, msg: 'App findById' });
     });
 });
 
@@ -90,4 +91,4 @@ mongoose
       console.log('Server is on track to port 3000');
     });
   })
-  .catch((error) => console.log('Mongoose Error', error));
+  .catch((error) => errorMsg({ error, msg: 'Mongoose connect'}));

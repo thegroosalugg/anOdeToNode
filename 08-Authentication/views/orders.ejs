@@ -1,34 +1,46 @@
 <%- include('dashboard') %>
 <%- include('userInfo') %>
 
-<% const border = (isTrue) => isTrue ? '0.5px solid #000' : 'none' %>
+<% const detailRow = (text, value, n1, n2) => { %>
+  <p
+    class="detail-row"
+    <% /* remove EJS style warnings */ %>
+    style="grid-template-columns: <%= n1 %> <%= n2 %>;">
+    <span><%= text %></span>
+    <span><%= value %></span>
+  </p>
+<% } %>
 
 <ul class="orders">
   <% if (orders.length === 0) { %>
   <h1>You have no orders</h1>
   <% } else { %>
   <% } orders.forEach((order) => { %>
-  <li>
-    <h2>Order ID: <%= order._id %></h2>
-    <ul>
-      <% order.items.forEach(({ name, price, imgURL, quantity }, index) => { %>
-      <li>
-        <img
-          src="<%= imgURL %>"
-          alt="<%= name %>"
-          <% /* this line removes style prop warnings */ %>
-          style="
-            border-top:    <%= border(index === 0)                      %>;
-            border-bottom: <%= border(index === order.items.length - 1) %>;
-          "
-        />
-        <p><%= name %></p>
-        <p>$<%= price.toFixed(2) %></p>
-        <p>x <%= quantity %></p>
-        <p>$<%= (quantity * price).toFixed(2) %></p>
-      </li>
-      <% }) %>
-    </ul>
-  </li>
+    <% const { _id, createdAt, user, items } = order; %>
+    <li>
+      <h2><%= formatDate(createdAt, true) %></h2>
+      <h2>
+        <span>Order ID: </span>
+        <span><%= _id %></span>
+      </h2>
+      <ul>
+        <% items.forEach(({ name, price, imgURL, quantity }, index) => { %>
+        <li>
+          <section>
+            <img src="<%= imgURL %>" alt="<%= name %>" />
+            <div>
+              <%= detailRow('Article:',     name, '60px', '60px') %>
+              <%= detailRow('Seller:', user.name, '60px', '60px') %>
+            </div>
+          </section>
+          <section>
+            <%= detailRow('Price:', '$' +             price.toFixed(2),  '1fr', '60px') %>
+            <%= detailRow('Quantity:',     quantity,                     '1fr', '60px') %>
+            <%= detailRow('Total:', '$' + (quantity * price).toFixed(2), '1fr', '60px') %>
+          </section>
+        </li>
+        <% }) %>
+      </ul>
+    </li>
   <% }) %>
 </ul>

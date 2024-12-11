@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 import Item from '../models/Item';
 import Order from '../models/Order';
 import errorMsg from '../util/errorMsg';
+import formatDate from '../util/formateDate';
 
 const getItems: RequestHandler = async (req, res, next) => {
   try {
@@ -79,7 +80,7 @@ const getOrders: RequestHandler = async (req, res, next) => {
       isActive: '/admin/items',
           view: 'orders',
         styles: ['orders', 'dashboard', 'userInfo'],
-        locals: { orders },
+        locals: { orders, formatDate },
     });
   } catch (error) {
     errorMsg({ error, msg: 'getOrders' });
