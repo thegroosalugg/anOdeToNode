@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import bcrypt from 'bcryptjs';
 import User from '../models/User';
 import errorMsg from '../util/errorMsg';
 
@@ -16,7 +17,7 @@ const getLogin: RequestHandler = (req, res, next) => {
         locals: { signup },
     })
   } else {
-    res.redirect('/admin/items')
+    res.redirect('/admin/items');
   }
 };
 
@@ -25,11 +26,17 @@ const postLogin: RequestHandler = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ email });
-    if (user && user.password === password) {
-      req.session.user = user;
-      res.redirect('/admin/items');
+    if (user) {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (isMatch) {
+        req.session.user = user;
+        res.redirect('/admin/items');
+      } else {
+        errorMsg({ error: "password doesn't match", msg: 'postLogin' });
+        res.redirect('/login');
+      }
     } else {
-      errorMsg({ error: 'email/password is wrong', msg: 'postLogin', })
+      errorMsg({ error: 'email not matched to a user', msg: 'postLogin' });
       res.redirect('/login');
     }
   } catch (error) {
@@ -56,7 +63,8 @@ const postSignup: RequestHandler = async (req, res, next) => {
   }
 
   try {
-    const user = new User({ name, email, password });
+    const hashed = await bcrypt.hash(password, 12);
+    const user = new User({ name, email, password: hashed });
     await user.save();
     req.session.user = user;
     res.redirect('/admin/items');
