@@ -21,9 +21,21 @@ const getLogin: RequestHandler = (req, res, next) => {
 };
 
 const postLogin: RequestHandler = async (req, res, next) => {
-  const user = await User.findById('6750df45541bb5fbb4115baf');
-  req.session.user = user;
-  res.redirect('/admin/items');
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (user && user.password === password) {
+      req.session.user = user;
+      res.redirect('/admin/items');
+    } else {
+      errorMsg({ error: 'email/password is wrong', msg: 'postLogin', })
+      res.redirect('/login');
+    }
+  } catch (error) {
+    errorMsg({ error, msg: 'postLogin' });
+    res.redirect('/login');
+  }
 };
 
 const postLogout: RequestHandler = (req, res, next) => {
@@ -31,18 +43,28 @@ const postLogout: RequestHandler = (req, res, next) => {
     if (error) {
       errorMsg({ error, msg: 'postLogout'});
     }
-
-    // Clear user data from req and res locals
-    req.user = null;
-    res.locals.user = null;
-
     res.redirect('/');
   });
 };
 
 const postSignup: RequestHandler = async (req, res, next) => {
-  errorMsg({ error: '', msg: 'signup' })
-  res.redirect('/login');
+  const { name, email, password, confirm_password } = req.body;
+
+  if (password !== confirm_password) {
+    errorMsg({ error: 'password don\'t match', msg: 'postSignup' });
+    return res.redirect('/login/?newuser=true');
+  }
+
+  try {
+    const user = new User({ name, email, password });
+    await user.save();
+    req.session.user = user;
+    res.redirect('/admin/items');
+  } catch (error) {
+    // will catch duplicate emails & all empty fields
+    errorMsg({ error, msg: 'postSignup' });
+    res.redirect('/login/?newuser=true');
+  }
 };
 
 export { getLogin, postLogin, postLogout, postSignup };

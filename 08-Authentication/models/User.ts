@@ -3,11 +3,17 @@ import Item, { IItem } from './Item';
 import errorMsg from '../util/errorMsg';
 
 const required = true;
+const trim = true;
+const validate = {
+  validator: (value: string) => value.trim().length > 0,
+    message: '', // this message will never show as 'required' will display first
+};
 
 interface IUser {
-   name: string;
-  email: string;
-   cart: { itemId: Types.ObjectId | string; quantity: number }[];
+      name: string;
+     email: string;
+  password: string;
+      cart: { itemId: Types.ObjectId | string; quantity: number }[];
 }
 
 interface IUserMethods {
@@ -18,9 +24,10 @@ interface IUserMethods {
 type UserModel = Model<IUser, {}, IUserMethods>;
 
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
-   name: { type: String, required },
-  email: { type: String, required, unique: true },
-   cart: [
+      name: { type: String, required, trim, validate },
+     email: { type: String, required, trim, validate, unique: true },
+  password: { type: String, required },
+      cart: [
     {
         itemId: { type: Schema.Types.ObjectId, ref: 'Item', required },
       quantity: { type: Number,                min: 1,      required },
