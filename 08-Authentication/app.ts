@@ -63,7 +63,7 @@ app.use((req, res, next) => {
       next();
     })
     .catch((error) => {
-      errorMsg({ error, msg: 'App findById' });
+      errorMsg({ error, where: 'App findById' });
     });
 });
 
@@ -91,4 +91,4 @@ mongoose
       console.log('Server is on track to port 3000');
     });
   })
-  .catch((error) => errorMsg({ error, msg: 'Mongoose connect'}));
+  .catch((error) => errorMsg({ error, where: 'Mongoose connect'}));

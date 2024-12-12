@@ -52,7 +52,7 @@ userSchema.methods.updateCart = async function(_id, quantity) {
   try {
     await this.save(); // mongoose function
   } catch (error) {
-    errorMsg({ error, msg: 'userSchema updateCart'});
+    errorMsg({ error, where: 'userSchema updateCart'});
   }
 };
 
@@ -79,7 +79,7 @@ userSchema.methods.getCart = async function() {
     await this.save();
     return cartItems;
   } catch (error) {
-    errorMsg({ error, msg: 'userSchema getCart'});
+    errorMsg({ error, where: 'userSchema getCart'});
     return [];
   }
 };

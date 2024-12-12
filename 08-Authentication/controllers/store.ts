@@ -15,7 +15,7 @@ const getItems: RequestHandler = async (req, res, next) => {
         locals: { items, isAdmin: false },
     });
   } catch (error) {
-    errorMsg({ error, msg: 'getItems' });
+    errorMsg({ error, where: 'getItems' });
     res.redirect('/');
   }
 };
@@ -32,7 +32,7 @@ const getItemById: RequestHandler = async (req, res, next) => {
         locals: { item },
     });
   } catch (error) {
-    errorMsg({ error, msg: 'getItemById' });
+    errorMsg({ error, where: 'getItemById' });
     res.redirect('/');
   }
 };
@@ -49,7 +49,7 @@ const getCart: RequestHandler = async (req, res, next) => {
         locals: { items },
     });
   } catch (error) {
-    errorMsg({ error, msg: 'getCart' });
+    errorMsg({ error, where: 'getCart' });
     res.redirect('/');
   }
 };
@@ -66,7 +66,7 @@ const postUpdateCart: RequestHandler = async (req, res, next) => {
     }
     res.redirect('/cart');
   } catch (error) {
-    errorMsg({ error, msg: 'postUpdateCart' });
+    errorMsg({ error, where: 'postUpdateCart' });
     res.redirect('/');
   }
 };
@@ -83,7 +83,7 @@ const getOrders: RequestHandler = async (req, res, next) => {
         locals: { orders, formatDate },
     });
   } catch (error) {
-    errorMsg({ error, msg: 'getOrders' });
+    errorMsg({ error, where: 'getOrders' });
     res.redirect('/');
   }
 };
@@ -99,7 +99,7 @@ const postCreateOrder: RequestHandler = async (req, res, next) => {
     await req.user.save();
     res.redirect('/orders');
   } catch (error) {
-    errorMsg({ error, msg: 'postCreateOrder' });
+    errorMsg({ error, where: 'postCreateOrder' });
     res.redirect('/');
   }
 };

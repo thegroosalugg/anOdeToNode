@@ -7,20 +7,16 @@ const barrier = (s: string, n: number, noLog?: boolean) => {
   console.log(chars);
 };
 
-const errorMsg = ({ msg, error }: { msg: string; error: any }) => {
-  barrier('№', 84);
+const errorMsg = ({ where, error }: { where: string; error: any }) => {
+  barrier('⇄', 84);
   console.log(
-    `${barrier('▣', 28, true)} ${col(1)}<% ERROR %> ${msg.toUpperCase()}${end}`
+    `${barrier('⫨', 28, true)} ${col(1)}<% ERROR %> ${where.toUpperCase()}${end}`
   );
-  barrier('№', 84);
-  console.log(error);
-  barrier('⇎⇏', 42);
+  console.log(error)
   console.log(
-    `${barrier('∜', 28, true)} ${col(2)}<% END %> ${msg.toUpperCase()} <% END %>${end}`
+    `${barrier('⫧', 28, true)} ${col(2)}<% -END- %> ${where.toUpperCase()}${end}`
   );
   barrier('⇏⇎', 42);
 };
 
 export default errorMsg;
-
-// ▣⇄⇎⇏▭◊№⁕⁂※✕✓₫֏▣◭∜∯ὄϰ

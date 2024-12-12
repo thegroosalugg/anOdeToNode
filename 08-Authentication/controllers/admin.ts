@@ -24,7 +24,7 @@ const getUserItems: RequestHandler = async (req, res, next) => {
         locals: { items, isAdmin: true },
     });
   } catch (error) {
-    errorMsg({ error, msg: 'getUserItems' });
+    errorMsg({ error, where: 'getUserItems' });
     res.redirect('/');
   }
 };
@@ -53,7 +53,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
       await item.save();
       res.redirect('/admin/items');
     } catch (error) {
-      errorMsg({ error, msg: 'postAddItem' });
+      errorMsg({ error, where: 'postAddItem' });
       res.redirect('/');
     }
 
@@ -85,7 +85,7 @@ const getEditItem: RequestHandler = async (req, res, next) => {
       res.redirect('/');
     }
   } catch (error) {
-    errorMsg({ error, msg: 'getEditItem' });
+    errorMsg({ error, where: 'getEditItem' });
     res.redirect('/');
   }
 };
@@ -101,7 +101,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
       await Item.updateOne({ _id }, { $set: { name, desc, imgURL, price }});
       res.redirect('/admin/items');
     } catch (error) {
-      errorMsg({ error, msg: 'postEditItem' });
+      errorMsg({ error, where: 'postEditItem' });
       res.redirect('/');
     }
 
@@ -117,7 +117,7 @@ const postDeleteItem: RequestHandler = async (req, res, next) => {
     await Item.deleteOne({ _id: itemId });
     res.redirect('/admin/items');
   } catch (error) {
-    errorMsg({ error, msg: 'postDeleteItem' });
+    errorMsg({ error, where: 'postDeleteItem' });
     res.redirect('/');
   }
 };

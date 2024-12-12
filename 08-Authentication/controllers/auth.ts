@@ -32,15 +32,15 @@ const postLogin: RequestHandler = async (req, res, next) => {
         req.session.user = user;
         res.redirect('/admin/items');
       } else {
-        errorMsg({ error: "password doesn't match", msg: 'postLogin' });
+        errorMsg({ error: "password doesn't match", where: 'postLogin' });
         res.redirect('/login');
       }
     } else {
-      errorMsg({ error: 'email not matched to a user', msg: 'postLogin' });
+      errorMsg({ error: 'email not matched to a user', where: 'postLogin' });
       res.redirect('/login');
     }
   } catch (error) {
-    errorMsg({ error, msg: 'postLogin' });
+    errorMsg({ error, where: 'postLogin' });
     res.redirect('/login');
   }
 };
@@ -48,7 +48,7 @@ const postLogin: RequestHandler = async (req, res, next) => {
 const postLogout: RequestHandler = (req, res, next) => {
   req.session.destroy((error) => {
     if (error) {
-      errorMsg({ error, msg: 'postLogout'});
+      errorMsg({ error, where: 'postLogout'});
     }
     res.redirect('/');
   });
@@ -58,7 +58,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
   const { name, email, password, confirm_password } = req.body;
 
   if (password !== confirm_password) {
-    errorMsg({ error: 'password don\'t match', msg: 'postSignup' });
+    errorMsg({ error: 'password don\'t match', where: 'postSignup' });
     return res.redirect('/login/?newuser=true');
   }
 
@@ -70,7 +70,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
     res.redirect('/admin/items');
   } catch (error) {
     // will catch duplicate emails & all empty fields
-    errorMsg({ error, msg: 'postSignup' });
+    errorMsg({ error, where: 'postSignup' });
     res.redirect('/login/?newuser=true');
   }
 };
