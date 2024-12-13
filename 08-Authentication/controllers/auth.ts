@@ -32,10 +32,12 @@ const postLogin: RequestHandler = async (req, res, next) => {
         req.session.user = user;
         res.redirect('/admin/items');
       } else {
+        req.session.errors = { password: 'is incorrect' };
         errorMsg({ error: "password doesn't match", where: 'postLogin' });
         res.redirect('/login');
       }
     } else {
+      req.session.errors = { email: 'is incorrect' };
       errorMsg({ error: 'email not matched to a user', where: 'postLogin' });
       res.redirect('/login');
     }

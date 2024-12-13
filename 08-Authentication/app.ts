@@ -7,8 +7,8 @@ import      authRoutes from './routes/auth';
 import     adminRoutes from './routes/admin';
 import     storeRoutes from './routes/store';
 import errorController from './controllers/error';
-import            User from './models/User';
 import      csrfShield from './middleware/csrf';
+import   handleSession from './middleware/session';
 import    authenticate from './middleware/authenticate';
 import        errorMsg from './util/errorMsg';
 import          dotenv from 'dotenv';
@@ -45,29 +45,7 @@ app.use(
 );
 
 app.use(csrfShield); // protects sessions from request forgery via tokens. Initialise after sessions
-
-// middleware sets sessions user to req.user for easier access in controllers
-app.use((req, res, next) => {
-  res.locals.user = null; // explicitly set as null every cycle to prevent undeclared keys
-
-  if (!req.session.user) {
-    return next();
-  }
-
-  User.findById(req.session.user._id)
-    .then((user) => {
-      if (!user) {
-        return next();
-      }
-      req.user = user; // sessions user set for all controller requests
-      const { _id, name, email } = user;
-      res.locals.user = { _id, name, email }; // locals user set for all EJS responses
-      next();
-    })
-    .catch((error) => {
-      errorMsg({ error, where: 'App findById' });
-    });
-});
+app.use(handleSession); // handles sessions data on each cycle
 
 // set to public folder in repo root, for all projects
 app.use(

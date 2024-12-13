@@ -1,10 +1,16 @@
 <% const input = (props) => { %>
   <%
     const [id, txt] = props;
-    const label = txt ? txt + '_' + id : id
+    const label = txt ? txt + '_' + id : id;
+    const content = label.replaceAll('_', ' ') + ' ' + errors[id]
   %>
   <section>
-    <label for="<%= label %>"><%= label.replaceAll('_', ' ') %></label>
+    <label
+        for="<%= label %>"
+      class="<%= errors[id] ? 'error' : '' %>"
+    >
+       <%= content %>
+    </label>
     <input
         id="<%= label %>"
       name="<%= label %>"
