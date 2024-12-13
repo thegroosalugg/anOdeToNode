@@ -26,9 +26,11 @@
     method="post"
     class="item-form"
   >
+    <input type="hidden" name="_csrf"     value="<%= csrf %>"   />
+
     <% if (item) { %>
-      <input type="hidden" name="_id"     value="<%= _id %>" />
-      <input type="hidden" name="imgURL" value="<%= imgURL %>" />
+      <input type="hidden" name="_id"     value="<%= _id %>"    />
+      <input type="hidden" name="imgURL"  value="<%= imgURL %>" />
     <% } else { %>
       <h1>Post a new listing</h1>
     <% } %>
@@ -45,7 +47,7 @@
       <% if (item) { %>
       Update <i class="fa-solid fa-check"></i>
       <% } else { %>
-      Add <i class="fa-solid fa-plus"></i>
+         Add <i class="fa-solid fa-plus"></i>
       <% } %>
     </button>
   </form>

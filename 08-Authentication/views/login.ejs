@@ -15,6 +15,7 @@
 <% } %>
 
 <form action="<%= signup ? '/signup' : '/login' %>" method="post" class="login">
+  <input type="hidden" name="_csrf" value="<%= csrf %>" />
   <h2><%= signup ? 'WELCOME' : 'LOGIN' %></h2>
   <% if (signup) { %>
   <%= input(['name']) %>
