@@ -1,6 +1,6 @@
 import express from 'express';
 import { getItems, getItemById, getCart, postUpdateCart, getOrders, postCreateOrder } from '../controllers/store';
-import { authenticate } from '../middleware/authenticate';
+import authenticate from '../middleware/authenticate';
 
 const router = express.Router();
 

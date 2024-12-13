@@ -1,18 +1,18 @@
-import             path from 'path';
-import          express from 'express';
-import          session from 'express-session';
-import            csrf  from 'csurf';
-import         mongoose from 'mongoose';
-import       MongoStore from 'connect-mongo';
-import       authRoutes from './routes/auth';
-import      adminRoutes from './routes/admin';
-import      storeRoutes from './routes/store';
-import  errorController from './controllers/error';
-import             User from './models/User';
-import { authenticate } from './middleware/authenticate';
-import         errorMsg from './util/errorMsg';
-import           dotenv from 'dotenv';
-                 dotenv.config();
+import            path from 'path';
+import         express from 'express';
+import         session from 'express-session';
+import        mongoose from 'mongoose';
+import      MongoStore from 'connect-mongo';
+import      authRoutes from './routes/auth';
+import     adminRoutes from './routes/admin';
+import     storeRoutes from './routes/store';
+import errorController from './controllers/error';
+import            User from './models/User';
+import      csrfShield from './middleware/csrf';
+import    authenticate from './middleware/authenticate';
+import        errorMsg from './util/errorMsg';
+import          dotenv from 'dotenv';
+                dotenv.config();
 
 const inProduction = process.env.NODE_ENV === 'production';
 const app = express();
@@ -44,12 +44,11 @@ app.use(
   })
 );
 
-app.use(csrf()); // protects sessions from request forgery via tokens. Initialise after sessions
+app.use(csrfShield); // protects sessions from request forgery via tokens. Initialise after sessions
 
 // middleware sets sessions user to req.user for easier access in controllers
 app.use((req, res, next) => {
   res.locals.user = null; // explicitly set as null every cycle to prevent undeclared keys
-  res.locals.csrf = req.csrfToken(); // built-in token function to be sent with post reqs
 
   if (!req.session.user) {
     return next();
