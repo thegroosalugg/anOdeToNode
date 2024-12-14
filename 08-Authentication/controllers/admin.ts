@@ -2,8 +2,7 @@ import { RequestHandler } from 'express';
 import Item from '../models/Item';
 import trimBody from '../util/trimBody';
 import errorMsg from '../util/errorMsg';
-import translateError from '../util/translateError';
-import { MongoServerError } from 'mongodb';
+import { MongooseErrors, translateError } from '../util/translateError';
 
 const images = ['four_awesome', 'green_orange', 'red_blue', 'sleek_black', 'tall.jpg', 'wide.jpg', 'yellow_purple', 'yellow_purple_2'];
 
@@ -52,7 +51,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
     await item.save();
     res.redirect('/admin/items');
   } catch (error) {
-    req.session.errors = translateError(error as MongoServerError);
+    req.session.errors = translateError(error as MongooseErrors);
     errorMsg({ error, where: 'postAddItem' });
     res.redirect('/admin/add-item');
   }
@@ -99,7 +98,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
     );
     res.redirect('/admin/items');
   } catch (error) {
-    req.session.errors = translateError(error as MongoServerError);
+    req.session.errors = translateError(error as MongooseErrors);
     errorMsg({ error, where: 'postEditItem' });
     res.redirect('/admin/edit-item/' + _id + '/?edit=true');
   }

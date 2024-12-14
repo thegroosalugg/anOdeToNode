@@ -2,8 +2,7 @@ import { RequestHandler } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../models/User';
 import errorMsg from '../util/errorMsg';
-import translateError from '../util/translateError';
-import { MongoServerError } from 'mongodb';
+import { MongooseErrors, translateError } from '../util/translateError';
 
 const getLogin: RequestHandler = (req, res, next) => {
   if (!req.user) {
@@ -76,7 +75,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
     res.redirect('/admin/items');
   } catch (error) {
     // will catch duplicate emails & all empty fields
-    req.session.errors = translateError(error as MongoServerError);
+    req.session.errors = translateError(error as MongooseErrors);
     errorMsg({ error, where: 'postSignup' });
     res.redirect('/login/?newuser=true');
   }
