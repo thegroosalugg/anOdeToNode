@@ -1,0 +1,45 @@
+<% const input = (props) => { %>
+  <%
+    const [id, txt] = props;
+    const label = txt ? txt + '_' + id : id;
+    const content =
+      (errors[id] && txt ? id : label).replaceAll('_', ' ') + ' ' + errors[id];
+  %>
+  <section>
+    <label
+        for="<%= label %>"
+      class="<%= errors[id] ? 'error' : '' %>"
+    >
+       <%= content %>
+    </label>
+    <input
+        id="<%= label %>"
+      name="<%= label %>"
+      type="<%= ['email', 'password'].includes(id) ? id : 'text' %>"
+      autocomplete="off"
+    />
+  </section>
+<% } %>
+
+<form action="<%= signup ? '/signup' : '/login' %>" method="post" class="login">
+  <input type="hidden" name="_csrf" value="<%= csrf %>" />
+  <h2><%= signup ? 'WELCOME' : 'LOGIN' %></h2>
+  <% if (signup) { %>
+  <%= input(['name']) %>
+  <% } %>
+  <%= input(['email']) %>
+  <%= input(['password']) %>
+  <% if (signup) { %>
+  <%= input(['password', 'confirm']) %>
+  <% } %>
+  <a
+     href="/login<%= signup ? '' : '/?newuser=true' %>"
+    class="<%= signup ?  'signup' : '' %>"
+  >
+    <span> <%= signup ? 'Already' : 'Don\'t'   %> have an account?</span>
+    <span> <%= signup ? 'Login!'  : 'Sign up!' %></span>
+  </a>
+  <button class="<%= signup ? 'signup' : '' %>">
+    <%= signup ? 'Sign Up' : 'Login' %>
+  </button>
+</form>
