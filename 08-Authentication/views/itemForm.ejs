@@ -6,10 +6,14 @@
       desc = 'This item is...',
     imgURL = ''
   } = item || {};
+
   const data = { name, price };
+
   const input = (id) => { %>
   <section>
-    <label for="<%= id %>"><%= id %></label>
+    <label for="<%= id %>" class="<%= errors[id] ? 'error' : '' %>">
+      <%= id + ' ' + errors[id] %>
+    </label>
     <input id="<%= id %>" name="<%= id %>" value="<%= data[id] %>" autocomplete="off" />
   </section>
 <% } %>
@@ -26,11 +30,11 @@
     method="post"
     class="item-form"
   >
-    <input type="hidden" name="_csrf"     value="<%= csrf %>"   />
+    <input type="hidden" name="_csrf"    value="<%= csrf %>"   />
 
     <% if (item) { %>
-      <input type="hidden" name="_id"     value="<%= _id %>"    />
-      <input type="hidden" name="imgURL"  value="<%= imgURL %>" />
+      <input type="hidden" name="_id"    value="<%= _id %>"    />
+      <input type="hidden" name="imgURL" value="<%= imgURL %>" />
     <% } else { %>
       <h1>Post a new listing</h1>
     <% } %>
@@ -39,7 +43,9 @@
     <%= input('price') %>
 
     <section>
-      <label for="desc">description</label>
+      <label for="desc" class="<%= errors.desc ? 'error' : '' %>">
+        <%= 'description ' + errors.desc %>
+      </label>
       <textarea rows="5" id="desc" name="desc"><%= desc %></textarea>
     </section>
 

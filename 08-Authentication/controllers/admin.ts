@@ -2,6 +2,8 @@ import { RequestHandler } from 'express';
 import Item from '../models/Item';
 import trimBody from '../util/trimBody';
 import errorMsg from '../util/errorMsg';
+import translateError from '../util/translateError';
+import { MongoServerError } from 'mongodb';
 
 const images = ['four_awesome', 'green_orange', 'red_blue', 'sleek_black', 'tall.jpg', 'wide.jpg', 'yellow_purple', 'yellow_purple_2'];
 
@@ -42,22 +44,16 @@ const getAddItem: RequestHandler = (req, res, next) => {
 
 // /admin/add-item - prepended by authenticate middleware
 const postAddItem: RequestHandler = async (req, res, next) => {
-  const { name, desc, price: str } = trimBody(req.body);
-  const price = +str;
+  const { name, desc, price } = trimBody(req.body);
 
-  if (name && desc && price > 0) {
+  try {
     const userId = req.user; // mongoose will extract just the Id due to schema ref
     const item = new Item({ name, desc, imgURL: randomIMG(), price, userId });
-
-    try {
-      await item.save();
-      res.redirect('/admin/items');
-    } catch (error) {
-      errorMsg({ error, where: 'postAddItem' });
-      res.redirect('/');
-    }
-
-  } else {
+    await item.save();
+    res.redirect('/admin/items');
+  } catch (error) {
+    req.session.errors = translateError(error as MongoServerError);
+    errorMsg({ error, where: 'postAddItem' });
     res.redirect('/admin/add-item');
   }
 };

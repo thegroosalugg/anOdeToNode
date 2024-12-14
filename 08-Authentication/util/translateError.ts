@@ -4,8 +4,9 @@ const translateError = (err:  MongoServerError) => {
   const errors: Record<string, string> = {};
 
   for (const key in err.errors) {
-    // errors.name/email/password.kind = 'required'. Output: 'name required'
-    errors[key] = err.errors[key].kind;
+    // errors.name/email/password.kind = 'required' | 'Number'.
+    const { kind }  = err.errors[key]; // 'name required' (etc) | 'price must be numberic'
+    errors[key] = kind === 'Number' ? 'must be numeric' : kind;
   }
 
   if (err.keyValue) {

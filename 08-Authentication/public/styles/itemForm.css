@@ -46,6 +46,12 @@
       label {
         padding: 0.2rem;
         text-transform: capitalize;
+
+        &.error {
+          color: #a02b11;
+          text-shadow: 0.5px 0.5px 1px #000;
+          text-wrap: nowrap;
+        }
       }
 
       input {
