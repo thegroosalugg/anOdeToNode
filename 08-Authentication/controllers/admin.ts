@@ -30,14 +30,26 @@ const getUserItems: RequestHandler = async (req, res, next) => {
   }
 };
 
-// /admin/add-item - prepended by authenticate middleware
-const getAddItem: RequestHandler = (req, res, next) => {
+// /admin/item-form - prepended by authenticate middleware
+const getItemForm: RequestHandler = async (req, res, next) => {
+  const { itemId } = req.params;
+  let item = null;
+
+  if (itemId) {
+    try {
+      item = await Item.findById(itemId);
+    } catch (error) {
+      errorMsg({ error, where: 'getEditItem' });
+      return res.redirect('/login');
+    }
+  }
+
   res.render('body', {
        title: 'New Listing',
     isActive: '/admin/items',
         view: 'itemForm',
       styles: ['itemForm', 'dashboard'],
-      locals: { item: null },
+      locals: { item },
   });
 };
 
@@ -53,37 +65,10 @@ const postAddItem: RequestHandler = async (req, res, next) => {
   } catch (error) {
     errorMsg({ error, where: 'postAddItem' });
     req.session.errors = translateError(error as MongooseErrors);
-    req.session.save(() => res.redirect('/admin/add-item'));
+    req.session.save(() => res.redirect('/admin/item-form'));
   }
 };
 
-// admin/edit-item/:itemId - prepended by authenticate middleware
-const getEditItem: RequestHandler = async (req, res, next) => {
-  const { edit } = req.query;
-
-  if (edit !== 'true') {
-    return res.redirect('/login');
-  }
-
-  try {
-    const { itemId } = req.params;
-    const item = await Item.findById(itemId);
-    if (item) {
-      res.render('body', {
-           title: 'Edit Listing',
-        isActive: '/admin/items',
-            view: 'itemForm',
-          styles: ['itemForm', 'dashboard'],
-          locals: { item },
-      });
-    } else {
-      res.redirect('/');
-    }
-  } catch (error) {
-    errorMsg({ error, where: 'getEditItem' });
-    res.redirect('/');
-  }
-};
 
 // /admin/edit-item - prepended by authenticate middleware
 const postEditItem: RequestHandler = async (req, res, next) => {
@@ -100,7 +85,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
   } catch (error) {
     errorMsg({ error, where: 'postEditItem' });
     req.session.errors = translateError(error as MongooseErrors);
-    req.session.save(() => res.redirect('/admin/edit-item/' + _id + '/?edit=true'));
+    req.session.save(() => res.redirect('/admin/item-form/' + _id));
   }
 };
 
@@ -116,4 +101,4 @@ const postDeleteItem: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { getUserItems, getAddItem, postAddItem, getEditItem, postEditItem, postDeleteItem };
+export { getUserItems, getItemForm, postAddItem, postEditItem, postDeleteItem };

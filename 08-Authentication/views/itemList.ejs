@@ -24,7 +24,7 @@
       <p><%= desc %></p>
       <% } else { %>
       <form action="/admin/delete-item" method="post" class="admin-controls">
-        <a href="/admin/edit-item/<%= _id %>/?edit=true">
+        <a href="/admin/item-form/<%= _id %>">
           EDIT
         </a>
         <button onclick="return confirm('Are you sure you want to delete this item?')">
