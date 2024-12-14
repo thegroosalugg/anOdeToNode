@@ -89,19 +89,18 @@ const getEditItem: RequestHandler = async (req, res, next) => {
 // /admin/edit-item - prepended by authenticate middleware
 const postEditItem: RequestHandler = async (req, res, next) => {
   const { _id, imgURL, ...updatedFields } = req.body;
-  const { name, desc, price: str } = trimBody(updatedFields);
-  const price = +str;
+  const { name, desc, price } = trimBody(updatedFields);
 
-  if (_id && imgURL && name && desc && price > 0) {
-    try {
-      await Item.updateOne({ _id }, { $set: { name, desc, imgURL, price }});
-      res.redirect('/admin/items');
-    } catch (error) {
-      errorMsg({ error, where: 'postEditItem' });
-      res.redirect('/');
-    }
-
-  } else {
+  try {
+    await Item.updateOne(
+      { _id },
+      { $set: { name, desc, imgURL, price } },
+      { runValidators: true } // ensures schema validations apply on updateOne
+    );
+    res.redirect('/admin/items');
+  } catch (error) {
+    req.session.errors = translateError(error as MongoServerError);
+    errorMsg({ error, where: 'postEditItem' });
     res.redirect('/admin/edit-item/' + _id + '/?edit=true');
   }
 };
