@@ -1,0 +1,40 @@
+<% if (isAdmin) { %>
+  <%- include('dashboard') %>
+  <%- include('userInfo') %>
+<% } %>
+
+<section class="store">
+<% if (!isAdmin) { %>
+  <h1>Store</h1>
+<% } %>
+  <ul>
+    <% if (items.length === 0) { %>
+    <h2>Whoops, looks like the is nothing here</h2>
+    <% } else { %>
+    <% } items.forEach(({ _id, name, desc, imgURL, price }) => { %>
+    <li>
+      <a href="/store/<%= _id %>">
+        <img src="<%= imgURL %>" alt="<%= name %>" />
+      </a>
+      <div>
+        <p><%= name %></p>
+        <p>$<%= price.toFixed(2) %></p>
+      </div>
+      <% if (!isAdmin) { %>
+      <p><%= desc %></p>
+      <% } else { %>
+      <form action="/admin/delete-item" method="post" class="admin-controls">
+        <a href="/admin/item-form/<%= _id %>">
+          EDIT
+        </a>
+        <button onclick="return confirm('Are you sure you want to delete this item?')">
+          DELETE
+        </button>
+        <input type="hidden" name="itemId" value="<%= _id %>" />
+        <input type="hidden" name="_csrf"  value="<%= csrf %>" />
+      </form>
+      <% } %>
+    </li>
+    <% }) %>
+  </ul>
+</section>
