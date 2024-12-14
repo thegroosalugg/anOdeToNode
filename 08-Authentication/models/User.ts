@@ -26,7 +26,7 @@ type UserModel = Model<IUser, {}, IUserMethods>;
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
       name: { type: String, required, trim, validate },
      email: { type: String, required, trim, validate, unique: true },
-  password: { type: String, required },
+  password: { type: String, required }, // handled manually
       cart: [
     {
         itemId: { type: Schema.Types.ObjectId, ref: 'Item', required },

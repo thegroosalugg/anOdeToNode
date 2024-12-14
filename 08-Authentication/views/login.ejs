@@ -2,7 +2,8 @@
   <%
     const [id, txt] = props;
     const label = txt ? txt + '_' + id : id;
-    const content = label.replaceAll('_', ' ') + ' ' + errors[id]
+    const content =
+      (errors[id] && txt ? id : label).replaceAll('_', ' ') + ' ' + errors[id];
   %>
   <section>
     <label
