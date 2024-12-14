@@ -31,16 +31,16 @@ const postLogin: RequestHandler = async (req, res, next) => {
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
         req.session.user = user;
-        res.redirect('/admin/items');
+        req.session.save(() => res.redirect('/admin/items'));
       } else {
+        errorMsg({ error: "wrong password", where: 'postLogin' });
         req.session.errors = { password: 'is incorrect' };
-        errorMsg({ error: "password doesn't match", where: 'postLogin' });
-        res.redirect('/login');
+        req.session.save(() => res.redirect('/login'));
       }
     } else {
-      req.session.errors = { email: 'is incorrect' };
       errorMsg({ error: 'email not matched to a user', where: 'postLogin' });
-      res.redirect('/login');
+      req.session.errors = { email: 'is incorrect' };
+      req.session.save(() => res.redirect('/login'));
     }
   } catch (error) {
     errorMsg({ error, where: 'postLogin' });
@@ -62,9 +62,10 @@ const postSignup: RequestHandler = async (req, res, next) => {
 
   if (!password.trim() || !confirm_password.trim() || password !== confirm_password) {
     const error = password.trim() !== confirm_password.trim() ? "doesn't match" : 'required';
-    req.session.errors = { password: error };
     errorMsg({ error, where: 'postSignup' });
-    return res.redirect('/login/?newuser=true');
+    req.session.errors = { password: error };
+    req.session.save(() => res.redirect('/login/?newuser=true'));
+    return;
   }
 
   try {
@@ -75,9 +76,9 @@ const postSignup: RequestHandler = async (req, res, next) => {
     res.redirect('/admin/items');
   } catch (error) {
     // will catch duplicate emails & all empty fields
-    req.session.errors = translateError(error as MongooseErrors);
     errorMsg({ error, where: 'postSignup' });
-    res.redirect('/login/?newuser=true');
+    req.session.errors = translateError(error as MongooseErrors);
+    req.session.save(() => res.redirect('/login/?newuser=true'));
   }
 };
 

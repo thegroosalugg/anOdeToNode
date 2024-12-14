@@ -51,9 +51,9 @@ const postAddItem: RequestHandler = async (req, res, next) => {
     await item.save();
     res.redirect('/admin/items');
   } catch (error) {
-    req.session.errors = translateError(error as MongooseErrors);
     errorMsg({ error, where: 'postAddItem' });
-    res.redirect('/admin/add-item');
+    req.session.errors = translateError(error as MongooseErrors);
+    req.session.save(() => res.redirect('/admin/add-item'));
   }
 };
 
@@ -98,9 +98,9 @@ const postEditItem: RequestHandler = async (req, res, next) => {
     );
     res.redirect('/admin/items');
   } catch (error) {
-    req.session.errors = translateError(error as MongooseErrors);
     errorMsg({ error, where: 'postEditItem' });
-    res.redirect('/admin/edit-item/' + _id + '/?edit=true');
+    req.session.errors = translateError(error as MongooseErrors);
+    req.session.save(() => res.redirect('/admin/edit-item/' + _id + '/?edit=true'));
   }
 };
 
