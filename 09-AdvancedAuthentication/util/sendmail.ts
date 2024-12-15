@@ -13,13 +13,17 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendMail = () => {
+export const sendMail = (token: string) => {
   transporter
     .sendMail({
            to: email,
          from: email,
       subject: 'An Ode to Node: Password Reset',
-         html: '<h1>This is a test</h1>',
+         html: `
+           <a href="http://localhost:3000/login/?token=${token}">
+             follow this link to reset your password
+           </a>
+         `,
     })
     .catch((error) => errorMsg({ error, where: 'sendMail' }));
 };

@@ -10,10 +10,11 @@ const validate = {
 };
 
 interface IUser {
-      name: string;
-     email: string;
-  password: string;
-      cart: { itemId: Types.ObjectId | string; quantity: number }[];
+        name: string;
+       email: string;
+    password: string;
+  resetAuth?: { token: string, expiry: number };
+        cart: { itemId: Types.ObjectId | string; quantity: number }[];
 }
 
 interface IUserMethods {
@@ -24,15 +25,19 @@ interface IUserMethods {
 type UserModel = Model<IUser, {}, IUserMethods>;
 
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
-      name: { type: String, required, trim, validate },
-     email: { type: String, required, trim, validate, unique: true },
-  password: { type: String, required }, // handled manually
-      cart: [
-    {
-        itemId: { type: Schema.Types.ObjectId, ref: 'Item', required },
-      quantity: { type: Number,                min: 1,      required },
-    },
-  ],
+       name: { type: String, required, trim, validate },
+      email: { type: String, required, trim, validate, unique: true },
+   password: { type: String, required }, // handled manually
+  resetAuth: {
+     token: { type: String },
+    expiry: { type: Number },
+  },
+       cart: [
+     {
+         itemId: { type: Schema.Types.ObjectId, ref: 'Item', required },
+       quantity: { type: Number,                min: 1,      required },
+     },
+   ],
 });
 
 userSchema.methods.updateCart = async function(_id, quantity) {

@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import User from '../models/User';
 import errorMsg from '../util/errorMsg';
@@ -84,10 +85,20 @@ const postSignup: RequestHandler = async (req, res, next) => {
   }
 };
 
-const postReset: RequestHandler =  (req, res, next) => {
+const postReset: RequestHandler = async (req, res, next) => {
   const { email } = req.body;
-  console.log(email);
-  res.redirect('/login');
-}
+  const user = await User.findOne({ email });
+
+  if (user) {
+    const token = crypto.randomBytes(32).toString('hex');
+    user.resetAuth = { token, expiry: Date.now() + 1000 * 60 * 60 };
+    await user.save();
+    sendMail(token); // emails preconfigured, only token is needed
+    res.redirect('/login');
+  } else {
+    req.session.errors = { email: 'invalid' };
+    req.session.save(() => res.redirect('login/?resetpass=true'));
+  }
+};
 
 export { getLogin, postLogin, postLogout, postSignup, postReset };
