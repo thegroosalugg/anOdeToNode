@@ -6,9 +6,23 @@ import errorMsg from '../util/errorMsg';
 import { MongooseErrors, translateError } from '../util/translateError';
 import { sendMail } from '../util/sendmail';
 
-const getLogin: RequestHandler = (req, res, next) => {
+const getLogin: RequestHandler = async (req, res, next) => {
   if (!req.user) {
-    const { newuser, resetpass } = req.query;
+    const { newuser, resetpass, token } = req.query;
+
+    if (token) {
+      const user = await User.findOne({
+         'resetAuth.token': token,
+        'resetAuth.expiry': { $gt: Date.now() } // Check if the token has not expired
+      });
+
+      if (user) {
+        console.log(user)
+      } else {
+        console.log('EXPIRED', token)
+      }
+    }
+
     const signup =   newuser === 'true';
     const  reset = resetpass === 'true';
     const title  = signup ? 'Sign Up' : reset ? 'Password Reset' : 'Login';
