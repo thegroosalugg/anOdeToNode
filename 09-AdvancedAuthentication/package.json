@@ -18,11 +18,13 @@
     "ejs": "^3.1.10",
     "express": "^4.21.0",
     "express-session": "^1.18.1",
-    "mongoose": "^8.8.3"
+    "mongoose": "^8.8.3",
+    "nodemailer": "^6.9.16"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/express-session": "^1.18.1",
+    "@types/nodemailer": "^6.4.17",
     "tsc-alias": "^1.8.10"
   }
 }

@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import User from '../models/User';
 import errorMsg from '../util/errorMsg';
 import { MongooseErrors, translateError } from '../util/translateError';
+import { sendMail } from '../util/sendmail';
 
 const getLogin: RequestHandler = (req, res, next) => {
   if (!req.user) {
