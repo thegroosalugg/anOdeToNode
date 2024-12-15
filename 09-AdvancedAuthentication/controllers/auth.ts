@@ -7,16 +7,17 @@ import { sendMail } from '../util/sendmail';
 
 const getLogin: RequestHandler = (req, res, next) => {
   if (!req.user) {
-    const { newuser } = req.query;
-    const signup = newuser === 'true';
-    const title = signup ? 'Sign Up' : 'Login';
+    const { newuser, resetpass } = req.query;
+    const signup =   newuser === 'true';
+    const  reset = resetpass === 'true';
+    const title  = signup ? 'Sign Up' : reset ? 'Password Reset' : 'Login';
 
     res.render('body', {
          title,
       isActive: '/login',
           view: 'login',
         styles: ['login'],
-        locals: { signup },
+        locals: { signup, reset },
     })
   } else {
     res.redirect('/admin/items');
@@ -83,4 +84,10 @@ const postSignup: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { getLogin, postLogin, postLogout, postSignup };
+const postReset: RequestHandler =  (req, res, next) => {
+  const { email } = req.body;
+  console.log(email);
+  res.redirect('/login');
+}
+
+export { getLogin, postLogin, postLogout, postSignup, postReset };

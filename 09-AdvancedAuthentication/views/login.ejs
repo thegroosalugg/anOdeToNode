@@ -1,7 +1,7 @@
 <% const input = (props) => { %>
   <%
     const [id, txt] = props;
-    const label = txt ? txt + '_' + id : id;
+    const   label = txt ? txt + '_' + id : id;
     const content =
       (errors[id] && txt ? id : label).replaceAll('_', ' ') + ' ' + errors[id];
   %>
@@ -21,25 +21,49 @@
   </section>
 <% } %>
 
-<form action="<%= signup ? '/signup' : '/login' %>" method="post" class="login">
+<form
+  action="<%= signup ? '/signup' : reset ? '/reset' : '/login' %>"
+  method="post"
+  class="login"
+>
   <input type="hidden" name="_csrf" value="<%= csrf %>" />
-  <h2><%= signup ? 'WELCOME' : 'LOGIN' %></h2>
+
+  <h2><%= signup ? 'WELCOME' : reset ? 'NEW PASSWORD' : 'LOGIN' %></h2>
+
   <% if (signup) { %>
-  <%= input(['name']) %>
+    <%= input(['name']) %>
   <% } %>
+
   <%= input(['email']) %>
-  <%= input(['password']) %>
-  <% if (signup) { %>
-  <%= input(['password', 'confirm']) %>
+
+  <% if (!reset) { %>
+    <%= input(['password']) %>
   <% } %>
-  <a
-     href="/login<%= signup ? '' : '/?newuser=true' %>"
-    class="<%= signup ?  'signup' : '' %>"
-  >
-    <span> <%= signup ? 'Already' : 'Don\'t'   %> have an account?</span>
-    <span> <%= signup ? 'Login!'  : 'Sign up!' %></span>
-  </a>
-  <button class="<%= signup ? 'signup' : '' %>">
-    <%= signup ? 'Sign Up' : 'Login' %>
+
+  <% if (signup) { %>
+    <%= input(['password', 'confirm']) %>
+  <% } %>
+
+  <% if (!reset) { %>
+    <a
+      href="/login<%= signup ? '' : '/?newuser=true' %>"
+      class="<%= signup ?  'signup' : '' %>"
+    >
+      <span> <%= signup ? 'Already' : 'Don\'t'   %> have an account?</span>
+      <span> <%= signup ? 'Login!'  : 'Sign up!' %></span>
+    </a>
+  <% } %>
+
+  <button class="<%= signup ? 'signup' : reset ? 'reset' : '' %>">
+    <%= signup ? 'Sign Up' : reset ? 'Request Link' : 'Login' %>
   </button>
+
+  <% if (!signup) { %>
+    <a
+      class="reset <%= reset ? 'go-back' : '' %>"
+      href="/login<%= reset ? '' : '/?resetpass=true' %>"
+    >
+      <%= reset ? 'Go Back' : 'Reset Password' %>
+    </a>
+  <% } %>
 </form>
