@@ -37,7 +37,7 @@ const getItemForm: RequestHandler = async (req, res, next) => {
 
   if (itemId) {
     try {
-      item = await Item.findById(itemId);
+      item = await Item.findOne({ _id: itemId, userId: req.user?._id });
     } catch (error) {
       errorMsg({ error, where: 'getEditItem' });
       return res.redirect('/login');
@@ -77,7 +77,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
 
   try {
     await Item.updateOne(
-      { _id },
+      { _id, userId: req.user?._id },
       { $set: { name, desc, imgURL, price } },
       { runValidators: true } // ensures schema validations apply on updateOne
     );
@@ -93,7 +93,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
 const postDeleteItem: RequestHandler = async (req, res, next) => {
   const { itemId } = req.body;
   try {
-    await Item.deleteOne({ _id: itemId });
+    await Item.deleteOne({ _id: itemId, userId: req.user?._id });
     res.redirect('/admin/items');
   } catch (error) {
     errorMsg({ error, where: 'postDeleteItem' });
