@@ -1,4 +1,4 @@
-.login {
+.login-form {
   width: 100%;
   max-width: 200px;
   margin: 0 auto;
@@ -48,15 +48,15 @@
       color: #569113;
     }
 
-    &.reset {
+    &.reset, &.login {
       margin-top: 0.3rem;
       text-align: end;
-      color: #914813;
+      color: #139187;
 
     }
 
-    &.go-back {
-      color: #139187;
+    &.login {
+      color: #914813;
     }
 
     &:hover {
@@ -72,18 +72,25 @@
     margin-top: 0.2rem;
     padding: 0.2rem;
     font-size: 0.9rem;
-    background: #508711;
     color: #FFFFFF;
     border: 0.5px solid transparent;
     border-radius: 3px;
     transition: 0.9s step-start;
+
+    &.login {
+      background: #508711;
+    }
 
     &.signup {
       background: #1183a0;
     }
 
     &.reset {
-      background: #a05d11;
+      background: #a03c11;
+    }
+
+    &.password {
+      background: #1156a0;
     }
 
     &:hover {

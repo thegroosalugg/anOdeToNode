@@ -8,7 +8,15 @@ import { sendMail } from '../util/sendmail';
 
 const getLogin: RequestHandler = async (req, res, next) => {
   if (!req.user) {
-    const { newuser, resetpass, token } = req.query;
+    const { signup, reset, token } = req.query;
+    let state: keyof typeof titles = 'login';
+
+    const titles = {
+         login: 'Login',
+        signup: 'Sign Up',
+         reset: 'Reset Password',
+      password: 'Set New Password',
+    };
 
     if (token) {
       const user = await User.findOne({
@@ -17,22 +25,20 @@ const getLogin: RequestHandler = async (req, res, next) => {
       });
 
       if (user) {
-        console.log(user)
-      } else {
-        console.log('EXPIRED', token)
+        state = 'password';
+        req.session.resetAuth = { token, userId: user._id };
       }
     }
 
-    const signup =   newuser === 'true';
-    const  reset = resetpass === 'true';
-    const title  = signup ? 'Sign Up' : reset ? 'Password Reset' : 'Login';
+    if (signup === 'true') state = 'signup';
+    if (reset  === 'true') state = 'reset';
 
     res.render('body', {
-         title,
+         title: titles[state],
       isActive: '/login',
           view: 'login',
         styles: ['login'],
-        locals: { signup, reset },
+        locals: { state },
     })
   } else {
     res.redirect('/admin/items');
@@ -81,7 +87,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
     const error = password.trim() !== confirm_password.trim() ? "doesn't match" : 'required';
     errorMsg({ error, where: 'postSignup' });
     req.session.errors = { password: error };
-    req.session.save(() => res.redirect('/login/?newuser=true'));
+    req.session.save(() => res.redirect('/login/?signup=true'));
     return;
   }
 
@@ -95,7 +101,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
     // will catch duplicate emails & all empty fields
     errorMsg({ error, where: 'postSignup' });
     req.session.errors = translateError(error as MongooseErrors);
-    req.session.save(() => res.redirect('/login/?newuser=true'));
+    req.session.save(() => res.redirect('/login/?signup=true'));
   }
 };
 
@@ -111,8 +117,13 @@ const postReset: RequestHandler = async (req, res, next) => {
     res.redirect('/login');
   } else {
     req.session.errors = { email: 'invalid' };
-    req.session.save(() => res.redirect('login/?resetpass=true'));
+    req.session.save(() => res.redirect('login/?reset=true'));
   }
 };
 
-export { getLogin, postLogin, postLogout, postSignup, postReset };
+const postNewPassword: RequestHandler = async (req, res, next) => {
+  console.log('NEW PASSWORD');
+  res.redirect('/login');
+}
+
+export { getLogin, postLogin, postLogout, postSignup, postReset, postNewPassword };
