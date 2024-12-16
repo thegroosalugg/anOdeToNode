@@ -25,8 +25,8 @@ const getLogin: RequestHandler = async (req, res, next) => {
       });
 
       if (user) {
-        state = 'password';
-        req.session.resetAuth = { token, userId: user._id };
+        state = 'password'; // if user is found via token, then expiry WILL exist too!
+        req.session.resetAuth = { token, expiry: user.resetAuth!.expiry, userId: user._id };
       }
     }
 
@@ -122,8 +122,47 @@ const postReset: RequestHandler = async (req, res, next) => {
 };
 
 const postNewPassword: RequestHandler = async (req, res, next) => {
-  console.log('NEW PASSWORD');
-  res.redirect('/login');
-}
+  if (!req.session.resetAuth) {
+    return res.redirect('/login');
+  }
+
+  const { token, userId } = req.session.resetAuth;
+  try {
+    const user = await User.findOne({
+                     _id: userId,
+       'resetAuth.token': token,
+      'resetAuth.expiry': { $gt: Date.now() },
+    });
+
+    if (user) {
+      console.log('USER FOUND', user);
+      const { password, confirm_password } = req.body;
+
+      if (!password.trim() || !confirm_password.trim() || password !== confirm_password) {
+        const error = password.trim() !== confirm_password.trim() ? "doesn't match" : 'required';
+        errorMsg({ error, where: 'postNewPassword' });
+        req.session.errors = { password: error };
+        req.session.save(() => res.redirect('/login/?token=' + token));
+        return;
+      }
+
+      try {
+        const hashed = await bcrypt.hash(password, 12);
+        user.password = hashed;
+        user.resetAuth = undefined;
+        req.session.resetAuth = undefined;
+        await user.save();
+        res.redirect('/login');
+      } catch (error) {
+        errorMsg({ error, where: 'postNewPassword' });
+        req.session.errors = translateError(error as MongooseErrors);
+        req.session.save(() => res.redirect('/login/?token=' + token));
+      }
+    }
+  } catch (error) {
+    errorMsg({ error, where: 'postNewPassword' });
+    res.redirect('/login');
+  }
+};
 
 export { getLogin, postLogin, postLogout, postSignup, postReset, postNewPassword };

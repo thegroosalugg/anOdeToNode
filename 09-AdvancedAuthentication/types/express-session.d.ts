@@ -9,6 +9,6 @@ declare module "express-session" {
          user: InstanceType<typeof User> | null;
          csrf: string;
        errors: { email?: string, password?: string, name?: string };
-    resetAuth: { token: ReqQuery, userId: Types.ObjectId };
+    resetAuth: { token: ReqQuery, expiry: number, userId: Types.ObjectId };
   }
 }

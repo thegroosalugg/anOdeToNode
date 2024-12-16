@@ -13,6 +13,10 @@ const handleSession: RequestHandler = ((req, res, next) => {
     delete req.session.errors; // Clear the session errors
   }
 
+  if (req.session.resetAuth && req.session.resetAuth.expiry < Date.now()) {
+    delete req.session.resetAuth; // delete expired password reset token
+  }
+
   if (!req.session.user) {
     return next();
   }

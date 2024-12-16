@@ -23,6 +23,9 @@ export const sendMail = (token: string) => {
            <a href="http://localhost:3000/login/?token=${token}">
              follow this link to reset your password
            </a>
+           <p>
+             http://localhost:3000/login/?token=${token}
+           </p>
          `,
     })
     .catch((error) => errorMsg({ error, where: 'sendMail' }));
