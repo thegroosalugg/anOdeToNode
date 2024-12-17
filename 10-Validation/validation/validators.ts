@@ -1,4 +1,5 @@
-import { body, check } from 'express-validator';
+import { body, check, FieldValidationError, validationResult } from 'express-validator';
+import { Request } from 'express';
 
 export const validateSignUp = [
   body('name')
@@ -19,3 +20,12 @@ export const validateSignUp = [
       return true;
     }),
 ];
+
+export const getErrors = (req: Request) =>
+  validationResult(req)
+    .array() // exp-val 7 no longer has union type errors. Must type guard for FieldErrors
+    .filter((err): err is FieldValidationError => err.type === 'field')
+    .map((err) => ({ [err.path]: err.msg })) // remove unwanted props
+    .reduce((acc, curr) => ({ ...acc, ...curr }), {}); // flatten to a signel object
+
+export const hasErrors = (obj: Object) => Object.keys(obj).length > 0;

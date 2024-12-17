@@ -5,7 +5,7 @@ import User from '../models/User';
 import errorMsg from '../util/errorMsg';
 import { MongooseErrors, mongooseErrors } from '../validation/mongooseErrors';
 import { sendMail } from '../util/sendmail';
-import { validationResult } from 'express-validator';
+import { getErrors, hasErrors } from '../validation/validators';
 
 const getLogin: RequestHandler = async (req, res, next) => {
   if (!req.user) {
@@ -84,12 +84,8 @@ const postLogout: RequestHandler = (req, res, next) => {
 const postSignup: RequestHandler = async (req, res, next) => {
   const { name, email, password } = req.body;
 
-  const errors = validationResult(req)
-    .array()
-    .map((err) => ({ [err.path]: err.msg }))
-    .reduce((acc, curr) => ({ ...acc, ...curr }), {});
-
-  if (Object.keys(errors).length > 0) {
+  const errors = getErrors(req);
+  if (hasErrors(errors)) {
     errorMsg({ error: errors, where: 'postSignup' });
     req.session.errors = errors;
     req.session.save(() => res.redirect('/login/?signup=true'));
