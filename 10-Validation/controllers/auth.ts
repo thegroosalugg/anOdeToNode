@@ -136,13 +136,12 @@ const postNewPassword: RequestHandler = async (req, res, next) => {
     });
 
     if (user) {
-      console.log('USER FOUND', user);
-      const { password, confirm_password } = req.body;
+      const { password } = req.body;
 
-      if (!password.trim() || !confirm_password.trim() || password !== confirm_password) {
-        const error = password.trim() !== confirm_password.trim() ? "doesn't match" : 'required';
-        errorMsg({ error, where: 'postNewPassword' });
-        req.session.errors = { password: error };
+      const errors = getErrors(req);
+      if (hasErrors(errors)) {
+        errorMsg({ error: errors, where: 'postNewPassword' });
+        req.session.errors = errors;
         req.session.save(() => res.redirect('/login/?token=' + token));
         return;
       }
