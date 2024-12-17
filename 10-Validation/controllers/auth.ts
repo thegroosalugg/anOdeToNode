@@ -3,8 +3,9 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import User from '../models/User';
 import errorMsg from '../util/errorMsg';
-import { MongooseErrors, translateError } from '../util/translateError';
+import { MongooseErrors, mongooseErrors } from '../validation/mongooseErrors';
 import { sendMail } from '../util/sendmail';
+import { validationResult } from 'express-validator';
 
 const getLogin: RequestHandler = async (req, res, next) => {
   if (!req.user) {
@@ -81,12 +82,16 @@ const postLogout: RequestHandler = (req, res, next) => {
 };
 
 const postSignup: RequestHandler = async (req, res, next) => {
-  const { name, email, password, confirm_password } = req.body;
+  const { name, email, password } = req.body;
 
-  if (!password.trim() || !confirm_password.trim() || password !== confirm_password) {
-    const error = password.trim() !== confirm_password.trim() ? "doesn't match" : 'required';
-    errorMsg({ error, where: 'postSignup' });
-    req.session.errors = { password: error };
+  const errors = validationResult(req)
+    .array()
+    .map((err) => ({ [err.path]: err.msg }))
+    .reduce((acc, curr) => ({ ...acc, ...curr }), {});
+
+  if (Object.keys(errors).length > 0) {
+    errorMsg({ error: errors, where: 'postSignup' });
+    req.session.errors = errors;
     req.session.save(() => res.redirect('/login/?signup=true'));
     return;
   }
@@ -100,7 +105,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
   } catch (error) {
     // will catch duplicate emails & all empty fields
     errorMsg({ error, where: 'postSignup' });
-    req.session.errors = translateError(error as MongooseErrors);
+    req.session.errors = mongooseErrors(error as MongooseErrors);
     req.session.save(() => res.redirect('/login/?signup=true'));
   }
 };
@@ -155,7 +160,7 @@ const postNewPassword: RequestHandler = async (req, res, next) => {
         res.redirect('/login');
       } catch (error) {
         errorMsg({ error, where: 'postNewPassword' });
-        req.session.errors = translateError(error as MongooseErrors);
+        req.session.errors = mongooseErrors(error as MongooseErrors);
         req.session.save(() => res.redirect('/login/?token=' + token));
       }
     }

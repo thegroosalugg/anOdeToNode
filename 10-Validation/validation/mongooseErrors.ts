@@ -5,7 +5,7 @@ type MongooseErrors =
   | Error.CastError
   | { keyValue: { [key: string]: string } };
 
-const translateError = (err: MongooseErrors) => {
+const mongooseErrors = (err: MongooseErrors) => {
   const errors: Record<string, string> = {};
 
   if ('errors' in err) {
@@ -28,4 +28,4 @@ const translateError = (err: MongooseErrors) => {
   return errors;
 };
 
-export { MongooseErrors, translateError };
+export { MongooseErrors, mongooseErrors };
