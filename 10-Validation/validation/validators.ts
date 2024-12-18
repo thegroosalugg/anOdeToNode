@@ -6,19 +6,20 @@ export const getErrors = (req: Request) =>
     .array() // exp-val 7 no longer has union type errors. Must type guard for FieldErrors
     .filter((err): err is FieldValidationError => err.type === 'field')
     .map((err) => ({ [err.path]: err.msg })) // remove unwanted props
-    .reduce((acc, curr) => ({ ...acc, ...curr }), {}); // flatten to a signel object
+    .reduce((acc, curr) => ({ ...acc, ...curr }), {}); // flatten to a single object
 
 export const hasErrors = (obj: Object) => Object.keys(obj).length > 0;
 
 export const validateName = body('name')
-  .not()
-  .isEmpty()
   .trim()
   .isLength({ min: 3 })
   .withMessage('needs 3+ chars')
   .escape();
 
-export const validateEmail = check('email').isEmail().withMessage('is invalid').normalizeEmail();
+export const validateEmail = check('email')
+  .isEmail()
+  .withMessage('is invalid')
+  .toLowerCase();
 
 export const validatePassword = body('password')
   .isLength({ min: 6 })

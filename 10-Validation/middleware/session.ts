@@ -7,10 +7,17 @@ const handleSession: RequestHandler = ((req, res, next) => {
   res.locals.user   = null; // explicitly set as null every cycle to prevent undeclared keys
   res.locals.errors =
     { email: '', password: '', name: '', price: '', desc: '' }; // Default shape
+  res.locals.formData =
+    { email: '', name: '' }; // Retain non sensitive user input data for failed submits
 
   if (req.session.errors) {
     res.locals.errors = { ...res.locals.errors, ...req.session.errors }; // Merge session errors
     delete req.session.errors; // Clear the session errors
+  }
+
+  if (req.session.formData) { // repeat for form data
+    res.locals.formData = { ...res.locals.formData, ...req.session.formData };
+    delete req.session.formData;
   }
 
   if (req.session.resetAuth && req.session.resetAuth.expiry < Date.now()) {

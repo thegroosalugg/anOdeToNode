@@ -19,9 +19,10 @@
        <%= content %>
     </label>
     <input
-        id="<%= label %>"
-      name="<%= label %>"
-      type="<%= ['email', 'password'].includes(id) ? id : 'text' %>"
+         id="<%= label %>"
+       name="<%= label %>"
+       type="<%= ['email', 'password'].includes(id) ? id : 'text' %>"
+      value="<%= formData[id] ? formData[id] : '' %>"
       autocomplete="off"
     />
   </section>

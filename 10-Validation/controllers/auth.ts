@@ -37,7 +37,7 @@ const getLogin: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: titles[state],
       isActive: '/login',
-          view: 'login',
+          view:  'login',
         styles: ['login'],
         locals: { state },
     })
@@ -59,11 +59,13 @@ const postLogin: RequestHandler = async (req, res, next) => {
       } else {
         errorMsg({ error: "wrong password", where: 'postLogin' });
         req.session.errors = { password: 'is incorrect' };
+        req.session.formData = { email };
         req.session.save(() => res.redirect('/login'));
       }
     } else {
       errorMsg({ error: 'email not matched to a user', where: 'postLogin' });
       req.session.errors = { email: 'is incorrect' };
+      req.session.formData = { email };
       req.session.save(() => res.redirect('/login'));
     }
   } catch (error) {
@@ -88,6 +90,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
   if (hasErrors(errors)) {
     errorMsg({ error: errors, where: 'postSignup' });
     req.session.errors = errors;
+    req.session.formData = { name, email };
     req.session.save(() => res.redirect('/login/?signup=true'));
     return;
   }
@@ -118,6 +121,7 @@ const postReset: RequestHandler = async (req, res, next) => {
     res.redirect('/login');
   } else {
     req.session.errors = { email: 'invalid' };
+    req.session.formData = { email };
     req.session.save(() => res.redirect('login/?reset=true'));
   }
 };
