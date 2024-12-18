@@ -12,9 +12,13 @@
   const input = (id) => { %>
   <section>
     <label for="<%= id %>" class="<%= errors[id] ? 'error' : '' %>">
-      <%= id + ' ' + errors[id] %>
+      <%= id + ' ' + (errors[id] || '') %>
     </label>
-    <input id="<%= id %>" name="<%= id %>" value="<%= data[id] %>" autocomplete="off" />
+    <input
+         id="<%= id %>"
+       name="<%= id %>"
+      value="<%= formData[id] || data[id] %>"
+      autocomplete="off" />
   </section>
 <% } %>
 
@@ -44,9 +48,11 @@
 
     <section>
       <label for="desc" class="<%= errors.desc ? 'error' : '' %>">
-        <%= 'description ' + errors.desc %>
+        <%= 'description ' + (errors.desc || '') %>
       </label>
-      <textarea rows="5" id="desc" name="desc"><%= desc %></textarea>
+      <textarea rows="5" id="desc" name="desc"><%=
+        formData.desc || desc
+      %></textarea>
     </section>
 
     <button class="<%= item ? 'update' : '' %>">

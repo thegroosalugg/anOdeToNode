@@ -4,11 +4,9 @@ import errorMsg from "../util/errorMsg";
 
 // middleware sets sessions user to req.user for easier access in controllers
 const handleSession: RequestHandler = ((req, res, next) => {
-  res.locals.user   = null; // explicitly set as null every cycle to prevent undeclared keys
-  res.locals.errors =
-    { email: '', password: '', name: '', price: '', desc: '' }; // Default shape
-  res.locals.formData =
-    { email: '', name: '' }; // Retain non sensitive user input data for failed submits
+  res.locals.user     = null;
+  res.locals.errors   = {};
+  res.locals.formData = {}; // res.locals all must be explicitly declared each cycle
 
   if (req.session.errors) {
     res.locals.errors = { ...res.locals.errors, ...req.session.errors }; // Merge session errors

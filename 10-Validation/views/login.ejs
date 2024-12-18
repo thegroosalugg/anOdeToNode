@@ -9,7 +9,7 @@
     const [id, txt] = props;
     const     label = txt ? txt + '_' + id : id;
     const   content =
-      (errors[id] && txt ? id : label).replaceAll('_', ' ') + ' ' + errors[id];
+      (errors[id] && txt ? id : label).replaceAll('_', ' ') + ' ' + (errors[id] || '');
   %>
   <section>
     <label
@@ -22,7 +22,7 @@
          id="<%= label %>"
        name="<%= label %>"
        type="<%= ['email', 'password'].includes(id) ? id : 'text' %>"
-      value="<%= formData[id] ? formData[id] : '' %>"
+      value="<%= formData[id] || '' %>"
       autocomplete="off"
     />
   </section>

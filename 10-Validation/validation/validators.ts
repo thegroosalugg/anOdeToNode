@@ -31,4 +31,15 @@ export const validatePassword = body('password')
     return true;
   });
 
+export const validateDesc = body('desc')
+  .trim()
+  .isLength({ min: 30 })
+  .withMessage('needs 30+ chars')
+  .escape();
+
+export const validatePrice = body('price')
+  .isFloat({ min: 0 })
+  .withMessage('must be numeric');
+
 export const validateSignUp = [validateName, validateEmail, validatePassword];
+export const   validateItem = [validateName, validateDesc,  validatePrice   ];

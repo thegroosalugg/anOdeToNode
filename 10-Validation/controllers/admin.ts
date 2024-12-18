@@ -3,6 +3,7 @@ import Item from '../models/Item';
 import trimBody from '../util/trimBody';
 import errorMsg from '../util/errorMsg';
 import { MongooseErrors, mongooseErrors } from '../validation/mongooseErrors';
+import { getErrors, hasErrors } from '../validation/validators';
 
 const images = ['four_awesome', 'green_orange', 'red_blue', 'sleek_black', 'tall.jpg', 'wide.jpg', 'yellow_purple', 'yellow_purple_2'];
 
@@ -57,6 +58,15 @@ const getItemForm: RequestHandler = async (req, res, next) => {
 const postAddItem: RequestHandler = async (req, res, next) => {
   const { name, desc, price } = trimBody(req.body);
 
+  const errors = getErrors(req);
+  if (hasErrors(errors)) {
+    errorMsg({ error: errors, where: 'postAddItem' });
+    req.session.errors = errors;
+    req.session.formData = { name, desc, price };
+    req.session.save(() => res.redirect('/admin/item-form'));
+    return;
+  }
+
   try {
     const userId = req.user; // mongoose will extract just the Id due to schema ref
     const item = new Item({ name, desc, imgURL: randomIMG(), price, userId });
@@ -74,6 +84,15 @@ const postAddItem: RequestHandler = async (req, res, next) => {
 const postEditItem: RequestHandler = async (req, res, next) => {
   const { _id, imgURL, ...updatedFields } = req.body;
   const { name, desc, price } = trimBody(updatedFields);
+
+  const errors = getErrors(req);
+  if (hasErrors(errors)) {
+    errorMsg({ error: errors, where: 'postEditItem' });
+    req.session.errors = errors;
+    req.session.formData = { name, desc, price };
+    req.session.save(() => res.redirect('/admin/item-form/' + _id));
+    return;
+  }
 
   try {
     await Item.updateOne(
