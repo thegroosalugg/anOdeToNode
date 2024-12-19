@@ -1,0 +1,76 @@
+<%
+  const   signup = state === 'signup';
+  const    reset = state === 'reset';
+  const password = state === 'password';
+%>
+
+<% const input = (props) => { %>
+  <%
+    const [id, txt] = props;
+    const     label = txt ? txt + '_' + id : id;
+    const   content =
+      (errors[id] && txt ? id : label).replaceAll('_', ' ') + ' ' + (errors[id] || '');
+  %>
+  <section>
+    <label
+        for="<%= label %>"
+      class="<%= errors[id] ? 'error' : '' %>"
+    >
+       <%= content %>
+    </label>
+    <input
+         id="<%= label %>"
+       name="<%= label %>"
+       type="<%= ['email', 'password'].includes(id) ? id : 'text' %>"
+      value="<%= formData[id] || '' %>"
+      autocomplete="off"
+    />
+  </section>
+<% } %>
+
+<form action="/<%= state %>" method="post" class="login-form" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrf %>" />
+
+  <h2>
+    <%= signup ? 'WELCOME' : reset ? 'NEW PASSWORD' : password ? 'SET PASSWORD' : 'LOGIN' %>
+  </h2>
+
+  <% if (['signup'].includes(state)) { %>
+    <%= input(['name']) %>
+  <% } %>
+
+  <% if (['login', 'signup', 'reset'].includes(state)) { %>
+  <%= input(['email']) %>
+  <% } %>
+
+  <% if (['login', 'signup', 'password'].includes(state)) { %>
+    <%= input(['password']) %>
+  <% } %>
+
+  <% if (['signup', 'password'].includes(state)) { %>
+    <%= input(['password', 'confirm']) %>
+  <% } %>
+
+  <% if (['login', 'signup'].includes(state)) { %>
+    <a
+      href="/login<%= signup ? '' : '/?signup=true' %>"
+      class="<%= signup ?  'signup' : '' %>"
+    >
+      <span> <%= signup ? 'Already' : 'Don\'t'   %> have an account?</span>
+      <span> <%= signup ? 'Login!'  : 'Sign up!' %></span>
+    </a>
+  <% } %>
+
+  <button class="<%= state %>">
+    <%= signup ? 'Sign Up' : reset ? 'Request Link' : password ? 'Change Password' : 'Login' %>
+  </button>
+
+  <% if (['login', 'reset'].includes(state)) { %>
+    <a
+      class="<%= state %>"
+      href="/login<%= reset ? '' : '/?reset=true' %>"
+    >
+      <%= reset ? 'Go Back' : 'Reset Password' %>
+    </a>
+  <% } %>
+</form>
