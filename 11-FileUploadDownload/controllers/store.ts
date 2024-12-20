@@ -15,8 +15,8 @@ const getItems: RequestHandler = async (req, res, next) => {
         locals: { items, isAdmin: false },
     });
   } catch (error) {
-    errorMsg({ error, where: 'getItems' });
-    res.redirect('/');
+    const err = new Error(error as string);
+    return next({ ...err, status: 500 }); // return next will reach special 500 middleware defined in app
   }
 };
 
