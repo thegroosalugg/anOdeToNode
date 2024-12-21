@@ -33,6 +33,7 @@
     action="/admin/<%= item ? 'edit' : 'add' %>-item"
     method="post"
     class="item-form"
+    enctype="multipart/form-data"
   >
     <input type="hidden" name="_csrf"    value="<%= csrf %>"   />
 
@@ -46,6 +47,7 @@
     <%= input('name') %>
     <%= input('price') %>
 
+    <input id="image" name="image" type="file" />
     <section>
       <label for="desc" class="<%= errors.desc ? 'error' : '' %>">
         <%= 'description ' + (errors.desc || '') %>

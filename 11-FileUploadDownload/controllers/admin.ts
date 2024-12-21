@@ -5,15 +5,6 @@ import errorMsg from '../util/errorMsg';
 import { MongooseErrors, mongooseErrors } from '../validation/mongooseErrors';
 import { getErrors, hasErrors } from '../validation/validators';
 
-const images = ['four_awesome', 'green_orange', 'red_blue', 'sleek_black', 'tall.jpg', 'wide.jpg', 'yellow_purple', 'yellow_purple_2'];
-
-const randomIMG = () => {
-  const index = Math.floor(Math.random() * images.length);
-  const image = images[index];
-
-  return '/images/board_' + image + (image.endsWith('.jpg') ? '' : '.png');
-};
-
 // /admin/items - prepended by authenticate middleware
 const getUserItems: RequestHandler = async (req, res, next) => {
   try {
@@ -57,6 +48,7 @@ const getItemForm: RequestHandler = async (req, res, next) => {
 // /admin/add-item - prepended by authenticate middleware
 const postAddItem: RequestHandler = async (req, res, next) => {
   const { name, desc, price } = trimBody(req.body);
+  const imgURL = req.file;
 
   const errors = getErrors(req);
   if (hasErrors(errors)) {
@@ -69,7 +61,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
 
   try {
     const userId = req.user; // mongoose will extract just the Id due to schema ref
-    const item = new Item({ name, desc, imgURL: randomIMG(), price, userId });
+    const item = new Item({ name, desc, imgURL, price, userId });
     await item.save();
     res.redirect('/admin/items');
   } catch (error) {

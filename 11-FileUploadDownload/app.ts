@@ -2,6 +2,7 @@ import express,
   { ErrorRequestHandler }
                      from 'express';
 import          path from 'path';
+import        multer from 'multer';
 import       session from 'express-session';
 import      mongoose from 'mongoose';
 import    MongoStore from 'connect-mongo';
@@ -27,6 +28,7 @@ app.set('view engine', 'ejs');
 
 // allows parsing of data into req.body with simple key value pairs
 app.use(express.urlencoded({ extended: false }));
+app.use(multer({ dest: 'uploads' }).single('image')); // allows storing of files
 
 app.set('trust proxy', 1); // trust first proxy. Required to work on Render.com
 app.use(
