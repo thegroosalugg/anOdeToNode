@@ -26,9 +26,21 @@ const app = express();
 // sets templating engine
 app.set('view engine', 'ejs');
 
+// configures multer file destination and filename
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, 'uploads');
+  }, // null is placeholder to pass an error
+     filename: (req, file, callback) => {
+    callback(null, new Date().toISOString() + '_' + file.originalname);
+  },
+});
+
+// single: 1 file. 'image' corresponds to input 'name'
+app.use(multer({ storage }).single('image')); // allows storing of files
+
 // allows parsing of data into req.body with simple key value pairs
 app.use(express.urlencoded({ extended: false }));
-app.use(multer({ dest: 'uploads' }).single('image')); // allows storing of files
 
 app.set('trust proxy', 1); // trust first proxy. Required to work on Render.com
 app.use(
