@@ -1,18 +1,13 @@
-import express,
-  { ErrorRequestHandler }
-                     from 'express';
+import express, { ErrorRequestHandler, Request } from 'express';
+import multer,  {      FileFilterCallback      } from 'multer';
+import          {      error404, error500      } from './controllers/error';
 import          path from 'path';
-import        multer from 'multer';
 import       session from 'express-session';
 import      mongoose from 'mongoose';
 import    MongoStore from 'connect-mongo';
 import    authRoutes from './routes/auth';
 import   adminRoutes from './routes/admin';
 import   storeRoutes from './routes/store';
-import {
-         error404,
-         error500
-                   } from './controllers/error';
 import    csrfShield from './middleware/csrf';
 import handleSession from './middleware/session';
 import  authenticate from './middleware/authenticate';
@@ -36,8 +31,18 @@ const storage = multer.diskStorage({
   },
 });
 
+// adds a file filter for accepted filetypes in multer
+const fileFilter = (
+       req: Request,
+      file: Express.Multer.File,
+  callback: FileFilterCallback
+) => {
+  const isValid = ['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimetype);
+  callback(null, isValid);
+};
+
 // single: 1 file. 'image' corresponds to input 'name'
-app.use(multer({ storage }).single('image')); // allows storing of files
+app.use(multer({ storage, fileFilter }).single('image')); // allows storing of files
 
 // allows parsing of data into req.body with simple key value pairs
 app.use(express.urlencoded({ extended: false }));
