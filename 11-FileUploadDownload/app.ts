@@ -1,6 +1,7 @@
-import express, { ErrorRequestHandler, Request } from 'express';
-import multer,  {      FileFilterCallback      } from 'multer';
-import          {      error404, error500      } from './controllers/error';
+import express,
+  { ErrorRequestHandler }
+                     from 'express';
+import        multer from 'multer';
 import          path from 'path';
 import       session from 'express-session';
 import      mongoose from 'mongoose';
@@ -8,9 +9,13 @@ import    MongoStore from 'connect-mongo';
 import    authRoutes from './routes/auth';
 import   adminRoutes from './routes/admin';
 import   storeRoutes from './routes/store';
+import { error404,
+         error500  } from './controllers/error';
 import    csrfShield from './middleware/csrf';
 import handleSession from './middleware/session';
 import  authenticate from './middleware/authenticate';
+import {  storage,
+        fileFilter } from './middleware/multerConfig';
 import      errorMsg from './util/errorMsg';
 import        dotenv from 'dotenv';
               dotenv.config();
@@ -20,26 +25,6 @@ const app = express();
 
 // sets templating engine
 app.set('view engine', 'ejs');
-
-// configures multer file destination and filename
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, 'uploads');
-  }, // null is placeholder to pass an error
-     filename: (req, file, callback) => {
-    callback(null, new Date().toISOString() + '_' + file.originalname);
-  },
-});
-
-// adds a file filter for accepted filetypes in multer
-const fileFilter = (
-       req: Request,
-      file: Express.Multer.File,
-  callback: FileFilterCallback
-) => {
-  const isValid = ['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimetype);
-  callback(null, isValid);
-};
 
 // single: 1 file. 'image' corresponds to input 'name'
 app.use(multer({ storage, fileFilter }).single('image')); // allows storing of files
@@ -53,7 +38,7 @@ app.use(
     secret: process.env.SESSION_SECRET!,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
+     store: MongoStore.create({
             mongoUrl: process.env.MONGO_URI,
       collectionName: 'sessions',
            serialize: (session) => session, // allows nested object structure in mongo
