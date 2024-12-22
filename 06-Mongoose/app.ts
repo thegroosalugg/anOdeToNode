@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // set to public folder in repo root, for all projects
 app.use(
-  express.static(path.join(import.meta.dirname, '../', 'public'), {
+  express.static(path.join(import.meta.dirname, '../', 'shared'), {
     maxAge: '1d', // Cache static assets for 1 day to improve load times
     etag: false, // Disable ETag generation for simpler cache management
   })
