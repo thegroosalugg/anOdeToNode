@@ -23,7 +23,7 @@
       <ul>
         <% items.forEach(({ name, price, imgURL, quantity }, index) => { %>
         <li>
-          <img src="<%= imgURL %>" alt="<%= name %>" />
+          <img src="/<%= imgURL %>" alt="<%= name %>" />
           <section>
             <%= detailRow('Article:',                 name             ) %>
             <%= detailRow('Seller:',             user.name             ) %>

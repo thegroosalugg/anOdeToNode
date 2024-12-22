@@ -66,6 +66,8 @@ app.use(
 
 // public folder specific to project
 app.use(express.static(path.join(import.meta.dirname, 'public')));
+// prepend uploads to ensure files routed to this folder not accessed at root level
+app.use('/uploads', express.static(path.join(import.meta.dirname, 'uploads')));
 
 app.use('/admin', authenticate, adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);

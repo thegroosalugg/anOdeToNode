@@ -27,7 +27,7 @@
 
 <section class="edit-form-wrapper">
   <% if (item) { %>
-    <img src="<%= imgURL %>" alt="<%= name %>" />
+    <img src="/<%= imgURL %>" alt="<%= name %>" />
   <% }  %>
 
   <form
@@ -52,7 +52,7 @@
       <label for="desc" class="<%= errors.desc ? 'error' : '' %>">
         <%= 'description ' + (errors.desc || '') %>
       </label>
-      <textarea rows="5" id="desc" name="desc"><%=
+      <textarea rows="4" id="desc" name="desc"><%=
         formData.desc || desc
       %></textarea>
     </section>
