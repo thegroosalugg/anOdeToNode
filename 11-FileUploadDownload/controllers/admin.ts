@@ -74,7 +74,6 @@ const postAddItem: RequestHandler = async (req, res, next) => {
   }
 };
 
-
 // /admin/edit-item - prepended by authenticate middleware
 const postEditItem: RequestHandler = async (req, res, next) => {
   const { _id, ...updatedFields } = req.body;
@@ -92,13 +91,15 @@ const postEditItem: RequestHandler = async (req, res, next) => {
   }
 
   try {
-    const updatedData: Record<string, string> = { name, desc, price };
-    if (image) updatedData.imgURL = image.path;
-    await Item.updateOne(
-      { _id, userId: req.user?._id },
-      { $set: updatedData },
-      { runValidators: true } // ensures schema validations apply on updateOne
-    );
+    const item = await Item.findOne({ _id, userId: req.user?._id });
+    if (item) {
+      Object.assign(item, { name, price, desc });
+      if (image) {
+        deleteFile(item.imgURL);
+        item.imgURL = image.path;
+      }
+      await item.save();
+    }
     res.redirect('/admin/items');
   } catch (error) {
     errorMsg({ error, where: 'postEditItem' });
