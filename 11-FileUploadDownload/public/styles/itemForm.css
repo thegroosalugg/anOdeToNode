@@ -56,6 +56,18 @@
 
       input {
         height: 2rem;
+
+        &#image {
+          background: #ffffff;
+          cursor: pointer;
+          text-indent: -6.4em; /* hides 'choose file button' */
+
+          /* this is an alternative to negative text indent,
+          but the remaining text is not vertically centered if you use this */
+          /* &::file-selector-button {
+            display: none;
+          } */
+        }
       }
 
       input, textarea {

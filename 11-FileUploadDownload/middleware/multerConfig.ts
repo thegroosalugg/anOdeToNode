@@ -6,8 +6,9 @@ const fileDate = new Date().toISOString().replace(/[:.-]/g, '_') + '_';
 // configures multer file destination and filename
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
+    // null is placeholder to pass an error, but it must be null.
     callback(null, 'uploads');
-  }, // null is placeholder to pass an error
+  },
      filename: (req, file, callback) => {
     callback(null, fileDate + file.originalname);
   },
@@ -20,6 +21,7 @@ const fileFilter = (
   callback: FileFilterCallback
 ) => {
   const isValid = ['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimetype);
+  // 1st arg is always null regardless of errors
   callback(null, isValid);
 };
 

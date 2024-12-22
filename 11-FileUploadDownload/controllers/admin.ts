@@ -48,7 +48,15 @@ const getItemForm: RequestHandler = async (req, res, next) => {
 // /admin/add-item - prepended by authenticate middleware
 const postAddItem: RequestHandler = async (req, res, next) => {
   const { name, desc, price } = trimBody(req.body);
-  const imgURL = req.file;
+  const image = req.file;
+
+  if (!image) {
+    errorMsg({ error: 'NO IMAGE', where: 'postAddItem' });
+    req.session.errors = { image: 'must be .jpg, .jpeg or .png' };
+    req.session.formData = { name, desc, price };
+    req.session.save(() => res.redirect('/admin/item-form'));
+    return;
+  }
 
   const errors = getErrors(req);
   if (hasErrors(errors)) {
@@ -61,7 +69,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
 
   try {
     const userId = req.user; // mongoose will extract just the Id due to schema ref
-    const item = new Item({ name, desc, imgURL, price, userId });
+    const item = new Item({ name, desc, imgURL: image.path, price, userId });
     await item.save();
     res.redirect('/admin/items');
   } catch (error) {

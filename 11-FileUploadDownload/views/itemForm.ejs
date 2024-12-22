@@ -18,6 +18,7 @@
          id="<%= id %>"
        name="<%= id %>"
       value="<%= formData[id] || data[id] %>"
+       type="<%= id === 'image' ? 'file' : 'text' %>"
       autocomplete="off" />
   </section>
 <% } %>
@@ -38,7 +39,7 @@
     <input type="hidden" name="_csrf"    value="<%= csrf %>"   />
 
     <% if (item) { %>
-      <input type="hidden" name="_id"    value="<%= _id %>"    />
+      <input type="hidden" name="_id"   value="<%= _id   %>" />
       <input type="hidden" name="imgURL" value="<%= imgURL %>" />
     <% } else { %>
       <h1>Post a new listing</h1>
@@ -46,8 +47,8 @@
 
     <%= input('name') %>
     <%= input('price') %>
+    <%= input('image') %>
 
-    <input id="image" name="image" type="file" />
     <section>
       <label for="desc" class="<%= errors.desc ? 'error' : '' %>">
         <%= 'description ' + (errors.desc || '') %>
