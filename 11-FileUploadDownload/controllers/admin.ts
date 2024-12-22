@@ -4,6 +4,7 @@ import trimBody from '../util/trimBody';
 import errorMsg from '../util/errorMsg';
 import { MongooseErrors, mongooseErrors } from '../validation/mongooseErrors';
 import { getErrors, hasErrors } from '../validation/validators';
+import { deleteFile } from '../util/deleteFile';
 
 // /admin/items - prepended by authenticate middleware
 const getUserItems: RequestHandler = async (req, res, next) => {
@@ -54,7 +55,8 @@ const postAddItem: RequestHandler = async (req, res, next) => {
   if (hasErrors(errors) || !image) {
     errorMsg({ error: errors, where: 'postAddItem' });
     req.session.errors = errors;
-    if (!image) req.session.errors.image = 'must be .jpg, .jpeg or .png'
+    if (!image) req.session.errors.image = 'must be .jpg, .jpeg or .png';
+    if (image) deleteFile(image.path);
     req.session.formData = { name, desc, price };
     req.session.save(() => res.redirect('/admin/item-form'));
     return;
@@ -84,6 +86,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
     errorMsg({ error: errors, where: 'postEditItem' });
     req.session.errors = errors;
     req.session.formData = { name, desc, price };
+    if (image) deleteFile(image.path);
     req.session.save(() => res.redirect('/admin/item-form/' + _id));
     return;
   }
@@ -106,9 +109,13 @@ const postEditItem: RequestHandler = async (req, res, next) => {
 
 // /admin//delete-item - prepended by authenticate middleware
 const postDeleteItem: RequestHandler = async (req, res, next) => {
-  const { itemId } = req.body;
+  const { itemId: _id } = req.body;
   try {
-    await Item.deleteOne({ _id: itemId, userId: req.user?._id });
+    const item = await Item.findOne({ _id, userId: req.user?._id });
+    if (item) {
+      deleteFile(item.imgURL);
+      await Item.deleteOne({ _id });
+    }
     res.redirect('/admin/items');
   } catch (error) {
     errorMsg({ error, where: 'postDeleteItem' });
