@@ -50,18 +50,11 @@ const postAddItem: RequestHandler = async (req, res, next) => {
   const { name, desc, price } = trimBody(req.body);
   const image = req.file;
 
-  if (!image) {
-    errorMsg({ error: 'NO IMAGE', where: 'postAddItem' });
-    req.session.errors = { image: 'must be .jpg, .jpeg or .png' };
-    req.session.formData = { name, desc, price };
-    req.session.save(() => res.redirect('/admin/item-form'));
-    return;
-  }
-
   const errors = getErrors(req);
-  if (hasErrors(errors)) {
+  if (hasErrors(errors) || !image) {
     errorMsg({ error: errors, where: 'postAddItem' });
     req.session.errors = errors;
+    if (!image) req.session.errors.image = 'must be .jpg, .jpeg or .png'
     req.session.formData = { name, desc, price };
     req.session.save(() => res.redirect('/admin/item-form'));
     return;

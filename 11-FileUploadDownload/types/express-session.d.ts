@@ -8,8 +8,8 @@ declare module "express-session" {
   interface SessionData {
          user: InstanceType<typeof User> | null;
          csrf: string;
-       errors: Object; // treated as opaque
-     formData: Object;
+       errors: Record<string, string>; // treated as opaque
+     formData: Record<string, string>;
     resetAuth: { token: ReqQuery, expiry: number, userId: Types.ObjectId };
   }
 }
