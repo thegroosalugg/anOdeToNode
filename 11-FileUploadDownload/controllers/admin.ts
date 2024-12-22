@@ -82,8 +82,9 @@ const postAddItem: RequestHandler = async (req, res, next) => {
 
 // /admin/edit-item - prepended by authenticate middleware
 const postEditItem: RequestHandler = async (req, res, next) => {
-  const { _id, imgURL, ...updatedFields } = req.body;
+  const { _id, ...updatedFields } = req.body;
   const { name, desc, price } = trimBody(updatedFields);
+  const image = req.file;
 
   const errors = getErrors(req);
   if (hasErrors(errors)) {
@@ -95,9 +96,11 @@ const postEditItem: RequestHandler = async (req, res, next) => {
   }
 
   try {
+    const updatedData: Record<string, string> = { name, desc, price };
+    if (image) updatedData.imgURL = image.path;
     await Item.updateOne(
       { _id, userId: req.user?._id },
-      { $set: { name, desc, imgURL, price } },
+      { $set: updatedData },
       { runValidators: true } // ensures schema validations apply on updateOne
     );
     res.redirect('/admin/items');
