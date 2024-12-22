@@ -1,8 +1,6 @@
 import multer, { FileFilterCallback } from 'multer';
 import { Request } from 'express';
 
-const fileDate = new Date().toISOString().replace(/[:.-]/g, '_') + '_';
-
 // configures multer file destination and filename
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
@@ -10,7 +8,8 @@ const storage = multer.diskStorage({
     callback(null, 'uploads');
   },
      filename: (req, file, callback) => {
-    callback(null, fileDate + file.originalname);
+    const dateStr = new Date().toISOString().replace(/[:.-]/g, '_') + '_';
+    callback(null, dateStr + file.originalname);
   },
 });
 
