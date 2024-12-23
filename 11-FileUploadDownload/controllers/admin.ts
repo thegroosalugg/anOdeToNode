@@ -4,9 +4,7 @@ import trimBody from '../util/trimBody';
 import errorMsg from '../util/errorMsg';
 import { MongooseErrors, mongooseErrors } from '../validation/mongooseErrors';
 import { getErrors, hasErrors } from '../validation/validators';
-import { deleteFile } from '../util/deleteFile';
-import { join } from 'path';
-import { renameSync } from 'fs';
+import { deleteFile, updateFile } from '../util/fileHelper';
 
 // /admin/items - prepended by authenticate middleware
 const getUserItems: RequestHandler = async (req, res, next) => {
@@ -71,8 +69,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
   }
 
   try {
-    const imgURL = join('uploads', image.filename); // remove 'temp' subfolder
-    renameSync(image.path, imgURL); // move from uploads/temp to uploads
+    const imgURL = updateFile(image.path, image.filename);
     const userId = req.user; // mongoose will extract just the Id due to schema ref
     const item = new Item({ name, desc, imgURL, price, userId });
     await item.save();
@@ -109,8 +106,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
     if (item) {
       Object.assign(item, { name, price, desc });
       if (image) {
-        const imgURL = join('uploads', image.filename); // remove 'temp' subfolder
-        renameSync(image.path, imgURL); // move from uploads/temp to uploads
+        const imgURL = updateFile(image.path, image.filename);
         deleteFile(item.imgURL);
         item.imgURL = imgURL;
       }
