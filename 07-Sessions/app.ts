@@ -16,6 +16,17 @@ const inProduction = process.env.NODE_ENV === 'production';
 
 const app = express();
 
+// set to public folder in repo root, for all projects
+app.use(
+  express.static(path.join(import.meta.dirname, '../', 'shared'), {
+    maxAge: '1d', // Cache static assets for 1 day to improve load times
+    etag: false, // Disable ETag generation for simpler cache management
+  })
+);
+
+// public folder specific to project
+app.use(express.static(path.join(import.meta.dirname, 'public')));
+
 // sets templating engine
 app.set('view engine', 'ejs');
 
@@ -65,18 +76,6 @@ app.use((req, res, next) => {
       console.log('App findById middleware error:', err);
     });
 });
-
-
-// set to public folder in repo root, for all projects
-app.use(
-  express.static(path.join(import.meta.dirname, '../', 'shared'), {
-    maxAge: '1d', // Cache static assets for 1 day to improve load times
-    etag: false, // Disable ETag generation for simpler cache management
-  })
-);
-
-// public folder specific to project
-app.use(express.static(path.join(import.meta.dirname, 'public')));
 
 app.use('/admin', authenticate, adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
