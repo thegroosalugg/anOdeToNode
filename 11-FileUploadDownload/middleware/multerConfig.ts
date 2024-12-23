@@ -20,6 +20,9 @@ const fileFilter = (
   callback: FileFilterCallback
 ) => {
   const isValid = ['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimetype);
+  if (!isValid) {
+    req.fileError = 'must be .jpg, .jpeg or .png';
+  }
   // 1st arg is always null regardless of errors
   callback(null, isValid);
 };

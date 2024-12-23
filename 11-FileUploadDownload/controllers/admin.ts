@@ -88,14 +88,18 @@ const postAddItem: RequestHandler = async (req, res, next) => {
 const postEditItem: RequestHandler = async (req, res, next) => {
   const { _id, ...updatedFields } = req.body;
   const { name, desc, price } = trimBody(updatedFields);
-  const image = req.file;
+  const image = req.file || req.session.file;
 
   const errors = getErrors(req);
   if (hasErrors(errors)) {
     errorMsg({ error: errors, where: 'postEditItem' });
     req.session.errors = errors;
     req.session.formData = { name, desc, price };
-    if (image) deleteFile(image.path);
+    if (image) {
+      req.session.file      = image;
+      req.session.dataRoute = true;
+    }
+    if (req.fileError) req.session.errors.image = req.fileError;
     req.session.save(() => res.redirect('/admin/item-form/' + _id));
     return;
   }
@@ -105,8 +109,10 @@ const postEditItem: RequestHandler = async (req, res, next) => {
     if (item) {
       Object.assign(item, { name, price, desc });
       if (image) {
+        const imgURL = join('uploads', image.filename); // remove 'temp' subfolder
+        renameSync(image.path, imgURL); // move from uploads/temp to uploads
         deleteFile(item.imgURL);
-        item.imgURL = image.path;
+        item.imgURL = imgURL;
       }
       await item.save();
     }
