@@ -10,6 +10,8 @@ declare module "express-session" {
          csrf: string;
        errors: Record<string, string>; // treated as opaque
      formData: Record<string, string>;
+         file: Express.Multer.File;
+    dataRoute: boolean;
     resetAuth: { token: ReqQuery, expiry: number, userId: Types.ObjectId };
   }
 }

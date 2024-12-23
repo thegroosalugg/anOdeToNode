@@ -14,6 +14,11 @@
     <label for="<%= id %>" class="<%= errors[id] ? 'error' : '' %>">
       <%= id + ' ' + (errors[id] || '') %>
     </label>
+
+    <% if (id === 'image' && filename) { %>
+    <p class="image-file"><%= filename %></p>
+    <% } %>
+    
     <input
          id="<%= id %>"
        name="<%= id %>"
@@ -36,10 +41,10 @@
       class="item-form"
     enctype="multipart/form-data"
   >
-    <input type="hidden" name="_csrf"    value="<%= csrf %>" />
+    <input   type="hidden" name="_csrf" value="<%= csrf %>" />
 
     <% if (item) { %>
-      <input type="hidden" name="_id"    value="<%= _id  %>" />
+      <input type="hidden" name="_id"   value="<%= _id  %>" />
     <% } else { %>
       <h1>Post a new listing</h1>
     <% } %>

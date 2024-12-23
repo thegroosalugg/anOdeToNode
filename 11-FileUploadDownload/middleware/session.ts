@@ -8,6 +8,14 @@ const handleSession: RequestHandler = ((req, res, next) => {
   res.locals.errors   = {};
   res.locals.formData = {}; // res.locals all must be explicitly declared each cycle
 
+  if (!req.session.dataRoute) {
+    delete req.session.file; // remove saved file on non file handling routes
+  }
+
+  if (req.session.dataRoute) {
+    req.session.dataRoute = false; // must be set to true only on file handling routes per req
+  }
+
   if (req.session.errors) {
     res.locals.errors = { ...res.locals.errors, ...req.session.errors }; // Merge session errors
     delete req.session.errors; // Clear the session errors

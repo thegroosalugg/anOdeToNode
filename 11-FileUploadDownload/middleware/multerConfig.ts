@@ -5,7 +5,7 @@ import { Request } from 'express';
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     // null is placeholder to pass an error, but it must be null.
-    callback(null, 'uploads');
+    callback(null, 'uploads/temp');
   },
      filename: (req, file, callback) => {
     const dateStr = new Date().toISOString().replace(/[:.-]/g, '_') + '_';

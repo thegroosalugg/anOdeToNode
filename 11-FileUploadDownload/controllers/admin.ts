@@ -5,6 +5,8 @@ import errorMsg from '../util/errorMsg';
 import { MongooseErrors, mongooseErrors } from '../validation/mongooseErrors';
 import { getErrors, hasErrors } from '../validation/validators';
 import { deleteFile } from '../util/deleteFile';
+import { join } from 'path';
+import { renameSync } from 'fs';
 
 // /admin/items - prepended by authenticate middleware
 const getUserItems: RequestHandler = async (req, res, next) => {
@@ -26,7 +28,9 @@ const getUserItems: RequestHandler = async (req, res, next) => {
 // /admin/item-form - prepended by authenticate middleware
 const getItemForm: RequestHandler = async (req, res, next) => {
   const { itemId } = req.params;
+  const filename   = req.session.file?.originalname;
   let item = null;
+  req.session.dataRoute = true;
 
   if (itemId) {
     try {
@@ -42,29 +46,35 @@ const getItemForm: RequestHandler = async (req, res, next) => {
     isActive: '/admin/items',
         view: 'itemForm',
       styles: ['itemForm', 'dashboard'],
-      locals: { item },
+      locals: { item, filename },
   });
 };
 
 // /admin/add-item - prepended by authenticate middleware
 const postAddItem: RequestHandler = async (req, res, next) => {
   const { name, desc, price } = trimBody(req.body);
-  const image = req.file;
+  const image = req.file || req.session.file;
 
   const errors = getErrors(req);
   if (hasErrors(errors) || !image) {
     errorMsg({ error: errors, where: 'postAddItem' });
     req.session.errors = errors;
-    if (!image) req.session.errors.image = 'must be .jpg, .jpeg or .png';
-    if (image) deleteFile(image.path);
     req.session.formData = { name, desc, price };
+    if (image) {
+      req.session.file      = image;
+      req.session.dataRoute = true;
+    } else {
+      req.session.errors.image = 'must be .jpg, .jpeg or .png';
+    }
     req.session.save(() => res.redirect('/admin/item-form'));
     return;
   }
 
   try {
+    const imgURL = join('uploads', image.filename); // remove 'temp' subfolder
+    renameSync(image.path, imgURL); // move from uploads/temp to uploads
     const userId = req.user; // mongoose will extract just the Id due to schema ref
-    const item = new Item({ name, desc, imgURL: image.path, price, userId });
+    const item = new Item({ name, desc, imgURL, price, userId });
     await item.save();
     res.redirect('/admin/items');
   } catch (error) {
