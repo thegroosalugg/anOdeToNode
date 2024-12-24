@@ -8,8 +8,8 @@ const storage = multer.diskStorage({
     callback(null, 'uploads/temp');
   },
      filename: (req, file, callback) => {
-    const dateStr = new Date().toISOString().replace(/[:.-]/g, '_') + '_';
-    callback(null, dateStr + file.originalname);
+    const dateStr = new Date().toISOString().replace(/[:.-]/g, '_');
+    callback(null, req.user?._id + '_' + dateStr + '_' + file.originalname);
   },
 });
 

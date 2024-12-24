@@ -40,9 +40,6 @@ app.use('/uploads', express.static(path.join(import.meta.dirname, 'uploads')));
 // sets templating engine
 app.set('view engine', 'ejs');
 
-// single: 1 file. 'image' corresponds to input 'name'
-app.use(multer({ storage, fileFilter }).single('image')); // allows storing of files
-
 // allows parsing of data into req.body with simple key value pairs
 app.use(express.urlencoded({ extended: false }));
 
@@ -67,8 +64,14 @@ app.use(
   })
 );
 
-app.use(csrfShield); // protects sessions from request forgery via tokens. Initialise after sessions
 app.use(handleSession); // handles sessions data on each cycle
+
+// single: 1 file. 'image' corresponds to input 'name'
+app.use(multer({ storage, fileFilter }).single('image')); // allows storing of files
+// multer is run after handleSession so that user data is available in storare
+// CSRF runs after multer, as it relies on form data. Multer configures ENCTYPE
+app.use(csrfShield); // protects sessions from request forgery via tokens. Initialise after sessions
+
 
 app.use('/admin', authenticate, adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
