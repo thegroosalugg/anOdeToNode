@@ -15,16 +15,27 @@
       <%= id + ' ' + (errors[id] || '') %>
     </label>
 
-    <% if (id === 'image' && filename) { %>
-    <p class="image-file"><%= filename %></p>
+    <% if (id === 'image') { %>
+      <% const defaultText = filename || 'No File Selected' %>
+      <label for="image" id="image-file">
+        <input id="image" name="image" type="file" accept="image/*" />
+        <%= defaultText %>
+      </label>
+      <script>
+        document.getElementById("image").addEventListener("change", function () {
+          const label   = document.getElementById("image-file");
+          const content = this.files[0]?.name || "<%= defaultText %>";
+          label.lastChild.textContent = content;
+        });
+      </script>
+    <% } else { %>
+      <input
+          id="<%= id %>"
+        name="<%= id %>"
+        value="<%= formData[id] || data[id] %>"
+        autocomplete="off"
+      />
     <% } %>
-    
-    <input
-         id="<%= id %>"
-       name="<%= id %>"
-      value="<%= formData[id] || data[id] %>"
-       type="<%= id === 'image' ? 'file' : 'text' %>"
-      autocomplete="off" />
   </section>
 <% } %>
 
@@ -64,9 +75,9 @@
 
     <button class="<%= item ? 'update' : '' %>">
       <% if (item) { %>
-      Update <i class="fa-solid fa-check"></i>
+        Update <i class="fa-solid fa-check"></i>
       <% } else { %>
-         Add <i class="fa-solid fa-plus"></i>
+        Add <i class="fa-solid fa-plus"></i>
       <% } %>
     </button>
   </form>
