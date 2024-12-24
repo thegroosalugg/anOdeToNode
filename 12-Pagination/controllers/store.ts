@@ -11,7 +11,7 @@ const getItems: RequestHandler = async (req, res, next) => {
          title: 'Home',
       isActive: '/',
           view: 'itemList',
-        styles: ['itemList'],
+        styles: ['itemList', 'pagination'],
         locals: { items, isAdmin: false },
     });
   } catch (error) {

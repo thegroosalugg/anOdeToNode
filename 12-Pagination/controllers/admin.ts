@@ -14,7 +14,7 @@ const getUserItems: RequestHandler = async (req, res, next) => {
          title: 'Dashboard',
       isActive: '/admin/items',
           view: 'itemList',
-        styles: ['itemList', 'dashboard', 'userInfo'],
+        styles: ['itemList', 'dashboard', 'userInfo', 'pagination'],
         locals: { items, isAdmin: true },
     });
   } catch (error) {
