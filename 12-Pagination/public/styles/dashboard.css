@@ -1,0 +1,30 @@
+.dashboard {
+  display: flex;
+  overflow-x: scroll;
+  padding: 0.5rem 0;
+  border-top: 1px solid #bdc3c7;
+  background: linear-gradient(to right, #000000, #434343);
+
+  a {
+    color: #bdc3c7;
+    font-size: 1.2rem;
+    border-right: 1px solid #bdc3c7;
+    padding: 0 0.5rem;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    &:hover {
+      color: #c38c4e;
+    }
+
+    &:first-child {
+      border-left: 1px solid #bdc3c7;
+      margin-left: auto;
+    }
+
+    &:last-child {
+      margin-right: auto;
+    }
+  }
+}
