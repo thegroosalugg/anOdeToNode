@@ -72,14 +72,17 @@ app.use(multer({ storage, fileFilter }).single('image')); // allows storing of f
 // CSRF runs after multer, as it relies on form data. Multer configures ENCTYPE
 app.use(csrfShield); // protects sessions from request forgery via tokens. Initialise after sessions
 
-
 app.use('/admin', authenticate, adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
 app.use(authRoutes);
 app.get('/500', error500); // 500 errors route - must be defined before the get all errors route
 app.use(error404); // will catch all other URLS, defined last
+
 // special 4 arg middleware that will catch next(withArgument)
-app.use(((error, req, res, next) => res.redirect('/500')) as ErrorRequestHandler);
+app.use(((error, req, res, next) => {
+  errorMsg({ error, where: 'App 500' });
+  res.redirect('/500');
+}) as ErrorRequestHandler);
 
 mongoose
   .connect(process.env.MONGO_URI!)

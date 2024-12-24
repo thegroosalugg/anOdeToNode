@@ -4,12 +4,17 @@ import { Request } from 'express';
 // configures multer file destination and filename
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    // null is placeholder to pass an error, but it must be null.
+    // callback successful, 1: error as null, 2: destination string
     callback(null, 'uploads/temp');
   },
-     filename: (req, file, callback) => {
+
+  filename: (req, file, callback) => {
+    if (!req.user) {
+      // callback failed, 1: error, 2: filename as empty string
+      return callback(new Error('User'), '');
+    }
     const dateStr = new Date().toISOString().replace(/[:.-]/g, '_');
-    callback(null, req.user?._id + '_' + dateStr + '_' + file.originalname);
+    callback(null, req.user._id + '_' + dateStr + '_' + file.originalname);
   },
 });
 
