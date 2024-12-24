@@ -17,6 +17,17 @@ import          dotenv from 'dotenv';
 const inProduction = process.env.NODE_ENV === 'production';
 const app = express();
 
+// set to public folder in repo root, for all projects
+app.use(
+  express.static(path.join(import.meta.dirname, '../', 'shared'), {
+    maxAge: '1d', // Cache static assets for 1 day to improve load times
+    etag: false, // Disable ETag generation for simpler cache management
+  })
+);
+
+// public folder specific to project
+app.use(express.static(path.join(import.meta.dirname, 'public')));
+
 // sets templating engine
 app.set('view engine', 'ejs');
 
@@ -46,17 +57,6 @@ app.use(
 
 app.use(csrfShield); // protects sessions from request forgery via tokens. Initialise after sessions
 app.use(handleSession); // handles sessions data on each cycle
-
-// set to public folder in repo root, for all projects
-app.use(
-  express.static(path.join(import.meta.dirname, '../', 'public'), {
-    maxAge: '1d', // Cache static assets for 1 day to improve load times
-    etag: false, // Disable ETag generation for simpler cache management
-  })
-);
-
-// public folder specific to project
-app.use(express.static(path.join(import.meta.dirname, 'public')));
 
 app.use('/admin', authenticate, adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
