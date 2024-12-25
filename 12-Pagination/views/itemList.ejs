@@ -8,33 +8,59 @@
   <h1>Store</h1>
 <% } %>
   <ul>
-    <% if (items.length === 0) { %>
+  <% if (items.length === 0) { %>
     <h2>Whoops, looks like the is nothing here</h2>
-    <% } else { %>
+  <% } else { %>
     <% } items.forEach(({ _id, name, desc, imgURL, price }) => { %>
-    <li>
-      <a href="/store/<%= _id %>">
-        <img src="/<%= imgURL %>" alt="<%= name %>" />
-      </a>
-      <div class="name-and-price">
-        <p><%= name %></p>
-        <p>$<%= price.toFixed(2) %></p>
-      </div>
-      <% if (!isAdmin) { %>
-      <p><%= desc %></p>
-      <% } else { %>
-      <div class="admin-controls">
-        <a href="/admin/item-form/<%= _id %>">EDIT</a>
-        <button onclick="deleteItem(this)">DELETE</button>
-        <input type="hidden" name="itemId" value="<%= _id %>" />
+      <li id="<%= _id %>">
         <input type="hidden" name="_csrf"  value="<%= csrf %>" />
-      </div>
-      <% } %>
-    </li>
+        <input type="hidden" name="itemId" value="<%= _id %>" />
+
+        <a href="/store/<%= _id %>">
+          <img src="/<%= imgURL %>" alt="<%= name %>" />
+        </a>
+
+        <div class="name-and-price">
+          <p><%= name %></p>
+          <p>$<%= price.toFixed(2) %></p>
+        </div>
+
+        <% if (!isAdmin) { %>
+          <p><%= desc %></p>
+        <% } else { %>
+          <div class="admin-controls">
+            <a href="/admin/item-form/<%= _id %>">EDIT</a>
+            <button onclick="openModal('<%= csrf %>', '<%= _id %>')">DELETE</button>
+          </div>
+        <% } %>
+      </li>
     <% }) %>
   </ul>
 </section>
 
-<script src="/script/deleteItem.js"></script>
-
 <%- include('includes/pagination') %>
+
+<script src="/script/deleteItem.js"></script>
+<script>
+  let token;
+  let itemId;
+
+  const openModal = (csrf, _id) => {
+    token  = csrf;
+    itemId = _id;
+    document.querySelector('.modal-confirm').showModal();
+  }
+
+  const closeModal = (id) => document.querySelector(id).close();
+</script>
+
+<dialog class="modal-confirm">
+  <p>Are you sure?</p>
+  <button onclick="deleteItem(token, itemId)">Yes</button>
+  <button onclick="closeModal('.modal-confirm')">No</button>
+</dialog>
+
+<dialog class="modal-error">
+  <p>An Error Has Occured</p>
+  <button onclick="closeModal('.modal-error')">Ok</button>
+</dialog>
