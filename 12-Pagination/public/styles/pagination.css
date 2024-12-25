@@ -17,4 +17,9 @@
       border-color: #1b1b1b;
     }
   }
+
+  > span {
+    color: #ba6247;
+    align-self: end;
+  }
 }
