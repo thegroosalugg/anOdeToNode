@@ -8,14 +8,24 @@ import { deleteFile, updateFile } from '../util/fileHelper';
 
 // /admin/items - prepended by authenticate middleware
 const getUserItems: RequestHandler = async (req, res, next) => {
+  const page = +(req.query.page || 1);
+  const docsPerPage = 2;
+  const userId = req.user?._id
+
   try {
-    const items = await Item.find({ userId: req.user?._id });
+    const docCount = await Item.find({ userId }).countDocuments();
+    const items     = await Item.find({ userId })
+      .skip((page - 1) * docsPerPage)
+      .limit(docsPerPage);
+
+    const pagination = { active: page, docsPerPage, docCount };
+
     res.render('body', {
          title: 'Dashboard',
       isActive: '/admin/items',
           view: 'itemList',
         styles: ['itemList', 'dashboard', 'userInfo', 'pagination'],
-        locals: { items, isAdmin: true },
+        locals: { items, isAdmin: true, pagination },
     });
   } catch (error) {
     errorMsg({ error, where: 'getUserItems' });

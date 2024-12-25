@@ -5,14 +5,24 @@ import errorMsg from '../util/errorMsg';
 import formatDate from '../util/formateDate';
 
 const getItems: RequestHandler = async (req, res, next) => {
+  const page = +(req.query.page || 1);
+  const docsPerPage = 3;
+
   try {
-    const items = await Item.find();
+    const docCount = await Item.find().countDocuments(); // returns only no. of DB entries
+    const items     = await Item.find()
+      .skip((page - 1) * docsPerPage) // skips first amount of results, so page * limit
+      .limit(docsPerPage); // limits results to how many you want on the page
+      // skip + limit = clamp(min, max)
+
+    const pagination = { active: page, docsPerPage, docCount };
+
     res.render('body', {
          title: 'Home',
       isActive: '/',
           view: 'itemList',
         styles: ['itemList', 'pagination'],
-        locals: { items, isAdmin: false },
+        locals: { items, isAdmin: false, pagination },
     });
   } catch (error) {
     const err = new Error(error as string);
@@ -73,14 +83,23 @@ const postUpdateCart: RequestHandler = async (req, res, next) => {
 
 // prepended by authenticate middleware
 const getOrders: RequestHandler = async (req, res, next) => {
+  const page = +(req.query.page || 1);
+  const docsPerPage = 2;
+
   try {
-    const orders = await Order.find({ 'user._id': req.user?._id });
+    const docCount = await Order.find({ 'user._id': req.user?._id }).countDocuments();
+    const orders = await Order.find({ 'user._id': req.user?._id })
+      .skip((page -1) * docsPerPage)
+      .limit(docsPerPage);
+
+    const pagination = { active: page, docsPerPage, docCount };
+
     res.render('body', {
           title: 'Your Orders',
       isActive: '/admin/items',
           view: 'orders',
-        styles: ['orders', 'dashboard', 'userInfo'],
-        locals: { orders, formatDate },
+        styles: ['orders', 'dashboard', 'userInfo', 'pagination'],
+        locals: { orders, formatDate, pagination },
     });
   } catch (error) {
     errorMsg({ error, where: 'getOrders' });

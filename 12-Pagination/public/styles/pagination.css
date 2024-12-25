@@ -8,11 +8,11 @@
     color: #ba6247;
     background: #e0dddb;
     text-align: center;
-    width: 1.8rem;
+    width: 2.2rem;
     border: 1.5px solid #ba6247;
     border-radius: 3px;
 
-    &:hover {
+    &:hover, &.active {
       color: #1b1b1b;
       border-color: #1b1b1b;
     }
