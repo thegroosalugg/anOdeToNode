@@ -16,27 +16,25 @@
       <a href="/store/<%= _id %>">
         <img src="/<%= imgURL %>" alt="<%= name %>" />
       </a>
-      <div>
+      <div class="name-and-price">
         <p><%= name %></p>
         <p>$<%= price.toFixed(2) %></p>
       </div>
       <% if (!isAdmin) { %>
       <p><%= desc %></p>
       <% } else { %>
-      <form action="/admin/delete-item" method="post" class="admin-controls">
-        <a href="/admin/item-form/<%= _id %>">
-          EDIT
-        </a>
-        <button onclick="return confirm('Are you sure you want to delete this item?')">
-          DELETE
-        </button>
+      <div class="admin-controls">
+        <a href="/admin/item-form/<%= _id %>">EDIT</a>
+        <button onclick="deleteItem(this)">DELETE</button>
         <input type="hidden" name="itemId" value="<%= _id %>" />
         <input type="hidden" name="_csrf"  value="<%= csrf %>" />
-      </form>
+      </div>
       <% } %>
     </li>
     <% }) %>
   </ul>
 </section>
+
+<script src="/script/deleteItem.js"></script>
 
 <%- include('includes/pagination') %>

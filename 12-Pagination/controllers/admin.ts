@@ -130,20 +130,20 @@ const postEditItem: RequestHandler = async (req, res, next) => {
   }
 };
 
-// /admin//delete-item - prepended by authenticate middleware
-const postDeleteItem: RequestHandler = async (req, res, next) => {
-  const { itemId: _id } = req.body;
+// /admin/item/:itemId - prepended by authenticate middleware
+const deleteItem: RequestHandler = async (req, res, next) => {
+  const { itemId: _id } = req.params;
   try {
     const item = await Item.findOne({ _id, userId: req.user?._id });
     if (item) {
       deleteFile(item.imgURL);
       await Item.deleteOne({ _id });
     }
-    res.redirect('/admin/items');
+    res.status(200).json({ message: 'Deletion Success' });
   } catch (error) {
     errorMsg({ error, where: 'postDeleteItem' });
-    res.redirect('/');
+    res.status(500).json({ message: 'Deletion Failed' });
   }
 };
 
-export { getUserItems, getItemForm, postAddItem, postEditItem, postDeleteItem };
+export { getUserItems, getItemForm, postAddItem, postEditItem, deleteItem };

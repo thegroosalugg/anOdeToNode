@@ -65,7 +65,7 @@
         color: #878787;
       }
 
-      > div {
+      .name-and-price {
         display: flex;
         justify-content: space-between;
         align-items: end;
