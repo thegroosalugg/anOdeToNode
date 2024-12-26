@@ -56,11 +56,13 @@
 
 <dialog class="modal-confirm">
   <p>Are you sure?</p>
-  <button onclick="deleteItem(token, itemId)">Yes</button>
-  <button onclick="closeModal('.modal-confirm')">No</button>
+  <div>
+    <button onclick="deleteItem(token, itemId)">Probably</button>
+    <button onclick="closeModal('.modal-confirm')">Probably Not</button>
+  </div>
 </dialog>
 
 <dialog class="modal-error">
-  <p>An Error Has Occured</p>
-  <button onclick="closeModal('.modal-error')">Ok</button>
+  <p>An Error Has Occured!</p>
+  <button onclick="closeModal('.modal-error')">Sure Thing!</button>
 </dialog>
