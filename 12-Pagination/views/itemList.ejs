@@ -51,13 +51,29 @@
     document.querySelector('.modal-confirm').showModal();
   }
 
-  const closeModal = (id) => document.querySelector(id).close();
+  const closeModal = (id) => {
+    const modal = document.querySelector(id);
+    modal.setAttribute('closing', '');
+    modal.addEventListener(
+      'animationend',
+      () => {
+        modal.removeAttribute('closing');
+        modal.close();
+      },
+      { once: true }
+    );
+  };
+
+  const handleDelete = () => {
+    deleteItem(token, itemId);
+    closeModal('.modal-confirm');
+  }
 </script>
 
 <dialog class="modal-confirm">
   <p>Are you sure?</p>
   <div>
-    <button onclick="deleteItem(token, itemId)">Probably</button>
+    <button onclick="handleDelete()">Probably</button>
     <button onclick="closeModal('.modal-confirm')">Probably Not</button>
   </div>
 </dialog>

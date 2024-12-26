@@ -1,6 +1,4 @@
 const deleteItem = async (csrf, itemId) => {
-  document.querySelector('.modal-confirm').close();
-
   try {
     const response = await fetch('/admin/item/' + itemId, {
       method: 'DELETE',
@@ -17,6 +15,6 @@ const deleteItem = async (csrf, itemId) => {
 
     document.getElementById(itemId).remove();
   } catch (error) {
-    window.alert(error.message);
+    document.querySelector('.modal-error').showModal();
   }
 }
