@@ -1,0 +1,11 @@
+<%
+  const errors = {
+    404: 'Page Not Found',
+    500: 'An error has occured, try again another time'
+  }
+%>
+
+<div class='error'>
+  <h1><%= errors[error] %></h1>
+  <a href='/'>Go back</a>
+</div>

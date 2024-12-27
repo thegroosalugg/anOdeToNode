@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch TypeScript",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/app.ts",
+      "outFiles": [
+        "${workspaceFolder}/**/*.js"
+      ],
+      "restart": true, // nodemon config
+      "runtimeExecutable": "nodemon", // set to nodemon or ts-node
+    }
+  ]
+}

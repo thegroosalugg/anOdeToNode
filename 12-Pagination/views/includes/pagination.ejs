@@ -1,0 +1,26 @@
+<%
+  const { active, docCount, docsPerPage } = pagination;
+  const last   = Math.ceil(docCount / docsPerPage);
+  const middle = last < 5 ? 3 : Math.min(Math.max(active, 3), last - 2);
+  const pages  = []
+
+  if (last >= 1) pages.push(1);
+  if (last >= 2) pages.push(middle - 1);
+  if (last >= 3) pages.push(middle);
+  if (last >= 4) pages.push(middle + 1);
+  if (last >= 5) pages.push(last);
+%>
+
+<nav class="pagination">
+  <% pages.map(page => { %>
+    <% if (last > 5 && page === last && pages[3] !== last - 1) { %>
+      <span>...</span>
+    <% } %>
+    <a href="?page=<%= page %>" class="<%= page === active ? 'active' : '' %>">
+      <%= page %>
+    </a>
+    <% if (last > 5 && page === 1 && pages[1] !== 2) { %>
+      <span>...</span>
+    <% } %>
+  <% }) %>
+</nav>
