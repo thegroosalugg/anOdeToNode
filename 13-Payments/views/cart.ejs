@@ -1,0 +1,51 @@
+<%- include('includes/dashboard') %>
+
+<% const cartButton = (id, action) => { %>
+  <form class="cart-button" action="/cart/<%= id + '/' + action %>" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrf %>" />
+    <button>
+      <i class="fa-solid fa-<%= action === 'add' ? 'plus' : 'minus' %>"></i>
+    </button>
+  </form>
+<% } %>
+
+<section class="cart">
+  <h1>Your Cart</h1>
+  <ul>
+    <% if (items.length === 0) { %>
+    <h2>Your Cart is Empty</h2>
+    <% } else { %>
+    <% items.forEach(({ _id, name, imgURL, price, quantity }) => { %>
+    <li>
+      <a href="/store/<%= _id %>">
+        <img src="/<%= imgURL %>" alt="<%= name %>" />
+      </a>
+      <section>
+        <h4>
+          <span><%= name %></span>
+        </h4>
+        <div>
+          <%= cartButton(_id, 'remove') %>
+          <p><%= quantity %></p>
+          <%= cartButton(_id, 'add') %>
+        </div>
+        <h5>$<%= (quantity * price).toFixed(2) %></h5>
+      </section>
+    </li>
+    <% }); %> <% } %>
+  </ul>
+  <% if (items.length > 0) { %>
+  <form class="order-button" action="new-order" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrf %>" />
+    <button>Place Order</button>
+  </form>
+  <% } %>
+  <h3>
+   Total: $
+   <%=
+     items.reduce(
+       (total, { price, quantity }) => total + price * quantity, 0
+     ).toFixed(2)
+    %>
+  </h3>
+</section>
