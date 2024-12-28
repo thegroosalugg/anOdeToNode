@@ -53,13 +53,13 @@ app.use(
             mongoUrl: process.env.MONGO_URI,
       collectionName: 'sessions',
            serialize: (session) => session, // allows nested object structure in mongo
-         unserialize: (data) => data,       // reformats back to app readable format
+         unserialize: ( data  ) => data,    // reformats back to app readable format
     }),
     cookie: {
         maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: inProduction, // prevents client-side JavaScript from accessing the cookie.
         secure: inProduction, // enables cookies over HTTPS only. Can't be used in dev.
-      sameSite: 'strict',     // sets cross origin requests
+      sameSite: 'lax',        // sets cross origin requests
     },
   })
 );

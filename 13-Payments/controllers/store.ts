@@ -3,6 +3,11 @@ import Item from '../models/Item';
 import Order from '../models/Order';
 import errorMsg from '../util/errorMsg';
 import formatDate from '../util/formateDate';
+import Stripe from 'stripe';
+import dotenv from 'dotenv';
+       dotenv.config();
+
+const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
 const getItems: RequestHandler = async (req, res, next) => {
   const page = +(req.query.page || 1);
@@ -10,7 +15,7 @@ const getItems: RequestHandler = async (req, res, next) => {
 
   try {
     const docCount = await Item.find().countDocuments(); // returns only no. of DB entries
-    const items     = await Item.find()
+    const items    = await Item.find()
       .skip((page - 1) * docsPerPage) // skips first amount of results, so page * limit
       .limit(docsPerPage); // limits results to how many you want on the page
       // skip + limit = clamp(min, max)
@@ -37,7 +42,7 @@ const getItemById: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: item?.name || 'Not Found',
       isActive: '/',
-          view: 'itemView',
+          view:  'itemView',
         styles: ['itemView'],
         locals: { item },
     });
@@ -54,10 +59,39 @@ const getCart: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: 'Your Cart',
       isActive: '/cart',
-          view: 'cart',
+          view:  'cart',
         styles: ['cart', 'dashboard'],
         locals: { items },
     });
+  } catch (error) {
+    errorMsg({ error, where: 'getCart' });
+    res.redirect('/');
+  }
+};
+
+// prepended by authenticate middleware
+const postCheckout: RequestHandler = async (req, res, next) => {
+  try {
+    const items = await req.user!.getCart(); // user guaranteed by middleware
+    // line_items will throw error if checkout accessed by false POST & empty cart
+    const line_items = items.map(({ name, desc, price, quantity }) => ({
+        quantity, // require & reserved stripe props
+      price_data: {
+            currency: 'usd',
+         unit_amount: price * 100, // price must be in cents in STRIPE
+        product_data: { name, description: desc },
+      },
+    }));
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+            mode: 'payment',
+      line_items,
+      success_url: req.protocol + '://' + req.get('host') + '/new-order',
+       cancel_url: req.protocol + '://' + req.get('host') + '/cart',
+    });
+
+    res.redirect(303, session.url!);
   } catch (error) {
     errorMsg({ error, where: 'getCart' });
     res.redirect('/');
@@ -88,7 +122,7 @@ const getOrders: RequestHandler = async (req, res, next) => {
 
   try {
     const docCount = await Order.find({ 'user._id': req.user?._id }).countDocuments();
-    const orders = await Order.find({ 'user._id': req.user?._id })
+    const orders   = await Order.find({ 'user._id': req.user?._id })
       .skip((page -1) * docsPerPage)
       .limit(docsPerPage);
 
@@ -97,7 +131,7 @@ const getOrders: RequestHandler = async (req, res, next) => {
     res.render('body', {
           title: 'Your Orders',
       isActive: '/admin/items',
-          view: 'orders',
+          view:  'orders',
         styles: ['orders', 'dashboard', 'userInfo', 'pagination'],
         locals: { orders, formatDate, pagination },
     });
@@ -107,20 +141,29 @@ const getOrders: RequestHandler = async (req, res, next) => {
   }
 };
 
+// must be a GET request as required by STRIPE redirect
 // prepended by authenticate middleware
-const postCreateOrder: RequestHandler = async (req, res, next) => {
-  if (!req.user) return;
+const getNewOrder: RequestHandler = async (req, res, next) => {
   try {
-    const { _id, name, email } = req.user;
-    const items = await req.user.getCart();
+    const user = req.user! // guaranteed by middleware
+    const { _id, name, email } = user;
+    const items = await user.getCart();
     await new Order({ user: { _id, name, email }, items }).save();
-    req.user.cart = [];
-    await req.user.save();
+    user.cart = [];
+    await user.save();
     res.redirect('/orders');
   } catch (error) {
-    errorMsg({ error, where: 'postCreateOrder' });
+    errorMsg({ error, where: 'getNewOrder' });
     res.redirect('/');
   }
 };
 
-export { getItems, getItemById, getCart, postUpdateCart, getOrders, postCreateOrder };
+export {
+  getItems,
+  getItemById,
+  getCart,
+  postUpdateCart,
+  postCheckout,
+  getOrders,
+  getNewOrder,
+};
