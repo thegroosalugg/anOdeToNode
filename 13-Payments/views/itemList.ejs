@@ -11,13 +11,16 @@
   <% if (items.length === 0) { %>
     <h2>Whoops, looks like the is nothing here</h2>
   <% } else { %>
-    <% } items.forEach(({ _id, name, desc, imgURL, price }) => { %>
+    <% } items.forEach(({ _id, name, desc, imgURL, price, userId }) => { %>
       <li id="<%= _id %>">
         <input type="hidden" name="_csrf"  value="<%= csrf %>" />
         <input type="hidden" name="itemId" value="<%= _id %>" />
 
         <a href="/store/<%= _id %>">
           <img src="/<%= imgURL %>" alt="<%= name %>" />
+          <% if (!isAdmin) { %>
+            <span>Sold By: <%= userId.name.toUpperCase() %></span>
+          <% } %>
         </a>
 
         <div class="name-and-price">

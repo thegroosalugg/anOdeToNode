@@ -47,10 +47,22 @@
 
       a {
         width: inherit;
-        img {
+        position: relative;
+        > img {
           height: 200px;
           width: 100%;
           object-fit: cover;
+        }
+
+        > span {
+          position: absolute;
+          bottom: 0.4rem;
+          padding: 0.1rem 0.2rem;
+          font-size: 0.8rem;
+          color: #2e2e2e;
+          background: #f4efef;
+          border: 1px solid #000;
+          border-left: 0;
         }
       }
 
@@ -76,7 +88,7 @@
             max-width: 65%;
             font-weight: 500;
             font-size: 1.2rem;
-            font-family: "Oswald", sans-serif;
+            font-family: 'Oswald', sans-serif;
           }
           &:last-child {
             color: #3b3b3b;
@@ -188,8 +200,31 @@
       grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
       li {
         width: 120px;
-        a img {
-          height: 120px;
+        a {
+          > img {
+            height: 120px;
+          }
+
+          > span {
+            font-size: 0.5rem;
+          }
+        }
+
+        > p {
+          font-size: 0.8rem;
+          padding: 0 0.25rem 0.25rem;
+        }
+
+        .name-and-price {
+          padding: 0.25rem;
+          > p {
+            &:first-child {
+              font-size: 0.9rem;
+            }
+            &:last-child {
+              font-size: 0.8rem;
+            }
+          }
         }
       }
     }
