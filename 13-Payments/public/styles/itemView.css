@@ -60,12 +60,25 @@
       background: linear-gradient(to right, #dfe1e3, #eef2f3);
 
       > h1 {
-        font-size: 3rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
         padding: 1rem 0 0.5rem;
         border-left: 1rem solid transparent;
         border-right: 1rem solid transparent;
         text-wrap: nowrap;
         overflow-x: scroll;
+
+        > span {
+          &:first-child {
+            font-size: 2.5rem;
+          }
+
+          &:last-child {
+            font-size: 1rem;
+            text-transform: capitalize;
+          }
+        }
 
         &::-webkit-scrollbar {
           height: 3px;

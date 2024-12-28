@@ -1,4 +1,4 @@
-<% const { _id, name, desc, imgURL, price } = item || {} %>
+<% const { _id, name, desc, imgURL, price, userId } = item || {} %>
 
 <% if (!item) { %>
   <h1 class="not-found">The Item Doesn't Exist</h1>
@@ -11,7 +11,10 @@
     <div class="listing">
       <img src="/<%= imgURL %>" alt="<%= name %>" />
       <div class="info">
-        <h1><%= name %></h1>
+        <h1>
+          <span><%= name %></span>
+          <span>Seller: <%= userId.name %></span>
+        </h1>
         <p><%= desc %></p>
         <h2>Ultra deals</h2>
         <div class="icons">

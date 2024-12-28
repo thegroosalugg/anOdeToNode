@@ -38,7 +38,7 @@ const getItems: RequestHandler = async (req, res, next) => {
 const getItemById: RequestHandler = async (req, res, next) => {
   const { itemId } = req.params;
   try {
-    const item = await Item.findById(itemId);
+    const item = await Item.findById(itemId).populate('userId', 'name');
     res.render('body', {
          title: item?.name || 'Not Found',
       isActive: '/',
