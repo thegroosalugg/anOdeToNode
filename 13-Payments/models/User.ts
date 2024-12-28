@@ -65,7 +65,9 @@ userSchema.methods.getCart = async function() {
   const cartIds = this.cart.map(({ itemId }) => itemId);
 
   try {
-    const items = await Item.find({ _id: { $in: cartIds } }).lean(); // lean returns plain JS objects
+    const items = await Item.find({ _id: { $in: cartIds } })
+      .populate('userId', 'name')
+      .lean(); // lean returns plain JS objects
 
     const  cartItems:  IItem[] = [];
     const deletedIds: string[] = [];

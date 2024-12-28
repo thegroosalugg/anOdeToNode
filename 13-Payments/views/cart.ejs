@@ -15,13 +15,14 @@
     <% if (items.length === 0) { %>
       <h2>Your Cart is Empty</h2>
     <% } else { %>
-      <% items.forEach(({ _id, name, imgURL, price, quantity }) => { %>
+      <% items.forEach(({ _id, name, imgURL, price, quantity, userId }) => { %>
         <li>
           <a href="/store/<%= _id %>">
             <img src="/<%= imgURL %>" alt="<%= name %>" />
           </a>
           <section>
             <h4>
+              <span><%= userId.name %></span>
               <span><%= name %></span>
             </h4>
             <div>
