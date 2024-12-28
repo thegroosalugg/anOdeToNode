@@ -4,7 +4,9 @@ import trimBody from '../util/trimBody';
 import errorMsg from '../util/errorMsg';
 import { MongooseErrors, mongooseErrors } from '../validation/mongooseErrors';
 import { getErrors, hasErrors } from '../validation/validators';
-import { deleteFile, updateFile } from '../util/fileHelper';
+import { deleteFile } from '../util/fileHelper';
+import { renameSync } from 'fs';
+import { join } from 'path';
 
 // /admin/items - prepended by authenticate middleware
 const getUserItems: RequestHandler = async (req, res, next) => {
@@ -14,7 +16,7 @@ const getUserItems: RequestHandler = async (req, res, next) => {
 
   try {
     const docCount = await Item.find({ userId }).countDocuments();
-    const items     = await Item.find({ userId })
+    const items    = await Item.find({ userId })
       .skip((page - 1) * docsPerPage)
       .limit(docsPerPage);
 
@@ -23,7 +25,7 @@ const getUserItems: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: 'Dashboard',
       isActive: '/admin/items',
-          view: 'itemList',
+          view:  'itemList',
         styles: ['itemList', 'dashboard', 'userInfo', 'pagination'],
         locals: { items, isAdmin: true, pagination },
     });
@@ -52,7 +54,7 @@ const getItemForm: RequestHandler = async (req, res, next) => {
   res.render('body', {
        title: 'New Listing',
     isActive: '/admin/items',
-        view: 'itemForm',
+        view:  'itemForm',
       styles: ['itemForm', 'dashboard'],
       locals: { item, filename },
   });
@@ -79,14 +81,22 @@ const postAddItem: RequestHandler = async (req, res, next) => {
   }
 
   try {
-    const imgURL = updateFile(image.path, image.filename);
     const userId = req.user; // mongoose will extract just the Id due to schema ref
+    const imgURL = join('uploads', image.filename); // remove 'temp' from filepath
     const item = new Item({ name, desc, imgURL, price, userId });
     await item.save();
+    renameSync(image.path, imgURL); // move file after mongoose schema validation
     res.redirect('/admin/items');
   } catch (error) {
     errorMsg({ error, where: 'postAddItem' });
     req.session.errors = mongooseErrors(error as MongooseErrors);
+    req.session.formData = { name, desc, price };
+    if (image) {
+      req.session.file      = image;
+      req.session.dataRoute = true;
+    } else {
+      req.session.errors.image = 'must be .jpg, .jpeg or .png';
+    }
     req.session.save(() => res.redirect('/admin/item-form'));
   }
 };
@@ -114,18 +124,34 @@ const postEditItem: RequestHandler = async (req, res, next) => {
   try {
     const item = await Item.findOne({ _id, userId: req.user?._id });
     if (item) {
+      let oldImgUrl = '';
+      let newImgUrl = '';
+
       Object.assign(item, { name, price, desc });
+
       if (image) {
-        const imgURL = updateFile(image.path, image.filename);
-        deleteFile(item.imgURL);
-        item.imgURL = imgURL;
+        oldImgUrl = item.imgURL
+        newImgUrl = join('uploads', image.filename);
+        item.imgURL = newImgUrl;
       }
+
       await item.save();
+
+      if (image) {
+        deleteFile(oldImgUrl);
+        renameSync(image.path, newImgUrl);
+      }
     }
     res.redirect('/admin/items');
   } catch (error) {
     errorMsg({ error, where: 'postEditItem' });
     req.session.errors = mongooseErrors(error as MongooseErrors);
+    req.session.formData = { name, desc, price };
+    if (image) {
+      req.session.file      = image;
+      req.session.dataRoute = true;
+    }
+    if (req.fileError) req.session.errors.image = req.fileError;
     req.session.save(() => res.redirect('/admin/item-form/' + _id));
   }
 };

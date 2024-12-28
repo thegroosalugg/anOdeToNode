@@ -25,4 +25,11 @@ export const itemSchema = new Schema<IItem, ItemModel, IItemMethods>({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required },
 });
 
+itemSchema.pre('save', function(next) {
+  if (this.price) {
+    this.price = Number(this.price.toFixed(2));
+  }
+  next();
+});
+
 export default model<IItem, ItemModel>('Item', itemSchema);
