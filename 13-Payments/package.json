@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "clear && tsx app.ts",
     "dev": "clear && nodemon -x tsx app.ts",
-    "build": "tsc && tsc-alias && mkdir -p dist/uploads/temp",
+    "build": "tsc && tsc-alias",
     "preview": "clear && node dist/app.js"
   },
   "dependencies": {
