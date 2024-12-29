@@ -27,7 +27,7 @@
           <p>$<%= price.toFixed(2) %></p>
           <button>
             <%=
-              userId._id.toString() === user._id.toString()
+              userId?._id.toString() === user?._id.toString()
                 ? 'Edit Listing'
                 : 'Add to Cart'
             %>
