@@ -1,0 +1,84 @@
+<%
+  const {
+       _id = '',
+      name = '...',
+     price = '0.00',
+      desc = 'This item is...',
+    imgURL = ''
+  } = item || {};
+
+  const data = { name, price };
+
+  const input = (id) => { %>
+  <section>
+    <label for="<%= id %>" class="<%= errors[id] ? 'error' : '' %>">
+      <%= id + ' ' + (errors[id] || '') %>
+    </label>
+
+    <% if (id === 'image') { %>
+      <% const defaultText = filename || 'No File Selected' %>
+      <label for="image" id="image-file">
+        <input id="image" name="image" type="file" accept="image/*" />
+        <%= defaultText %>
+      </label>
+      <script>
+        document.getElementById("image").addEventListener("change", function () {
+          const label   = document.getElementById("image-file");
+          const content = this.files[0]?.name || "<%= defaultText %>";
+          label.lastChild.textContent = content;
+        });
+      </script>
+    <% } else { %>
+      <input
+          id="<%= id %>"
+        name="<%= id %>"
+        value="<%= formData[id] || data[id] %>"
+        autocomplete="off"
+      />
+    <% } %>
+  </section>
+<% } %>
+
+<%- include('includes/dashboard') %>
+
+<section class="edit-form-wrapper">
+  <% if (item) { %>
+    <img src="/<%= imgURL %>" alt="<%= name %>" />
+  <% }  %>
+
+  <form
+     action="/admin/<%= item ? 'edit' : 'add' %>-item"
+     method="post"
+      class="item-form"
+    enctype="multipart/form-data"
+  >
+    <input   type="hidden" name="_csrf" value="<%= csrf %>" />
+
+    <% if (item) { %>
+      <input type="hidden" name="_id"   value="<%= _id  %>" />
+    <% } else { %>
+      <h1>Post a new listing</h1>
+    <% } %>
+
+    <%= input('name') %>
+    <%= input('price') %>
+    <%= input('image') %>
+
+    <section>
+      <label for="desc" class="<%= errors.desc ? 'error' : '' %>">
+        <%= 'description ' + (errors.desc || '') %>
+      </label>
+      <textarea rows="4" id="desc" name="desc"><%=
+        formData.desc || desc
+      %></textarea>
+    </section>
+
+    <button class="<%= item ? 'update' : '' %>">
+      <% if (item) { %>
+        Update <i class="fa-solid fa-check"></i>
+      <% } else { %>
+        Add <i class="fa-solid fa-plus"></i>
+      <% } %>
+    </button>
+  </form>
+</section>

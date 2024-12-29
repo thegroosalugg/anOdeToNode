@@ -1,0 +1,87 @@
+<% if (isAdmin) { %>
+  <%- include('includes/dashboard') %>
+  <%- include('userInfo') %>
+<% } %>
+
+<section class="store">
+<% if (!isAdmin) { %>
+  <h1>Store</h1>
+<% } %>
+  <ul>
+  <% if (items.length === 0) { %>
+    <h2>Whoops, looks like the is nothing here</h2>
+  <% } else { %>
+    <% } items.forEach(({ _id, name, desc, imgURL, price, userId }) => { %>
+      <li id="<%= _id %>">
+        <input type="hidden" name="_csrf"  value="<%= csrf %>" />
+        <input type="hidden" name="itemId" value="<%= _id %>" />
+
+        <a href="/store/<%= _id %>">
+          <img src="/<%= imgURL %>" alt="<%= name %>" />
+          <% if (!isAdmin) { %>
+            <span>Sold By: <%= userId.name.toUpperCase() %></span>
+          <% } %>
+        </a>
+
+        <div class="name-and-price">
+          <p><%= name %></p>
+          <p>$<%= price.toFixed(2) %></p>
+        </div>
+
+        <% if (!isAdmin) { %>
+          <p><%= desc %></p>
+        <% } else { %>
+          <div class="admin-controls">
+            <a href="/admin/item-form/<%= _id %>">EDIT</a>
+            <button onclick="openModal('<%= csrf %>', '<%= _id %>')">DELETE</button>
+          </div>
+        <% } %>
+      </li>
+    <% }) %>
+  </ul>
+</section>
+
+<%- include('includes/pagination') %>
+
+<script src="/script/deleteItem.js"></script>
+<script>
+  let token;
+  let itemId;
+
+  const openModal = (csrf, _id) => {
+    token  = csrf;
+    itemId = _id;
+    document.querySelector('.modal-confirm').showModal();
+  }
+
+  const closeModal = (id) => {
+    const modal = document.querySelector(id);
+    modal.setAttribute('closing', '');
+    modal.addEventListener(
+      'animationend',
+      () => {
+        modal.removeAttribute('closing');
+        modal.close();
+      },
+      { once: true }
+    );
+  };
+
+  const handleDelete = () => {
+    deleteItem(token, itemId);
+    closeModal('.modal-confirm');
+  }
+</script>
+
+<dialog class="modal-confirm">
+  <p>Are you sure?</p>
+  <div>
+    <button onclick="handleDelete()">Probably</button>
+    <button onclick="closeModal('.modal-confirm')">Probably Not</button>
+  </div>
+</dialog>
+
+<dialog class="modal-error">
+  <p>An Error Has Occured!</p>
+  <button onclick="closeModal('.modal-error')">Sure Thing!</button>
+</dialog>
