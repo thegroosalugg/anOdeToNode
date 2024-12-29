@@ -23,15 +23,6 @@ import        dotenv from 'dotenv';
 const inProduction = process.env.NODE_ENV === 'production';
 const app = express();
 
-// RUN ALL STATIC MIDDLEWARE FIRST! ANY MIDDLEWARE DEFINED BEFORE WILL EXECUTE MULTIME TIMES!
-// set to public folder in repo root, for all projects
-app.use(
-  express.static(path.join(import.meta.dirname, '../', 'shared'), {
-    maxAge: '1d', // Cache static assets for 1 day to improve load times
-    etag: false, // Disable ETag generation for simpler cache management
-  })
-);
-
 // public folder specific to project
 app.use(express.static(path.join(import.meta.dirname, 'public')));
 // prepend uploads to ensure files routed to this folder not accessed at root level

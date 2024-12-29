@@ -69,6 +69,30 @@ const getCart: RequestHandler = async (req, res, next) => {
   }
 };
 
+// /cart/:itemId/:action - prepended by authenticate middleware
+const postUpdateCart: RequestHandler = async (req, res, next) => {
+  const { itemId, action } = req.params;
+  const quantity = { add: 1, remove: -1 }[action];
+
+  try {
+    const item = await Item.findById(itemId);
+
+    if (item && item.userId.toString() === req.user?._id.toString()) {
+      // do not allow to add own items to cart
+      return res.redirect('/admin/item-form/' + item._id);
+    }
+
+    if (item && req.user && (quantity === 1 || quantity === -1)) {
+      await req.user.updateCart(itemId, quantity);
+    }
+
+    res.redirect('/cart');
+  } catch (error) {
+    errorMsg({ error, where: 'postUpdateCart' });
+    res.redirect('/');
+  }
+};
+
 // prepended by authenticate middleware
 const postCheckout: RequestHandler = async (req, res, next) => {
   try {
@@ -94,23 +118,6 @@ const postCheckout: RequestHandler = async (req, res, next) => {
     res.redirect(303, session.url!);
   } catch (error) {
     errorMsg({ error, where: 'getCart' });
-    res.redirect('/');
-  }
-};
-
-// /cart/:itemId/:action - prepended by authenticate middleware
-const postUpdateCart: RequestHandler = async (req, res, next) => {
-  const { itemId, action } = req.params;
-  const quantity = { add: 1, remove: -1 }[action];
-
-  try {
-    const item = await Item.findById(itemId);
-    if (item && req.user && (quantity === 1 || quantity === -1)) {
-      await req.user.updateCart(itemId, quantity);
-    }
-    res.redirect('/cart');
-  } catch (error) {
-    errorMsg({ error, where: 'postUpdateCart' });
     res.redirect('/');
   }
 };
