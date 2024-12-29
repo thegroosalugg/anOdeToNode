@@ -21,12 +21,14 @@ import        dotenv from 'dotenv';
               dotenv.config();
 
 const inProduction = process.env.NODE_ENV === 'production';
+const rootDir = inProduction ? '../' : '';
+
 const app = express();
 
 // public folder specific to project
-app.use(express.static(path.join(import.meta.dirname, 'public')));
+app.use(express.static(path.join(import.meta.dirname, rootDir, 'public')));
 // prepend uploads to ensure files routed to this folder not accessed at root level
-app.use('/uploads', express.static(path.join(import.meta.dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(import.meta.dirname, rootDir, 'uploads')));
 
 // sets templating engine
 app.set('view engine', 'ejs');
