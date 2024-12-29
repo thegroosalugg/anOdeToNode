@@ -3,26 +3,28 @@ import errorMsg from './errorMsg';
 import dotenv from 'dotenv';
        dotenv.config();
 
-const email = process.env.USER_EMAIL;
+const sender = process.env.SENDER_EMAIL;
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.USER_EMAIL,
+    user: sender,
     pass: process.env.MAIL_KEY,
   },
 });
 
-export const sendMail = (token: string) => {
+export const sendMail = (token: string, recipient: string) => {
   transporter
     .sendMail({
-           to: email,
-         from: email,
+           to: sender,
+         from: sender,
       subject: 'An Ode to Node: Password Reset',
          html: `
+           <h1>D-Bay Express App Password Reset</h1>
            <a href="http://localhost:3000/login/?token=${token}">
              follow this link to reset your password
            </a>
+           <p>Copy below URL is the above link does not work</p>
            <p>
              http://localhost:3000/login/?token=${token}
            </p>

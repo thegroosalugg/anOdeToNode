@@ -117,8 +117,8 @@ const postReset: RequestHandler = async (req, res, next) => {
     const token = crypto.randomBytes(32).toString('hex');
     user.resetAuth = { token, expiry: Date.now() + 1000 * 60 * 60 };
     await user.save();
-    sendMail(token); // emails preconfigured, only token is needed
-    res.redirect('/login');
+    // sendMail(token, user.email);
+    res.redirect('/login/?token=' + token);
   } else {
     req.session.errors = { email: 'invalid' };
     req.session.formData = { email };
