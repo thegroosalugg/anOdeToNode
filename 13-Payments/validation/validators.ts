@@ -14,7 +14,7 @@ export const validateName = body('name')
   .trim()
   .isLength({ min: 3 })
   .withMessage('needs 3+ chars')
-  .escape();
+  .customSanitizer((value) => value.replace(/<|>/g, '')); // escapes only dangerous values
 
 export const validateEmail = check('email')
   .isEmail()
@@ -35,7 +35,7 @@ export const validateDesc = body('desc')
   .trim()
   .isLength({ min: 30 })
   .withMessage('needs 30+ chars')
-  .escape();
+  .customSanitizer((value) => value.replace(/<|>/g, ''));
 
 export const validatePrice = body('price')
   .isFloat({ min: 0 })
