@@ -1,4 +1,5 @@
 {
+  // run this config when app directory is at root level
   "version": "0.2.0",
   "configurations": [
     {
@@ -13,7 +14,9 @@
         "${workspaceFolder}/**/*.js"
       ],
       "restart": true, // nodemon config
-      "runtimeExecutable": "nodemon", // set to nodemon or ts-node
+      // "runtimeExecutable": "tsx", // set to TSX to run TypeScript
+      "runtimeExecutable": "nodemon",
+      "runtimeArgs": ["-x", "tsx"] // allows to use Nodemon with TSX
     }
   ]
 }
