@@ -1,5 +1,5 @@
 {
-  "name": "14-restapi",
+  "name": "14-restapi-server",
   "version": "1.0.0",
   "description": "moving to REST APIs",
   "main": "app.ts",
