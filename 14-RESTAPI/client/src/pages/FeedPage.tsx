@@ -1,4 +1,20 @@
+import fetchData from "@/util/fetchData";
+import { useEffect, useState } from "react";
+
 export default function FeedPage() {
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    const getData = async () => {
+      const posts = await fetchData({ url: 'feed/posts' })
+      setData(posts)
+    }
+
+    getData();
+  }, [])
+
+  console.log(data)
+
   return (
     <div>
       <h1>header 1</h1>
