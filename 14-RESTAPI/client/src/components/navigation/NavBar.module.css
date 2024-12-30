@@ -1,0 +1,13 @@
+.nav {
+  display: flex;
+  gap: 0.8rem;
+  padding: 0.5rem;
+  overflow-x: scroll;
+  background: linear-gradient(to right, #1D976C, #349256);
+}
+
+/* @media screen and (pointer: coarse) and (orientation: landscape) {
+  .nav {
+    flex-direction: column;
+  }
+} */

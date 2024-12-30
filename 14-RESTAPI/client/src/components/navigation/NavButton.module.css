@@ -1,0 +1,49 @@
+.nav-button {
+  color: #ffffff;
+  transition: 0.5s ease-in-out;
+  padding: 0.25rem;
+  background: none;
+  border: none;
+
+  .active-tab {
+    margin-top: 0.1rem;
+    border-bottom: 1.5px solid #b7cc15;
+    border-radius: 3px;
+    transition: border-color 0.5s ease-in-out;
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  &.active {
+    color: #b7cc15;
+
+    &:hover {
+      color: #8d9e10;
+
+      .active-tab {
+        border-color: #8d9e10;
+      }
+    }
+  }
+
+  &:hover {
+    color: #bebcbc;
+
+    .active-tab {
+      border-color: #bebcbc;
+    }
+  }
+
+  &.mobile {
+    &:hover {
+      color: #b7cc15;
+
+      .active-tab {
+        border-color: #b7cc15;
+      }
+    }
+  }
+}

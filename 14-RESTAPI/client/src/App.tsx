@@ -1,23 +1,22 @@
-function App() {
-  return (
-    <div>
-      <h1>header 1</h1>
-      <h2>header 2</h2>
-      <h3>header 3</h3>
-      <h4>header 4</h4>
-      <h5>header 5</h5>
-      <h6>header 6</h6>
-      <p>This is a paragraph.</p>
-      <ul>
-        <li>Unordered list item 1</li>
-        <li>Unordered list item 2</li>
-      </ul>
-      <ol>
-        <li>Ordered list item 1</li>
-        <li>Ordered list item 2</li>
-      </ol>
-    </div>
-  );
-}
+import { useRoutes } from 'react-router-dom';
+import RootLayout from './pages/RootLayout';
+import FeedPage from './pages/FeedPage';
 
-export default App;
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fab } from '@fortawesome/free-brands-svg-icons'; // import brand icons
+import { fas } from '@fortawesome/free-solid-svg-icons'; // import solid icons
+import { far } from '@fortawesome/free-regular-svg-icons'; // import regular icons
+
+library.add(fab, fas, far);
+
+export default function App() {
+  const element = useRoutes(
+    [
+      { path: '/', element: <FeedPage /> },
+    ]
+  );
+
+  if (!element) return null;
+
+  return <RootLayout>{element}</RootLayout>;
+}

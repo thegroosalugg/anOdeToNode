@@ -10,13 +10,13 @@
   background: linear-gradient(to right, #dbd9d9, #fff);
 }
 
-/* #main {
+#main {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-@media screen and (pointer: coarse) and (orientation: landscape) {
+/* @media screen and (pointer: coarse) and (orientation: landscape) {
   #root {
     flex-direction: row;
   }
