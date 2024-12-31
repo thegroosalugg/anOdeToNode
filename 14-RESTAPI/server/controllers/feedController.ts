@@ -9,12 +9,9 @@ const getPosts: RequestHandler = (req, res, next) => {
 const newPost: RequestHandler = (req, res, next) => {
   const { subject, content } = req.body;
   res.status(201).json({
-    message: 'Success',
-    post: {
-      id: new Date().toISOString,
-      subject,
-      content,
-    },
+    _id: new Date().toISOString(),
+    subject,
+    content,
   });
 };
 

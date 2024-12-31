@@ -1,9 +1,9 @@
-import Post from "@/models/Post";
+import Post from '@/models/Post';
+import css from './Feed.module.css';
 
 export default function Feed({ feed }: { feed: Post[] }) {
-  return <section>
-    <h1>Feed</h1>
-    <ul>
+  return (
+    <ul className={css.feed}>
       {feed.map(({ _id, title, content }) => (
         <li key={_id}>
           <h2>{title}</h2>
@@ -11,5 +11,5 @@ export default function Feed({ feed }: { feed: Post[] }) {
         </li>
       ))}
     </ul>
-  </section>
+  );
 }

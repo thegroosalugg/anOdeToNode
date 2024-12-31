@@ -1,24 +1,47 @@
-import Feed from "@/components/feed/Feed";
-import useFetch from "@/hooks/useFetch";
-import Post from "@/models/Post";
-import { useEffect } from "react";
+import Feed from '@/components/feed/Feed';
+import Loader from '@/components/loading/Loader';
+import useFetch from '@/hooks/useFetch';
+import Post from '@/models/Post';
+import { useEffect } from 'react';
 
 export default function FeedPage() {
-  const { error, isLoading, data, reqHandler } = useFetch<Post[]>([]);
+  const { data: posts, setData, reqHandler, error, isLoading } = useFetch<Post[]>([]);
+  const { reqHandler: sendPost } = useFetch<Post | null>(null);
 
   useEffect(() => {
     const getData = async () => {
-      await reqHandler({ url: 'feed/posts' })
-    }
+      await reqHandler({ url: 'feed/posts' });
+    };
 
     getData();
-  }, [reqHandler])
+  }, [reqHandler]);
 
-  console.log('error', error, '\nisLoading', isLoading, '\ndata', data);
+  async function clickHandler() {
+    const post = await sendPost({
+      url: 'feed/new-post',
+      method: 'POST',
+      data: {
+        title: 'Number Two',
+        content: 'This is number two.',
+      },
+    });
+    if (post) {
+      setData((prev) => [post, ...prev]);
+    }
+  }
+
+  console.log('error', error, '\nisLoading', isLoading, '\ndata', posts);
 
   return (
     <>
-      {isLoading ? <div>Loading...</div> : <Feed feed={data} />}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <button onClick={clickHandler}>New Post</button>
+          <Feed feed={posts} />
+        </>
+      )}
     </>
   );
 }
