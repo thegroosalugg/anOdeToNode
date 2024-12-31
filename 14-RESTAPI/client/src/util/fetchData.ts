@@ -16,9 +16,10 @@ const fetchData = async ({ url, method = 'GET' }: Fetch) => {
   const resData = await response.json();
 
   if (!response.ok) {
-    console.log('fetchData response:', response);
-    // throw { ...resData, status: response.status };
+    throw { ...resData, status: response.status };
   }
+
+  console.log('fetchData response:', response, '\n', 'resData', resData);
 
   return resData;
 };

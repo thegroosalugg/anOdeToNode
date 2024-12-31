@@ -1,19 +1,18 @@
-import fetchData from "@/util/fetchData";
-import { useEffect, useState } from "react";
+import useFetch from "@/hooks/useFetch";
+import { useEffect } from "react";
 
 export default function FeedPage() {
-  const [data, setData] = useState();
+  const { error, isLoading, data, reqHandler } = useFetch();
 
   useEffect(() => {
     const getData = async () => {
-      const posts = await fetchData({ url: 'feed/posts' })
-      setData(posts)
+      await reqHandler({ url: 'feed/posts' })
     }
 
     getData();
-  }, [])
+  }, [reqHandler])
 
-  console.log(data)
+  console.log('error', error, '\nisLoading', isLoading, '\ndata', data)
 
   return (
     <div>
