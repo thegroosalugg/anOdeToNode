@@ -1,8 +1,8 @@
 import fetchData, { Fetch } from '@/util/fetchData';
 import { useState, useCallback } from 'react';
 
-const useFetch = () => {
-  const [     data,      setData] = useState(null);
+const useFetch = <T>(initialData: T) => {
+  const [     data,      setData] = useState<T>(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const [    error,     setError] = useState<unknown | null>(null);
 
@@ -19,7 +19,7 @@ const useFetch = () => {
     }
   }, []);
 
-  return { data, isLoading, error, reqHandler };
+  return { data, setData, isLoading, error, reqHandler };
 };
 
 export default useFetch;

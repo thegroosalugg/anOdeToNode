@@ -1,6 +1,8 @@
 import express from 'express';
 import { join } from 'path';
 import feedRoutes from './routes/feed';
+import dotenv from 'dotenv';
+       dotenv.config();
 
 const app = express();
 
@@ -11,7 +13,8 @@ app.use(express.json()); // parse application/json
 
 // allows cross origin requests
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*'); // sets allowd URLS. * = all
+  // sets allowd URLS. * = all
+  res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_URL!);
   // sets allowed methods
   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
   // sets allowed headers, content-type for req body
