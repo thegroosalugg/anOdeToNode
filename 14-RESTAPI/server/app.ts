@@ -1,6 +1,8 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import { join } from 'path';
 import feedRoutes from './routes/feed';
+import errorMsg from './util/errorMsg';
 import dotenv from 'dotenv';
        dotenv.config();
 
@@ -24,4 +26,11 @@ app.use((req, res, next) => {
 
 app.use('/feed', feedRoutes);
 
-app.listen(3000);
+mongoose
+  .connect(process.env.MONGO_URI!)
+  .then(() => {
+    app.listen(3000, () => {
+      console.log('Hudson River, 2 years ago');
+    });
+  })
+  .catch((error) => errorMsg({ error, where: 'Mongoose connect'}));
