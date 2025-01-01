@@ -10,7 +10,7 @@ export default function FeedPage() {
           data: posts,
        setData,
     reqHandler: initialReq,
-         error,
+        //  error,
      isLoading,
   } = useFetch<Post[]>([]);
   const {                reqHandler: updateReq } = useFetch<Post[]>([]);
@@ -30,7 +30,6 @@ export default function FeedPage() {
         return prevData;
       });
     };
-    console.log('UPDATED'); // **LOGDATA
     updateData();
   }, [updateReq, setData, newPost]);
 
@@ -45,12 +44,12 @@ export default function FeedPage() {
     });
   }
 
-  console.log(
-          'error', error,
-    '\nisLoading', isLoading,
-         '\ndata', posts,
-      '\nnewPost', newPost
-  ); // **LOGDATA
+  // console.log(
+  //         'error', error,
+  //   '\nisLoading', isLoading,
+  //        '\ndata', posts,
+  //     '\nnewPost', newPost
+  // ); // **LOGDATA
 
   return (
     <>
