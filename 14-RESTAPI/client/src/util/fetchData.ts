@@ -19,7 +19,7 @@ const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
     throw { ...resData, status: response.status };
   }
 
-  console.log('fetchData response:', response, '\n', 'resData', resData);
+  console.log('fetchData response:', response, '\n', 'resData', resData); // **LOGDATA
 
   return resData;
 };
