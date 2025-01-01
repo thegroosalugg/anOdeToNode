@@ -1,18 +1,16 @@
 import { RequestHandler } from 'express';
+import Post from '../model/Post';
 
-const getPosts: RequestHandler = (req, res, next) => {
-  res
-    .status(200)
-    .json([{ _id: '1', title: 'First Post', content: 'This is the  first post!' }]);
+const getPosts: RequestHandler = async (req, res, next) => {
+  const feed = await Post.find().sort({ _id: -1 }); // newest first
+  res.status(200).json(feed);
 };
 
-const newPost: RequestHandler = (req, res, next) => {
-  const { subject, content } = req.body;
-  res.status(201).json({
-    _id: new Date().toISOString(),
-    subject,
-    content,
-  });
+const newPost: RequestHandler = async (req, res, next) => {
+  const { title, content } = req.body;
+  const post = new Post({ title: 'Hello ' + Math.random(), content: 'New Post' });
+  await post.save();
+  res.status(201).json(post);
 };
 
 export { getPosts, newPost };
