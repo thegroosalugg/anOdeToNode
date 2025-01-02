@@ -16,7 +16,7 @@ app.use('/uploads', express.static(join(import.meta.dirname, 'uploads')));
 
 // app.use(express.urlencoded({ extended: false })); // x-www-form-urlencoded <form>
 app.use(express.json()); // parse application/json
-app.use(multer({ storage, fileFilter }).single('image')); // allows storing of files
+app.use(multer({ storage, fileFilter }).single('image')); // multipart/form-data
 
 // allows cross origin requests
 app.use((req, res, next) => {

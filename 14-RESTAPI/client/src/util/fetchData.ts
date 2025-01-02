@@ -15,11 +15,11 @@ const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
   const response = await fetch(BASE_URL + url, { method, headers, body });
   const resData  = await response.json();
 
+  console.log('fetchData response:', response, '\n\n', 'resData', resData); // **LOGDATA
+
   if (!response.ok) {
     throw { ...resData, status: response.status };
   }
-
-  // console.log('fetchData response:', response, '\n\n', 'resData', resData); // **LOGDATA
 
   return resData;
 };
