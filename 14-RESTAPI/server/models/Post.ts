@@ -6,7 +6,7 @@ export interface IPost {
     title: string;
   content: string;
    imgURL: string;
-   userId: Types.ObjectId;
+     user: Types.ObjectId;
 }
 
 interface IPostMethods {
@@ -19,7 +19,7 @@ export const postSchema = new Schema<IPost, PostModel, IPostMethods>({
     title: { type: String, required },
   content: { type: String, required },
    imgURL: { type: String },
-   userId: { type: Schema.Types.ObjectId, ref: 'User', required },
+     user: { type: Schema.Types.ObjectId, ref: 'User', required },
 });
 
 export default model<IPost, PostModel>('Post', postSchema);

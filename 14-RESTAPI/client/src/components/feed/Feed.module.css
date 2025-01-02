@@ -12,5 +12,48 @@
     width: 100%;
     padding: 1rem;
     border: 2px solid #12a1a1;
+    background: linear-gradient(to right, #ededed, #fff);
+    cursor: pointer;
+
+    > h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 20px;
+      font-weight: 600;
+      border-bottom: 1px solid #12a1a1;
+      padding-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
+
+      > img {
+        width: 20px;
+        height: 20px;
+        border: 0.8px solid #12a1a1;
+        border-radius: 50%;
+      }
+    }
+
+    h2, p, h3 span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    h2, h3 span {
+      white-space: nowrap;
+    }
+
+    h2 {
+      font-weight: 500;
+    }
+
+    p {
+      margin-top: 0.2rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+      box-orient: vertical;
+      color: #818181;
+    }
   }
 }

@@ -22,11 +22,10 @@ export default function FeedPage() {
   } = useFetch<Post | null>(null);
   const { data: user, reqHandler: fetchUser } = useFetch<Post[]>([]);
 
-
   useEffect(() => {
     const mountData = async () => {
       await initialReq({ url: 'feed/posts' });
-      await fetchUser({ url: 'login' });
+      await  fetchUser({ url: 'login'      });
     }
     mountData();
   }, [initialReq, fetchUser]);
@@ -55,7 +54,7 @@ export default function FeedPage() {
   console.log(
           'error', error, postErr,
   //   '\nisLoading', isLoading,
-         '\ndata', user,
+         '\ndata', posts, user,
   //     '\nnewPost', newPost
   ); // **LOGDATA
 
