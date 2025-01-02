@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
-import Feed from '@/components/feed/Feed';
-import Loader from '@/components/loading/Loader';
+import { useEffect, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
 import Post from '@/models/Post';
+import Feed from '@/components/feed/Feed';
+import Loader from '@/components/loading/Loader';
+import Modal from '@/components/modal/Modal';
 
 export default function FeedPage() {
   const {
@@ -31,8 +32,10 @@ export default function FeedPage() {
     };
     updateData();
   }, [updateReq, setData, newPost]);
+  const [showModal, setShowModal] = useState(false);
 
   async function clickHandler() {
+    setShowModal(false);
     await postReq({
          url: 'feed/new-post',
       method: 'POST',
@@ -52,7 +55,15 @@ export default function FeedPage() {
 
   return (
     <>
-      <button onClick={clickHandler}>New Post</button>
+      <Modal show={showModal} close={() => setShowModal(false)}>
+        <div style={{ width: '500px', height: '300px', background: '#de1b1bbf' }}>
+          <h2>Form</h2>
+          <p>Line</p>
+          <p>Line</p><p>Line</p><p>Line</p><p>Line</p><p>Line</p><p>Line</p><p>Line</p>
+          <button onClick={clickHandler}>New Post</button>
+        </div>
+      </Modal>
+      <button onClick={() => setShowModal(true)}>New Post</button>
       {postErr && <p>{postErr.message}</p>}
       {isLoading ? <Loader /> : error ? <p>{error.message}</p> : <Feed feed={posts} />}
     </>
