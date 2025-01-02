@@ -3,18 +3,21 @@ import Feed from '@/components/feed/Feed';
 import Loader from '@/components/loading/Loader';
 import useFetch from '@/hooks/useFetch';
 import Post from '@/models/Post';
-import compareArrays from '@/util/compareArrays';
 
 export default function FeedPage() {
   const {
           data: posts,
        setData,
     reqHandler: initialReq,
-        //  error,
+         error,
      isLoading,
   } = useFetch<Post[]>([]);
-  const {                reqHandler: updateReq } = useFetch<Post[]>([]);
-  const { data: newPost, reqHandler:   postReq } = useFetch<Post | null>(null);
+  const { reqHandler: updateReq } = useFetch<Post[]>([]);
+  const {
+          data: newPost,
+         error: postErr,
+    reqHandler: postReq,
+  } = useFetch<Post | null>(null);
 
   useEffect(() => {
     const mountData = async () => await initialReq({ url: 'feed/posts' });
@@ -24,11 +27,7 @@ export default function FeedPage() {
   useEffect(() => {
     const updateData = async () => {
       const updatedData = await updateReq({ url: 'feed/posts' });
-      setData((prevData) => {
-        const newPosts = compareArrays(prevData, updatedData);
-        if (newPosts) return [...newPosts, ...prevData];
-        return prevData;
-      });
+      setData(updatedData);
     };
     updateData();
   }, [updateReq, setData, newPost]);
@@ -44,17 +43,18 @@ export default function FeedPage() {
     });
   }
 
-  // console.log(
-  //         'error', error,
+  console.log(
+          'error', error, postErr,
   //   '\nisLoading', isLoading,
   //        '\ndata', posts,
   //     '\nnewPost', newPost
-  // ); // **LOGDATA
+  ); // **LOGDATA
 
   return (
     <>
       <button onClick={clickHandler}>New Post</button>
-      {isLoading ? <Loader /> : <Feed feed={posts} />}
+      {postErr && <p>{postErr.message}</p>}
+      {isLoading ? <Loader /> : error ? <p>{error.message}</p> : <Feed feed={posts} />}
     </>
   );
 }
