@@ -41,15 +41,16 @@ export default function FeedPage() {
   }, [updateReq, setData, newPost]);
   const [showModal, setShowModal] = useState(false);
 
-  async function submitPost(data: object) {
+  async function submitPost(data: FormData) {
     setShowModal(false);
     await postReq({ url: 'feed/new-post', method: 'POST', data });
   }
 
+  if (user) // to quiet TS unused var warning
   console.log(
     //       'error', error, postErr,
     // '\nisLoading', isLoading,
-    //      '\ndata', posts, user,
+        //  '\ndata', posts, user,
     //   '\nnewPost', newPost
   ); // **LOGDATA
 

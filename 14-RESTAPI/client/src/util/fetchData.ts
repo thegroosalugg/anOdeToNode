@@ -1,7 +1,7 @@
 export interface Fetch {
       url: string;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-    data?: object;
+    data?: FormData | Record<string, string>;
 }
 
 const BASE_URL = import.meta.env.VITE_SERVER_URL;

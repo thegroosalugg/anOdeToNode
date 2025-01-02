@@ -1,6 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import multer from 'multer';
 import { join } from 'path';
+import { storage, fileFilter } from './middleware/multerConfig';
 import authRoutes from './routes/auth';
 import feedRoutes from './routes/feed';
 import errorMsg from './util/errorMsg';
@@ -10,9 +12,11 @@ import dotenv from 'dotenv';
 const app = express();
 
 app.use(express.static(join(import.meta.dirname, 'public'))); // serve static paths
+app.use('/uploads', express.static(join(import.meta.dirname, 'uploads')));
 
 // app.use(express.urlencoded({ extended: false })); // x-www-form-urlencoded <form>
 app.use(express.json()); // parse application/json
+app.use(multer({ storage, fileFilter }).single('image')); // allows storing of files
 
 // allows cross origin requests
 app.use((req, res, next) => {

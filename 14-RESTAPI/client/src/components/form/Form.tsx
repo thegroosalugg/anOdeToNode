@@ -2,12 +2,12 @@ import Button from '../button/Button';
 import css from './Form.module.css';
 import Input from './Input';
 
-export default function Form({ dataFn }: { dataFn: (data: object) => void }) {
+export default function Form({ dataFn }: { dataFn: (data: FormData) => void }) {
   function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    dataFn(data);
+    // const data = Object.fromEntries(formData.entries()); // use for application JSON
+    dataFn(formData);
   }
 
   return (
