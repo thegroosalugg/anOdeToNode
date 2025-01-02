@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import { join } from 'path';
+import authRoutes from './routes/auth';
 import feedRoutes from './routes/feed';
 import errorMsg from './util/errorMsg';
 import dotenv from 'dotenv';
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(authRoutes);
 app.use('/feed', feedRoutes);
 
 mongoose

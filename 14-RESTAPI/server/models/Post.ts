@@ -5,8 +5,8 @@ const required = true;
 export interface IPost {
     title: string;
   content: string;
-  //  imgURL: string;
-  //  userId: Types.ObjectId;
+   imgURL: string;
+   userId: Types.ObjectId;
 }
 
 interface IPostMethods {
@@ -18,8 +18,8 @@ type PostModel = Model<IPost, {}, IPostMethods>;
 export const postSchema = new Schema<IPost, PostModel, IPostMethods>({
     title: { type: String, required },
   content: { type: String, required },
-  // imgURL: { type: String, required },
-  // userId: { type: Schema.Types.ObjectId, ref: 'User', required },
+   imgURL: { type: String },
+   userId: { type: Schema.Types.ObjectId, ref: 'User', required },
 });
 
 export default model<IPost, PostModel>('Post', postSchema);

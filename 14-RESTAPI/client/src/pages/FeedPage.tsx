@@ -20,11 +20,16 @@ export default function FeedPage() {
          error: postErr,
     reqHandler: postReq,
   } = useFetch<Post | null>(null);
+  const { data: user, reqHandler: fetchUser } = useFetch<Post[]>([]);
+
 
   useEffect(() => {
-    const mountData = async () => await initialReq({ url: 'feed/posts' });
+    const mountData = async () => {
+      await initialReq({ url: 'feed/posts' });
+      await fetchUser({ url: 'login' });
+    }
     mountData();
-  }, [initialReq]);
+  }, [initialReq, fetchUser]);
 
   useEffect(() => {
     const updateData = async () => {
@@ -50,7 +55,7 @@ export default function FeedPage() {
   console.log(
           'error', error, postErr,
   //   '\nisLoading', isLoading,
-  //        '\ndata', posts,
+         '\ndata', user,
   //     '\nnewPost', newPost
   ); // **LOGDATA
 
@@ -59,14 +64,6 @@ export default function FeedPage() {
       <Modal show={showModal} close={() => setShowModal(false)}>
         <div style={{ width: '500px', height: '300px', background: '#de1b1bbf' }}>
           <h2>Form</h2>
-          <p>Line</p>
-          <p>Line</p>
-          <p>Line</p>
-          <p>Line</p>
-          <p>Line</p>
-          <p>Line</p>
-          <p>Line</p>
-          <p>Line</p>
           <button onClick={clickHandler}>New Post</button>
         </div>
       </Modal>
