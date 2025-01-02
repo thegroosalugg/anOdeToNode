@@ -19,8 +19,7 @@ const newPost: RequestHandler = async (req, res, next) => {
   try {
     const { title, content } = req.body;
     const post = new Post({
-        title: 'Hello ' + Math.random(),
-      content: 'New Post',
+        title, content,
          user: '67768c6bfa4804119c44db20',
     });
     await post.save();

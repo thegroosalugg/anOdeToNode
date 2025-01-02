@@ -7,6 +7,7 @@
   max-width: 90%;
   overflow: auto;
   border: none;
+  background: none;
   /* Must be inline. Framer motion disables CSS transform */
   /* transform: translate(-50%, -50%); */
 }

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
+import User from '@/models/User';
 import Post from '@/models/Post';
 import Feed from '@/components/feed/Feed';
 import Loader from '@/components/loading/Loader';
 import Modal from '@/components/modal/Modal';
 import Button from '@/components/button/Button';
+import Form from '@/components/form/Form';
 
 export default function FeedPage() {
   const {
@@ -20,7 +22,7 @@ export default function FeedPage() {
          error: postErr,
     reqHandler: postReq,
   } = useFetch<Post | null>(null);
-  const { data: user, reqHandler: fetchUser } = useFetch<Post[]>([]);
+  const { data: user, reqHandler: fetchUser } = useFetch<User | null>(null);
 
   useEffect(() => {
     const mountData = async () => {
@@ -39,36 +41,26 @@ export default function FeedPage() {
   }, [updateReq, setData, newPost]);
   const [showModal, setShowModal] = useState(false);
 
-  async function clickHandler() {
+  async function submitPost(data: object) {
     setShowModal(false);
-    await postReq({
-         url: 'feed/new-post',
-      method: 'POST',
-        data: {
-          title: 'Number Two',
-        content: 'This is number two.',
-      },
-    });
+    await postReq({ url: 'feed/new-post', method: 'POST', data });
   }
 
   console.log(
-          'error', error, postErr,
-  //   '\nisLoading', isLoading,
-         '\ndata', posts, user,
-  //     '\nnewPost', newPost
+    //       'error', error, postErr,
+    // '\nisLoading', isLoading,
+    //      '\ndata', posts, user,
+    //   '\nnewPost', newPost
   ); // **LOGDATA
 
   return (
     <>
       <Modal show={showModal} close={() => setShowModal(false)}>
-        <div style={{ width: '500px', height: '300px', background: '#de1b1bbf' }}>
-          <h2>Form</h2>
-          <button onClick={clickHandler}>New Post</button>
-        </div>
+        <Form dataFn={submitPost} />
       </Modal>
       <Button
             hsl={[180, 80, 35]}
-          style={{ marginBottom: 0 }}
+          style={{ margin: '1rem auto 0' }}
         onClick={() => setShowModal(true)}
       >
         New Post

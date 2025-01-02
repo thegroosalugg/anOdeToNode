@@ -1,7 +1,7 @@
 export interface Fetch {
       url: string;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-    data?: Record<string, string>;
+    data?: object;
 }
 
 const BASE_URL = import.meta.env.VITE_SERVER_URL;
@@ -19,7 +19,7 @@ const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
     throw { ...resData, status: response.status };
   }
 
-  console.log('fetchData response:', response, '\n\n', 'resData', resData); // **LOGDATA
+  // console.log('fetchData response:', response, '\n\n', 'resData', resData); // **LOGDATA
 
   return resData;
 };
