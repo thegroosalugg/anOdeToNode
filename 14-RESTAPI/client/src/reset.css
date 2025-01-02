@@ -22,9 +22,10 @@ input, textarea, select {
   border-radius: 0;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p, h1, h2, h3, h4, h5, h6, button, input, textarea, select {
   overflow-wrap: break-word;
   font-size: inherit;
+  font-family: inherit;
   font-weight: 400;
 }
 

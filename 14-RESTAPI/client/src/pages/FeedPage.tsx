@@ -4,6 +4,7 @@ import Post from '@/models/Post';
 import Feed from '@/components/feed/Feed';
 import Loader from '@/components/loading/Loader';
 import Modal from '@/components/modal/Modal';
+import Button from '@/components/button/Button';
 
 export default function FeedPage() {
   const {
@@ -59,11 +60,23 @@ export default function FeedPage() {
         <div style={{ width: '500px', height: '300px', background: '#de1b1bbf' }}>
           <h2>Form</h2>
           <p>Line</p>
-          <p>Line</p><p>Line</p><p>Line</p><p>Line</p><p>Line</p><p>Line</p><p>Line</p>
+          <p>Line</p>
+          <p>Line</p>
+          <p>Line</p>
+          <p>Line</p>
+          <p>Line</p>
+          <p>Line</p>
+          <p>Line</p>
           <button onClick={clickHandler}>New Post</button>
         </div>
       </Modal>
-      <button onClick={() => setShowModal(true)}>New Post</button>
+      <Button
+            hsl={[180, 80, 35]}
+          style={{ marginBottom: 0 }}
+        onClick={() => setShowModal(true)}
+      >
+        New Post
+      </Button>
       {postErr && <p>{postErr.message}</p>}
       {isLoading ? <Loader /> : error ? <p>{error.message}</p> : <Feed feed={posts} />}
     </>
