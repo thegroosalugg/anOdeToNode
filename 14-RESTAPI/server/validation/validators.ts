@@ -14,7 +14,7 @@ export const validateField = (field: string, min: number) =>
   body(field)
     .trim()
     .isLength({ min })
-    .withMessage(`requires ${min}+ chars`)
+    .withMessage(`requires at least ${min} characters`)
     .customSanitizer((value) => value.replace(/<|>/g, '')); // escapes only dangerous values
 
 export const validateEmail = check('email')

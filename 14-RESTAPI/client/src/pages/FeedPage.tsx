@@ -17,12 +17,8 @@ export default function FeedPage() {
      isLoading,
   } = useFetch<Post[]>([]);
   const { reqHandler: updateReq } = useFetch<Post[]>([]);
-  const {
-          data: newPost,
-         error: postErr,
-    reqHandler: postReq,
-  } = useFetch<Post | null>(null);
   const { data: user, reqHandler: fetchUser } = useFetch<User | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const mountData = async () => {
@@ -38,26 +34,19 @@ export default function FeedPage() {
       setData(updatedData);
     };
     updateData();
-  }, [updateReq, setData, newPost]);
-  const [showModal, setShowModal] = useState(false);
-
-  async function submitPost(data: FormData) {
-    setShowModal(false);
-    await postReq({ url: 'feed/new-post', method: 'POST', data });
-  }
+  }, [updateReq, setData]);
 
   if (user) // to quiet TS unused var warning
   console.log(
-    //       'error', error, postErr,
+    //       'error', error,
     // '\nisLoading', isLoading,
         //  '\ndata', posts, user,
-    //   '\nnewPost', newPost
   ); // **LOGDATA
 
   return (
     <>
       <Modal show={showModal} close={() => setShowModal(false)}>
-        <Form dataFn={submitPost} />
+        <Form callback={() => setShowModal(false)} />
       </Modal>
       <Button
             hsl={[180, 80, 35]}
@@ -66,7 +55,6 @@ export default function FeedPage() {
       >
         New Post
       </Button>
-      {postErr && <p>{postErr.message}</p>}
       {isLoading ? <Loader /> : error ? <p>{error.message}</p> : <Feed feed={posts} />}
     </>
   );

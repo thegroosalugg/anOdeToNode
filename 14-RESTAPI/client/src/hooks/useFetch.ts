@@ -1,9 +1,10 @@
 import fetchData, { Fetch } from '@/util/fetchData';
 import { useState, useCallback } from 'react';
 
-type FetchError  = {
-  message: string;
-   status: number;
+export type FetchError  = {
+        message: string;
+         status: number;
+  [key: string]: string | number;
 }
 
 const useFetch = <T>(initialData: T) => {

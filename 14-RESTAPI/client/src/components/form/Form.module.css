@@ -1,7 +1,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1.8rem;
   padding: 1rem;
   background: linear-gradient(to right, #ededed, #fff);
   border-radius: 2px;
