@@ -15,14 +15,16 @@ export default function Input({
    text?: boolean;
   errors: FetchError | null;
 } & (HTMLProps<HTMLInputElement> & HTMLProps<HTMLTextAreaElement>)) {
-  const Element = text ? 'textarea' : 'input';
-  const error   = (errors || {})[id as keyof typeof errors];
-  const delay   = 0.1 * (Object.keys(errors || {}).indexOf(id) + 1);
+  const     Element = text ? 'textarea' : 'input';
+  const       error = (errors || {})[id as keyof typeof errors];
+  const       delay = 0.1 * (Object.keys(errors || {}).indexOf(id) + 1);
+  const       color = error ? '#c65740' : '#12a1a1';
+  const borderColor = color;
 
   return (
     <div className={css['input']}>
-      <label htmlFor={id}>{id}</label>
-      <Element id={id} name={id} {...props} />
+      <label htmlFor={id}        style={{ color }}>{id}</label>
+      <Element id={id} name={id} style={{ borderColor }} {...props} />
       <AnimatePresence>
         {error && (
           <motion.p
