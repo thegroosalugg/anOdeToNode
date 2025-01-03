@@ -1,6 +1,7 @@
 import { useRoutes } from 'react-router-dom';
 import RootLayout from './pages/RootLayout';
 import FeedPage from './pages/FeedPage';
+import ErrorPage from './pages/ErrorPage';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons'; // import brand icons
@@ -13,6 +14,7 @@ export default function App() {
   const element = useRoutes(
     [
       { path: '/', element: <FeedPage /> },
+      { path: '*', element: <ErrorPage /> },
     ]
   );
 

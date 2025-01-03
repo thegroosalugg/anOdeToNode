@@ -8,28 +8,32 @@ export default function Feed({ feed }: { feed: Post[] }) {
   return (
     <ul className={css.feed}>
       <AnimatePresence>
-        {feed.map(({ _id, title, content, user }, i) => (
-          <motion.li
-             layout
-                key={_id}
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x:   0, transition: { duration: 0.5, delay: i * 0.1 } }}
-               exit={{ opacity: 0, x:  50, transition: { duration: 0.5 } }}
-          >
-            <h3>
-              <img
-                    src={user.imgURL || fallback}
-                    alt={user.name}
-                onError={(e) => ((e.target as HTMLImageElement).src = fallback)}
-              />
-              <span>
-                {user.name} {user.surname}
-              </span>
-            </h3>
-            <h2>{title}</h2>
-            <p>{content}</p>
-          </motion.li>
-        ))}
+        {feed.length > 0 ? (
+          feed.map(({ _id, title, content, user }, i) => (
+            <motion.li
+               layout
+                  key={_id}
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x:   0, transition: { duration: 0.5, delay: i * 0.1 } }}
+                 exit={{ opacity: 0, x:  50, transition: { duration: 0.5 } }}
+            >
+              <h3>
+                <img
+                  src={user.imgURL || fallback}
+                  alt={user.name}
+                  onError={(e) => ((e.target as HTMLImageElement).src = fallback)}
+                />
+                <span>
+                  {user.name} {user.surname}
+                </span>
+              </h3>
+              <h2>{title}</h2>
+              <p>{content}</p>
+            </motion.li>
+          ))
+        ) : (
+          <p>Nothing to see here.</p>
+        )}
       </AnimatePresence>
     </ul>
   );
