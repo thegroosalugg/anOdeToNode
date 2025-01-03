@@ -17,6 +17,21 @@ const getPosts: RequestHandler = async (req, res, next) => {
   }
 };
 
+const getPostById: RequestHandler = async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const post = await Post.findById(postId).populate('user', 'name surname');
+    if (!post) {
+      res.status(404).json({ message: 'Post not found.' });
+      return;
+    }
+    res.status(200).json(post);
+  } catch (error) {
+    errorMsg({ error, where: 'getPostById' });
+    res.status(500).json({ message: 'Unable to load post.' });
+  }
+};
+
 const newPost: RequestHandler = async (req, res, next) => {
   try {
     const { title, content } = req.body;
@@ -39,4 +54,4 @@ const newPost: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { getPosts, newPost };
+export { getPosts, getPostById, newPost };

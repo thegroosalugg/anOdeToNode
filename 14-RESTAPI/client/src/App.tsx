@@ -1,6 +1,7 @@
 import { useRoutes } from 'react-router-dom';
 import RootLayout from './pages/RootLayout';
 import FeedPage from './pages/FeedPage';
+import PostPage from './pages/PostPage';
 import ErrorPage from './pages/ErrorPage';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -13,8 +14,9 @@ library.add(fab, fas, far);
 export default function App() {
   const element = useRoutes(
     [
-      { path: '/', element: <FeedPage /> },
-      { path: '*', element: <ErrorPage /> },
+      { path: '/',             element: <FeedPage /> },
+      { path: '/post/:postId', element: <PostPage /> },
+      { path: '*',             element: <ErrorPage /> },
     ]
   );
 

@@ -4,7 +4,7 @@ export interface Fetch {
     data?: FormData | Record<string, string>;
 }
 
-const BASE_URL = import.meta.env.VITE_SERVER_URL;
+export const BASE_URL = import.meta.env.VITE_SERVER_URL;
 
 const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
   const isFile = data instanceof FormData; // multipart/form-data
