@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import Post from '@/models/Post';
 import Loader from '@/components/loading/Loader';
 import PostId from '@/components/post/PostId';
+import Error from '@/components/error/Error';
 
 export default function PostPage() {
   const { postId } = useParams();
@@ -14,16 +15,14 @@ export default function PostPage() {
     fetchPost();
   }, [postId, reqHandler]);
 
-  console.log('data', post);
-
   return (
     <>
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <p>{error.message}</p>
+        <Error error={error} />
       ) : (
-        <PostId post={post!} />
+        <PostId post={post!} /> // post guaranteed true if isLoading/error false
       )}
     </>
   );

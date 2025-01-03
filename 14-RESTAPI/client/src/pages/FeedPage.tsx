@@ -7,6 +7,7 @@ import Loader from '@/components/loading/Loader';
 import Modal from '@/components/modal/Modal';
 import Button from '@/components/button/Button';
 import Form from '@/components/form/Form';
+import Error from '@/components/error/Error';
 
 export default function FeedPage() {
   const {
@@ -16,9 +17,9 @@ export default function FeedPage() {
          error,
      isLoading,
   } = useFetch<Post[]>([], true);
-  const { reqHandler: updateReq } = useFetch<Post[]>([]);
+  const {             reqHandler: updateReq } = useFetch<Post[]>([]);
   const { data: user, reqHandler: fetchUser } = useFetch<User | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [  showModal,          setShowModal ] = useState(false);
 
   useEffect(() => {
     const mountData = async () => {
@@ -36,12 +37,7 @@ export default function FeedPage() {
     updateData();
   }, [updateReq, setData, showModal]);
 
-  if (user) // to quiet TS unused var warning
-  console.log(
-    //       'error', error,
-    // '\nisLoading', isLoading,
-        //  '\ndata', posts, user,
-  ); // **LOGDATA
+  if (user) // silence TS unused var warning
 
   return (
     <>
@@ -55,7 +51,7 @@ export default function FeedPage() {
       >
         New Post
       </Button>
-      {isLoading ? <Loader /> : error ? <p>{error.message}</p> : <Feed feed={posts} />}
+      {isLoading ? <Loader /> : error ? <Error error={error} /> : <Feed feed={posts} />}
     </>
   );
 }
