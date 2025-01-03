@@ -1,10 +1,10 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import Post from '@/models/Post';
 import css from './Feed.module.css';
 
 export default function Feed({ feed }: { feed: Post[] }) {
   const fallback = '/fallback_user.png';
-  
+
   return (
     <ul className={css.feed}>
       <AnimatePresence>

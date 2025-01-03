@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'motion/react';
 import { isMobile } from 'react-device-detect';
 import css from './Button.module.css';
 

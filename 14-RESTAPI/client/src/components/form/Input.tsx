@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { HTMLProps } from 'react';
 import { FetchError } from '@/hooks/useFetch';
 import css from './Input.module.css';

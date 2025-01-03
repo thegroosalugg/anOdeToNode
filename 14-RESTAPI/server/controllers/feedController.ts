@@ -23,7 +23,7 @@ const newPost: RequestHandler = async (req, res, next) => {
     const errors = getErrors(req);
     if (hasErrors(errors)) {
       res.status(422).json(errors);
-      return
+      return;
     }
 
     const post = new Post({ title, content, user: '67768c6bfa4804119c44db20'});

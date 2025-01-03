@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
 import css from './NavButton.module.css';
