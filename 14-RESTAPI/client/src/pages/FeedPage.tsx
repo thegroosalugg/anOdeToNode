@@ -34,7 +34,7 @@ export default function FeedPage() {
       setData(updatedData);
     };
     updateData();
-  }, [updateReq, setData]);
+  }, [updateReq, setData, showModal]);
 
   if (user) // to quiet TS unused var warning
   console.log(

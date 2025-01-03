@@ -4,6 +4,7 @@ import Post from '@/models/Post';
 import Input from './Input';
 import Button from '../button/Button';
 import css from './Form.module.css';
+import ImagePicker from './ImagePicker';
 
 export default function Form({ callback }: { callback: () => void }) {
   const { error, reqHandler } = useFetch<Post | null>(null);
@@ -28,6 +29,7 @@ export default function Form({ callback }: { callback: () => void }) {
     <form className={css.form} onSubmit={submitHandler} ref={scope}>
       <Input id='title'   errors={error} />
       <Input id='content' errors={error} text rows={5} />
+      <ImagePicker />
       <Button hsl={[37, 96, 45]}>Post</Button>
     </form>
   );
