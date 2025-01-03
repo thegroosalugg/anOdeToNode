@@ -25,9 +25,6 @@ const fileFilter = (
   callback: FileFilterCallback
 ) => {
   const isValid = ['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimetype);
-  // if (!isValid) {
-  //   // tbc
-  // }
   // 1st arg is always null regardless of errors
   callback(null, isValid);
 };
