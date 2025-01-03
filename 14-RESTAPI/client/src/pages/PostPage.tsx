@@ -7,7 +7,7 @@ import PostId from '@/components/post/PostId';
 
 export default function PostPage() {
   const { postId } = useParams();
-  const { data: post, isLoading, error, reqHandler } = useFetch<Post | null>(null);
+  const { data: post, isLoading, error, reqHandler } = useFetch<Post | null>(null, true);
 
   useEffect(() => {
     const fetchPost = async () => reqHandler({ url: `feed/post/${postId}` });
@@ -23,7 +23,7 @@ export default function PostPage() {
       ) : error ? (
         <p>{error.message}</p>
       ) : (
-        post && <PostId post={post} />
+        <PostId post={post!} />
       )}
     </>
   );

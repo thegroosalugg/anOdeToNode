@@ -7,9 +7,10 @@ export type FetchError  = {
   [key: string]: string | number;
 }
 
-const useFetch = <T>(initialData: T) => {
+// optional loading set to true for GET reqs ensures Loader is returned first
+const useFetch = <T>(initialData: T, loading: boolean = false) => {
   const [     data,      setData] = useState<T>(initialData);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(loading);
   const [    error,     setError] = useState<FetchError | null>(null);
 
   const reqHandler = useCallback(async (params: Fetch) => {
