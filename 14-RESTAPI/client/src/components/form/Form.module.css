@@ -1,13 +1,27 @@
 .form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.8rem;
   padding: 1rem;
-  background: linear-gradient(to right, #ededed, #fff);
   border-radius: 2px;
+  background: linear-gradient(to right, #ededed, #fff);
+
+  .inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    align-items: center;
+    overflow: auto;
+    max-width: 600px;
+    gap: 1rem;
+
+    > section {
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+      margin-bottom: 1.4rem;
+    }
+  }
 
   > button {
-    align-self: end;
+    width: 100%;
+    margin-top: 1rem;
     font-weight: 900;
     border-radius: 2px;
   }

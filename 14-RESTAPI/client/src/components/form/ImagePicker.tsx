@@ -3,6 +3,7 @@ import css from './ImagePicker.module.css';
 
 export default function ImagePicker() {
   const [image, setImage] = useState('');
+  const style = image ? { background: '#252525' } : {};
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -14,8 +15,8 @@ export default function ImagePicker() {
   };
 
   return (
-    <label className={css.picker} htmlFor='image'>
-      <input type='file' id='image' accept='image/*' onChange={changeHandler} />
+    <label className={css['picker']} htmlFor='image' style={style} >
+      <input type='file' id='image' name='image' accept='image/*' onChange={changeHandler} />
       {image ? <img src={image} alt='preview' /> : <span>Choose an Image</span>}
     </label>
   );

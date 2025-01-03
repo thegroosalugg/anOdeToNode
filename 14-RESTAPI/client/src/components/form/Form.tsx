@@ -2,9 +2,9 @@ import { useAnimate, stagger } from 'motion/react';
 import useFetch from '@/hooks/useFetch';
 import Post from '@/models/Post';
 import Input from './Input';
+import ImagePicker from './ImagePicker';
 import Button from '../button/Button';
 import css from './Form.module.css';
-import ImagePicker from './ImagePicker';
 
 export default function Form({ callback }: { callback: () => void }) {
   const { error, reqHandler } = useFetch<Post | null>(null);
@@ -26,10 +26,14 @@ export default function Form({ callback }: { callback: () => void }) {
   }
 
   return (
-    <form className={css.form} onSubmit={submitHandler} ref={scope}>
-      <Input id='title'   errors={error} />
-      <Input id='content' errors={error} text rows={5} />
-      <ImagePicker />
+    <form className={css['form']} onSubmit={submitHandler} ref={scope}>
+      <section className={css['inputs']}>
+        <section>
+          <Input id='title' errors={error} />
+          <Input id='content' errors={error} text rows={5} />
+        </section>
+        <ImagePicker />
+      </section>
       <Button hsl={[37, 96, 45]}>Post</Button>
     </form>
   );
