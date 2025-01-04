@@ -59,4 +59,16 @@
     text-align: center;
     color: var(--text-grey);
   }
+
+  .buttons {
+    text-align: end;
+    text-wrap: nowrap;
+    overflow-x: scroll;
+    padding: 0.2rem;
+
+    > button {
+      width: 70px;
+      margin-left: 0.05rem;
+    }
+  }
 }

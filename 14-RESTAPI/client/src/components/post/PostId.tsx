@@ -1,12 +1,14 @@
 import { motion } from 'motion/react';
 import { BASE_URL } from '@/util/fetchData';
-import Post from '@/models/Post';
-import css from './PostId.module.css';
-import ProfilePic from '../profile/ProfilePic';
 import { timeAgo } from '@/util/timeStamps';
+import Post from '@/models/Post';
+import User from '@/models/User';
+import ProfilePic from '../profile/ProfilePic';
+import Button from '../button/Button';
+import css from './PostId.module.css';
 
-export default function PostId({ post }: { post: Post }) {
-  const { title, content, imgURL, author, updatedAt  } = post;
+export default function PostId({ post, user }: { post: Post; user: User | null }) {
+  const { title, content, imgURL, author, updatedAt } = post;
   const variants = {
      hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.5 } },
@@ -42,6 +44,17 @@ export default function PostId({ post }: { post: Post }) {
         />
       )}
       <motion.p variants={variants}>{content}</motion.p>
+      {user && (
+        <motion.section className={css['buttons']} variants={variants}>
+          <Button hsl={[180, 80, 35]}> Reply</Button>
+          {user._id === author._id && (
+            <>
+              <Button hsl={[28, 64, 50]}> Edit </Button>
+              <Button hsl={[10, 54, 51]}>Delete</Button>
+            </>
+          )}
+        </motion.section>
+      )}
     </motion.section>
   );
 }

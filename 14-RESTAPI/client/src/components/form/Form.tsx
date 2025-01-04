@@ -34,7 +34,7 @@ export default function Form({ callback }: { callback: () => void }) {
         </section>
         <ImagePicker style={{ marginTop: '2px' }} /> {/* applies to this layout only */}
       </section>
-      <Button hsl={[37, 96, 45]}>Post</Button>
+      <Button hsl={[28, 64, 50]}>Post</Button>
     </form>
   );
 }

@@ -18,14 +18,16 @@ export default function FeedPage() {
      isLoading,
   } = useFetch<Post[]>([], true);
   const {             reqHandler: updateReq } = useFetch<Post[]>([]);
-  const { data: user, reqHandler: fetchUser } = useFetch<User | null>(null); // eslint-disable-line
+  const { data: user, reqHandler: fetchUser } = useFetch<User | null>(null);
   const [  showModal,          setShowModal ] = useState(false);
 
   useEffect(() => {
     const mountData = async () => {
-      await initialReq({ url: 'feed/posts' });
-      await  fetchUser({ url: 'login'      });
-    }
+      await Promise.all([
+        initialReq({ url: 'feed/posts' }),
+         fetchUser({ url: 'login' })
+      ]);
+    };
     mountData();
   }, [initialReq, fetchUser]);
 
@@ -40,15 +42,17 @@ export default function FeedPage() {
   return (
     <>
       <Modal show={showModal} close={() => setShowModal(false)}>
-        <Form callback={() => setShowModal(false)} />
+        <Form              callback={() => setShowModal(false)} />
       </Modal>
-      <Button
-            hsl={[180, 80, 35]}
-          style={{ margin: '0 auto 1rem' }}
-        onClick={() => setShowModal(true)}
-      >
-        New Post
-      </Button>
+      {user && (
+        <Button
+              hsl={[180, 80, 35]}
+            style={{ margin: '0 auto 1rem' }}
+          onClick={() => setShowModal(true)}
+        >
+          New Post
+        </Button>
+      )}
       {isLoading ? <Loader /> : error ? <Error error={error} /> : <Feed feed={posts} />}
     </>
   );
