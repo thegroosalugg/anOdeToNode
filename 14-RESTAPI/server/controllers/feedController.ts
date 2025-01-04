@@ -7,7 +7,7 @@ import errorMsg from '../util/errorMsg';
 const getPosts: RequestHandler = async (req, res, next) => {
   try {
     const posts = await Post.find()
-      .populate('user', 'name surname')
+      .populate('author', 'name surname')
       .sort({ _id: -1 }); // newest first
 
     res.status(200).json(posts);
@@ -20,7 +20,7 @@ const getPosts: RequestHandler = async (req, res, next) => {
 const getPostById: RequestHandler = async (req, res, next) => {
   try {
     const { postId } = req.params;
-    const post = await Post.findById(postId).populate('user', 'name surname');
+    const post = await Post.findById(postId).populate('author', 'name surname');
     if (!post) {
       res.status(404).json({ message: 'Post not found.' });
       return;
@@ -44,7 +44,7 @@ const newPost: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const post = new Post({ title, content, user: '67768c6bfa4804119c44db20'});
+    const post = new Post({ title, content, author: '67768c6bfa4804119c44db20'});
     if (image) post.imgURL = image.path;
     await post.save();
     res.status(201).json(post);

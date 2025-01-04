@@ -11,7 +11,7 @@ export default function Feed({ feed }: { feed: Post[] }) {
     <ul className={css.feed}>
       <AnimatePresence>
         {feed.length > 0 ? (
-          feed.map(({ _id, title, content, user }, i) => (
+          feed.map(({ _id, title, content, author }, i) => (
             <motion.li
                layout
                   key={_id}
@@ -22,12 +22,12 @@ export default function Feed({ feed }: { feed: Post[] }) {
             >
               <h3>
                 <img
-                  src={user.imgURL || fallback}
-                  alt={user.name}
+                  src={author.imgURL || fallback}
+                  alt={author.name}
                   onError={(e) => ((e.target as HTMLImageElement).src = fallback)}
                 />
                 <span>
-                  {user.name} {user.surname}
+                  {author.name} {author.surname}
                 </span>
               </h3>
               <h2>{title}</h2>

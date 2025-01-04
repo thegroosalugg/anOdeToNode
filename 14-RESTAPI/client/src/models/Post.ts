@@ -5,7 +5,7 @@ type Post = {
     title: string;
   content: string;
   imgURL?: string;
-     user: User;
+   author: User;
 };
 
 export default Post;
