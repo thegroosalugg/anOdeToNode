@@ -1,6 +1,6 @@
 .profile-pic {
   width: 20px;
   height: 20px;
-  border: 0.8px solid #12a1a1;
+  border: 0.8px solid var(--team-green);
   border-radius: 50%;
 }

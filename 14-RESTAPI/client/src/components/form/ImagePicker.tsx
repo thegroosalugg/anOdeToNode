@@ -4,8 +4,8 @@ import css from './ImagePicker.module.css';
 export default function ImagePicker({...props}) {
   const [image, setImage] = useState('');
   const [error, setError] = useState('');
-  const  background = image ? '#252525' : '#ffffff00';
-  const       color = error ? '#c65740' : '#12a1a1';
+  const  background = image ?          '#252525' : '#ffffff00';
+  const       color = error ? 'var(--error-red)' : 'var(--team-green)';
   const borderColor = color;
   const { style, ...labelProps } = props;
 

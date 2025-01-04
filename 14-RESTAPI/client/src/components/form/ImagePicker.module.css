@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   height: 187px;
-  border: 1px solid #12a1a1;
+  border: 1px solid var(--team-green);
   border-radius: 2px;
   cursor: pointer;
 
@@ -20,6 +20,6 @@
     font-family: "Oswald", serif;
     font-size: 0.8rem;
     font-weight: 300;
-    color: #12a1a1;
+    color: var(--team-green);
   }
 }

@@ -10,8 +10,8 @@
   li {
     width: 100%;
     padding: 1rem;
-    border: 2px solid #12a1a1;
-    background: linear-gradient(to right, #ededed, #fff);
+    border: 2px solid var(--team-green);
+    background: var(--box-gradient);
     cursor: pointer;
 
     > h3 {
@@ -20,7 +20,7 @@
       gap: 0.3rem;
       font-size: 20px;
       font-weight: 600;
-      border-bottom: 1px solid #12a1a1;
+      border-bottom: 1px solid var(--team-green);
       padding-bottom: 0.25rem;
       margin-bottom: 0.5rem;
     }
@@ -45,7 +45,7 @@
       -webkit-box-orient: vertical;
       line-clamp: 2;
       box-orient: vertical;
-      color: #818181;
+      color: var(--text-grey);
     }
   }
 }

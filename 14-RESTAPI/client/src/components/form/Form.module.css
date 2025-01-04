@@ -1,7 +1,7 @@
 .form {
   padding: 1rem;
   border-radius: 2px;
-  background: linear-gradient(to right, #ededed, #fff);
+  background: var(--box-gradient);
 
   .inputs {
     display: grid;

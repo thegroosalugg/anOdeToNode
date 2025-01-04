@@ -1,6 +1,6 @@
 .error {
   margin: 0 auto;
-  background: #c65740;
+  background: var(--error-red);
   color: #fff;
   padding: 1rem;
 }

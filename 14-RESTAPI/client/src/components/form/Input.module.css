@@ -5,7 +5,7 @@
   gap: 0.1rem;
 
   label {
-    color: #12a1a1;
+    color: var(--team-green);
     text-shadow: 0.5px 0.5px 1px #000;
     font-size: 1.2rem;
     font-weight: 600;
@@ -18,7 +18,7 @@
 
   input, textarea {
     font-size: 1.2rem;
-    border: 1px solid #12a1a1;
+    border: 1px solid var(--team-green);
     border-radius: 2px;
     resize: none;
   }
@@ -33,7 +33,7 @@
     overflow-x: scroll;
     max-width: 95%;
     border-radius: 2px;
-    background: #c65740;
+    background: var(--error-red);
     color: #ffffff;
   }
 }
