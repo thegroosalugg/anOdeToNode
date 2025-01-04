@@ -3,12 +3,13 @@ import { BASE_URL } from '@/util/fetchData';
 import Post from '@/models/Post';
 import css from './PostId.module.css';
 import ProfilePic from '../profile/ProfilePic';
+import { timeAgo } from '@/util/timeStamps';
 
 export default function PostId({ post }: { post: Post }) {
-  const { title, content, imgURL, author } = post;
+  const { title, content, imgURL, author, updatedAt  } = post;
   const variants = {
      hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.8 } },
+    visible: { opacity: 1, transition: { duration: 0.5 } },
   };
 
   return (
@@ -25,6 +26,9 @@ export default function PostId({ post }: { post: Post }) {
         </span>
         <ProfilePic user={author} />
       </motion.h1>
+      <motion.time variants={variants}>
+        {timeAgo(updatedAt)}
+      </motion.time>
       {imgURL && (
         <motion.img
                src={BASE_URL + imgURL}

@@ -8,7 +8,7 @@
   > h1 {
     display: flex;
     align-items: center;
-    padding: 0.5rem;
+    padding: 0.5rem 0.5rem 0;
 
     span {
       line-height: 1.5;
@@ -16,6 +16,7 @@
       text-wrap: nowrap;
       overflow-x: scroll;
       overflow-y: hidden;
+
       &:first-of-type {
         margin-right: auto;
         max-width: 60%;
@@ -29,6 +30,15 @@
     }
   }
 
+  > time {
+    display: block;
+    padding: 0 0.7rem 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-grey);
+    text-align: right;
+    text-wrap: nowrap;
+    overflow-x: scroll;
+  }
 
   > img {
     width: 100%;

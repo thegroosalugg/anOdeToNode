@@ -25,7 +25,7 @@
       margin-bottom: 0.5rem;
     }
 
-    h2, p, h3 span {
+    h2 *, p, h3 span {
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -36,6 +36,19 @@
 
     h2 {
       font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+
+      span {
+        max-width: 70%;
+      }
+
+      time {
+        color: var(--text-grey);
+        font-size: 0.8rem;
+      }
     }
 
     p {

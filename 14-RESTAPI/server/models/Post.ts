@@ -20,6 +20,8 @@ export const postSchema = new Schema<IPost, PostModel, IPostMethods>({
   content: { type: String, required },
    imgURL: { type: String },
    author: { type: Schema.Types.ObjectId, ref: 'User', required },
-});
+  },
+  { timestamps: true }
+);
 
 export default model<IPost, PostModel>('Post', postSchema);

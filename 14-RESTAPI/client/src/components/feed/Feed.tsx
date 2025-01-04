@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Post from '@/models/Post';
 import css from './Feed.module.css';
 import ProfilePic from '../profile/ProfilePic';
+import { timeAgo } from '@/util/timeStamps';
 
 export default function Feed({ feed }: { feed: Post[] }) {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ export default function Feed({ feed }: { feed: Post[] }) {
     <ul className={css.feed}>
       <AnimatePresence>
         {feed.length > 0 ? (
-          feed.map(({ _id, title, content, author }, i) => (
+          feed.map(({ _id, title, content, updatedAt, author }, i) => (
             <motion.li
                layout
                   key={_id}
@@ -26,7 +27,10 @@ export default function Feed({ feed }: { feed: Post[] }) {
                   {author.name} {author.surname}
                 </span>
               </h3>
-              <h2>{title}</h2>
+              <h2>
+                <span>{title}</span>
+                <time>{timeAgo(updatedAt)}</time>
+              </h2>
               <p>{content}</p>
             </motion.li>
           ))
