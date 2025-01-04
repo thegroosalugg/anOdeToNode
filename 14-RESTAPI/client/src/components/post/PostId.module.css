@@ -5,7 +5,48 @@
   max-width: 600px;
   background: linear-gradient(to right, #ededed, #fff);
 
+  > h1 {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+
+    span {
+      line-height: 1.5;
+      text-transform: capitalize;
+      text-wrap: nowrap;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      &:first-of-type {
+        margin-right: auto;
+        max-width: 60%;
+        font-family: "Oswald", sans-serif;
+      }
+
+      &:last-of-type {
+        margin-left: 0.5rem;
+        margin-right: 0.2rem;
+      }
+    }
+  }
+
+
   > img {
-    width: 200px;
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-top: 1px solid #12a1a1;
+    border-bottom: 1px solid #12a1a1;
+    background: linear-gradient(to right, #dbd9d9, #fff);
+  }
+
+  > p {
+    max-height: 300px;
+    overflow-y: scroll;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 300;
+    text-align: center;
+    color: #6d6d6d;
   }
 }
