@@ -54,4 +54,21 @@ const newPost: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { getPosts, getPostById, newPost };
+const deletePost: RequestHandler = async (req, res, next) => {
+  try {
+    const { postId: _id } = req.params;
+    const post = await Post.findOne({ _id });
+    if (post) {
+      if (post.imgURL) {
+        unlink(post.imgURL, (error) => error && errorMsg({ error, where: 'deletePost' }));
+      }
+      await Post.deleteOne({ _id });
+      res.status(200).json(null); // truthy objects cause errors as they do not match Models
+    }
+  } catch (error) {
+    errorMsg({ error, where: 'deletePost' });
+    res.status(500).json({ message: 'Unable to delete post.' });
+  }
+};
+
+export { getPosts, getPostById, newPost, deletePost };
