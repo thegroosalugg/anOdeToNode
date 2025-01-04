@@ -18,7 +18,7 @@ export default function FeedPage() {
      isLoading,
   } = useFetch<Post[]>([], true);
   const {             reqHandler: updateReq } = useFetch<Post[]>([]);
-  const { data: user, reqHandler: fetchUser } = useFetch<User | null>(null);
+  const { data: user, reqHandler: fetchUser } = useFetch<User | null>(null); // eslint-disable-line
   const [  showModal,          setShowModal ] = useState(false);
 
   useEffect(() => {
@@ -37,8 +37,6 @@ export default function FeedPage() {
     updateData();
   }, [updateReq, setData, showModal]);
 
-  if (user) // silence TS unused var warning
-
   return (
     <>
       <Modal show={showModal} close={() => setShowModal(false)}>
@@ -46,7 +44,7 @@ export default function FeedPage() {
       </Modal>
       <Button
             hsl={[180, 80, 35]}
-          style={{ margin: '1rem auto 0' }}
+          style={{ margin: '0 auto 1rem' }}
         onClick={() => setShowModal(true)}
       >
         New Post

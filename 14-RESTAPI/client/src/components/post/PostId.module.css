@@ -1,4 +1,9 @@
 .postId {
+  align-self: center;
+  border: 2px solid #12a1a1;
+  width: 100%;
+  max-width: 600px;
+  background: linear-gradient(to right, #ededed, #fff);
 
   > img {
     width: 200px;
