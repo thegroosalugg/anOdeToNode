@@ -1,0 +1,24 @@
+.confirm-dialog {
+  padding: 0.5rem;
+  background: var(--box-gradient);
+
+  > h2 {
+    text-align: center;
+    font-family: "Oswald", sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  > section {
+    display: flex;
+    gap: 0.5rem;
+
+    > button {
+      width: 108px;
+      
+      &:last-of-type {
+        color: #252525;
+      }
+    }
+  }
+}

@@ -7,11 +7,19 @@ import ProfilePic from '../profile/ProfilePic';
 import Button from '../button/Button';
 import css from './PostId.module.css';
 
-export default function PostId({ post, user }: { post: Post; user: User | null }) {
+export default function PostId({
+  post,
+  user,
+  setModal,
+}: {
+      post: Post;
+      user: User | null;
+  setModal: (modal: string) => void;
+}) {
   const { title, content, imgURL, author, updatedAt } = post;
   const variants = {
      hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.5 } },
+    visible: { opacity: 1, transition: { duration: 0.3 } },
   };
 
   return (
@@ -19,7 +27,7 @@ export default function PostId({ post, user }: { post: Post; user: User | null }
        className={css['postId']}
          initial='hidden'
          animate='visible'
-      transition={{ staggerChildren: 0.5 }}
+      transition={{ staggerChildren: 0.3 }}
     >
       <motion.h1 variants={variants}>
         <span>{title}</span>
@@ -49,8 +57,12 @@ export default function PostId({ post, user }: { post: Post; user: User | null }
           <Button hsl={[180, 80, 35]}> Reply</Button>
           {user._id === author._id && (
             <>
-              <Button hsl={[28, 64, 50]}> Edit </Button>
-              <Button hsl={[10, 54, 51]}>Delete</Button>
+              <Button hsl={[28, 64, 50]} onClick={() => setModal('edit')}>
+                Edit
+              </Button>
+              <Button hsl={[10, 54, 51]} onClick={() => setModal('delete')}>
+                Delete
+              </Button>
             </>
           )}
         </motion.section>

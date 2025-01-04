@@ -8,7 +8,7 @@ export default function Modal({
      close,
 }: {
   children: React.ReactNode;
-      show: boolean;
+      show: boolean | string;
      close: () => void;
 }) {
   return createPortal(
