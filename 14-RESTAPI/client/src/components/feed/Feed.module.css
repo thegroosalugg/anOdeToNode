@@ -23,13 +23,6 @@
       border-bottom: 1px solid #12a1a1;
       padding-bottom: 0.25rem;
       margin-bottom: 0.5rem;
-
-      > img {
-        width: 20px;
-        height: 20px;
-        border: 0.8px solid #12a1a1;
-        border-radius: 50%;
-      }
     }
 
     h2, p, h3 span {

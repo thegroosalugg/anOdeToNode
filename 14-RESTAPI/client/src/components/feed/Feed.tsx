@@ -2,10 +2,10 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import Post from '@/models/Post';
 import css from './Feed.module.css';
+import ProfilePic from '../profile/ProfilePic';
 
 export default function Feed({ feed }: { feed: Post[] }) {
   const navigate = useNavigate();
-  const fallback = '/fallback_user.png';
 
   return (
     <ul className={css.feed}>
@@ -21,11 +21,7 @@ export default function Feed({ feed }: { feed: Post[] }) {
                  exit={{ opacity: 0, x:  50, transition: { duration: 0.5 } }}
             >
               <h3>
-                <img
-                  src={author.imgURL || fallback}
-                  alt={author.name}
-                  onError={(e) => ((e.target as HTMLImageElement).src = fallback)}
-                />
+                <ProfilePic user={author} />
                 <span>
                   {author.name} {author.surname}
                 </span>
