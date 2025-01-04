@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import css from './ImagePicker.module.css';
 
-export default function ImagePicker() {
+export default function ImagePicker({...props}) {
   const [image, setImage] = useState('');
   const [error, setError] = useState('');
   const  background = image ? '#252525' : '#ffffff00';
   const       color = error ? '#c65740' : '#12a1a1';
   const borderColor = color;
+  const { style, ...labelProps } = props;
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -28,7 +29,8 @@ export default function ImagePicker() {
     <label
       className={css['picker']}
         htmlFor='image'
-          style={{ background, borderColor }}
+          style={{ background, borderColor, ...style }}
+      {...labelProps}
     >
       <input
         onChange={changeHandler}
