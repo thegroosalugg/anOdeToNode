@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
 import User from '@/models/User';
 import Post from '@/models/Post';
@@ -20,24 +20,30 @@ export default function FeedPage() {
   const {             reqHandler: updateReq } = useFetch<Post[]>([]);
   const { data: user, reqHandler: fetchUser } = useFetch<User>();
   const [  showModal,          setShowModal ] = useState(false);
+  const isInitial = useRef(true);
 
   useEffect(() => {
     const mountData = async () => {
       await Promise.all([
-        initialReq({ url: 'feed/posts' }),
+        initialReq({ url: 'feed/posts?page=1' }),
          fetchUser({ url: 'login' })
       ]);
     };
-    mountData();
-  }, [initialReq, fetchUser]);
 
-  useEffect(() => {
     const updateData = async () => {
-      const updatedData = await updateReq({ url: 'feed/posts' });
+      const updatedData = await updateReq({ url: 'feed/posts?page=3' });
       setData(updatedData);
     };
-    updateData();
-  }, [updateReq, setData, showModal]);
+
+    if (isInitial.current) {
+      isInitial.current = false;
+      mountData();
+      console.log('IS INITIAL');
+    } else {
+      updateData();
+      console.log('UPDATING');
+    }
+  }, [updateReq, initialReq, fetchUser, setData, showModal]);
 
   return (
     <>

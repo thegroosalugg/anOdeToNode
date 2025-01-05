@@ -6,6 +6,10 @@ import errorMsg from '../util/errorMsg';
 
 const getPosts: RequestHandler = async (req, res, next) => {
   try {
+    const page = +(req.query.page || 1);
+    const docsPerPage = 2;
+
+    console.log(page)
     const posts = await Post.find()
       .populate('author', 'name surname')
       .sort({ _id: -1 }); // newest first
