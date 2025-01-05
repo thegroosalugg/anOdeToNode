@@ -6,7 +6,7 @@ import Feed from '@/components/feed/Feed';
 import Loader from '@/components/loading/Loader';
 import Modal from '@/components/modal/Modal';
 import Button from '@/components/button/Button';
-import Form from '@/components/form/Form';
+import PostForm from '@/components/form/PostForm';
 import Error from '@/components/error/Error';
 
 export default function FeedPage() {
@@ -42,7 +42,7 @@ export default function FeedPage() {
   return (
     <>
       <Modal show={showModal} close={() => setShowModal(false)}>
-        <Form              callback={() => setShowModal(false)} />
+        <PostForm          callback={() => setShowModal(false)} />
       </Modal>
       {user && (
         <Button

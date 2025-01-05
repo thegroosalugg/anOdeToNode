@@ -54,6 +54,43 @@ const newPost: RequestHandler = async (req, res, next) => {
   }
 };
 
+const editPost: RequestHandler = async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const { title, content } = req.body;
+    const image = req.file;
+
+    const errors = getErrors(req);
+    if (hasErrors(errors)) {
+      res.status(422).json(errors);
+      if (image) unlink(image.path, (error) => errorMsg({ error, where: 'FS Unlink' }));
+      return;
+    }
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      res.status(404).json({ message: 'Post not found.' });
+      return;
+    }
+
+    post.title = title;
+    post.content = content;
+    if (image) {
+      if (post.imgURL) {
+        unlink(post.imgURL, (error) => error && errorMsg({ error, where: 'FS Unlink' }));
+      }
+      post.imgURL = image.path;
+    }
+
+    await post.save();
+    await post.populate('author', 'name surname');
+    res.status(200).json(post);
+  } catch (error) {
+    errorMsg({ error, where: 'editPost' });
+    res.status(500).json({ message: 'Unable to update your post.' });
+  }
+};
+
 const deletePost: RequestHandler = async (req, res, next) => {
   try {
     const { postId: _id } = req.params;
@@ -71,4 +108,4 @@ const deletePost: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { getPosts, getPostById, newPost, deletePost };
+export { getPosts, getPostById, newPost, editPost, deletePost };

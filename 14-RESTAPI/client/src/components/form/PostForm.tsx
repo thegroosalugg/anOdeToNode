@@ -4,18 +4,29 @@ import Post from '@/models/Post';
 import Input from './Input';
 import ImagePicker from './ImagePicker';
 import Button from '../button/Button';
-import css from './Form.module.css';
+import css from './PostForm.module.css';
 
-export default function Form({ callback }: { callback: () => void }) {
+export default function PostForm({
+       url = 'feed/new-post',
+    method = 'POST',
+  callback,
+      post,
+}: {
+      url?: 'feed/new-post' | `feed/post/${string}`;
+   method?: 'POST' | 'PUT';
+  callback: (post: Post) => void;
+     post?: Post | null
+}) {
   const { error, reqHandler } = useFetch<Post | null>(null);
   const [ scope,    animate ] = useAnimate();
+  const { title = '', content = '' } = post || {};
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    const post = await reqHandler({ url: 'feed/new-post', method: 'POST', data });
+    const post = await reqHandler({ url, method, data });
     if (post) {
-      callback();
+      callback(method === 'PUT' && post);
     } else {
       animate(
         'p',
@@ -26,11 +37,11 @@ export default function Form({ callback }: { callback: () => void }) {
   }
 
   return (
-    <form className={css['form']} onSubmit={submitHandler} ref={scope}>
+    <form className={css['post-form']} onSubmit={submitHandler} ref={scope}>
       <section className={css['inputs']}>
         <section>
-          <Input id='title' errors={error} />
-          <Input id='content' errors={error} text rows={5} />
+          <Input id='title'   errors={error} defaultValue={title} />
+          <Input id='content' errors={error} defaultValue={content} text rows={5} />
         </section>
         <ImagePicker style={{ marginTop: '2px' }} /> {/* applies to this layout only */}
       </section>

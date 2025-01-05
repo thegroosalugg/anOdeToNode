@@ -7,13 +7,13 @@ import Loader from '@/components/loading/Loader';
 import PostId from '@/components/post/PostId';
 import Error from '@/components/error/Error';
 import Modal from '@/components/modal/Modal';
-import Form from '@/components/form/Form';
+import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
 
 export default function PostPage() {
   const { postId } = useParams();
   const navigate = useNavigate();
-  const { data: post, reqHandler, isLoading, error } = useFetch<Post | null>(null, true);
+  const { data: post, setData, reqHandler, isLoading, error } = useFetch<Post | null>(null, true);
   const { data: user, reqHandler: fetchUser        } = useFetch<User | null>(null, true);
   const [modalState,   setModalState] = useState('');
 
@@ -27,6 +27,11 @@ export default function PostPage() {
     fetchPost();
   }, [postId, reqHandler, fetchUser]);
 
+  function updatePost(post: Post) {
+    setData(post);
+    setModalState('');
+  }
+
   async function deletePost() {
     setModalState('');
     const res = await reqHandler({ url: `feed/post/${postId}`, method: 'DELETE' });
@@ -35,8 +40,15 @@ export default function PostPage() {
 
   return (
     <>
-      <Modal show={modalState}               close={() => setModalState('')}>
-        {modalState ===  'edit'  && <Form callback={() => setModalState('')} />}
+      <Modal show={modalState} close={() => setModalState('')}>
+        {modalState ===  'edit'  && (
+          <PostForm
+            callback={updatePost}
+                 url={`feed/post/${postId}`}
+              method='PUT'
+                post={post}
+          />
+        )}
         {modalState === 'delete' && (
           <ConfirmDialog
             onConfirm={deletePost}

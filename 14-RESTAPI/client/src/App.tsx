@@ -12,6 +12,8 @@ import { far } from '@fortawesome/free-regular-svg-icons'; // import regular ico
 library.add(fab, fas, far);
 
 export default function App() {
+  console.clear(); // **LOGDATA
+
   const element = useRoutes(
     [
       { path: '/',             element: <FeedPage /> },
