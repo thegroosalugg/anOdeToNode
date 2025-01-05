@@ -13,7 +13,7 @@ export default function PostId({
   setModal,
 }: {
       post: Post;
-      user: User | null;
+      user: User | undefined;
   setModal: (modal: string) => void;
 }) {
   const { title, content, imgURL, author, updatedAt } = post;

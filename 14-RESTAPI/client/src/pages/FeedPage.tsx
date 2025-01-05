@@ -16,9 +16,9 @@ export default function FeedPage() {
     reqHandler: initialReq,
          error,
      isLoading,
-  } = useFetch<Post[]>([], true);
+  } = useFetch<Post[]>([]);
   const {             reqHandler: updateReq } = useFetch<Post[]>([]);
-  const { data: user, reqHandler: fetchUser } = useFetch<User | null>(null);
+  const { data: user, reqHandler: fetchUser } = useFetch<User>();
   const [  showModal,          setShowModal ] = useState(false);
 
   useEffect(() => {

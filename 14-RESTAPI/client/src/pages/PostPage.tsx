@@ -13,8 +13,8 @@ import ConfirmDialog from '@/components/dialog/ConfirmDialog';
 export default function PostPage() {
   const { postId } = useParams();
   const navigate = useNavigate();
-  const { data: post, setData, reqHandler, isLoading, error } = useFetch<Post | null>(null, true);
-  const { data: user, reqHandler: fetchUser        } = useFetch<User | null>(null, true);
+  const { data: post, setData, reqHandler, isLoading, error } = useFetch<Post>();
+  const { data: user, reqHandler: fetchUser        } = useFetch<User>();
   const [modalState,   setModalState] = useState('');
 
   useEffect(() => {

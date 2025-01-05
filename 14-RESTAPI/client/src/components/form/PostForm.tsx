@@ -15,9 +15,9 @@ export default function PostForm({
       url?: 'feed/new-post' | `feed/post/${string}`;
    method?: 'POST' | 'PUT';
   callback: (post: Post) => void;
-     post?: Post | null
+     post?: Post;
 }) {
-  const { error, reqHandler } = useFetch<Post | null>(null);
+  const { error, reqHandler } = useFetch<Post>();
   const [ scope,    animate ] = useAnimate();
   const { title = '', content = '' } = post || {};
 
