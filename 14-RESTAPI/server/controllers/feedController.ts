@@ -6,15 +6,18 @@ import errorMsg from '../util/errorMsg';
 
 const getPosts: RequestHandler = async (req, res, next) => {
   try {
-    const page = +(req.query.page || 1);
-    const docsPerPage = 2;
+    const  page = +(req.query.page || 1);
+    const limit = 4;
 
-    console.log(page)
-    const posts = await Post.find()
+    console.log(page, limit)
+    const docCount = await Post.find().countDocuments();
+    const    posts = await Post.find()
+      .skip((page - 1) * limit)
+      .limit(limit)
       .populate('author', 'name surname')
       .sort({ _id: -1 }); // newest first
 
-    res.status(200).json(posts);
+    res.status(200).json({ posts, docCount });
   } catch (error) {
     errorMsg({ error, where: 'getPosts' });
     res.status(500).json({ message: 'Unable to load posts.' });

@@ -10,7 +10,7 @@ export default function Feed({ feed }: { feed: Post[] }) {
 
   return (
     <ul className={css.feed}>
-      <AnimatePresence>
+      <AnimatePresence mode='popLayout'>
         {feed.length > 0 ? (
           feed.map(({ _id, title, content, updatedAt, author }, i) => (
             <motion.li

@@ -5,6 +5,7 @@
   align-self: center;
   width: 100%;
   max-width: 600px;
+  height: 560px;
   gap: 0.5rem;
 
   li {

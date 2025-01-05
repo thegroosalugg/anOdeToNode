@@ -8,30 +8,34 @@ import Modal from '@/components/modal/Modal';
 import Button from '@/components/button/Button';
 import PostForm from '@/components/form/PostForm';
 import Error from '@/components/error/Error';
+import Pagination, { Pages } from '@/components/pagination/Pagination';
+
+const initialData = { docCount: 0, posts: [] };
 
 export default function FeedPage() {
   const {
-          data: posts,
+          data,
        setData,
     reqHandler: initialReq,
          error,
      isLoading,
-  } = useFetch<Post[]>([]);
-  const {             reqHandler: updateReq } = useFetch<Post[]>([]);
+  } = useFetch<Pages<Post, 'posts'>>(initialData);
+  const {             reqHandler: updateReq } = useFetch<Pages<Post, 'posts'>>(initialData);
   const { data: user, reqHandler: fetchUser } = useFetch<User>();
   const [  showModal,          setShowModal ] = useState(false);
+  const [       page,               setPage ] = useState(1);
   const isInitial = useRef(true);
 
   useEffect(() => {
     const mountData = async () => {
       await Promise.all([
-        initialReq({ url: 'feed/posts?page=1' }),
+        initialReq({ url: `feed/posts?page=${page}` }),
          fetchUser({ url: 'login' })
       ]);
     };
 
     const updateData = async () => {
-      const updatedData = await updateReq({ url: 'feed/posts?page=3' });
+      const updatedData = await updateReq({ url: `feed/posts?page=${page}` });
       setData(updatedData);
     };
 
@@ -43,7 +47,7 @@ export default function FeedPage() {
       updateData();
       console.log('UPDATING');
     }
-  }, [updateReq, initialReq, fetchUser, setData, showModal]);
+  }, [updateReq, initialReq, fetchUser, setData, page, showModal]);
 
   return (
     <>
@@ -59,7 +63,13 @@ export default function FeedPage() {
           New Post
         </Button>
       )}
-      {isLoading ? <Loader /> : error ? <Error error={error} /> : <Feed feed={posts} />}
+      {isLoading ? <Loader /> : error ? <Error error={error} /> : <Feed feed={data.posts} />}
+      <Pagination
+              limit={4}
+           docCount={data.docCount}
+           isActive={page}
+        setIsActive={setPage}
+      />
     </>
   );
 }
