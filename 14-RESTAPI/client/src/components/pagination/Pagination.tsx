@@ -31,7 +31,7 @@ export default function Pagination({
         limit: number;
      docCount: number;
      isActive: number;
-  setIsActive: (page: number) => void;
+  setIsActive: (pages: number[]) => void;
 }) {
   const   last = Math.ceil(docCount / limit);
   const middle = last < 5 ? 3 : Math.min(Math.max(isActive, 3), last - 2);
@@ -49,12 +49,12 @@ export default function Pagination({
         {pages.map((page) => {
           const onActive = isActive === page;
           return (
-            <AnimatePresence mode='popLayout'>
+            <AnimatePresence key={page}>
               {last > 5 && page === last && pages[3] !== last - 1 && <Ellipsis key='e1' />}
               <motion.button
                   layout
                     key={page}
-                onClick={() => setIsActive(page)}
+                onClick={() => setIsActive([isActive, page])}
                 animate={{
                    background: onActive ? '#a2c31f' : '#ededed',
                   borderColor: onActive ? '#000000' : 'var(--team-green)',

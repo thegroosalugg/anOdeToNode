@@ -5,8 +5,10 @@ import css from './Feed.module.css';
 import ProfilePic from '../profile/ProfilePic';
 import { timeAgo } from '@/util/timeStamps';
 
-export default function Feed({ feed }: { feed: Post[] }) {
+export default function Feed({ feed, pages }: { feed: Post[], pages: number[] }) {
   const navigate = useNavigate();
+  const direction = pages[0] < pages[1] ? 1 : -1;
+  const x = 50 * direction;
 
   return (
     <ul className={css.feed}>
@@ -17,9 +19,9 @@ export default function Feed({ feed }: { feed: Post[] }) {
                layout
                   key={_id}
               onClick={() => navigate(`/post/${_id}`)}
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x:   0, transition: { duration: 0.5, delay: i * 0.1 } }}
-                 exit={{ opacity: 0, x:  50, transition: { duration: 0.5 } }}
+              initial={{ opacity: 0, x }}
+              animate={{ opacity: 1, x:  0, transition: { duration: 0.5, delay: i * 0.1 } }}
+                 exit={{ opacity: 0, x: -x, transition: { duration: 0.5 } }}
             >
               <h3>
                 <ProfilePic user={author} />

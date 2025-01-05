@@ -23,19 +23,19 @@ export default function FeedPage() {
   const {             reqHandler: updateReq } = useFetch<Pages<Post, 'posts'>>(initialData);
   const { data: user, reqHandler: fetchUser } = useFetch<User>();
   const [  showModal,          setShowModal ] = useState(false);
-  const [       page,               setPage ] = useState(1);
+  const [      pages,              setPages ] = useState([1, 1]); // 0: prevPage, 1: currentPage
   const isInitial = useRef(true);
 
   useEffect(() => {
     const mountData = async () => {
       await Promise.all([
-        initialReq({ url: `feed/posts?page=${page}` }),
+        initialReq({ url: `feed/posts?page=${pages[1]}` }),
          fetchUser({ url: 'login' })
       ]);
     };
 
     const updateData = async () => {
-      const updatedData = await updateReq({ url: `feed/posts?page=${page}` });
+      const updatedData = await updateReq({ url: `feed/posts?page=${pages[1]}` });
       setData(updatedData);
     };
 
@@ -47,7 +47,7 @@ export default function FeedPage() {
       updateData();
       console.log('UPDATING');
     }
-  }, [updateReq, initialReq, fetchUser, setData, page, showModal]);
+  }, [updateReq, initialReq, fetchUser, setData, pages, showModal]);
 
   return (
     <>
@@ -63,12 +63,18 @@ export default function FeedPage() {
           New Post
         </Button>
       )}
-      {isLoading ? <Loader /> : error ? <Error error={error} /> : <Feed feed={data.posts} />}
+      {isLoading ? (
+        <Loader />
+      ) : error ? (
+        <Error error={error} />
+      ) : (
+        <Feed feed={data.posts} pages={pages} />
+      )}
       <Pagination
               limit={4}
            docCount={data.docCount}
-           isActive={page}
-        setIsActive={setPage}
+           isActive={pages[1]}
+        setIsActive={setPages}
       />
     </>
   );
