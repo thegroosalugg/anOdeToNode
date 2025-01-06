@@ -25,8 +25,14 @@
   padding: 1rem;
 }
 
-/* @media screen and (pointer: coarse) and (orientation: landscape) {
+/* side navbar on mobile landscape */
+@media screen and (pointer: coarse) and (orientation: landscape) {
   #root {
     flex-direction: row;
   }
-} */
+
+  #main {
+    /* align main content by width of nav bar (position fixed, not in element flow) */
+    margin-left: 64px;
+  }
+}

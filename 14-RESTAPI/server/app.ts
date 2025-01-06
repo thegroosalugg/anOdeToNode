@@ -11,8 +11,7 @@ import dotenv from 'dotenv';
 
 const app = express();
 
-app.use(express.static(join(import.meta.dirname, 'public'))); // serve static paths
-app.use('/uploads', express.static(join(import.meta.dirname, 'uploads')));
+app.use('/uploads', express.static(join(import.meta.dirname, 'uploads'))); // serve static paths
 
 // app.use(express.urlencoded({ extended: false })); // x-www-form-urlencoded <form>
 app.use(express.json()); // parse application/json

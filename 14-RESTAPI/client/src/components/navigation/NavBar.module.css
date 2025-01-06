@@ -1,13 +1,35 @@
 .nav {
   display: flex;
-  gap: 0.8rem;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.5rem;
   overflow-x: scroll;
   background: linear-gradient(to right, #1d9737, #52a456);
+
+  > h1 {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 900;
+    margin-right: 0.25rem;
+    margin-top: 0.25rem;
+  }
+
+  button {
+    &:last-of-type {
+      margin-left: auto;
+    }
+  }
 }
 
-/* @media screen and (pointer: coarse) and (orientation: landscape) {
+/* move nav bar to the left of screen on mobile landscape */
+@media screen and (pointer: coarse) and (orientation: landscape) {
   .nav {
     flex-direction: column;
+    position: fixed; /* ensures nav buttons do not scroll away */
+    height: 100vh;
+
+    > h1 {
+      display: none;
+    }
   }
-} */
+}

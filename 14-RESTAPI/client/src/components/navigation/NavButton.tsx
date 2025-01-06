@@ -4,7 +4,8 @@ import { isMobile } from 'react-device-detect';
 import css from './NavButton.module.css';
 
 const labels = {
-  '/': 'Feed',
+       '/': 'Feed',
+  '/login': 'Login'
 };
 
 interface NavProps {
@@ -15,7 +16,7 @@ interface NavProps {
 
 export default function NavButton({ path, navFn, isDebouncing }: NavProps) {
   const { pathname } = useLocation();
-  const   isActive   = pathname === path;
+  const   isActive   = pathname === path || (pathname.startsWith('/post') && path === '/');
   const   classes    = `${css['nav-button']} ${
     isActive ? css['active'] : ''} ${
     isMobile ? css['mobile'] : ''

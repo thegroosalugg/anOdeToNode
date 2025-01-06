@@ -13,7 +13,9 @@ export default function NavBar() {
 
   return (
     <nav className={css['nav']}>
+      <h1>Friendface</h1>
       <NavButton path='/' navFn={navTo} isDebouncing={isDebouncing} />
+      <NavButton path='/login' navFn={navTo} isDebouncing={isDebouncing} />
     </nav>
   );
 }
