@@ -1,5 +1,6 @@
 import { body, check, FieldValidationError, validationResult } from 'express-validator';
 import { Request } from 'express';
+import User from '../models/User';
 
 export const getErrors = (req: Request) =>
   validationResult(req)
@@ -20,21 +21,28 @@ export const validateField = (field: string, min: number) =>
 export const validateEmail = check('email')
   .isEmail()
   .withMessage('is invalid')
-  .toLowerCase();
+  .toLowerCase()
+  .custom(async (email, { req }) => {
+    const duplicate = await User.findOne({ email });
+    if (duplicate) {
+      throw new Error('already registered');
+    }
+    return true;
+  });
 
 export const validatePassword = body('password')
   .isLength({ min: 6 })
-  .withMessage('requires 6+ chars')
-  .custom((value, { req }) => {
-    if (value !== req.body.confirm_password) {
+  .withMessage('requires at least 6 characters')
+  .custom((password, { req }) => {
+    if (password !== req.body.confirm_password) {
       throw new Error("doesn't match");
     }
     return true;
   });
 
   export const validateSignUp = [
-    validateField('name', 3),
-    validateField('surname', 3),
+    validateField('name', 2),
+    validateField('surname', 2),
     validateEmail,
     validatePassword,
   ];

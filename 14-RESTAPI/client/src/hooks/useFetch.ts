@@ -25,7 +25,7 @@ const useFetch = <T>(initialData?: T) => {
     }
   }, []);
 
-  return { data, setData, isLoading, error, reqHandler };
+  return { data, setData, isLoading, error, setError, reqHandler };
 };
 
 export default useFetch;

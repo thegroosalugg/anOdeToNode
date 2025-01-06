@@ -23,11 +23,11 @@ export default function PostForm({
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
+    const data = new FormData(e.currentTarget); // multipart/form-data
     const post = await reqHandler({ url, method, data });
     if (post) {
-      callback(method === 'PUT' && post);
-    } else {
+      callback(post);
+    } else if (error) {
       animate(
         'p',
         { x: [null, 10, 0, 10, 0] },

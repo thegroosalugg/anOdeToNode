@@ -9,24 +9,34 @@ export default function Input({
        id,
      text,
    errors,
+  confirm,
  variants,
   ...props
 }: {
          id: string;
       text?: boolean;
      errors: FetchError | null;
+   confirm?: boolean;
   variants?: Variants;
 } & (HTMLProps<HTMLInputElement> & HTMLProps<HTMLTextAreaElement>)) {
-  const     Element = text ? 'textarea' : 'input';
-  const       error = (errors || {})[id as keyof typeof errors];
-  const       delay = 0.1 * (Object.keys(errors || {}).indexOf(id) + 1);
-  const       color = error ? 'var(--error-red)' : 'var(--team-green)';
-  const borderColor = color;
+  const     Element =    text ?         'textarea' : 'input';
+  const        name = confirm ?   'confirm_' + id  : id;
+  const       error =   errors?.[id];
+  const       color =   error ? 'var(--error-red)' : 'var(--team-green)';
+  const borderColor =   color;
+  let delay = 0.1 * (Object.keys(errors || {}).indexOf(id) + 1);
+  if (confirm) delay += 0.1;
 
   return (
     <motion.div className={css['input']} variants={variants}>
-      <label htmlFor={id}        style={{ color }}>{id.replaceAll('_', ' ')}</label>
-      <Element id={id} name={id} style={{ borderColor }} {...props} />
+      <label htmlFor={name} style={{ color }}>{name.replaceAll('_', ' ')}</label>
+      <Element
+           id={name}
+         name={name}
+        style={{ borderColor }}
+        {...(id === 'password' && { type: 'password' })} // does not add Type to textarea
+        {...props}
+      />
       <AnimatePresence>
         {error && (
           <motion.p

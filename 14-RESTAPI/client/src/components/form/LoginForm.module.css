@@ -5,7 +5,11 @@
   overflow-x: scroll;
   display: flex;
   flex-direction: column;
-  gap: 1.3rem;
+  gap: 1.4rem;
+
+  &::-webkit-scrollbar {
+    height: 0; /* appears on shake. Needs to be hidden on form */
+  }
 
   &.alternate {
     label {
