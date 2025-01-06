@@ -20,7 +20,7 @@ export default function PostPage() {
   useEffect(() => {
     const fetchPost = async () => {
       await Promise.all([
-         fetchUser({ url: 'login' }),
+        //  fetchUser({ url: 'login' }),
         reqHandler({ url: `feed/post/${postId}` })
       ]);
     }

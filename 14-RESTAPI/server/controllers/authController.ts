@@ -4,9 +4,20 @@ import User from '../models/User';
 import errorMsg from '../util/errorMsg';
 import { getErrors, hasErrors } from '../validation/validators';
 
-const getLogin: RequestHandler = async (req, res, next) => {
+const postLogin: RequestHandler = async (req, res, next) => {
   try {
-    const user = await User.findOne({ _id: '67768c6bfa4804119c44db20' });
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      res.status(404).json({ email: 'is incorrect' });
+      return;
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      res.status(404).json({ password: 'is incorrect' });
+      return;
+    }
+
     res.status(200).json(user);
   } catch (error) {
     errorMsg({ error, where: 'getLogin' });
@@ -35,4 +46,4 @@ const postSignup: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { getLogin, postSignup };
+export { postLogin, postSignup };

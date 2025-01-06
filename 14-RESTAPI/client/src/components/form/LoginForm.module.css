@@ -12,14 +12,6 @@
   }
 
   &.alternate {
-    label {
-      color: #597326 !important;
-    }
-
-    input {
-      border-color: #597326 !important;
-    }
-
     h2 {
       color: #a16512;
       border-color: #a16512;

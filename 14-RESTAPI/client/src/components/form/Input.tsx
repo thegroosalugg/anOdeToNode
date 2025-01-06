@@ -7,6 +7,7 @@ const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
 export default function Input({
        id,
+      clr = 'var(--team-green)',
      text,
    errors,
   confirm,
@@ -14,6 +15,7 @@ export default function Input({
   ...props
 }: {
          id: string;
+       clr?: string;
       text?: boolean;
      errors: FetchError | null;
    confirm?: boolean;
@@ -22,7 +24,7 @@ export default function Input({
   const     Element =    text ?         'textarea' : 'input';
   const        name = confirm ?   'confirm_' + id  : id;
   const       error =   errors?.[id];
-  const       color =   error ? 'var(--error-red)' : 'var(--team-green)';
+  const       color =   error ? 'var(--error-red)' : clr;
   const borderColor =   color;
   let delay = 0.1 * (Object.keys(errors || {}).indexOf(id) + 1);
   if (confirm) delay += 0.1;

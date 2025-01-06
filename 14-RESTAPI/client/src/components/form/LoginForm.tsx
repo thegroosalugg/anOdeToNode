@@ -13,8 +13,9 @@ export default function LoginForm({ callback }: { callback: (user: User) => void
   const    label = isLogin ? 'Login' : 'Sign Up';
   const variants = {
      hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.5 } },
+    visible: { opacity: 1, transition: { duration: 0.2 } },
   };
+  const color = isLogin ? '#597326' : '';
 
   function switchForm() {
     setIsLogin(prev => !prev);
@@ -51,20 +52,20 @@ export default function LoginForm({ callback }: { callback: (user: User) => void
         className={`${css['login-form']} ${isLogin ? css['alternate'] : ''}`}
           initial='hidden'
           animate='visible'
-             exit={{ opacity: 0, transition: { duration: 0.5 }}}
-       transition={{ staggerChildren: 0.3 }}
+             exit={{ opacity: 0, transition: { duration: 0.3}}}
+       transition={{ staggerChildren: 0.2 }}
       >
         <motion.h2 variants={variants}>{label}</motion.h2>
         {!isLogin &&
           <motion.section variants={variants}>
-            <Input id='name'           errors={error} />
-            <Input id='surname'        errors={error} />
+            <Input id='name'     errors={error} />
+            <Input id='surname'  errors={error} />
           </motion.section>
         }
-        <Input id='email'              errors={error} variants={variants} />
-        <Input id='password'           errors={error} variants={variants} />
+        <Input     id='email'    errors={error} variants={variants} clr={color} />
+        <Input     id='password' errors={error} variants={variants} clr={color} />
         {!isLogin &&
-          <Input id='password' confirm errors={error} variants={variants} />
+          <Input   id='password' errors={error} variants={variants} confirm />
         }
         <motion.button
                type='button'

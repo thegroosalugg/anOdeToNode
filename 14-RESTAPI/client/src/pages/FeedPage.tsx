@@ -30,7 +30,7 @@ export default function FeedPage() {
     const mountData = async () => {
       await Promise.all([
         initialReq({ url: `feed/posts?page=${pages[1]}` }),
-         fetchUser({ url: 'login' })
+        //  fetchUser({ url: 'login' })
       ]);
     };
 
@@ -42,10 +42,10 @@ export default function FeedPage() {
     if (isInitial.current) {
       isInitial.current = false;
       mountData();
-      console.log('IS INITIAL');
+      console.log('IS INITIAL'); // **LOGDATA
     } else {
       updateData();
-      console.log('UPDATING');
+      console.log('UPDATING'); // **LOGDATA
     }
   }, [updateReq, initialReq, fetchUser, setData, pages, showModal]);
 
