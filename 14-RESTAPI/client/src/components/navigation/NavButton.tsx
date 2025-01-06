@@ -4,8 +4,8 @@ import { isMobile } from 'react-device-detect';
 import css from './NavButton.module.css';
 
 const labels = {
-       '/': 'Feed',
-  '/login': 'Login'
+         '/': 'Feed',
+  '/account': 'Login'
 };
 
 interface NavProps {

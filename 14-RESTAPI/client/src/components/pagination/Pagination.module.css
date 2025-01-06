@@ -2,6 +2,9 @@
   display: flex;
   margin: 1rem auto 0;
   gap: 0.5rem;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  max-width: 100%;
 
   > span {
     color: var(--team-green);
@@ -10,7 +13,7 @@
   }
 
   > button {
-    width: 2rem;
+    min-width: 2rem;
     color: var(--team-green);
     border: 1.5px solid var(--team-green);
     background: #ededed;

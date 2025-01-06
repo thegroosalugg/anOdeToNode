@@ -2,6 +2,7 @@ import { useRoutes } from 'react-router-dom';
 import RootLayout from './pages/RootLayout';
 import FeedPage from './pages/FeedPage';
 import PostPage from './pages/PostPage';
+import UserPage from './pages/UserPage';
 import ErrorPage from './pages/ErrorPage';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -18,6 +19,7 @@ export default function App() {
     [
       { path: '/',             element: <FeedPage /> },
       { path: '/post/:postId', element: <PostPage /> },
+      { path: '/account',        element: <UserPage /> },
       { path: '*',             element: <ErrorPage /> },
     ]
   );

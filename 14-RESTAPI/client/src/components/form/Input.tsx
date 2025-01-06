@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, Variants } from 'motion/react';
 import { HTMLProps } from 'react';
 import { FetchError } from '@/hooks/useFetch';
 import css from './Input.module.css';
@@ -9,11 +9,13 @@ export default function Input({
        id,
      text,
    errors,
+ variants,
   ...props
 }: {
-      id: string;
-   text?: boolean;
-  errors: FetchError | null;
+         id: string;
+      text?: boolean;
+     errors: FetchError | null;
+  variants?: Variants;
 } & (HTMLProps<HTMLInputElement> & HTMLProps<HTMLTextAreaElement>)) {
   const     Element = text ? 'textarea' : 'input';
   const       error = (errors || {})[id as keyof typeof errors];
@@ -22,8 +24,8 @@ export default function Input({
   const borderColor = color;
 
   return (
-    <div className={css['input']}>
-      <label htmlFor={id}        style={{ color }}>{id}</label>
+    <motion.div className={css['input']} variants={variants}>
+      <label htmlFor={id}        style={{ color }}>{id.replaceAll('_', ' ')}</label>
       <Element id={id} name={id} style={{ borderColor }} {...props} />
       <AnimatePresence>
         {error && (
@@ -38,6 +40,6 @@ export default function Input({
           </motion.p>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
