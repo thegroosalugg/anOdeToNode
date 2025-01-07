@@ -1,9 +1,10 @@
-import { useAnimate, stagger } from 'motion/react';
+import { useAnimate, stagger, AnimatePresence, motion } from 'motion/react';
 import useFetch from '@/hooks/useFetch';
 import Post from '@/models/Post';
 import Input from './Input';
 import ImagePicker from './ImagePicker';
 import Button from '../button/Button';
+import Error from '../error/Error';
 import css from './PostForm.module.css';
 
 export default function PostForm({
@@ -27,7 +28,7 @@ export default function PostForm({
     const post = await reqHandler({ url, method, data });
     if (post) {
       callback(post);
-    } else if (error) {
+    } else if (error && !error.message) {
       animate(
         'p',
         { x: [null, 10, 0, 10, 0] },
@@ -37,15 +38,27 @@ export default function PostForm({
   }
 
   return (
-    <form className={css['post-form']} onSubmit={submitHandler} ref={scope}>
-      <section className={css['inputs']}>
-        <section>
-          <Input id='title'   errors={error} defaultValue={title} />
-          <Input id='content' errors={error} defaultValue={content} text rows={5} />
-        </section>
-        <ImagePicker style={{ marginTop: '2px' }} /> {/* applies to this layout only */}
-      </section>
-      <Button hsl={[28, 64, 50]}>Post</Button>
-    </form>
+    <AnimatePresence mode='wait'>
+      {error?.message ? (
+        <Error key='error' error={error} />
+      ) : (
+        <motion.form
+               key='form'
+          className={css['post-form']}
+           onSubmit={submitHandler}
+                ref={scope}
+               exit={{ opacity: 0, scale: 0.8 }}
+        >
+          <section className={css['inputs']}>
+            <section>
+              <Input id='title' errors={error} defaultValue={title} />
+              <Input id='content' errors={error} defaultValue={content} text rows={5} />
+            </section>
+            <ImagePicker style={{ marginTop: '2px' }} /> {/* applies to this layout only */}
+          </section>
+          <Button hsl={[28, 64, 50]}>Post</Button>
+        </motion.form>
+      )}
+    </AnimatePresence>
   );
 }
