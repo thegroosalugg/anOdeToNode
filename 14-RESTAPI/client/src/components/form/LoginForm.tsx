@@ -33,7 +33,9 @@ export default function LoginForm({ callback }: { callback: (user: User) => void
     });
 
     if (user) {
+      localStorage.setItem('token', user.token)
       callback(user);
+      setError(null);
     } else if (error) {
       animate(
         'p',
