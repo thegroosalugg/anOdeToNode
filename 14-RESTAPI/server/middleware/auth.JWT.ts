@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import { Types } from 'mongoose';
+import { unlink } from 'fs';
 import jwt from 'jsonwebtoken';
 import errorMsg from '../util/errorMsg';
 
@@ -19,12 +20,17 @@ export const authJWT: RequestHandler = (req, res, next) => {
     next();
   } catch (error) {
     errorMsg({ error, where: 'authJWT' });
+
+    if (req.file) // delete req files if middleware catches error before controller
+      unlink(req.file.path, (error) => errorMsg({ error, where: 'authJWT FS Unlink' }));
+
     const message =
       error instanceof jwt.TokenExpiredError
         ? 'Session expired'
         : error instanceof jwt.JsonWebTokenError
         ? 'Invalid session'
         : 'You were logged out';
+        
     res.status(401).json({ message });
   }
 };

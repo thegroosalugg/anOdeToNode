@@ -51,7 +51,7 @@ export default function PostForm({
         >
           <section className={css['inputs']}>
             <section>
-              <Input id='title' errors={error} defaultValue={title} />
+              <Input id='title'   errors={error} defaultValue={title} />
               <Input id='content' errors={error} defaultValue={content} text rows={5} />
             </section>
             <ImagePicker style={{ marginTop: '2px' }} /> {/* applies to this layout only */}
