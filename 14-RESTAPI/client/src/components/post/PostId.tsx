@@ -35,7 +35,8 @@ export default function PostId({
           {title}
         </motion.span>
         <span>
-          {author.name} {author.surname}
+          {author?.name    || 'Account '}
+          {author?.surname || 'deleted'}
         </span>
         <ProfilePic user={author} />
       </motion.h1>
@@ -65,7 +66,7 @@ export default function PostId({
       {user && (
         <motion.section className={css['buttons']} variants={variants}>
           <Button hsl={[180, 80, 35]}> Reply</Button>
-          {user._id === author._id && (
+          {user._id === author?._id && (
             <>
               <Button hsl={[28, 64, 50]} onClick={() => setModal('edit')}>
                 Edit

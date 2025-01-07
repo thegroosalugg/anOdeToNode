@@ -18,7 +18,7 @@ const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
   const resData  = await response.json();
 
   console.log(
-    'fetchData response:', response, '\n\n', 'resData', resData, '\n\nTOKEN', token
+    'RESPONSE:', response, '\n\n', 'RESDATA', resData, '\n\nTOKEN', token
   ); // **LOGDATA
 
   if (!response.ok) {

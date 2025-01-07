@@ -7,12 +7,12 @@ import Button from '../button/Button';
 import css from './PostForm.module.css';
 
 export default function PostForm({
-       url = 'feed/new-post',
+       url = 'admin/new-post',
     method = 'POST',
   callback,
       post,
 }: {
-      url?: 'feed/new-post' | `feed/post/${string}`;
+      url?: 'admin/new-post' | `admin/post/${string}`;
    method?: 'POST' | 'PUT';
   callback: (post: Post) => void;
      post?: Post;

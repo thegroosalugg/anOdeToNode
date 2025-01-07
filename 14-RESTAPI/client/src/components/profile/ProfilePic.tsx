@@ -5,7 +5,7 @@ import css from './ProfilePic.module.css';
 const fallback = '/fallback_user.png';
 
 export default function ProfilePic({ user, ...props }: { user: User }) {
-  const { name, imgURL } = user;
+  const { name, imgURL } = user || {};
   return (
     <img
       className={css['profile-pic']}

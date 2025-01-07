@@ -1,13 +1,18 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import multer from 'multer';
-import { join } from 'path';
-import { storage, fileFilter } from './middleware/multerConfig';
-import authRoutes from './routes/auth';
-import feedRoutes from './routes/feed';
-import errorMsg from './util/errorMsg';
-import dotenv from 'dotenv';
-       dotenv.config();
+import     express from 'express';
+import    mongoose from 'mongoose';
+import      multer from 'multer';
+import {   join  } from 'path';
+import {
+         storage,
+        fileFilter
+                 } from './middleware/multerConfig';
+import { authJWT } from './middleware/auth.JWT';
+import  authRoutes from './routes/auth';
+import adminRoutes from './routes/admin';
+import  feedRoutes from './routes/feed';
+import    errorMsg from './util/errorMsg';
+import      dotenv from 'dotenv';
+            dotenv.config();
 
 const app = express();
 
@@ -28,8 +33,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(authRoutes);
-app.use('/feed', feedRoutes);
+app.use(           authRoutes);
+app.use('/feed',   feedRoutes);
+app.use('/admin', adminRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI!)

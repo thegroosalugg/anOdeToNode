@@ -34,7 +34,7 @@ export default function PostPage() {
 
   async function deletePost() {
     setModalState('');
-    const res = await reqHandler({ url: `feed/post/${postId}`, method: 'DELETE' });
+    const res = await reqHandler({ url: `admin/post/${postId}`, method: 'DELETE' });
     if (res === null) navigate('/'); // null is returned to data state, confirming deletion
   }
 
@@ -44,7 +44,7 @@ export default function PostPage() {
         {modalState ===  'edit'  && (
           <PostForm
             callback={updatePost}
-                 url={`feed/post/${postId}`}
+                 url={`admin/post/${postId}`}
               method='PUT'
                 post={post}
           />

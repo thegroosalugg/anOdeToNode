@@ -26,7 +26,8 @@ export default function Feed({ feed, pages }: { feed: Post[], pages: number[] })
               <h3>
                 <ProfilePic user={author} />
                 <span>
-                  {author.name} {author.surname}
+                  {author?.name    || 'account '}
+                  {author?.surname || 'deleted'}
                 </span>
               </h3>
               <h2>
