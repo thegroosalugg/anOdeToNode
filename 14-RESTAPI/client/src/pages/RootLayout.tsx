@@ -8,7 +8,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       <NavBar />
-      <AnimatePresence mode='popLayout'>
+      <AnimatePresence mode='wait'>
         <motion.main
                   id='main'
                  key={pathname}

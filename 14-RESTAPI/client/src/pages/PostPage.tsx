@@ -14,13 +14,13 @@ export default function PostPage() {
   const { postId } = useParams();
   const navigate = useNavigate();
   const { data: post, setData, reqHandler, isLoading, error } = useFetch<Post>();
-  const { data: user, reqHandler: fetchUser        } = useFetch<User>();
+  const { data: user,          reqHandler: fetchUser        } = useFetch<User>();
   const [modalState,   setModalState] = useState('');
 
   useEffect(() => {
     const fetchPost = async () => {
       await Promise.all([
-        //  fetchUser({ url: 'login' }),
+         fetchUser({ url: 'user' }),
         reqHandler({ url: `feed/post/${postId}` })
       ]);
     }

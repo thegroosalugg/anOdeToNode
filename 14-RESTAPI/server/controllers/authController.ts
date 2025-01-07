@@ -5,6 +5,28 @@ import User from '../models/User';
 import errorMsg from '../util/errorMsg';
 import { getErrors, hasErrors } from '../validation/validators';
 
+const getUser: RequestHandler = async (req, res, next) => {
+  const token = req.get('authorization')?.split(' ')[1];
+
+  if (!token) {
+    res.status(404).json({ message: 'Session not found' });
+    return;
+  }
+
+  try {
+    const decodedTkn = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const user = await User.findById(decodedTkn.userId).select('-password');
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    errorMsg({ error, where: 'getUser' });
+    res.status(401).json({ message: 'Invalid session' });
+  }
+};
+
 const postLogin: RequestHandler = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -28,7 +50,7 @@ const postLogin: RequestHandler = async (req, res, next) => {
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
     res.status(200).json({ token, ...userDets });
   } catch (error) {
-    errorMsg({ error, where: 'getLogin' });
+    errorMsg({ error, where: 'postLogin' });
     res.status(500).json({ message: 'Unable to login.' });
   }
 };
@@ -58,4 +80,4 @@ const postSignup: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { postLogin, postSignup };
+export { getUser, postLogin, postSignup };

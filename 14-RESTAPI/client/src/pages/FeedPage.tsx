@@ -30,7 +30,7 @@ export default function FeedPage() {
     const mountData = async () => {
       await Promise.all([
         initialReq({ url: `feed/posts?page=${pages[1]}` }),
-        //  fetchUser({ url: 'login' })
+         fetchUser({ url: 'user' })
       ]);
     };
 
