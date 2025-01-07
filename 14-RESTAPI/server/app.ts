@@ -33,9 +33,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(           authRoutes);
-app.use('/feed',   feedRoutes);
-app.use('/admin', adminRoutes);
+app.use(                    authRoutes);
+app.use('/feed',            feedRoutes);
+app.use('/admin', authJWT, adminRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI!)

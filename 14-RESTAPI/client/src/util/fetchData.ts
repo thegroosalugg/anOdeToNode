@@ -22,7 +22,8 @@ const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
   ); // **LOGDATA
 
   if (!response.ok) {
-    throw { ...resData, status: response.status };
+    if (response.status === 401) localStorage.removeItem('token');
+    throw resData;
   }
 
   return resData;
