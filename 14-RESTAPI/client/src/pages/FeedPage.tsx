@@ -12,7 +12,7 @@ import Pagination, { Pages } from '@/components/pagination/Pagination';
 
 const initialData = { docCount: 0, posts: [] };
 
-export default function FeedPage() {
+export default function FeedPage({ user }: { user: User | null }) {
   const {
           data,
        setData,
@@ -20,18 +20,14 @@ export default function FeedPage() {
          error,
      isLoading,
   } = useFetch<Pages<Post, 'posts'>>(initialData);
-  const {             reqHandler: updateReq } = useFetch<Pages<Post, 'posts'>>(initialData);
-  const { data: user, reqHandler: fetchUser } = useFetch<User>();
-  const [  showModal,          setShowModal ] = useState(false);
-  const [      pages,              setPages ] = useState([1, 1]); // 0: prevPage, 1: currentPage
+  const { reqHandler: updateReq } = useFetch<Pages<Post, 'posts'>>(initialData);
+  const [showModal, setShowModal] = useState(false);
+  const [pages,         setPages] = useState([1, 1]); // 0: prevPage, 1: currentPage
   const isInitial = useRef(true);
 
   useEffect(() => {
     const mountData = async () => {
-      await Promise.all([
-        initialReq({ url: `feed/posts?page=${pages[1]}` }),
-         fetchUser({ url: 'user' })
-      ]);
+      await initialReq({ url: `feed/posts?page=${pages[1]}` });
     };
 
     const updateData = async () => {
@@ -47,7 +43,7 @@ export default function FeedPage() {
       updateData();
       console.log('UPDATING'); // **LOGDATA
     }
-  }, [updateReq, initialReq, fetchUser, setData, pages, showModal]);
+  }, [updateReq, initialReq, setData, pages, showModal]);
 
   return (
     <>

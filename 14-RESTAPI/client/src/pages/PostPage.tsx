@@ -1,5 +1,5 @@
 import useFetch from '@/hooks/useFetch';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Post from '@/models/Post';
 import User from '@/models/User';
@@ -10,22 +10,26 @@ import Modal from '@/components/modal/Modal';
 import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
 
-export default function PostPage() {
+export default function PostPage({ user }: { user: User | null }) {
+  const   navigate = useNavigate();
   const { postId } = useParams();
-  const navigate = useNavigate();
   const { data: post, setData, reqHandler, isLoading, error } = useFetch<Post>();
-  const { data: user,          reqHandler: fetchUser        } = useFetch<User>();
-  const [modalState,   setModalState] = useState('');
+  const [modalState, setModalState] = useState('');
+  const isInitial = useRef(true);
 
   useEffect(() => {
     const fetchPost = async () => {
-      await Promise.all([
-         fetchUser({ url: 'user' }),
-        reqHandler({ url: `feed/post/${postId}` })
-      ]);
+      if (postId) {
+        await reqHandler({ url: `feed/post/${postId}` });
+      }
     }
-    fetchPost();
-  }, [postId, reqHandler, fetchUser]);
+
+    if (isInitial.current) {
+      isInitial.current = false;
+      console.log('postID', postId); //**LOGDATA
+      fetchPost();
+    }
+  }, [postId, reqHandler]);
 
   function updatePost(post: Post) {
     setData(post);
