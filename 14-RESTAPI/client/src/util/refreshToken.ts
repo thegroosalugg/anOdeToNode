@@ -12,9 +12,12 @@ const refreshToken = async (refresh?: boolean) => {
 
     const token = await response.json();
     if (token) {
-      localStorage.setItem('jwt-access', token);
-      return token;
+      const { JWTaccess, JWTrefresh } = token;
+      localStorage.setItem('jwt-access',  JWTaccess);
+      localStorage.setItem('jwt-refresh', JWTrefresh);
+      return JWTaccess;
     } else {
+      localStorage.removeItem('jwt-access');
       localStorage.removeItem('jwt-refresh');
     }
   }

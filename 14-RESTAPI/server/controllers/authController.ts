@@ -44,12 +44,13 @@ const postLogin: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const JWTaccess = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
+    const userId = user._id;
+    const JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
       expiresIn: '15m',
     });
 
-    const JWTrefresh = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH!, {
-      expiresIn: '30d',
+    const JWTrefresh = jwt.sign({ userId }, process.env.JWT_REFRESH!, {
+      expiresIn: '7d',
     });
 
 
@@ -76,12 +77,13 @@ const postSignup: RequestHandler = async (req, res, next) => {
     const user = new User({ name, surname, email, password: hashed });
     await user.save();
 
-    const JWTaccess = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
+    const userId = user._id;
+    const JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
       expiresIn: '15m',
     });
 
-    const JWTrefresh = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH!, {
-      expiresIn: '30d',
+    const JWTrefresh = jwt.sign({ userId }, process.env.JWT_REFRESH!, {
+      expiresIn: '7d',
     });
 
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
@@ -102,10 +104,14 @@ const refreshToken: RequestHandler = (req, res, next) => {
 
   try {
     const decodedTkn = jwt.verify(token, process.env.JWT_REFRESH!) as JwtPayload;
-    const  JWTaccess = jwt.sign({ userId: decodedTkn.userId }, process.env.JWT_SECRET!, {
+    const { userId } = decodedTkn;
+    const  JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
       expiresIn: '15m',
     });
-    res.status(200).json(JWTaccess);
+    const JWTrefresh = jwt.sign({ userId }, process.env.JWT_REFRESH!, {
+      expiresIn: '7d',
+    });
+    res.status(200).json({ JWTaccess, JWTrefresh });
   } catch (error) {
     errorMsg({ error, where: 'refreshToken' });
     res.status(401).json(null);
