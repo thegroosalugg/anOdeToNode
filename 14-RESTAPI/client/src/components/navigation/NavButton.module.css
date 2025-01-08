@@ -1,0 +1,57 @@
+.nav-button {
+  color: #ffffff;
+  transition: 0.5s ease-in-out;
+  padding: 0.25rem;
+  font-family: "Oswald", serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  background: none;
+  border: none;
+  position: relative;
+
+  .active-tab {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #b7cc15;
+    left: 0;
+    bottom: 0.1rem;
+    border-radius: 3px;
+    transition: background 0.5s ease-in-out;
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  &.active {
+    color: #b7cc15;
+
+    &:hover {
+      color: #8d9e10;
+
+      .active-tab {
+        background: #8d9e10;
+      }
+    }
+  }
+
+  &:hover {
+    color: #bebcbc;
+
+    .active-tab {
+      background: #bebcbc;
+    }
+  }
+
+  &.mobile {
+    &:hover {
+      color: #b7cc15;
+
+      .active-tab {
+        background: #b7cc15;
+      }
+    }
+  }
+}

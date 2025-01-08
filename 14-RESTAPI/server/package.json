@@ -1,0 +1,29 @@
+{
+  "name": "14-restapi-server",
+  "version": "1.0.0",
+  "description": "REST API - The Node Express Server",
+  "main": "app.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "clear && tsx app.ts",
+    "dev": "clear && nodemon -x tsx app.ts",
+    "build": "tsc && tsc-alias",
+    "preview": "clear && node dist/app.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-validator": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.3",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/multer": "^1.4.12",
+    "tsc-alias": "^1.8.10"
+  }
+}

@@ -1,0 +1,65 @@
+.feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  width: 100%;
+  max-width: 600px;
+  height: 560px;
+  gap: 0.5rem;
+
+  li {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--team-green);
+    background: var(--box-gradient);
+    cursor: pointer;
+
+    > h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 20px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--team-green);
+      padding-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 *, p, h3 span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    h2, h3 span {
+      white-space: nowrap;
+    }
+
+    h2 {
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+
+      span {
+        max-width: 70%;
+      }
+
+      time {
+        color: var(--text-grey);
+        font-size: 0.8rem;
+      }
+    }
+
+    p {
+      margin-top: 0.2rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+      box-orient: vertical;
+      color: var(--text-grey);
+    }
+  }
+}

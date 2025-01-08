@@ -8,12 +8,14 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/01-TheBasics/app.ts",
+      "program": "${workspaceFolder}/14-RESTAPI/server/app.ts",
       "outFiles": [
-        "${workspaceFolder}/01-TheBasics/**/*.js"
+        "${workspaceFolder}/14-RESTAPI/server/**/*.js"
       ],
       "restart": true, // nodemon config
-      "runtimeExecutable": "nodemon", // set to nodemon or ts-node
+      // "runtimeExecutable": "tsx", // set to TSX to run TypeScript
+      "runtimeExecutable": "nodemon",
+      "runtimeArgs": ["-x", "tsx"] // allows to use Nodemon with TSX
     }
   ]
 }
