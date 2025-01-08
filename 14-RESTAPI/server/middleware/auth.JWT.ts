@@ -24,13 +24,14 @@ export const authJWT: RequestHandler = (req, res, next) => {
     if (req.file) // delete req files if middleware catches error before controller
       unlink(req.file.path, (error) => errorMsg({ error, where: 'authJWT FS Unlink' }));
 
+    const refresh = error instanceof jwt.TokenExpiredError;
     const message =
       error instanceof jwt.TokenExpiredError
         ? 'Session expired'
         : error instanceof jwt.JsonWebTokenError
         ? 'Invalid session'
         : 'You were logged out';
-        
-    res.status(401).json({ message });
+
+    res.status(401).json({ message, refresh });
   }
 };

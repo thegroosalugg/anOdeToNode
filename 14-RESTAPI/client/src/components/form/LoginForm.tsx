@@ -33,7 +33,8 @@ export default function LoginForm({ callback }: { callback: (user: User) => void
     });
 
     if (user) {
-      localStorage.setItem('token', user.token)
+      localStorage.setItem('jwt-access',  user.JWTaccess);
+      localStorage.setItem('jwt-refresh', user.JWTrefresh);
       callback(user);
       setError(null);
     } else if (error) {

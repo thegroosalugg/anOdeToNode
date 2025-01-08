@@ -23,7 +23,8 @@ const getUser: RequestHandler = async (req, res, next) => {
     res.status(200).json(user);
   } catch (error) {
     errorMsg({ error, where: 'getUser' });
-    res.status(401).json({ message: 'Invalid session' });
+    const refresh = error instanceof jwt.TokenExpiredError;
+    res.status(401).json({ message: 'Invalid session', refresh });
   }
 };
 
@@ -43,12 +44,17 @@ const postLogin: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
+    const JWTaccess = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
       expiresIn: '15m',
     });
 
+    const JWTrefresh = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH!, {
+      expiresIn: '30d',
+    });
+
+
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
-    res.status(200).json({ token, ...userDets });
+    res.status(200).json({ JWTaccess, JWTrefresh, ...userDets });
   } catch (error) {
     errorMsg({ error, where: 'postLogin' });
     res.status(500).json({ message: 'Unable to login.' });
@@ -69,15 +75,41 @@ const postSignup: RequestHandler = async (req, res, next) => {
     const hashed = await bcrypt.hash(password, 12);
     const user = new User({ name, surname, email, password: hashed });
     await user.save();
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
+
+    const JWTaccess = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
       expiresIn: '15m',
     });
+
+    const JWTrefresh = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH!, {
+      expiresIn: '30d',
+    });
+
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
-    res.status(201).json({ token, ...userDets });
+    res.status(201).json({ JWTaccess, JWTrefresh, ...userDets });
   } catch (error) {
     errorMsg({ error, where: 'postSignup' });
     res.status(500).json({ message: 'Sign up failed.' });
   }
 };
 
-export { getUser, postLogin, postSignup };
+const refreshToken: RequestHandler = (req, res, next) => {
+  const token = req.get('authorization')?.split(' ')[1];
+
+  if (!token) {
+    res.status(401).json({ message: 'No refresh token provided' });
+    return;
+  }
+
+  try {
+    const decodedTkn = jwt.verify(token, process.env.JWT_REFRESH!) as JwtPayload;
+    const  JWTaccess = jwt.sign({ userId: decodedTkn.userId }, process.env.JWT_SECRET!, {
+      expiresIn: '15m',
+    });
+    res.status(200).json(JWTaccess);
+  } catch (error) {
+    errorMsg({ error, where: 'refreshToken' });
+    res.status(401).json(null);
+  }
+}
+
+export { getUser, postLogin, postSignup, refreshToken };
