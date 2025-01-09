@@ -4,7 +4,7 @@ import { AuthProps } from '@/pages/RootLayout';
 import NavButton from './NavButton';
 import css from './NavBar.module.css';
 
-export default function NavBar({ auth }: { auth: AuthProps }) {
+export default function NavBar({ user }: AuthProps) {
   const navigate = useNavigate();
   const { isDebouncing, throttleFn } = useDebounce();
 
@@ -16,7 +16,7 @@ export default function NavBar({ auth }: { auth: AuthProps }) {
     <nav className={css['nav']}>
       <h1>Friendface</h1>
       <NavButton path='/'        navFn={navTo} isDebouncing={isDebouncing} />
-      <NavButton path='/account' navFn={navTo} isDebouncing={isDebouncing} {...auth} />
+      <NavButton path='/account' navFn={navTo} isDebouncing={isDebouncing} user={user} />
     </nav>
   );
 }

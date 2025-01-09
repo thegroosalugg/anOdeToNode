@@ -7,7 +7,7 @@ import User from '@/models/User';
 
 export interface AuthProps {
        user: User | null;
-    setData: Dispatch<SetStateAction<User>>;
+    setData: Dispatch<SetStateAction<User | null>>;
   isLoading: boolean;
       error: FetchError | null;
  }
@@ -18,7 +18,7 @@ export default function RootLayout({
   children: (props: AuthProps) => React.ReactNode;
 }) {
   const { pathname } = useLocation();
-  const { data: user, setData, reqHandler, isLoading, error } = useFetch<User>();
+  const { data: user, setData, reqHandler, isLoading, error } = useFetch<User | null>();
   const props = { user, setData, isLoading, error };
 
   useEffect(() => {
@@ -30,13 +30,13 @@ export default function RootLayout({
 
   return (
     <>
-      <NavBar auth={props} />
+      <NavBar {...props} />
       <AnimatePresence mode='wait'>
         <motion.main
                   id='main'
                  key={pathname}
                 exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
         >
           {children(props)}
         </motion.main>
