@@ -5,9 +5,13 @@
   align-self: center;
   width: 100%;
   max-width: 600px;
-  height: 560px;
+  /* height: 560px; */
   gap: 0.5rem;
 
+  .fallback{
+    text-align: center;
+  }
+  
   li {
     width: 100%;
     padding: 1rem;

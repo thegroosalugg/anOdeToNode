@@ -55,7 +55,10 @@ export default function Pagination({
                   layout
                     key={page}
                 onClick={() => setIsActive([isActive, page])}
+             transition={{ opacity: { duration: 0.5, ease: 'linear' }}}
+                initial={{ opacity: 0 }}
                 animate={{
+                      opacity: 1,
                    background: onActive ? '#a2c31f' : '#ededed',
                   borderColor: onActive ? '#000000' : 'var(--team-green)',
                         color: onActive ? '#000000' : 'var(--team-green)'

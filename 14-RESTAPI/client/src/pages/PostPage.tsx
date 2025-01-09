@@ -1,8 +1,8 @@
 import useFetch from '@/hooks/useFetch';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { AuthProps } from './RootLayout';
 import Post from '@/models/Post';
-import User from '@/models/User';
 import Loader from '@/components/loading/Loader';
 import PostId from '@/components/post/PostId';
 import Error from '@/components/error/Error';
@@ -10,7 +10,7 @@ import Modal from '@/components/modal/Modal';
 import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
 
-export default function PostPage({ user }: { user: User | null }) {
+export default function PostPage({ user }: AuthProps) {
   const   navigate = useNavigate();
   const { postId } = useParams();
   const { data: post, setData, reqHandler, isLoading, error } = useFetch<Post>();
@@ -26,7 +26,7 @@ export default function PostPage({ user }: { user: User | null }) {
 
     if (isInitial.current) {
       isInitial.current = false;
-      console.log('postID', postId); //**LOGDATA
+      console.log('POSTPAGE effect, ID:', postId); //**LOGDATA
       fetchPost();
     }
   }, [postId, reqHandler]);

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, ReactNode, useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 import NavBar from '@/components/navigation/NavBar';
@@ -7,7 +7,7 @@ import User from '@/models/User';
 
 export interface AuthProps {
        user: User | null;
-    setData: Dispatch<SetStateAction<User | null>>;
+    setUser: Dispatch<SetStateAction<User | null>>;
   isLoading: boolean;
       error: FetchError | null;
  }
@@ -15,18 +15,20 @@ export interface AuthProps {
 export default function RootLayout({
   children,
 }: {
-  children: (props: AuthProps) => React.ReactNode;
+  children: (props: AuthProps) => ReactNode;
 }) {
   const { pathname } = useLocation();
-  const { data: user, setData, reqHandler, isLoading, error } = useFetch<User | null>();
-  const props = { user, setData, isLoading, error };
+  const { data: user, setData: setUser, reqHandler, isLoading, error } = useFetch<User | null>();
+  const props = { user, setUser, isLoading, error };
 
   useEffect(() => {
     const mountData = async () => await reqHandler({ url: 'user' });
-    console.log('ROOT LAYOUT');
 
+    console.log('ROOT Mount Data'); // **LOGDATA
     mountData();
   }, [reqHandler, pathname]);
+
+  console.log('ROOT RENDER CYCLE'); // **LOGDATA
 
   return (
     <>

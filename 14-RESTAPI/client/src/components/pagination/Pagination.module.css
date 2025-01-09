@@ -18,4 +18,8 @@
     border: 1.5px solid var(--team-green);
     background: #ededed;
   }
+
+  &::-webkit-scrollbar {
+    height: 0; /* appears on shake. Needs to be hidden on form */
+  }
 }

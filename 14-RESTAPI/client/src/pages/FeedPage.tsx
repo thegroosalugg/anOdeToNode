@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
-import User from '@/models/User';
+import { AuthProps } from './RootLayout';
 import Post from '@/models/Post';
 import Feed from '@/components/feed/Feed';
 import Loader from '@/components/loading/Loader';
@@ -12,7 +12,7 @@ import Pagination, { Pages } from '@/components/pagination/Pagination';
 
 const initialData = { docCount: 0, posts: [] };
 
-export default function FeedPage({ user }: { user: User | null }) {
+export default function FeedPage({ user, isLoading: fetchingUser }: AuthProps) {
   const {
           data,
        setData,
@@ -38,10 +38,10 @@ export default function FeedPage({ user }: { user: User | null }) {
     if (isInitial.current) {
       isInitial.current = false;
       mountData();
-      console.log('IS INITIAL'); // **LOGDATA
+      console.log('FEEDPAGE INITIAL'); // **LOGDATA
     } else {
       updateData();
-      console.log('UPDATING'); // **LOGDATA
+      console.log('FEEDPAGE UPDATING'); // **LOGDATA
     }
   }, [updateReq, initialReq, setData, pages, showModal]);
 
@@ -50,28 +50,34 @@ export default function FeedPage({ user }: { user: User | null }) {
       <Modal show={showModal} close={() => setShowModal(false)}>
         <PostForm          callback={() => setShowModal(false)} />
       </Modal>
-      {user && (
-        <Button
-              hsl={[180, 80, 35]}
-            style={{ margin: '0 auto 1rem' }}
-          onClick={() => setShowModal(true)}
-        >
-          New Post
-        </Button>
+      {fetchingUser ? (
+        <p style={{ alignSelf: 'center' }}>Logging in...</p>
+      ) : (
+        user && (
+          <Button
+                hsl={[180, 80, 35]}
+              style={{ margin: '0 auto 1rem' }}
+            onClick={() => setShowModal(true)}
+          >
+            New Post
+          </Button>
+        )
       )}
       {isLoading ? (
         <Loader />
       ) : error ? (
         <Error error={error} />
       ) : (
-        <Feed feed={data.posts} pages={pages} />
+        <Feed data={data} pages={pages} />
       )}
-      <Pagination
-              limit={4}
-           docCount={data.docCount}
-           isActive={pages[1]}
-        setIsActive={setPages}
-      />
+      {data.docCount > 4 && (
+        <Pagination
+                limit={4}
+             docCount={data.docCount}
+             isActive={pages[1]}
+          setIsActive={setPages}
+        />
+      )}
     </>
   );
 }
