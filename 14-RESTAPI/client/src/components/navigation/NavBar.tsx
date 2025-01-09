@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
-import User from '@/models/User';
+import { AuthProps } from '@/pages/RootLayout';
 import NavButton from './NavButton';
 import css from './NavBar.module.css';
 
-export default function NavBar({ user }: { user: User }) {
+export default function NavBar({ auth }: { auth: AuthProps }) {
   const navigate = useNavigate();
-  const { isDebouncing, throttleFn } = useDebounce()
+  const { isDebouncing, throttleFn } = useDebounce();
 
   function navTo(path: string) {
     throttleFn(() => navigate(path), 1200);
@@ -16,7 +16,7 @@ export default function NavBar({ user }: { user: User }) {
     <nav className={css['nav']}>
       <h1>Friendface</h1>
       <NavButton path='/'        navFn={navTo} isDebouncing={isDebouncing} />
-      <NavButton path='/account' navFn={navTo} isDebouncing={isDebouncing} user={user} />
+      <NavButton path='/account' navFn={navTo} isDebouncing={isDebouncing} {...auth} />
     </nav>
   );
 }

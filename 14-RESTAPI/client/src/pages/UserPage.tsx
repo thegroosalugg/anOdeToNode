@@ -1,9 +1,9 @@
 import LoginForm from "@/components/form/LoginForm";
-import User from "@/models/User";
+import { AuthProps } from "./RootLayout";
 
-export default function UserPage({ user }: { user: User | null }) {
+export default function UserPage({ user, setData }: AuthProps) {
 
-  if (user) console.log('');
+  console.log(user, setData)
 
   return <LoginForm callback={(user) => console.log('LOGINFORM', user)} />
 }
