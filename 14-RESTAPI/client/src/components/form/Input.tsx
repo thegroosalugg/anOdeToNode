@@ -1,6 +1,7 @@
 import { motion, AnimatePresence, Variants } from 'motion/react';
 import { HTMLProps } from 'react';
 import { FetchError } from '@/hooks/useFetch';
+import ErrorPopUp from '../error/ErrorPopUp';
 import css from './Input.module.css';
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -40,16 +41,12 @@ export default function Input({
         {...props}
       />
       <AnimatePresence>
-        {error && (
-          <motion.p
-            className={css['error']}
-                style={{ translate: '-50%' }}
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale:   1, transition: { delay } }}
-                 exit={{ opacity: 0, scale: 0.5 }}
-          >
-            {capitalize(id) + ' ' + error}
-          </motion.p>
+      {error && (
+          <ErrorPopUp
+            error={capitalize(id) + ' ' + error}
+            delay={delay}
+            style={{ bottom: '-1.3rem', left: '50%', translate: '-50%' }}
+          />
         )}
       </AnimatePresence>
     </motion.div>
