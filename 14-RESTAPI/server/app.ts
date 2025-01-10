@@ -1,18 +1,19 @@
-import     express from 'express';
-import    mongoose from 'mongoose';
-import      multer from 'multer';
-import {   join  } from 'path';
+import       express from 'express';
+import      mongoose from 'mongoose';
+import        multer from 'multer';
+import {    join   } from 'path';
 import {
          storage,
         fileFilter
-                 } from './middleware/multerConfig';
-import { authJWT } from './middleware/auth.JWT';
-import  authRoutes from './routes/auth';
-import  postRoutes from './routes/post';
-import  feedRoutes from './routes/feed';
-import    errorMsg from './util/errorMsg';
-import      dotenv from 'dotenv';
-            dotenv.config();
+                   } from './middleware/multerConfig';
+import {   authJWT } from './middleware/auth.JWT';
+import    authRoutes from './routes/auth';
+import    postRoutes from './routes/post';
+import    feedRoutes from './routes/feed';
+import profileRoutes from './routes/profile';
+import      errorMsg from './util/errorMsg';
+import        dotenv from 'dotenv';
+              dotenv.config();
 
 const app = express();
 
@@ -33,9 +34,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(                  authRoutes);
-app.use('/feed',          feedRoutes);
-app.use('/post', authJWT, postRoutes);
+app.use(                        authRoutes);
+app.use('/feed',                feedRoutes);
+app.use('/post',    authJWT,    postRoutes);
+app.use('/profile', authJWT, profileRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI!)

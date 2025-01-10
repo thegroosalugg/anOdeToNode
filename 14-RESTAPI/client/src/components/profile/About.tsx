@@ -1,3 +1,4 @@
+import useFetch from '@/hooks/useFetch';
 import { useState } from 'react';
 import { BASE_URL } from '@/util/fetchData';
 import User from '@/models/User';
@@ -9,10 +10,19 @@ import css from './About.module.css';
 export default function About({ user }: { user: User }) {
   const { name, surname, imgURL } = user;
   const [showModal, setShowModal] = useState(false);
+  const [displayPic, setDisplayPic] = useState(imgURL);
+  const { reqHandler } = useFetch();
 
-  function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
+    const res = await reqHandler({ url: 'profile/pic', method: 'POST', data });
+    if (res.imgURL) {
+      setDisplayPic(res.imgURL);
+    } else if (res.message) {
+      //
+    }
+    setShowModal(false);
   }
 
   return (
@@ -29,7 +39,7 @@ export default function About({ user }: { user: User }) {
           {name} {surname}
         </h1>
         <div onClick={() => setShowModal(true)}>
-          {imgURL ? <img src={BASE_URL + imgURL} alt={name} /> : <p>Upload an image</p>}
+          {displayPic ? <img src={BASE_URL + displayPic} alt={name} /> : <p>Upload an image</p>}
         </div>
       </section>
     </>
