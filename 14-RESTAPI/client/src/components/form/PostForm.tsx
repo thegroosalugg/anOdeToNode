@@ -8,12 +8,12 @@ import Error from '../error/Error';
 import css from './PostForm.module.css';
 
 export default function PostForm({
-       url = 'admin/new-post',
+       url = 'post/new',
     method = 'POST',
   callback,
       post,
 }: {
-      url?: 'admin/new-post' | `admin/post/${string}`;
+      url?: 'post/new' | `post/edit/${string}`;
    method?: 'POST' | 'PUT';
   callback: (post: Post) => void;
      post?: Post;

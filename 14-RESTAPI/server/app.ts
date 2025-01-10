@@ -8,7 +8,7 @@ import {
                  } from './middleware/multerConfig';
 import { authJWT } from './middleware/auth.JWT';
 import  authRoutes from './routes/auth';
-import adminRoutes from './routes/admin';
+import  postRoutes from './routes/post';
 import  feedRoutes from './routes/feed';
 import    errorMsg from './util/errorMsg';
 import      dotenv from 'dotenv';
@@ -33,9 +33,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(                    authRoutes);
-app.use('/feed',            feedRoutes);
-app.use('/admin', authJWT, adminRoutes);
+app.use(                  authRoutes);
+app.use('/feed',          feedRoutes);
+app.use('/post', authJWT, postRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI!)

@@ -20,13 +20,13 @@ export default function PostPage({ user }: AuthProps) {
   useEffect(() => {
     const fetchPost = async () => {
       if (postId) {
-        await reqHandler({ url: `feed/post/${postId}` });
+        await reqHandler({ url: `feed/find/${postId}` });
       }
     }
 
     if (isInitial.current) {
       isInitial.current = false;
-      console.log('POSTPAGE effect, ID:', postId); //**LOGDATA
+      console.log('POSTPAGE effect, ID:', postId); // **LOGDATA
       fetchPost();
     }
   }, [postId, reqHandler]);
@@ -38,7 +38,7 @@ export default function PostPage({ user }: AuthProps) {
 
   async function deletePost() {
     setModalState('');
-    const res = await reqHandler({ url: `admin/post/${postId}`, method: 'DELETE' });
+    const res = await reqHandler({ url: `post/delete/${postId}`, method: 'DELETE' });
     if (res === null) navigate('/'); // null is returned to data state, confirming deletion
   }
 
@@ -48,7 +48,7 @@ export default function PostPage({ user }: AuthProps) {
         {modalState ===  'edit'  && (
           <PostForm
             callback={updatePost}
-                 url={`admin/post/${postId}`}
+                 url={`post/edit/${postId}`}
               method='PUT'
                 post={post}
           />
