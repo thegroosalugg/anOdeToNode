@@ -20,7 +20,7 @@ export default function PostForm({
 }) {
   const { error, reqHandler } = useFetch<Post>();
   const [ scope,    animate ] = useAnimate();
-  const { title = '', content = '' } = post || {};
+  const { title = '', content = '', imgURL = '' } = post || {};
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -54,7 +54,7 @@ export default function PostForm({
               <Input id='title'   errors={error} defaultValue={title} />
               <Input id='content' errors={error} defaultValue={content} text rows={5} />
             </section>
-            <ImagePicker style={{ marginTop: '2px' }} /> {/* applies to this layout only */}
+            <ImagePicker imgURL={imgURL} style={{ marginTop: '2px' }} /> {/* applies to this layout only */}
           </section>
           <Button hsl={[28, 64, 50]}>Post</Button>
         </motion.form>

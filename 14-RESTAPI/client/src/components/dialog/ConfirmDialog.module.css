@@ -1,6 +1,8 @@
 .confirm-dialog {
   padding: 0.5rem;
   background: var(--box-gradient);
+  overflow-x: scroll;
+  width: 240px;
 
   > h2 {
     text-align: center;
@@ -15,7 +17,7 @@
 
     > button {
       width: 108px;
-      
+
       &:last-of-type {
         color: #252525;
       }
