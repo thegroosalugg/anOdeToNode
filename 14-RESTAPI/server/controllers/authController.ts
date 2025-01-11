@@ -6,26 +6,8 @@ import errorMsg from '../util/errorMsg';
 import { getErrors, hasErrors } from '../validation/validators';
 
 const getUser: RequestHandler = async (req, res, next) => {
-  const token = req.get('authorization')?.split(' ')[1];
-
-  if (!token) {
-    res.status(404).json({ message: 'Session not found' });
-    return;
-  }
-
-  try {
-    const decodedTkn = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    const user = await User.findById(decodedTkn.userId).select('-password');
-    if (!user) {
-      res.status(404).json({ message: 'User not found' });
-      return;
-    }
-    res.status(200).json(user);
-  } catch (error) {
-    errorMsg({ error, where: 'getUser' });
-    const refresh = error instanceof jwt.TokenExpiredError;
-    res.status(401).json({ message: 'Invalid session', refresh });
-  }
+  // handled by middleware, requires a controller to receive requests
+    res.status(200).json({...req.user?.toObject()});
 };
 
 const postLogin: RequestHandler = async (req, res, next) => {
@@ -94,7 +76,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
   }
 };
 
-const refreshToken: RequestHandler = (req, res, next) => {
+const refreshToken: RequestHandler = async (req, res, next) => {
   const token = req.get('authorization')?.split(' ')[1];
 
   if (!token) {
@@ -105,6 +87,11 @@ const refreshToken: RequestHandler = (req, res, next) => {
   try {
     const decodedTkn = jwt.verify(token, process.env.JWT_REFRESH!) as JwtPayload;
     const { userId } = decodedTkn;
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
     const  JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
       expiresIn: '15m',
     });

@@ -1,9 +1,9 @@
-import { Types } from "mongoose";
+import User from "../models/User";
 
 declare global {
   namespace Express {
     interface Request {
-      user: Types.ObjectId | null;
+      user: InstanceType<typeof User> | null;
     }
   }
 
