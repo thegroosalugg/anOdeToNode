@@ -9,6 +9,7 @@ import Error from '@/components/error/Error';
 import Modal from '@/components/modal/Modal';
 import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
+import { captainsLog } from '@/util/captainsLog';
 
 export default function PostPage({ user }: AuthProps) {
   const   navigate = useNavigate();
@@ -26,7 +27,7 @@ export default function PostPage({ user }: AuthProps) {
 
     if (isInitial.current) {
       isInitial.current = false;
-      console.log('POSTPAGE effect, ID:', postId); // **LOGDATA
+      captainsLog(-100, 30, ['POSTPAGE effect, ID:' + postId]); // **LOGDATA
       fetchPost();
     }
   }, [postId, reqHandler]);

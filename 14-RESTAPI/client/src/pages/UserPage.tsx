@@ -2,6 +2,7 @@ import LoginForm from '@/components/form/LoginForm';
 import { AuthProps } from './RootLayout';
 import Loader from '@/components/loading/Loader';
 import UserProfile from '@/components/profile/UserProfile';
+import { captainsLog } from '@/util/captainsLog';
 
 export default function UserPage({ user, setUser, isLoading }: AuthProps) {
   function logout() {
@@ -10,7 +11,7 @@ export default function UserPage({ user, setUser, isLoading }: AuthProps) {
     localStorage.removeItem('jwt-refresh');
   }
 
-  console.log('USER PAGE'); // **LOGDATA
+  captainsLog(-100, 250, ['USER PAGE']); // **LOGDATA
 
   return (
     <>

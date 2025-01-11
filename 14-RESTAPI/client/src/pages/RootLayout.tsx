@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import NavBar from '@/components/navigation/NavBar';
 import useFetch, { FetchError } from '@/hooks/useFetch';
 import User from '@/models/User';
+import { captainsLog } from '@/util/captainsLog';
 
 export interface AuthProps {
        user: User | null;
@@ -24,11 +25,11 @@ export default function RootLayout({
   useEffect(() => {
     const mountData = async () => await reqHandler({ url: 'user' });
 
-    console.log('ROOT Mount Data'); // **LOGDATA
+    captainsLog(-100, 105, ['ROOT Mount Data']); // **LOGDATA
     mountData();
   }, [reqHandler, pathname]);
 
-  console.log('ROOT RENDER CYCLE'); // **LOGDATA
+  captainsLog(105, -90, ['ROOT RENDER CYCLE user', user]); // **LOGDATA
 
   return (
     <>

@@ -1,3 +1,4 @@
+import { captainsLog } from './captainsLog';
 import refreshToken from './refreshToken';
 
 export interface Fetch {
@@ -19,7 +20,7 @@ const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
   const response = await fetch(BASE_URL + url, { method, headers, body });
   const resData  = await response.json();
 
-  // console.log('\n RESPONSE:', response, '\n\n RESDATA', resData); // **LOGDATA
+  captainsLog(-100, 20, ['RES', response, 'RESData', resData]); // **LOGDATA
 
   if (!response.ok) {
     if (response.status === 401) {
@@ -30,7 +31,7 @@ const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
         return await retryResponse.json();
       }
     }
-    throw resData;
+    throw { ...resData, status: response.status };
   }
 
   return resData;

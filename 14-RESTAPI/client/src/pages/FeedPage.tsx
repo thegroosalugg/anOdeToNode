@@ -9,6 +9,7 @@ import Button from '@/components/button/Button';
 import PostForm from '@/components/form/PostForm';
 import Error from '@/components/error/Error';
 import Pagination, { Pages } from '@/components/pagination/Pagination';
+import { captainsLog } from '@/util/captainsLog';
 
 const initialData = { docCount: 0, posts: [] };
 
@@ -32,18 +33,21 @@ export default function FeedPage({ user, isLoading: fetchingUser }: AuthProps) {
 
     const updateData = async () => {
       const updatedData = await updateReq({ url: `feed/posts?page=${pages[1]}` });
-      setData(updatedData);
+      captainsLog(270, -90, ['FEEDPAGE updatedData', updatedData] ); // **LOGDATA
+      if (updatedData) setData(updatedData);
     };
 
     if (isInitial.current) {
       isInitial.current = false;
       mountData();
-      console.log('FEEDPAGE INITIAL'); // **LOGDATA
+      captainsLog(-100, 260, ['FEEDPAGE INITIAL'] ); // **LOGDATA
     } else {
       updateData();
-      console.log('FEEDPAGE UPDATING'); // **LOGDATA
+      captainsLog(-100, 270, ['FEEDPAGE UPDATING'] ); // **LOGDATA
     }
   }, [updateReq, initialReq, setData, pages, showModal]);
+
+  captainsLog(270, -90, ['FEEDPAGE DATA', data] ); // **LOGDATA
 
   return (
     <>
