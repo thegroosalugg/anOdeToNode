@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import useFetch from '@/hooks/useFetch';
 import { motion, AnimatePresence, useAnimate, stagger } from 'motion/react';
+import User from '@/models/User';
 import Input from './Input';
 import Button from '../button/Button';
+import Loader from '../loading/Loader';
 import css from './LoginForm.module.css';
-import User from '@/models/User';
 
 export default function LoginForm({ callback }: { callback: (user: User) => void}) {
-  const { error, setError, reqHandler } = useFetch();
+  const { isLoading, error, setError, reqHandler } = useFetch();
   const [isLogin, setIsLogin] = useState(true);
   const [ scope,    animate ] = useAnimate();
   const    label = isLogin ? 'Login' : 'Sign Up';
@@ -79,7 +80,7 @@ export default function LoginForm({ callback }: { callback: (user: User) => void
           {isLogin ? 'Switch to Sign Up' : 'Already have an account? Login'}
         </motion.button>
         <Button hsl={isLogin ? [80, 50, 30] : [180, 80, 35]} variants={variants}>
-          {label}
+          {isLoading ? <Loader small /> : label}
         </Button>
       </motion.form>
     </AnimatePresence>

@@ -5,6 +5,7 @@ import Input from './Input';
 import ImagePicker from './ImagePicker';
 import Button from '../button/Button';
 import Error from '../error/Error';
+import Loader from '../loading/Loader';
 import css from './PostForm.module.css';
 
 export default function PostForm({
@@ -18,8 +19,8 @@ export default function PostForm({
   callback: (post: Post) => void;
      post?: Post;
 }) {
-  const { error, reqHandler } = useFetch<Post>();
-  const [ scope,    animate ] = useAnimate();
+  const { isLoading, error, reqHandler } = useFetch<Post>();
+  const [ scope, animate ] = useAnimate();
   const { title = '', content = '', imgURL = '' } = post || {};
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
@@ -56,7 +57,9 @@ export default function PostForm({
             </section>
             <ImagePicker imgURL={imgURL} style={{ marginTop: '2px' }} /> {/* applies to this layout only */}
           </section>
-          <Button hsl={[28, 64, 50]}>Post</Button>
+          <Button hsl={[28, 64, 50]}>
+            {isLoading ? <Loader small /> : 'Post'}
+          </Button>
         </motion.form>
       )}
     </AnimatePresence>

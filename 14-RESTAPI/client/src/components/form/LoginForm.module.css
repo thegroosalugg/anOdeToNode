@@ -9,6 +9,7 @@
 
   &::-webkit-scrollbar {
     height: 0; /* appears on shake. Needs to be hidden on form */
+    width: 0;
   }
 
   &.alternate {
@@ -64,5 +65,6 @@
 
   > button:last-of-type {
     align-self: end;
+    width: 84px;
   }
 }
