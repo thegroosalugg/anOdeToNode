@@ -1,13 +1,6 @@
 import { captainsLog } from '@/util/captainsLog';
-import fetchData, { Fetch } from '@/util/fetchData';
+import fetchData, { Fetch, FetchError } from '@/util/fetchData';
 import { useState, useCallback } from 'react';
-
-export type FetchError = {
-  [key: string]: string;
-} & {
-  message: string;
-   status: number;
-};
 
 const useFetch = <T>(initialData: T = null as T) => {
   const [     data,      setData] = useState<T>(initialData);

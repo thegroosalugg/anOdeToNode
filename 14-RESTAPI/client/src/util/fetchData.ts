@@ -6,6 +6,13 @@ export interface Fetch {
     data?: FormData | { [k: string]: FormDataEntryValue };
 }
 
+export type FetchError = {
+  [key: string]: string;
+} & {
+  message: string;
+   status: number;
+};
+
 export const BASE_URL = import.meta.env.VITE_SERVER_URL;
 
 const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
@@ -32,7 +39,7 @@ const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
   }
 
   if (!response.ok) {
-    throw { ...resData, status: response.status };
+    throw { ...resData, status: response.status } as FetchError;
   }
 
   return resData;

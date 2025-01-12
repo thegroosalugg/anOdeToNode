@@ -1,7 +1,8 @@
-import useFetch, { FetchError } from '@/hooks/useFetch';
+import useFetch from '@/hooks/useFetch';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthProps } from './RootLayout';
+import { FetchError } from '@/util/fetchData';
 import Post from '@/models/Post';
 import Loader from '@/components/loading/Loader';
 import PostId from '@/components/post/PostId';

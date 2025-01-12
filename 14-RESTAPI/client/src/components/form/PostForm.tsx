@@ -1,5 +1,6 @@
 import { useAnimate, stagger, AnimatePresence, motion } from 'motion/react';
-import useFetch, { FetchError } from '@/hooks/useFetch';
+import useFetch from '@/hooks/useFetch';
+import { FetchError } from '@/util/fetchData';
 import Post from '@/models/Post';
 import Input from './Input';
 import ImagePicker from './ImagePicker';

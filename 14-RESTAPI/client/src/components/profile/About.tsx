@@ -1,6 +1,6 @@
-import useFetch, { FetchError } from '@/hooks/useFetch';
+import useFetch from '@/hooks/useFetch';
 import { useState } from 'react';
-import { BASE_URL } from '@/util/fetchData';
+import { BASE_URL, FetchError } from '@/util/fetchData';
 import { motion, useAnimate, stagger } from 'motion/react';
 import { AuthProps } from '@/pages/RootLayout';
 import ImagePicker from '../form/ImagePicker';

@@ -1,6 +1,7 @@
-import useFetch, { FetchError } from '@/hooks/useFetch';
+import useFetch from '@/hooks/useFetch';
 import { useEffect, useState } from 'react';
 import { AuthProps } from '@/pages/RootLayout';
+import { FetchError } from '@/util/fetchData';
 import Post from '@/models/Post';
 import About from './About';
 import Modal from '../modal/Modal';
@@ -8,8 +9,9 @@ import Button from '../button/Button';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import css from './UserProfile.module.css';
 
-export default function UserProfile({ user, setUser }: Pick<AuthProps, 'user' | 'setUser'>) {
+export default function UserProfile({ user, setUser }: AuthProps) {
   const [showModal, setShowModal] = useState(false);
+  // eslint-disable-next-line
   const { data: posts, setData, isLoading, error, reqHandler } = useFetch<Post[]>([]);
 
   useEffect(() => {
@@ -43,6 +45,7 @@ export default function UserProfile({ user, setUser }: Pick<AuthProps, 'user' | 
       </Modal>
       <section className={css['user-profile']}>
         <About user={user} on401={on401} />
+
         <Button hsl={[10, 54, 51]} onClick={() => setShowModal(true)}>
           Logout
         </Button>

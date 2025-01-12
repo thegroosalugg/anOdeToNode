@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import useFetch, { FetchError } from '@/hooks/useFetch';
+import useFetch from '@/hooks/useFetch';
 import { AuthProps } from './RootLayout';
+import { FetchError } from '@/util/fetchData';
 import Post from '@/models/Post';
 import Feed from '@/components/feed/Feed';
 import Loader from '@/components/loading/Loader';

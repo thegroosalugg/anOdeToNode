@@ -1,14 +1,12 @@
 import { useState } from 'react';
-import useFetch from '@/hooks/useFetch';
 import { motion, useAnimate, stagger } from 'motion/react';
-import User from '@/models/User';
+import { AuthProps } from '@/pages/RootLayout';
 import Input from './Input';
 import Button from '../button/Button';
 import Loader from '../loading/Loader';
 import css from './LoginForm.module.css';
 
-export default function LoginForm({ callback }: { callback: (user: User) => void}) {
-  const { isLoading, error, setError, reqHandler } = useFetch<User | null>();
+export default function LoginForm({ isLoading, error, setError, reqUser }: AuthProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [ scope,    animate ] = useAnimate();
   const    label = isLogin ? 'Login' : 'Sign Up';
@@ -35,7 +33,7 @@ export default function LoginForm({ callback }: { callback: (user: User) => void
     e.preventDefault();
     const data = new FormData(e.currentTarget); // data parsed by multer
     // const data = Object.fromEntries(formData.entries()); // if application/json
-    const user = await reqHandler({
+    const user = await reqUser({
          url: isLogin ? 'login' : 'signup',
       method: 'POST',
         data,
@@ -44,7 +42,6 @@ export default function LoginForm({ callback }: { callback: (user: User) => void
     if (user) {
       localStorage.setItem('jwt-access',  user.JWTaccess);
       localStorage.setItem('jwt-refresh', user.JWTrefresh);
-      callback(user);
       setError(null);
     } else if (error) {
       animate(
@@ -57,6 +54,7 @@ export default function LoginForm({ callback }: { callback: (user: User) => void
 
   return (
     <motion.form
+             key={isLogin + ''}
              ref={scope}
         onSubmit={submitHandler}
        className={`${css['login-form']} ${isLogin ? css['alternate'] : ''}`}
