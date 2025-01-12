@@ -27,7 +27,7 @@ export default function App() {
     },
     {
          path: '/account',
-      element: <RootLayout children={(props) => <UserPage props={props} />} />,
+      element: <RootLayout children={(props) => <UserPage auth={props} />} />,
     },
     {    path: '*',
       element: <RootLayout children={() => <ErrorPage />} />,

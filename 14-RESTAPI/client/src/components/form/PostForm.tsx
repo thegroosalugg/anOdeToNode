@@ -1,6 +1,7 @@
 import { useAnimate, stagger, AnimatePresence, motion } from 'motion/react';
-import useFetch from '@/hooks/useFetch';
+import useFetch, { ReqConfig } from '@/hooks/useFetch';
 import { FetchError } from '@/util/fetchData';
+import { Auth } from '@/pages/RootLayout';
 import Post from '@/models/Post';
 import Input from './Input';
 import ImagePicker from './ImagePicker';
@@ -13,13 +14,13 @@ export default function PostForm({
         url = 'post/new',
      method = 'POST',
   onSuccess,
-      on401,
+    setUser,
        post,
 }: {
        url?: 'post/new' | `post/edit/${string}`;
     method?: 'POST' | 'PUT';
-  onSuccess: (post: Post) => void;
-      on401: (err: FetchError) => void;
+  onSuccess: ReqConfig<Post | null>['onSuccess'];
+    setUser: Auth['setUser'];
       post?: Post | null;
 }) {
   const { isLoading, error, reqHandler } = useFetch<Post | null>();
@@ -29,16 +30,19 @@ export default function PostForm({
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget); // multipart/form-data
-    const post = await reqHandler({ url, method, data }, on401);
-    if (post) {
-      onSuccess(post);
-    } else if (error && !error.message) {
-      animate(
-        'p',
-        { x: [null, 10, 0, 10, 0] },
-        { repeat: 1, duration: 0.3, delay: stagger(0.1) }
-      );
+
+    const onError = (err: FetchError) => {
+      if (error && !error.message) {
+        animate(
+          'p',
+          { x: [null, 10, 0, 10, 0] },
+          { repeat: 1, duration: 0.3, delay: stagger(0.1) }
+        );
+      }
+      if (err.status === 401) setUser(null);
     }
+
+    await reqHandler({ url, method, data }, { onError, onSuccess });
   }
 
   return (

@@ -2,24 +2,26 @@ import { Dispatch, SetStateAction, ReactNode, useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 import NavBar from '@/components/navigation/NavBar';
-import useFetch from '@/hooks/useFetch';
+import useFetch, { ReqConfig } from '@/hooks/useFetch';
 import { Fetch, FetchError } from '@/util/fetchData';
 import User from '@/models/User';
 import { captainsLog } from '@/util/captainsLog';
 
-export interface AuthProps {
-        user: User | null;
-     setUser: Dispatch<SetStateAction<User | null>>;
-     reqUser: (params: Fetch, cb?: () => void) => Promise<Record<string, string>>;
+type  isUser =       User | null;
+type isError = FetchError | null;
+export interface Auth {
+        user: isUser;
+     setUser: Dispatch<SetStateAction<isUser>>;
+     reqUser: (params: Fetch, config?: ReqConfig<isUser>) => Promise<isUser | void>;
    isLoading: boolean;
-       error: FetchError | null;
-    setError: Dispatch<SetStateAction<FetchError | null>>;
+       error: isError;
+    setError: Dispatch<SetStateAction<isError>>;
 }
 
 export default function RootLayout({
   children,
 }: {
-  children: (props: AuthProps) => ReactNode;
+  children: (props: Auth) => ReactNode;
 }) {
   const { pathname } = useLocation();
   const {
@@ -29,11 +31,11 @@ export default function RootLayout({
      isLoading,
          error,
       setError,
-  } = useFetch<User | null>();
+  } = useFetch<Auth['user']>();
   const props = { user, setUser, reqUser, isLoading, error, setError };
 
   useEffect(() => {                                                 // callback on Error
-    const mountData = async () => await reqUser({ url: 'user' }, () => setUser(null));
+    const mountData = async () => await reqUser({ url: 'user' }, { onError: () => setUser(null)});
     captainsLog(-100, 105, ['ROOT Mount Data']); // **LOGDATA
     mountData();
   }, [reqUser, setUser, pathname]);

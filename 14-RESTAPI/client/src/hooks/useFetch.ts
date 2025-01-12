@@ -2,25 +2,32 @@ import { captainsLog } from '@/util/captainsLog';
 import fetchData, { Fetch, FetchError } from '@/util/fetchData';
 import { useState, useCallback } from 'react';
 
+export interface ReqConfig<T> {
+  onSuccess?: (res:     T     ) => void;
+    onError?: (err: FetchError) => void;
+}
+
 const useFetch = <T>(initialData: T = null as T) => {
   const [     data,      setData] = useState<T>(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const [    error,     setError] = useState<FetchError | null>(null);
 
   const reqHandler = useCallback(
-    async (params: Fetch, callback?: (err: FetchError) => void) => {
+    async (params: Fetch, config?: ReqConfig<T>): Promise<T | void> => {
       if (params.method) console.clear(); // **LOGDATA
+      const { onSuccess, onError } = config || {};
       setIsLoading(true);
       try {
-        const response = await fetchData(params);
+        const response: T = await fetchData(params);
         setData(response);
         captainsLog(-100, 340, ['USE FETCH TRY', response]); // **LOGDATA
+        if (onSuccess) onSuccess(response);
         return response;
       } catch (err) {
         const fetchErr = err as FetchError;
         captainsLog(-100, 310, ['USE FETCH CATCH', fetchErr]); // **LOGDATA
         setError(fetchErr);
-        if (callback) callback(fetchErr); // i.e. setData of other states
+        if (onError) onError(fetchErr); // i.e. setData of other states
       } finally {
         setIsLoading(false);
       }

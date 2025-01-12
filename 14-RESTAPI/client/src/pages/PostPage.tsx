@@ -1,8 +1,7 @@
 import useFetch from '@/hooks/useFetch';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AuthProps } from './RootLayout';
-import { FetchError } from '@/util/fetchData';
+import { Auth } from './RootLayout';
 import Post from '@/models/Post';
 import Loader from '@/components/loading/Loader';
 import PostId from '@/components/post/PostId';
@@ -12,10 +11,10 @@ import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
 import { captainsLog } from '@/util/captainsLog';
 
-export default function PostPage({ user, setUser }: AuthProps) {
+export default function PostPage({ user, setUser }: Auth) {
   const   navigate = useNavigate();
   const { postId } = useParams();
-  const { data: post, setData, reqHandler, isLoading, error } = useFetch<Post | null>();
+  const { data: post, setData: setPost, reqHandler, isLoading, error } = useFetch<Post | null>();
   const [modalState, setModalState] = useState('');
   const isInitial = useRef(true);
 
@@ -33,19 +32,17 @@ export default function PostPage({ user, setUser }: AuthProps) {
     }
   }, [postId, reqHandler]);
 
-  function updatePost(post: Post) {
-    setData(post);
+  function updatePost(post: Post | null) {
+    setPost(post);
     setModalState('');
   }
 
   async function deletePost() {
     setModalState('');
-    const res = await reqHandler({ url: `post/delete/${postId}`, method: 'DELETE' });
-    if (res === null) navigate('/'); // null is returned to data state, confirming deletion
-  }
-
-  function on401(err: FetchError) {
-    if (err.status === 401) setUser(null);
+    await reqHandler(
+      { url: `post/delete/${postId}`, method: 'DELETE' },
+      { onSuccess: () => navigate('/') },
+    );
   }
 
   return (
@@ -54,10 +51,10 @@ export default function PostPage({ user, setUser }: AuthProps) {
         {modalState ===  'edit'  && (
           <PostForm
             onSuccess={updatePost}
-               on401={on401}
-                 url={`post/edit/${postId}`}
-              method='PUT'
-                post={post}
+              setUser={setUser}
+                  url={`post/edit/${postId}`}
+               method='PUT'
+                 post={post}
           />
         )}
         {modalState === 'delete' && (

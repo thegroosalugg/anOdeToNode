@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { BASE_URL } from '@/util/fetchData';
 import { timeAgo } from '@/util/timeStamps';
-import { AuthProps } from '@/pages/RootLayout';
+import { Auth } from '@/pages/RootLayout';
 import Post from '@/models/Post';
 import ProfilePic from '../profile/ProfilePic';
 import Button from '../button/Button';
@@ -14,7 +14,7 @@ export default function PostId({
   setModal,
 }: {
       post: Post;
-      user: AuthProps['user'];
+      user: Auth['user'];
   setModal: (modal: string) => void;
 }) {
   const { title, content, imgURL, author, updatedAt } = post;

@@ -1,14 +1,14 @@
 import { motion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
-import { AuthProps } from '@/pages/RootLayout';
+import { Auth } from '@/pages/RootLayout';
 import css from './NavButton.module.css';
 
 interface NavProps {
           path: string;
          navFn: (path: string) => void;
   isDebouncing: boolean;
-         user?: AuthProps['user'];
+         user?: Auth['user'];
 }
 
 export default function NavButton({ path, navFn, isDebouncing, user }: NavProps) {

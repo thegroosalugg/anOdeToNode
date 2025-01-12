@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
-import { AuthProps } from './RootLayout';
-import { FetchError } from '@/util/fetchData';
+import { Auth } from './RootLayout';
 import Post from '@/models/Post';
 import Feed from '@/components/feed/Feed';
 import Loader from '@/components/loading/Loader';
@@ -14,7 +13,7 @@ import { captainsLog } from '@/util/captainsLog';
 
 const initialData = { docCount: 0, posts: [] };
 
-export default function FeedPage({ user, setUser, isLoading: fetchingUser }: AuthProps) {
+export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Auth) {
   const {
           data,
        setData,
@@ -33,8 +32,10 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
     };
 
     const updateData = async () => {
-      const updatedData = await updateReq({ url: `feed/posts?page=${pages[1]}` });
-      if (updatedData) setData(updatedData);
+      await updateReq(
+        { url: `feed/posts?page=${pages[1]}` },
+        { onSuccess: (updated) => setData(updated) }
+      );
     };
 
     if (isInitial.current) {
@@ -47,14 +48,12 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
     }
   }, [updateReq, initialReq, setData, pages, showModal]);
 
-  function on401(err: FetchError) {
-    if (err.status === 401) setUser(null);
-  }
+  const closeModal = () => setShowModal(false);
 
   return (
     <>
-      <Modal show={showModal}       close={() => setShowModal(false)}>
-        <PostForm on401={on401} onSuccess={() => setShowModal(false)} />
+      <Modal show={showModal}           close={closeModal}>
+        <PostForm setUser={setUser} onSuccess={closeModal} />
       </Modal>
       {fetchingUser ? (
         <p style={{ alignSelf: 'center' }}>Logging in...</p>

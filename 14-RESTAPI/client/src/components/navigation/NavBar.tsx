@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
-import { AuthProps } from '@/pages/RootLayout';
+import { Auth } from '@/pages/RootLayout';
 import NavButton from './NavButton';
 import css from './NavBar.module.css';
 
-export default function NavBar({ user }: AuthProps) {
+export default function NavBar({ user }: Auth) {
   const navigate = useNavigate();
   const { isDebouncing, throttleFn } = useDebounce();
 

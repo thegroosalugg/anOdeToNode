@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { motion, useAnimate, stagger } from 'motion/react';
-import { AuthProps } from '@/pages/RootLayout';
+import { Auth } from '@/pages/RootLayout';
 import Input from './Input';
 import Button from '../button/Button';
 import Loader from '../loading/Loader';
 import css from './LoginForm.module.css';
 
-export default function LoginForm({ isLoading, error, setError, reqUser }: AuthProps) {
+export default function LoginForm({ isLoading, error, setError, reqUser }: Auth) {
   const [isLogin, setIsLogin] = useState(true);
   const [ scope,    animate ] = useAnimate();
   const    label = isLogin ? 'Login' : 'Sign Up';
@@ -33,23 +33,34 @@ export default function LoginForm({ isLoading, error, setError, reqUser }: AuthP
     e.preventDefault();
     const data = new FormData(e.currentTarget); // data parsed by multer
     // const data = Object.fromEntries(formData.entries()); // if application/json
-    const user = await reqUser({
-         url: isLogin ? 'login' : 'signup',
-      method: 'POST',
-        data,
-    });
+    
+    const onSuccess = (user: Auth['user']) => {
+      if (user) {
+        const { JWTaccess, JWTrefresh } = user;
+        setError(null);
+        localStorage.setItem('jwt-access', JWTaccess);
+        localStorage.setItem('jwt-refresh', JWTrefresh);
+      }
+    };
 
-    if (user) {
-      localStorage.setItem('jwt-access',  user.JWTaccess);
-      localStorage.setItem('jwt-refresh', user.JWTrefresh);
-      setError(null);
-    } else if (error) {
-      animate(
-        'p',
-        { x: [null, 10, 0, 10, 0] },
-        { repeat: 1, duration: 0.3, delay: stagger(0.1) }
-      );
-    }
+    const onError = () => {
+      if (error && !error.message) {
+        animate(
+          'p',
+          { x: [null, 10, 0, 10, 0] },
+          { repeat: 1, duration: 0.3, delay: stagger(0.1) }
+        );
+      }
+    };
+
+    await reqUser(
+      {
+           url: isLogin ? 'login' : 'signup',
+        method: 'POST',
+          data,
+      },
+      { onSuccess, onError }
+    );
   }
 
   return (

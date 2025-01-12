@@ -2,40 +2,51 @@ import useFetch from '@/hooks/useFetch';
 import { useState } from 'react';
 import { BASE_URL, FetchError } from '@/util/fetchData';
 import { motion, useAnimate, stagger } from 'motion/react';
-import { AuthProps } from '@/pages/RootLayout';
+import { Auth } from '@/pages/RootLayout';
 import ImagePicker from '../form/ImagePicker';
 import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import ErrorPopUp from '../error/ErrorPopUp';
 import css from './About.module.css';
-export default function About({
-   user,
-  on401,
-}: {
-   user: AuthProps['user'];
-  on401: (err: FetchError) => void;
-}) {
+
+export default function About({ user, setUser }: Pick<Auth, 'user' | 'setUser'>) {
   const { name,    surname,    imgURL } = user || {};
   const [ showModal,     setShowModal ] = useState(false);
   const [ displayPic,   setDisplayPic ] = useState(imgURL);
   const [ scope,              animate ] = useAnimate();
-  const { reqHandler, error, setError } = useFetch<{ imgURL: string} | null>();
+  const { reqHandler, error, setError } = useFetch<{ imgURL: string}>();
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    const res  = await reqHandler({ url: 'profile/pic', method: 'POST', data }, on401);
-    if (res) {
-      setDisplayPic(res.imgURL);
+
+    const onError = (err: FetchError) => {
+      // checks state to prevent animation running on initial submit
+      if (error) {
+        animate(
+          'p',
+          { x: [null, 10, 0, 10, 0] },
+          { repeat: 1, duration: 0.3, delay: stagger(0.1) }
+        );
+      }
+      // checks immediate value from catch block to logout
+      if (err.status === 401) {
+        setTimeout(() => {
+          setUser(null);
+        }, 2000);
+      }
+    };
+
+    const onSuccess = ({ imgURL }: { imgURL: string }) => {
+      setDisplayPic(imgURL);
       setError(null);
       setShowModal(false);
-    } else if (error) {
-      animate(
-        'p',
-        { x: [null, 10, 0, 10, 0] },
-        { repeat: 1, duration: 0.3, delay: stagger(0.1) }
-      );
-    }
+    };
+
+    await reqHandler(
+      { url: 'profile/pic', method: 'POST', data },
+      { onError, onSuccess }
+    );
   }
 
   function closeModal() {

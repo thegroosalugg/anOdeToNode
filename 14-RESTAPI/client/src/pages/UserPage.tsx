@@ -1,18 +1,18 @@
 import LoginForm from '@/components/form/LoginForm';
-import { AuthProps } from './RootLayout';
+import { Auth } from './RootLayout';
 import UserProfile from '@/components/profile/UserProfile';
 import { captainsLog } from '@/util/captainsLog';
 import { AnimatePresence } from 'motion/react';
 
-export default function UserPage({ props }: { props: AuthProps }) {
+export default function UserPage({ auth }: { auth: Auth }) {
   captainsLog(-100, 250, ['USER PAGE']); // **LOGDATA
-  const { user } = props;
+  const { user } = auth;
   return (
     <AnimatePresence mode='wait'>
       {user ? (
-        <UserProfile {...props} key='profile' />
+        <UserProfile {...auth} key='profile' />
       ) : (
-        <LoginForm   {...props} key='form' />
+        <LoginForm   {...auth} key='form' />
       )}
     </AnimatePresence>
   );
