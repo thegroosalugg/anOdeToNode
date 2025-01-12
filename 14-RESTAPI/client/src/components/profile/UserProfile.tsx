@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import useFetch, { FetchError } from '@/hooks/useFetch';
+import { useEffect, useState } from 'react';
+import { AuthProps } from '@/pages/RootLayout';
+import Post from '@/models/Post';
 import About from './About';
 import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import ConfirmDialog from '../dialog/ConfirmDialog';
-import { AuthProps } from '@/pages/RootLayout';
-import { FetchError } from '@/hooks/useFetch';
 import css from './UserProfile.module.css';
 
 export default function UserProfile({ user, setUser }: Pick<AuthProps, 'user' | 'setUser'>) {
   const [showModal, setShowModal] = useState(false);
+  const { data: posts, setData, isLoading, error, reqHandler } = useFetch<Post[]>([]);
+
+  useEffect(() => {
+    const getPosts = async () => await reqHandler({ url: 'profile/posts' });
+    getPosts();
+  }, [reqHandler])
+
 
   function closeModal() {
     setShowModal(false);

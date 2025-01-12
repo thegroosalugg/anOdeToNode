@@ -27,13 +27,12 @@ const useFetch = <T>(initialData: T = null as T) => {
         const fetchErr = err as FetchError;
         captainsLog(-100, 310, ['USE FETCH CATCH', fetchErr]); // **LOGDATA
         setError(fetchErr);
-        setData(initialData); // clear out old data on latest requests
         if (callback) callback(fetchErr); // i.e. setData of other states
       } finally {
         setIsLoading(false);
       }
     },
-    [initialData]
+    []
   );
 
   return { data, setData, isLoading, error, setError, reqHandler };

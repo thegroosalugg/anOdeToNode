@@ -28,12 +28,11 @@ export default function RootLayout({
   } = useFetch<User | null>();
   const props = { user, setUser, isLoading, error };
 
-  useEffect(() => {
-    const mountData = async () => await reqHandler({ url: 'user' });
-
+  useEffect(() => {                                                 // callback on Error
+    const mountData = async () => await reqHandler({ url: 'user' }, () => setUser(null));
     captainsLog(-100, 105, ['ROOT Mount Data']); // **LOGDATA
     mountData();
-  }, [reqHandler, pathname]);
+  }, [reqHandler, setUser, pathname]);
 
   captainsLog(105, -90, ['ROOT RENDER CYCLE user', user]); // **LOGDATA
 
