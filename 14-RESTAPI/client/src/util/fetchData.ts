@@ -1,4 +1,3 @@
-import { captainsLog } from './captainsLog';
 import refreshToken from './refreshToken';
 
 export interface Fetch {
@@ -12,25 +11,27 @@ export const BASE_URL = import.meta.env.VITE_SERVER_URL;
 const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
   const isFile = data instanceof FormData; // multipart/form-data
   const   body = data ? (isFile ? data : JSON.stringify(data)) : null;
-  const  token = localStorage.getItem('jwt-access');
   const headers: HeadersInit = {};
-  if (!isFile) headers['Content-Type']  = 'application/json';
-  if ( token ) headers['Authorization'] = `Bearer ${token}`;
+  if (!isFile) headers['Content-Type'] = 'application/json';
 
-  const response = await fetch(BASE_URL + url, { method, headers, body });
-  const resData  = await response.json();
+  const makeRequest = async () => {
+    const token = localStorage.getItem('jwt-access');
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    return fetch(BASE_URL + url, { method, headers, body });
+  };
 
-  captainsLog(-100, 20, ['RES', response, 'RESData', resData]); // **LOGDATA
+  let response = await makeRequest();
+  let resData  = await response.json();
+
+  if (response.status === 401) {
+    const newToken = await refreshToken(resData.refresh);
+    if (newToken) {
+      response = await makeRequest();
+      resData  = await response.json();
+    }
+  }
 
   if (!response.ok) {
-    if (response.status === 401) {
-      const newToken = await refreshToken(resData.refresh);
-      if (newToken) {
-        headers['Authorization'] = `Bearer ${newToken}`;
-        const retryResponse = await fetch(BASE_URL + url, { method, headers, body });
-        return await retryResponse.json();
-      }
-    }
     throw { ...resData, status: response.status };
   }
 
