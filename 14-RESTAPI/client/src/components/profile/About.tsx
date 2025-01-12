@@ -8,7 +8,6 @@ import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import ErrorPopUp from '../error/ErrorPopUp';
 import css from './About.module.css';
-
 export default function About({
    user,
   on401,
@@ -59,7 +58,13 @@ export default function About({
           )}
         </form>
       </Modal>
-      <section className={css['about']}>
+      <motion.section
+         className={css['about']}
+           initial={{   opacity: 0  }}
+           animate={{   opacity: 1  }}
+              exit={{   opacity: 0  }}
+        transition={{ duration: 0.5 }}
+      >
         <h1>
           {name} {surname}
         </h1>
@@ -76,7 +81,7 @@ export default function About({
             <p>Upload an image</p>
           )}
         </div>
-      </section>
+      </motion.section>
     </>
   );
 }
