@@ -1,16 +1,22 @@
-import useFetch from '@/hooks/useFetch';
+import useFetch, { FetchError } from '@/hooks/useFetch';
 import { useState } from 'react';
 import { BASE_URL } from '@/util/fetchData';
 import { motion, useAnimate, stagger } from 'motion/react';
-import User from '@/models/User';
+import { AuthProps } from '@/pages/RootLayout';
 import ImagePicker from '../form/ImagePicker';
 import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import ErrorPopUp from '../error/ErrorPopUp';
 import css from './About.module.css';
 
-export default function About({ user }: { user: User }) {
-  const { name,    surname,    imgURL } = user;
+export default function About({
+   user,
+  on401,
+}: {
+   user: AuthProps['user'];
+  on401: (err: FetchError) => void;
+}) {
+  const { name,    surname,    imgURL } = user || {};
   const [ showModal,     setShowModal ] = useState(false);
   const [ displayPic,   setDisplayPic ] = useState(imgURL);
   const [ scope,              animate ] = useAnimate();
@@ -19,7 +25,7 @@ export default function About({ user }: { user: User }) {
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    const res  = await reqHandler({ url: 'profile/pic', method: 'POST', data });
+    const res  = await reqHandler({ url: 'profile/pic', method: 'POST', data }, on401);
     if (res) {
       setDisplayPic(res.imgURL);
       setError(null);

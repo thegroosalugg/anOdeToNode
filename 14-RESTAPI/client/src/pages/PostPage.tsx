@@ -1,4 +1,4 @@
-import useFetch from '@/hooks/useFetch';
+import useFetch, { FetchError } from '@/hooks/useFetch';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthProps } from './RootLayout';
@@ -11,7 +11,7 @@ import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
 import { captainsLog } from '@/util/captainsLog';
 
-export default function PostPage({ user }: AuthProps) {
+export default function PostPage({ user, setUser }: AuthProps) {
   const   navigate = useNavigate();
   const { postId } = useParams();
   const { data: post, setData, reqHandler, isLoading, error } = useFetch<Post | null>();
@@ -43,12 +43,17 @@ export default function PostPage({ user }: AuthProps) {
     if (res === null) navigate('/'); // null is returned to data state, confirming deletion
   }
 
+  function on401(err: FetchError) {
+    if (err.status === 401) setUser(null);
+  }
+
   return (
     <>
       <Modal show={modalState} close={() => setModalState('')}>
         {modalState ===  'edit'  && (
           <PostForm
-            callback={updatePost}
+            onSuccess={updatePost}
+               on401={on401}
                  url={`post/edit/${postId}`}
               method='PUT'
                 post={post}

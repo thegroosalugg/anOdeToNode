@@ -5,6 +5,9 @@ import User from '../models/User';
 import errorMsg from '../util/errorMsg';
 import { getErrors, hasErrors } from '../validation/validators';
 
+const mins = '15m';
+const days = '7d';
+
 const getUser: RequestHandler = async (req, res, next) => {
   // handled by middleware, requires a controller to receive requests
     res.status(200).json({...req.user?.toObject()});
@@ -28,11 +31,11 @@ const postLogin: RequestHandler = async (req, res, next) => {
 
     const userId = user._id;
     const JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
-      expiresIn: '15m',
+      expiresIn: mins,
     });
 
     const JWTrefresh = jwt.sign({ userId }, process.env.JWT_REFRESH!, {
-      expiresIn: '7d',
+      expiresIn: days,
     });
 
 
@@ -61,11 +64,11 @@ const postSignup: RequestHandler = async (req, res, next) => {
 
     const userId = user._id;
     const JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
-      expiresIn: '15m',
+      expiresIn: mins,
     });
 
     const JWTrefresh = jwt.sign({ userId }, process.env.JWT_REFRESH!, {
-      expiresIn: '7d',
+      expiresIn: days,
     });
 
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
@@ -93,10 +96,10 @@ const refreshToken: RequestHandler = async (req, res, next) => {
       return;
     }
     const  JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
-      expiresIn: '15m',
+      expiresIn: mins,
     });
     const JWTrefresh = jwt.sign({ userId }, process.env.JWT_REFRESH!, {
-      expiresIn: '7d',
+      expiresIn: days,
     });
     res.status(200).json({ JWTaccess, JWTrefresh });
   } catch (error) {

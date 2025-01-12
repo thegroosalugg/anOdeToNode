@@ -1,5 +1,5 @@
 import { useAnimate, stagger, AnimatePresence, motion } from 'motion/react';
-import useFetch from '@/hooks/useFetch';
+import useFetch, { FetchError } from '@/hooks/useFetch';
 import Post from '@/models/Post';
 import Input from './Input';
 import ImagePicker from './ImagePicker';
@@ -9,15 +9,17 @@ import Loader from '../loading/Loader';
 import css from './PostForm.module.css';
 
 export default function PostForm({
-       url = 'post/new',
-    method = 'POST',
-  callback,
-      post,
+        url = 'post/new',
+     method = 'POST',
+  onSuccess,
+      on401,
+       post,
 }: {
-      url?: 'post/new' | `post/edit/${string}`;
-   method?: 'POST' | 'PUT';
-  callback: (post: Post) => void;
-     post?: Post | null;
+       url?: 'post/new' | `post/edit/${string}`;
+    method?: 'POST' | 'PUT';
+  onSuccess: (post: Post) => void;
+      on401: (err: FetchError) => void;
+      post?: Post | null;
 }) {
   const { isLoading, error, reqHandler } = useFetch<Post | null>();
   const [ scope, animate ] = useAnimate();
@@ -26,9 +28,9 @@ export default function PostForm({
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget); // multipart/form-data
-    const post = await reqHandler({ url, method, data });
+    const post = await reqHandler({ url, method, data }, on401);
     if (post) {
-      callback(post);
+      onSuccess(post);
     } else if (error && !error.message) {
       animate(
         'p',

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import useFetch from '@/hooks/useFetch';
+import useFetch, { FetchError } from '@/hooks/useFetch';
 import { AuthProps } from './RootLayout';
 import Post from '@/models/Post';
 import Feed from '@/components/feed/Feed';
@@ -13,7 +13,7 @@ import { captainsLog } from '@/util/captainsLog';
 
 const initialData = { docCount: 0, posts: [] };
 
-export default function FeedPage({ user, isLoading: fetchingUser }: AuthProps) {
+export default function FeedPage({ user, setUser, isLoading: fetchingUser }: AuthProps) {
   const {
           data,
        setData,
@@ -33,7 +33,6 @@ export default function FeedPage({ user, isLoading: fetchingUser }: AuthProps) {
 
     const updateData = async () => {
       const updatedData = await updateReq({ url: `feed/posts?page=${pages[1]}` });
-      captainsLog(270, -90, ['FEEDPAGE updatedData', updatedData] ); // **LOGDATA
       if (updatedData) setData(updatedData);
     };
 
@@ -47,12 +46,14 @@ export default function FeedPage({ user, isLoading: fetchingUser }: AuthProps) {
     }
   }, [updateReq, initialReq, setData, pages, showModal]);
 
-  captainsLog(270, -90, ['FEEDPAGE DATA', data] ); // **LOGDATA
+  function on401(err: FetchError) {
+    if (err.status === 401) setUser(null);
+  }
 
   return (
     <>
-      <Modal show={showModal} close={() => setShowModal(false)}>
-        <PostForm          callback={() => setShowModal(false)} />
+      <Modal show={showModal}       close={() => setShowModal(false)}>
+        <PostForm on401={on401} onSuccess={() => setShowModal(false)} />
       </Modal>
       {fetchingUser ? (
         <p style={{ alignSelf: 'center' }}>Logging in...</p>

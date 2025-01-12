@@ -5,20 +5,14 @@ import UserProfile from '@/components/profile/UserProfile';
 import { captainsLog } from '@/util/captainsLog';
 
 export default function UserPage({ user, setUser, isLoading }: AuthProps) {
-  function logout() {
-    setUser(null);
-    localStorage.removeItem('jwt-access');
-    localStorage.removeItem('jwt-refresh');
-  }
-
   captainsLog(-100, 250, ['USER PAGE']); // **LOGDATA
-
+  const props = { user, setUser };
   return (
     <>
       {isLoading ? (
         <Loader />
       ) : user ? (
-        <UserProfile user={user} logout={logout} />
+        <UserProfile {...props} />
       ) : (
         <LoginForm callback={(user) => setUser(user)} />
       )}
