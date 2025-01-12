@@ -14,7 +14,7 @@ import { captainsLog } from '@/util/captainsLog';
 export default function PostPage({ user }: AuthProps) {
   const   navigate = useNavigate();
   const { postId } = useParams();
-  const { data: post, setData, reqHandler, isLoading, error } = useFetch<Post>();
+  const { data: post, setData, reqHandler, isLoading, error } = useFetch<Post | null>();
   const [modalState, setModalState] = useState('');
   const isInitial = useRef(true);
 

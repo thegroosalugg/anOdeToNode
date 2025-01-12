@@ -11,7 +11,7 @@ export interface AuthProps {
     setUser: Dispatch<SetStateAction<User | null>>;
   isLoading: boolean;
       error: FetchError | null;
- }
+}
 
 export default function RootLayout({
   children,
@@ -19,7 +19,13 @@ export default function RootLayout({
   children: (props: AuthProps) => ReactNode;
 }) {
   const { pathname } = useLocation();
-  const { data: user, setData: setUser, reqHandler, isLoading, error } = useFetch<User | null>();
+  const {
+          data: user,
+       setData: setUser,
+    reqHandler,
+     isLoading,
+         error,
+  } = useFetch<User | null>();
   const props = { user, setUser, isLoading, error };
 
   useEffect(() => {

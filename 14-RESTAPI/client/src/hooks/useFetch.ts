@@ -3,11 +3,14 @@ import fetchData, { Fetch } from '@/util/fetchData';
 import { useState, useCallback } from 'react';
 
 export type FetchError  = {
-  [key: string]: string | number;
+  [key: string]: string;
+} & {
+  message: string;
+   status: number;
 }
 
-const useFetch = <T>(initialData: T | null = null) => {
-  const [     data,      setData] = useState<T>(initialData as T);
+const useFetch = <T>(initialData: T = null as T) => {
+  const [     data,      setData] = useState<T>(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const [    error,     setError] = useState<FetchError | null>(null);
 
@@ -21,11 +24,12 @@ const useFetch = <T>(initialData: T | null = null) => {
       return response;
     } catch (err) {
       captainsLog(-100, 310, ['USE FETCH CATCH', err]); // **LOGDATA
+      setData(initialData)
       setError(err as FetchError);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [initialData]);
 
   return { data, setData, isLoading, error, setError, reqHandler };
 };

@@ -17,9 +17,9 @@ export default function PostForm({
       url?: 'post/new' | `post/edit/${string}`;
    method?: 'POST' | 'PUT';
   callback: (post: Post) => void;
-     post?: Post;
+     post?: Post | null;
 }) {
-  const { isLoading, error, reqHandler } = useFetch<Post>();
+  const { isLoading, error, reqHandler } = useFetch<Post | null>();
   const [ scope, animate ] = useAnimate();
   const { title = '', content = '', imgURL = '' } = post || {};
 

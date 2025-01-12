@@ -8,7 +8,7 @@ import Loader from '../loading/Loader';
 import css from './LoginForm.module.css';
 
 export default function LoginForm({ callback }: { callback: (user: User) => void}) {
-  const { isLoading, error, setError, reqHandler } = useFetch();
+  const { isLoading, error, setError, reqHandler } = useFetch<User | null>();
   const [isLogin, setIsLogin] = useState(true);
   const [ scope,    animate ] = useAnimate();
   const    label = isLogin ? 'Login' : 'Sign Up';

@@ -14,7 +14,7 @@ export default function About({ user }: { user: User }) {
   const [ showModal,     setShowModal ] = useState(false);
   const [ displayPic,   setDisplayPic ] = useState(imgURL);
   const [ scope,              animate ] = useAnimate();
-  const { reqHandler, error, setError } = useFetch();
+  const { reqHandler, error, setError } = useFetch<{ imgURL: string} | null>();
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
