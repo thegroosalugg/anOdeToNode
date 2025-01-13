@@ -3,6 +3,7 @@ import { unlink } from 'fs';
 import Post from '../models/Post';
 import { getErrors, hasErrors } from '../validation/validators';
 import errorMsg from '../util/errorMsg';
+import { io } from '../app';
 
 const newPost: RequestHandler = async (req, res, next) => {
   try {
@@ -19,6 +20,7 @@ const newPost: RequestHandler = async (req, res, next) => {
     const post = new Post({ title, content, author: req.user });
     if (image) post.imgURL = image.path;
     await post.save();
+    io.emit('post:update', post); // pushes socket to client
     res.status(201).json(post);
   } catch (error) {
     errorMsg({ error, where: 'newPost' });
@@ -56,6 +58,7 @@ const editPost: RequestHandler = async (req, res, next) => {
 
     await post.save();
     await post.populate('author', '-email -password');
+    io.emit('post:update', post); // pushes socket to client
     res.status(200).json(post);
   } catch (error) {
     errorMsg({ error, where: 'editPost' });

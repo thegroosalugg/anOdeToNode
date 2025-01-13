@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { io } from 'socket.io-client';
+import { BASE_URL } from '@/util/fetchData';
 import useFetch from '@/hooks/useFetch';
 import { Auth } from './RootLayout';
 import Post from '@/models/Post';
@@ -33,23 +35,36 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
   const url = `feed/posts?page=${current}`;
 
   useEffect(() => {
-    const mountData = async () => {
-      await initialReq({ url });
-    };
-
-    const updateData = async () => {
-      await updateReq({ url }, { onSuccess: (updated) => setData(updated) });
-    };
+    const  mountData = async () => await initialReq({ url });
+    const updateData = async () => await  updateReq({ url },
+      { onSuccess: (updated) => setData(updated) }
+    );
 
     if (isInitial.current) {
       isInitial.current = false;
       mountData();
-      captainsLog(-100, 260, ['FEEDPAGE INITIAL'] ); // **LOGDATA
+      captainsLog(-100, 270, ['FEEDPAGE INITIAL'] ); // **LOGDATA
     } else {
       updateData();
-      captainsLog(-100, 270, ['FEEDPAGE UPDATING'] ); // **LOGDATA
+      captainsLog(-100, 260, ['FEEDPAGE UPDATING'] ); // **LOGDATA
     }
-  }, [updateReq, initialReq, setData, url, showModal]);
+
+    const socket = io(BASE_URL);
+    socket.on('connect', () => captainsLog(-100, 250, ['FEEDPAGE: Socket connected']));
+    socket.on('post:update', (post) => {
+      setData((prev) => ({
+        ...prev,
+        posts: [post, ...prev.posts],
+      }));
+      captainsLog(-100, 240, ['FEEDPAGE UPDATE', post]);
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('post:update');
+      socket.disconnect();
+    };
+  }, [initialReq, updateReq, setData, url]);
 
   const closeModal = () => setShowModal(false);
 

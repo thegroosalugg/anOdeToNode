@@ -21,7 +21,13 @@ const server = app.listen(3000, () => {
   console.log('Hudson River, 2 years ago');
 }); // createNewServer
 
-const io = new Server(server); // set up websockets
+export const io = new Server(server, {
+  cors: {
+            origin: process.env.CLIENT_URL,
+           methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }
+}); // set up websockets. CORS applies only to sockets, not regular HTTP
 
 app.use('/uploads', express.static(join(import.meta.dirname, 'uploads'))); // serve static paths
 
@@ -49,10 +55,10 @@ mongoose
   .connect(process.env.MONGO_URI!)
   .then(() => {
     io.on('connection', (socket) => {
-      console.log('Client connected');
+      console.log('App.ts Client connected');
 
       socket.on('disconnect', () => {
-        console.log('Client disconnected');
+        console.log('App.ts Client disconnected');
       });
     });
   })

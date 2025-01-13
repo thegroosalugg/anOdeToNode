@@ -15,12 +15,14 @@ export default function PostFeed({ posts, pages, limit, alternate, deferring }: 
   const   navigate = useNavigate();
   const  direction = pages[0] < pages[1] ? 1 : -1;
   const          x = direction * 50;
-  const     height = (alternate ? 60 : 130) * limit + 'px';
   const    classes = `${css['feed']} ${alternate ? css['alternate'] : ''}`
   const defaultBck =            alternate ? '#454545'  : '#12a1a1';
   const background = limit > posts.length ? defaultBck : '#00000000';
   const   position = deferring ? 'sticky' : 'relative';
   const     cursor = deferring ?   'wait' : 'pointer';
+  let       height = (alternate ? 60 : 130) * limit + 'px';
+  if (posts.length <= 0) height = 'auto';
+
 
   function navTo(_id: string) {
     if (!deferring) {
