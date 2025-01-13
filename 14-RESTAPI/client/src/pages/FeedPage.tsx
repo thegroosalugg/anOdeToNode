@@ -30,17 +30,15 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
     docCount, posts, error, isLoading, limit: 4, pages, setPages
   };
   const [, current] = pages;
+  const url = `feed/posts?page=${current}`;
 
   useEffect(() => {
     const mountData = async () => {
-      await initialReq({ url: `feed/posts?page=${current}` });
+      await initialReq({ url });
     };
 
     const updateData = async () => {
-      await updateReq(
-        { url: `feed/posts?page=${current}` },
-        { onSuccess: (updated) => setData(updated) }
-      );
+      await updateReq({ url }, { onSuccess: (updated) => setData(updated) });
     };
 
     if (isInitial.current) {
@@ -51,7 +49,7 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
       updateData();
       captainsLog(-100, 270, ['FEEDPAGE UPDATING'] ); // **LOGDATA
     }
-  }, [updateReq, initialReq, setData, current, showModal]);
+  }, [updateReq, initialReq, setData, url, showModal]);
 
   const closeModal = () => setShowModal(false);
 

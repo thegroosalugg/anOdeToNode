@@ -1,5 +1,5 @@
 import useFetch from '@/hooks/useFetch';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Auth } from '@/pages/RootLayout';
 import Post from '@/models/Post';
 import About from './About';
@@ -22,17 +22,34 @@ export default function UserProfile({ user, setUser }: Auth) {
 
   const {
           data: { docCount, posts },
+       setData,
      isLoading,
          error,
-    reqHandler,
+    reqHandler: initialReq,
   } = useFetch(initialData);
+  const { reqHandler: updateReq } = useFetch(initialData);
+ const isInitial = useRef(true);
+ const url =  `profile/posts?page=${current}`;
+
   const aboutProps = { user, setUser }
-  const  feedProps = { docCount, posts, isLoading, error, limit: 8, pages, setPages };
+  const  feedProps = {
+    docCount, posts, isLoading, error, limit: 6, pages, setPages, alternate: true
+  };
 
   useEffect(() => {
-    const getPosts = async () => await reqHandler({ url: `profile/posts?page=${current}` });
-    getPosts();
-  }, [reqHandler, current]);
+    const mountData = async () => await initialReq({ url });
+
+    const updateData = async () =>
+      await updateReq({ url }, { onSuccess: (updated) => setData(updated) });
+
+    if (isInitial.current) {
+      isInitial.current = false;
+      mountData();
+    } else {
+      updateData();
+    }
+
+  }, [initialReq, updateReq, setData, url]);
 
   const closeModal = () => setShowModal(false);
 

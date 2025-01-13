@@ -6,7 +6,7 @@ import { Types } from 'mongoose';
 const getPosts: RequestHandler = async (req, res, next) => {
   try {
     const  page = +(req.query.page || 1);
-    const limit = req.user ? 8 : 4;
+    const limit = req.user ? 6 : 4;
     const query: Record<string, Types.ObjectId> = {};
 
     if (req.user) {

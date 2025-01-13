@@ -7,8 +7,9 @@ import PostFeed from './PostFeed';
 import { FetchError } from '@/util/fetchData';
 
 interface Feed extends Paginated<Post, 'posts'> {
-  isLoading: boolean;
-      error: FetchError | null;
+   isLoading: boolean;
+       error: FetchError | null;
+  alternate?: boolean;
 }
 
 export default function FeedPanel({
@@ -19,9 +20,10 @@ export default function FeedPanel({
       limit,
       pages,
    setPages,
+  alternate,
 }: Feed) {
   const paginateProps = { limit, docCount, pages, setPages };
-  const     feedProps = { ...paginateProps, posts };
+  const     feedProps = { ...paginateProps, posts, alternate };
   return (
     <>
       {isLoading ? (

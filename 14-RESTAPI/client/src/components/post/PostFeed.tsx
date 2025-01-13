@@ -6,11 +6,15 @@ import ProfilePic from '../profile/ProfilePic';
 import { timeAgo } from '@/util/timeStamps';
 import css from './PostFeed.module.css';
 
-export default function PostFeed({ posts, pages, limit }: Paginated<Post, 'posts'>) {
+interface PostFeed extends Paginated<Post, 'posts'> {
+  alternate?: boolean;
+}
+
+export default function PostFeed({ posts, pages, limit, alternate }: PostFeed) {
   const  navigate = useNavigate();
   const direction = pages[0] < pages[1] ? 1 : -1;
   const         x = direction * 50;
-  const    height = limit     * 140 + 'px'
+  const    height = (alternate ? 60 : 140) * limit + 'px';
 
   return (
     <ul className={css['feed']} style={{ height }}>
@@ -25,13 +29,15 @@ export default function PostFeed({ posts, pages, limit }: Paginated<Post, 'posts
               animate={{ opacity: 1, x:  0, transition: { duration: 0.5, delay: i * 0.1 } }}
                  exit={{ opacity: 0, x: -x, transition: { duration: 0.5 } }}
             >
-              <h3>
-                <ProfilePic user={author} />
-                <span>
-                  {author?.name    || 'account '}
-                  {author?.surname || 'deleted'}
-                </span>
-              </h3>
+              {!alternate && (
+                <h3>
+                  <ProfilePic user={author} />
+                  <span>
+                    {author?.name    || 'account '}
+                    {author?.surname || 'deleted'}
+                  </span>
+                </h3>
+              )}
               <h2>
                 <span>{title}</span>
                 <time>{timeAgo(updatedAt)}</time>
