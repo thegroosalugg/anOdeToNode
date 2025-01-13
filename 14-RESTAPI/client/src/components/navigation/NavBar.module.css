@@ -27,9 +27,16 @@
     flex-direction: column;
     position: fixed; /* ensures nav buttons do not scroll away */
     height: 100vh;
+    width: 76px;
 
     > h1 {
       display: none;
+    }
+
+    button {
+      &:last-of-type {
+        margin-left: 0;
+      }
     }
   }
 }

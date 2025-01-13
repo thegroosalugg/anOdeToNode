@@ -1,12 +1,27 @@
 .feed {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   align-self: center;
   width: 100%;
   max-width: 600px;
-  height: 560px;
-  gap: 0.5rem;
+  gap: 0.2rem;
+  padding: 0 0.1rem;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    height: 0;
+    width: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #e19d3d;
+  }
+
+  .fallback{
+    text-align: center;
+  }
 
   li {
     width: 100%;
@@ -61,5 +76,16 @@
       box-orient: vertical;
       color: var(--text-grey);
     }
+  }
+}
+
+.alternate {
+  &::-webkit-scrollbar-thumb {
+    background: #7fa145;
+  }
+
+  li {
+    border: none;
+    padding: 0.5rem;
   }
 }

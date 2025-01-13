@@ -1,4 +1,4 @@
-import { FetchError } from '@/hooks/useFetch';
+import { FetchError } from '@/util/fetchData';
 import css from './Error.module.css';
 import { motion } from 'motion/react';
 

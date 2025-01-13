@@ -1,6 +1,6 @@
 import { BASE_URL } from './fetchData';
 
-const refreshToken = async (refresh?: boolean) => {
+const refreshToken = async (refresh: boolean) => {
   localStorage.removeItem('jwt-access');
 
   if (refresh) {

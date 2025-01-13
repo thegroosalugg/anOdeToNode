@@ -1,27 +1,37 @@
+import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { BASE_URL } from '@/util/fetchData';
 import { timeAgo } from '@/util/timeStamps';
+import { Auth } from '@/pages/RootLayout';
 import Post from '@/models/Post';
-import User from '@/models/User';
 import ProfilePic from '../profile/ProfilePic';
 import Button from '../button/Button';
 import css from './PostId.module.css';
 
 export default function PostId({
-  post,
-  user,
+      post,
+      user,
   setModal,
 }: {
       post: Post;
-      user: User | undefined;
+      user: Auth['user'];
   setModal: (modal: string) => void;
 }) {
   const { title, content, imgURL, author, updatedAt } = post;
-  const exit = { height: '0', transition: { duration: 0.8 } };
-  const variants = {
-     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 1 } },
-  };
+  const transition = { duration: 0.8 };
+  const    opacity = 0;
+  const     hidden = { opacity };
+  const    visible = { opacity: 1, transition };
+  const   variants = { hidden, visible };
+
+  const htnlRef = useRef<HTMLParagraphElement | null>(null);
+  const [height, setHeight] = useState<number | 'auto'>('auto');
+
+  useEffect(() => {
+    if (htnlRef.current) {
+      setHeight(htnlRef.current.offsetHeight + 16); // 16 for padding
+    }
+  }, [content]);
 
   return (
     <motion.section
@@ -43,15 +53,18 @@ export default function PostId({
       <motion.time variants={variants}>
         {timeAgo(updatedAt)}
       </motion.time>
-      <AnimatePresence>
+      <AnimatePresence mode='wait'>
         {imgURL && (
           <motion.img
                  key={imgURL}
                  src={BASE_URL + imgURL}
                  alt={title}
              loading='eager'
-                exit={exit}
-            variants={variants}
+                exit={{ opacity, transition }}
+            variants={{
+               hidden: {  opacity,   height: 200 },
+              visible: { ...visible, height: 200 }
+            }}
              onError={(e) => {
                const img = e.target as HTMLImageElement;
                img.src = '/notFound.png';
@@ -59,7 +72,19 @@ export default function PostId({
             }}
           />
         )}
-        <motion.p key={content} variants={variants} exit={exit}>
+      </AnimatePresence>
+      <AnimatePresence mode='wait'>
+        <motion.p
+               key={content}
+               ref={htnlRef}
+          variants={variants}
+             style={{ height, maxHeight: 200 }}
+           animate={{
+                 height: 'auto',
+                opacity: 1,
+             transition: { ease: 'linear', transition: 1 }
+           }}
+        >
           {content}
         </motion.p>
       </AnimatePresence>

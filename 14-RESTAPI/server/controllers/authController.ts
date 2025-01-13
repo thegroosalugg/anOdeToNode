@@ -5,27 +5,12 @@ import User from '../models/User';
 import errorMsg from '../util/errorMsg';
 import { getErrors, hasErrors } from '../validation/validators';
 
+const mins = '15m';
+const days = '7d';
+
 const getUser: RequestHandler = async (req, res, next) => {
-  const token = req.get('authorization')?.split(' ')[1];
-
-  if (!token) {
-    res.status(404).json({ message: 'Session not found' });
-    return;
-  }
-
-  try {
-    const decodedTkn = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    const user = await User.findById(decodedTkn.userId).select('-password');
-    if (!user) {
-      res.status(404).json({ message: 'User not found' });
-      return;
-    }
-    res.status(200).json(user);
-  } catch (error) {
-    errorMsg({ error, where: 'getUser' });
-    const refresh = error instanceof jwt.TokenExpiredError;
-    res.status(401).json({ message: 'Invalid session', refresh });
-  }
+  // handled by middleware, requires a controller to receive requests
+    res.status(200).json({...req.user?.toObject()});
 };
 
 const postLogin: RequestHandler = async (req, res, next) => {
@@ -46,11 +31,11 @@ const postLogin: RequestHandler = async (req, res, next) => {
 
     const userId = user._id;
     const JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
-      expiresIn: '15m',
+      expiresIn: mins,
     });
 
     const JWTrefresh = jwt.sign({ userId }, process.env.JWT_REFRESH!, {
-      expiresIn: '7d',
+      expiresIn: days,
     });
 
 
@@ -79,11 +64,11 @@ const postSignup: RequestHandler = async (req, res, next) => {
 
     const userId = user._id;
     const JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
-      expiresIn: '15m',
+      expiresIn: mins,
     });
 
     const JWTrefresh = jwt.sign({ userId }, process.env.JWT_REFRESH!, {
-      expiresIn: '7d',
+      expiresIn: days,
     });
 
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
@@ -94,7 +79,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
   }
 };
 
-const refreshToken: RequestHandler = (req, res, next) => {
+const refreshToken: RequestHandler = async (req, res, next) => {
   const token = req.get('authorization')?.split(' ')[1];
 
   if (!token) {
@@ -105,11 +90,16 @@ const refreshToken: RequestHandler = (req, res, next) => {
   try {
     const decodedTkn = jwt.verify(token, process.env.JWT_REFRESH!) as JwtPayload;
     const { userId } = decodedTkn;
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
     const  JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
-      expiresIn: '15m',
+      expiresIn: mins,
     });
     const JWTrefresh = jwt.sign({ userId }, process.env.JWT_REFRESH!, {
-      expiresIn: '7d',
+      expiresIn: days,
     });
     res.status(200).json({ JWTaccess, JWTrefresh });
   } catch (error) {

@@ -1,41 +1,48 @@
 import useFetch from '@/hooks/useFetch';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Auth } from './RootLayout';
 import Post from '@/models/Post';
-import User from '@/models/User';
 import Loader from '@/components/loading/Loader';
 import PostId from '@/components/post/PostId';
 import Error from '@/components/error/Error';
 import Modal from '@/components/modal/Modal';
 import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
+import { captainsLog } from '@/util/captainsLog';
 
-export default function PostPage() {
+export default function PostPage({ user, setUser }: Auth) {
+  const   navigate = useNavigate();
   const { postId } = useParams();
-  const navigate = useNavigate();
-  const { data: post, setData, reqHandler, isLoading, error } = useFetch<Post>();
-  const { data: user,          reqHandler: fetchUser        } = useFetch<User>();
-  const [modalState,   setModalState] = useState('');
+  const { data: post, setData: setPost, reqHandler, isLoading, error } = useFetch<Post | null>();
+  const [modalState, setModalState] = useState('');
+  const isInitial = useRef(true);
 
   useEffect(() => {
     const fetchPost = async () => {
-      await Promise.all([
-         fetchUser({ url: 'user' }),
-        reqHandler({ url: `feed/post/${postId}` })
-      ]);
+      if (postId) {
+        await reqHandler({ url: `feed/find/${postId}` });
+      }
     }
-    fetchPost();
-  }, [postId, reqHandler, fetchUser]);
 
-  function updatePost(post: Post) {
-    setData(post);
+    if (isInitial.current) {
+      isInitial.current = false;
+      captainsLog(-100, 30, ['POSTPAGE effect, ID:' + postId]); // **LOGDATA
+      fetchPost();
+    }
+  }, [postId, reqHandler]);
+
+  function updatePost(post: Post | null) {
+    setPost(post);
     setModalState('');
   }
 
   async function deletePost() {
     setModalState('');
-    const res = await reqHandler({ url: `admin/post/${postId}`, method: 'DELETE' });
-    if (res === null) navigate('/'); // null is returned to data state, confirming deletion
+    await reqHandler(
+      { url: `post/delete/${postId}`, method: 'DELETE' },
+      { onSuccess: () => navigate('/') },
+    );
   }
 
   return (
@@ -43,10 +50,11 @@ export default function PostPage() {
       <Modal show={modalState} close={() => setModalState('')}>
         {modalState ===  'edit'  && (
           <PostForm
-            callback={updatePost}
-                 url={`admin/post/${postId}`}
-              method='PUT'
-                post={post}
+            onSuccess={updatePost}
+              setUser={setUser}
+                  url={`post/edit/${postId}`}
+               method='PUT'
+                 post={post}
           />
         )}
         {modalState === 'delete' && (

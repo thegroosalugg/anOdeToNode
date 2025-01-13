@@ -5,6 +5,6 @@ const router = express.Router();
 
 // all routes prepended by /feed
 router.get('/posts', getPosts);
-router.get('/post/:postId', getPostById);
+router.get('/find/:postId', getPostById);
 
 export default router;

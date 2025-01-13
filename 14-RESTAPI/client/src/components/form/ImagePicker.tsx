@@ -1,8 +1,15 @@
 import { useState } from 'react';
+import { BASE_URL } from '@/util/fetchData';
 import css from './ImagePicker.module.css';
 
-export default function ImagePicker({...props}) {
-  const [image, setImage] = useState('');
+export default function ImagePicker({
+  imgURL,
+  ...props
+}: {
+  imgURL?: string;
+} & React.LabelHTMLAttributes<HTMLLabelElement>) {
+  const initialImg = imgURL ? BASE_URL + imgURL : '';
+  const [image, setImage] = useState(initialImg);
   const [error, setError] = useState('');
   const  background = image ?          '#252525' : '#ffffff00';
   const       color = error ? 'var(--error-red)' : 'var(--team-green)';
@@ -40,7 +47,11 @@ export default function ImagePicker({...props}) {
             name='image'
       />
       {image ? (
-        <img src={image} alt='preview' />
+        <img
+            src={image}
+            alt='preview'
+        onError={(e) => ((e.target as HTMLImageElement).src = '/notFound.png')}
+      />
       ) : (
         <span style={{ color }}>{error ? error : 'Choose an Image'}</span>
       )}

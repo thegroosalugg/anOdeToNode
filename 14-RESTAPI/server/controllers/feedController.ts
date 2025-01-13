@@ -1,18 +1,28 @@
 import { RequestHandler } from 'express';
 import Post from '../models/Post';
 import errorMsg from '../util/errorMsg';
+import { Types } from 'mongoose';
 
 const getPosts: RequestHandler = async (req, res, next) => {
   try {
     const  page = +(req.query.page || 1);
-    const limit = 4;
+    const limit = req.user ? 6 : 4;
+    const query: Record<string, Types.ObjectId> = {};
 
-    const docCount = await Post.find().countDocuments();
-    const    posts = await Post.find()
+    if (req.user) {
+      query.author = req.user._id;
+    }
+
+    const docCount = await Post.find(query).countDocuments();
+    const    posts = await Post.find(query)
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate('author', 'name surname')
+      .populate('author', '-email -password')
       .sort({ _id: -1 }); // newest first
+
+    if (!posts) {
+      res.status(404).json({ message: 'Nothing posted yet' });
+    }
 
     res.status(200).json({ posts, docCount });
   } catch (error) {
@@ -24,7 +34,7 @@ const getPosts: RequestHandler = async (req, res, next) => {
 const getPostById: RequestHandler = async (req, res, next) => {
   try {
     const { postId } = req.params;
-    const post = await Post.findById(postId).populate('author', 'name surname');
+    const post = await Post.findById(postId).populate('author', '-email -password');
     if (!post) {
       res.status(404).json({ message: 'Post not found.' });
       return;

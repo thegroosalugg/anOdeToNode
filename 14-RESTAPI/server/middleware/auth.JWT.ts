@@ -1,28 +1,40 @@
 import { RequestHandler } from 'express';
-import { Types } from 'mongoose';
+import User from '../models/User';
 import { unlink } from 'fs';
 import jwt from 'jsonwebtoken';
 import errorMsg from '../util/errorMsg';
 
-export const authJWT: RequestHandler = (req, res, next) => {
+export const authJWT: RequestHandler = async (req, res, next) => {
   if (req.method === 'OPTIONS') return next(); // Skip token validation for preflight
 
+  const image = req.file;
   const token = req.get('authorization')?.split(' ')[1]; // split string @ 'Bearer ' whitespace
   if (!token) {
     res.status(401).json({ message: 'You are not logged in' });
+    if (image) { // delete req files if middleware catches error before controller
+      unlink(image.path, (error) => errorMsg({ error, where: 'authJWT FS !token' }));
+    }
     return;
   }
 
   try {
     const decodedTkn = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    const _id = new Types.ObjectId(decodedTkn.userId); // convert string to Mongo Object ID
-    req.user = _id;
+    const user = await User.findById(decodedTkn.userId).select('-password');
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      if (image) {
+        unlink(image.path, (error) => errorMsg({ error, where: 'authJWT FS !user' }));
+      }
+      return;
+    }
+    req.user = user;
     next();
   } catch (error) {
     errorMsg({ error, where: 'authJWT' });
 
-    if (req.file) // delete req files if middleware catches error before controller
-      unlink(req.file.path, (error) => errorMsg({ error, where: 'authJWT FS Unlink' }));
+    if (image) {
+      unlink(image.path, (error) => errorMsg({ error, where: 'authJWT FS Catch' }));
+    }
 
     const refresh = error instanceof jwt.TokenExpiredError;
     const message =

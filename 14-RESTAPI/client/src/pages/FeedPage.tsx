@@ -1,81 +1,77 @@
 import { useEffect, useRef, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
-import User from '@/models/User';
+import { Auth } from './RootLayout';
 import Post from '@/models/Post';
-import Feed from '@/components/feed/Feed';
-import Loader from '@/components/loading/Loader';
 import Modal from '@/components/modal/Modal';
 import Button from '@/components/button/Button';
+import FeedPanel from '@/components/post/FeedPanel';
 import PostForm from '@/components/form/PostForm';
-import Error from '@/components/error/Error';
-import Pagination, { Pages } from '@/components/pagination/Pagination';
+import { Pages, Paginated } from '@/components/pagination/Pagination';
+import { captainsLog } from '@/util/captainsLog';
 
-const initialData = { docCount: 0, posts: [] };
+const initialData: Pick<Paginated<Post, 'posts'>, 'posts' | 'docCount'> = {
+  docCount: 0,
+     posts: [],
+};
 
-export default function FeedPage() {
+export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Auth) {
   const {
-          data,
+          data: { docCount, posts },
        setData,
     reqHandler: initialReq,
          error,
      isLoading,
-  } = useFetch<Pages<Post, 'posts'>>(initialData);
-  const {             reqHandler: updateReq } = useFetch<Pages<Post, 'posts'>>(initialData);
-  const { data: user, reqHandler: fetchUser } = useFetch<User>();
-  const [  showModal,          setShowModal ] = useState(false);
-  const [      pages,              setPages ] = useState([1, 1]); // 0: prevPage, 1: currentPage
-  const isInitial = useRef(true);
+  } = useFetch(initialData);
+  const { reqHandler: updateReq } = useFetch(initialData);
+  const [showModal, setShowModal] = useState(false);
+  const [pages,         setPages] = useState<Pages>([1, 1]);
+  const isInitial = useRef(true);        // 0: prevPage, 1: currentPage
+  const feedProps = {
+    docCount, posts, error, isLoading, limit: 4, pages, setPages
+  };
+  const [, current] = pages;
+  const url = `feed/posts?page=${current}`;
 
   useEffect(() => {
     const mountData = async () => {
-      await Promise.all([
-        initialReq({ url: `feed/posts?page=${pages[1]}` }),
-         fetchUser({ url: 'user' })
-      ]);
+      await initialReq({ url });
     };
 
     const updateData = async () => {
-      const updatedData = await updateReq({ url: `feed/posts?page=${pages[1]}` });
-      setData(updatedData);
+      await updateReq({ url }, { onSuccess: (updated) => setData(updated) });
     };
 
     if (isInitial.current) {
       isInitial.current = false;
       mountData();
-      console.log('IS INITIAL'); // **LOGDATA
+      captainsLog(-100, 260, ['FEEDPAGE INITIAL'] ); // **LOGDATA
     } else {
       updateData();
-      console.log('UPDATING'); // **LOGDATA
+      captainsLog(-100, 270, ['FEEDPAGE UPDATING'] ); // **LOGDATA
     }
-  }, [updateReq, initialReq, fetchUser, setData, pages, showModal]);
+  }, [updateReq, initialReq, setData, url, showModal]);
+
+  const closeModal = () => setShowModal(false);
 
   return (
     <>
-      <Modal show={showModal} close={() => setShowModal(false)}>
-        <PostForm          callback={() => setShowModal(false)} />
+      <Modal show={showModal}           close={closeModal}>
+        <PostForm setUser={setUser} onSuccess={closeModal} />
       </Modal>
-      {user && (
-        <Button
-              hsl={[180, 80, 35]}
-            style={{ margin: '0 auto 1rem' }}
-          onClick={() => setShowModal(true)}
-        >
-          New Post
-        </Button>
-      )}
-      {isLoading ? (
-        <Loader />
-      ) : error ? (
-        <Error error={error} />
+      {fetchingUser ? (
+        <p style={{ alignSelf: 'center' }}>Logging in...</p>
       ) : (
-        <Feed feed={data.posts} pages={pages} />
+        user && (
+          <Button
+                hsl={[180, 80, 35]}
+              style={{ margin: '0 auto 1rem' }}
+            onClick={() => setShowModal(true)}
+          >
+            New Post
+          </Button>
+        )
       )}
-      <Pagination
-              limit={4}
-           docCount={data.docCount}
-           isActive={pages[1]}
-        setIsActive={setPages}
-      />
+      <FeedPanel {...feedProps} />
     </>
   );
 }

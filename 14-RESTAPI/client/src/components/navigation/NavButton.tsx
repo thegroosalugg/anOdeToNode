@@ -1,20 +1,17 @@
 import { motion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
+import { Auth } from '@/pages/RootLayout';
 import css from './NavButton.module.css';
 
-const labels = {
-         '/': 'Feed',
-  '/account': 'Login'
-};
-
 interface NavProps {
-          path: keyof typeof labels;
+          path: string;
          navFn: (path: string) => void;
-  isDebouncing: boolean;
+     deferring: boolean;
+         user?: Auth['user'];
 }
 
-export default function NavButton({ path, navFn, isDebouncing }: NavProps) {
+export default function NavButton({ path, navFn, deferring, user }: NavProps) {
   const { pathname } = useLocation();
   const   isActive   = pathname === path || (pathname.startsWith('/post') && path === '/');
   const   classes    = `${css['nav-button']} ${
@@ -22,8 +19,13 @@ export default function NavButton({ path, navFn, isDebouncing }: NavProps) {
     isMobile ? css['mobile'] : ''
   }`;
 
+  const labels: Record<string, string> = {
+           '/': 'Feed',
+    '/account': user ? 'Profile' : 'Login',
+  };
+
   return (
-    <button className={classes} onClick={() => navFn(path)} disabled={isDebouncing}>
+    <button className={classes} onClick={() => navFn(path)} disabled={deferring}>
       {labels[path]}
       {isActive && <motion.div layoutId='tab-indicator' className={css['active-tab']} />}
     </button>

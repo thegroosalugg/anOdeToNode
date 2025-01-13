@@ -22,18 +22,4 @@
     border-radius: 2px;
     resize: none;
   }
-
-  .error {
-    position: absolute;
-    bottom: -1.3rem;
-    left: 50%;
-    padding: 0.1rem 0.2rem;
-    font-size: 0.7rem;
-    text-wrap: nowrap;
-    overflow-x: scroll;
-    max-width: 95%;
-    border-radius: 2px;
-    background: var(--error-red);
-    color: #ffffff;
-  }
 }
