@@ -6,6 +6,10 @@
   overflow-x: scroll;
   background: linear-gradient(to right, #1d9737, #52a456);
 
+  &::-webkit-scrollbar-thumb {
+    background: #ffffff;
+  }
+
   > h1 {
     color: #fff;
     border: 2px solid #fff;

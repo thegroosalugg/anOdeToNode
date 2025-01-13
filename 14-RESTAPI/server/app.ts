@@ -1,6 +1,7 @@
 import       express from 'express';
 import      mongoose from 'mongoose';
 import        multer from 'multer';
+import {   Server  } from 'socket.io';
 import {    join   } from 'path';
 import {
          storage,
@@ -15,7 +16,12 @@ import      errorMsg from './util/errorMsg';
 import        dotenv from 'dotenv';
               dotenv.config();
 
-const app = express();
+const    app = express();
+const server = app.listen(3000, () => {
+  console.log('Hudson River, 2 years ago');
+}); // createNewServer
+
+const io = new Server(server); // set up websockets
 
 app.use('/uploads', express.static(join(import.meta.dirname, 'uploads'))); // serve static paths
 
@@ -42,8 +48,12 @@ app.use('/profile', authJWT, profileRoutes);
 mongoose
   .connect(process.env.MONGO_URI!)
   .then(() => {
-    app.listen(3000, () => {
-      console.log('Hudson River, 2 years ago');
+    io.on('connection', (socket) => {
+      console.log('Client connected');
+
+      socket.on('disconnect', () => {
+        console.log('Client disconnected');
+      });
     });
   })
   .catch((error) => errorMsg({ error, where: 'Mongoose connect'}));

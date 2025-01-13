@@ -64,7 +64,7 @@ export default function PostForm({
             </section>
             <ImagePicker imgURL={imgURL} style={{ marginTop: '2px' }} /> {/* applies to this layout only */}
           </section>
-          <Button hsl={[28, 64, 50]}>
+          <Button hsl={[180, 30, 35]}>
             {isLoading ? <Loader small /> : 'Post'}
           </Button>
         </motion.form>

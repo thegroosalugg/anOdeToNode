@@ -1,22 +1,19 @@
 .feed {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   align-self: center;
   width: 100%;
   max-width: 600px;
   gap: 0.2rem;
-  padding: 0 0.1rem;
+  padding: 0.1rem;
+  border-top: 2px solid var(--team-green);
+  border-bottom: 2px solid var(--team-green);
   overflow-y: scroll;
 
   &::-webkit-scrollbar {
     height: 0;
     width: 2px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #e19d3d;
   }
 
   .fallback{
@@ -80,8 +77,11 @@
 }
 
 .alternate {
+  border-top-color: var(--text-grey);
+  border-bottom-color: var(--text-grey);
+
   &::-webkit-scrollbar-thumb {
-    background: #7fa145;
+    background: var(--text-grey);
   }
 
   li {
