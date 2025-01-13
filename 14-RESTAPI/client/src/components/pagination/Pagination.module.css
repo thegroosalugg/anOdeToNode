@@ -1,6 +1,6 @@
 .pagination {
   display: flex;
-  margin: 1rem auto 0;
+  margin: 0.5rem auto 0;
   gap: 0.5rem;
   overflow-x: scroll;
   overflow-y: hidden;
@@ -17,9 +17,28 @@
     color: var(--team-green);
     border: 1.5px solid var(--team-green);
     background: #ededed;
+
+    &:disabled {
+      cursor: wait;
+    }
   }
 
   &::-webkit-scrollbar {
     height: 0; /* appears on shake. Needs to be hidden on form */
+  }
+}
+
+.alternate {
+  gap: 0;
+  margin: 0 auto;
+
+  > span {
+    color: #454545;
+    margin: 0 0.1rem;
+  }
+
+  > button {
+    font-weight: 700;
+    min-width: 2.5rem;
   }
 }

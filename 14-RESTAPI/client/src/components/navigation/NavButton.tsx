@@ -7,11 +7,11 @@ import css from './NavButton.module.css';
 interface NavProps {
           path: string;
          navFn: (path: string) => void;
-  isDebouncing: boolean;
+     deferring: boolean;
          user?: Auth['user'];
 }
 
-export default function NavButton({ path, navFn, isDebouncing, user }: NavProps) {
+export default function NavButton({ path, navFn, deferring, user }: NavProps) {
   const { pathname } = useLocation();
   const   isActive   = pathname === path || (pathname.startsWith('/post') && path === '/');
   const   classes    = `${css['nav-button']} ${
@@ -25,7 +25,7 @@ export default function NavButton({ path, navFn, isDebouncing, user }: NavProps)
   };
 
   return (
-    <button className={classes} onClick={() => navFn(path)} disabled={isDebouncing}>
+    <button className={classes} onClick={() => navFn(path)} disabled={deferring}>
       {labels[path]}
       {isActive && <motion.div layoutId='tab-indicator' className={css['active-tab']} />}
     </button>

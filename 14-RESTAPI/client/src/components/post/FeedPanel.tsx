@@ -1,3 +1,4 @@
+import useDebounce from '@/hooks/useDebounce';
 import Post from '@/models/Post';
 import Error from '../error/Error';
 import Loader from '../loading/Loader';
@@ -22,8 +23,9 @@ export default function FeedPanel({
    setPages,
   alternate,
 }: Feed) {
-  const paginateProps = { limit, docCount, pages, setPages };
-  const     feedProps = { ...paginateProps, posts, alternate };
+  const { deferring, deferFn } = useDebounce();
+  const paginateProps = { limit, docCount, pages, setPages, alternate, deferring, deferFn };
+  const     feedProps = { ...paginateProps, posts };
   return (
     <>
       {isLoading ? (

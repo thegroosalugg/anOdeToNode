@@ -1,5 +1,6 @@
 import { motion, AnimatePresence, LayoutGroup } from 'motion/react';
 import { Dispatch, SetStateAction } from 'react';
+import type { Debounce } from '@/hooks/useDebounce';
 import css from './Pagination.module.css';
 
 export type Pages = [previous: number, current: number];
@@ -15,15 +16,15 @@ export type Paginated< T = null, K extends string = 'data' > = {
   [key in K]: T[];
 };
 
-const Ellipsis = () => (
+const Ellipsis = ({ chars }: { chars: string }) => (
   <motion.span
         layout
        initial={{ opacity: 0, scale: 0 }}
        animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0 }}
-    transition={{     duration: 1      }}
+    transition={{     duration: 0.3    }}
   >
-    ...
+    {chars}
   </motion.span>
 );
 
@@ -32,7 +33,11 @@ export default function Pagination({
   docCount,
      pages: [, current],
   setPages: setIsActive,
-}: Omit<Paginated, 'data'>) {
+ alternate,
+ deferring,
+   deferFn,
+}: Omit<Paginated, 'data'> & { alternate?: boolean } & Debounce) {
+  const  classes = `${css['pagination']} ${alternate ? css['alternate'] : ''}`
   const     last = Math.ceil(docCount / limit);
   const   middle = last < 5 ? 3 : Math.min(Math.max(current, 3), last - 2);
   const    pages: number[] = [];
@@ -43,30 +48,46 @@ export default function Pagination({
   if (last >= 4) pages.push(middle + 1);
   if (last >= 5) pages.push(last);
 
+  const changePage = (page: number) => {
+    deferFn(() => setIsActive([current, page]), 1200);
+  }
+  // ↪↩◈▾▾▾▿⁺⁺▿▴▵◂▸◃▹▪▪▪▫▫▫⁝⁘°ªº‥‥․․․……
+  const       chars = alternate ?       '◈' : '…'
+  const  defaultClr = alternate ?  '#454545' : 'var(--team-green)';
+  const  defaultHvr = alternate ?  '#e1e1e1' : '#ebebeb';
+  const  defaultBck = defaultHvr;
+  const      filter = `brightness(${deferring ? 0.9 : 1})`
+
   return (
-    <section className={css['pagination']}>
+    <section className={classes}>
       <LayoutGroup>
         {pages.map((page) => {
-          const isActive = current === page;
+          const    isActive = current === page;
+          const       color =  isActive ? defaultHvr : defaultClr;
+          const borderColor =  color;
+          const  background = !isActive ? defaultBck : defaultClr;
           return (
             <AnimatePresence key={page}>
-              {last > 5 && page === last && pages[3] !== last - 1 && <Ellipsis key='e1' />}
+              {last > 5 && page === last && pages[3] !== last - 1 && (
+                <Ellipsis key='e1' chars={chars} />
+              )}
               <motion.button
-                  layout
-                    key={page}
-                onClick={() => setIsActive([current, page])}
-             transition={{ opacity: { duration: 0.5, ease: 'linear' }}}
-                initial={{ opacity: 0 }}
-                animate={{
-                      opacity: 1,
-                   background: isActive ? '#a2c31f' : '#ededed',
-                  borderColor: isActive ? '#000000' : 'var(--team-green)',
-                        color: isActive ? '#000000' : 'var(--team-green)'
+                     layout
+                       key={page}
+                  disabled={deferring}
+                   onClick={() => changePage(page)}
+                   initial={{ opacity: 0 }}
+                   animate={{ opacity: 1, background, borderColor, color, filter }}
+                transition={{
+                  opacity: { duration: 0.5, ease: 'linear' },
+                   layout: { duration: 0.3 },
                 }}
               >
                 {page}
               </motion.button>
-              {last > 5 && page === 1 && pages[1] !== 2 && <Ellipsis key='e2' />}
+              {last > 5 && page === 1 && pages[1] !== 2 && (
+                <Ellipsis key='e2' chars={chars} />
+              )}
             </AnimatePresence>
           );
         })}

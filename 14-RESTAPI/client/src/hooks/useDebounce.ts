@@ -1,19 +1,25 @@
 import { useState } from 'react';
 
-export default function useDebounce() {
-  const [isDebouncing, setIsDebouncing] = useState(false);
+type DeferFn = (callback: () => void, timeout: number) => void;
 
-  const throttleFn = (callback: () => void, timeout: number) => {
-    if (!isDebouncing) {
-      setIsDebouncing(true);
+export type Debounce = {
+  deferring: boolean;
+    deferFn: DeferFn;
+};
+
+export default function useDebounce() {
+  const [deferring, setDeferring] = useState(false);
+
+  const deferFn: DeferFn = (callback, timeout) => {
+    if (!deferring) {
+      setDeferring(true);
       callback();
 
       setTimeout(() => {
-        setIsDebouncing(false);
+        setDeferring(false);
       }, timeout);
     }
-  }
+  };
 
-
-  return { isDebouncing, throttleFn }
+  return { deferring, deferFn };
 }

@@ -6,17 +6,17 @@ import css from './NavBar.module.css';
 
 export default function NavBar({ user }: Auth) {
   const navigate = useNavigate();
-  const { isDebouncing, throttleFn } = useDebounce();
+  const { deferring, deferFn } = useDebounce();
 
   function navTo(path: string) {
-    throttleFn(() => navigate(path), 1200);
+    deferFn(() => navigate(path), 1200);
   }
 
   return (
     <nav className={css['nav']}>
       <h1>Friendface</h1>
-      <NavButton path='/'        navFn={navTo} isDebouncing={isDebouncing} />
-      <NavButton path='/account' navFn={navTo} isDebouncing={isDebouncing} user={user} />
+      <NavButton path='/'        navFn={navTo} deferring={deferring} />
+      <NavButton path='/account' navFn={navTo} deferring={deferring} user={user} />
     </nav>
   );
 }
