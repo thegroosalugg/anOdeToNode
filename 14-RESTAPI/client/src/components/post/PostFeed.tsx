@@ -1,19 +1,19 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { Pages } from '../pagination/Pagination';
+import { Paginated } from '../pagination/Pagination';
 import Post from '@/models/Post';
-import css from './Feed.module.css';
 import ProfilePic from '../profile/ProfilePic';
 import { timeAgo } from '@/util/timeStamps';
+import css from './PostFeed.module.css';
 
-export default function Feed({ data, pages }: { data: Pages<Post, 'posts'>, pages: number[] }) {
-  const navigate = useNavigate();
-  const { posts, docCount } = data;
+export default function PostFeed({ posts, pages, limit }: Paginated<Post, 'posts'>) {
+  const  navigate = useNavigate();
   const direction = pages[0] < pages[1] ? 1 : -1;
-  const x = 50 * direction;
+  const         x = direction * 50;
+  const    height = limit     * 140 + 'px'
 
   return (
-    <ul className={css['feed']} style={{ height: docCount > 3 ? '560px' : '' }}>
+    <ul className={css['feed']} style={{ height }}>
       <AnimatePresence mode='popLayout'>
         {posts.length > 0 ? (
           posts.map(({ _id, title, content, updatedAt, author }, i) => (

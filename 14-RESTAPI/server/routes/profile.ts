@@ -1,5 +1,6 @@
 import express from "express";
-import { getPosts, profilePic } from "../controllers/profileController";
+import { profilePic } from "../controllers/profileController";
+import { getPosts } from "../controllers/feedController";
 // import { validatePost } from "../validation/validators";
 
 const router = express.Router();

@@ -5,23 +5,36 @@ import Post from '@/models/Post';
 import About from './About';
 import Modal from '../modal/Modal';
 import Button from '../button/Button';
+import FeedPanel from '../post/FeedPanel';
+import { Pages, Paginated } from '../pagination/Pagination';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import css from './UserProfile.module.css';
 
+const initialData: Pick<Paginated<Post, 'posts'>, 'posts' | 'docCount'> = {
+  docCount: 0,
+     posts: [],
+};
+
 export default function UserProfile({ user, setUser }: Auth) {
   const [showModal, setShowModal] = useState(false);
-  // eslint-disable-next-line
-  const { data: posts, setData, isLoading, error, reqHandler } = useFetch<Post[]>([]);
+  const [pages,  setPages] = useState<Pages>([1, 1]);
+  const [, current] = pages;
+
+  const {
+          data: { docCount, posts },
+     isLoading,
+         error,
+    reqHandler,
+  } = useFetch(initialData);
+  const aboutProps = { user, setUser }
+  const  feedProps = { docCount, posts, isLoading, error, limit: 8, pages, setPages };
 
   useEffect(() => {
-    const getPosts = async () => await reqHandler({ url: 'profile/posts' });
+    const getPosts = async () => await reqHandler({ url: `profile/posts?page=${current}` });
     getPosts();
-  }, [reqHandler])
+  }, [reqHandler, current]);
 
-
-  function closeModal() {
-    setShowModal(false);
-  }
+  const closeModal = () => setShowModal(false);
 
   function logout() {
     setUser(null);
@@ -35,7 +48,8 @@ export default function UserProfile({ user, setUser }: Auth) {
         <ConfirmDialog onConfirm={logout} onCancel={closeModal} />
       </Modal>
       <section className={css['user-profile']}>
-        <About user={user} setUser={setUser} />
+        <About    {...aboutProps} />
+        <FeedPanel {...feedProps} />
         <Button hsl={[10, 54, 51]} onClick={() => setShowModal(true)}>
           Logout
         </Button>

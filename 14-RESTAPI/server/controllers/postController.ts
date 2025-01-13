@@ -55,7 +55,7 @@ const editPost: RequestHandler = async (req, res, next) => {
     }
 
     await post.save();
-    await post.populate('author', 'name surname');
+    await post.populate('author', '-email -password');
     res.status(200).json(post);
   } catch (error) {
     errorMsg({ error, where: 'editPost' });

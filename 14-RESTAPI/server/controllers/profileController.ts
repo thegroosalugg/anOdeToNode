@@ -1,22 +1,7 @@
 import { RequestHandler } from 'express';
 import { unlink } from 'fs';
 import User from '../models/User';
-import Post from '../models/Post';
 import errorMsg from '../util/errorMsg';
-
-const getPosts: RequestHandler = async (req, res, next) => {
-  try {
-    const posts = await Post.find({ author: req.user });
-    console.log(posts)
-    if (!posts) {
-      res.status(404).json({ message: 'Nothing posted yet' });
-    }
-    res.status(200).json(posts);
-  } catch (error) {
-    errorMsg({ error, where: 'getPosts' });
-    res.status(500).json({ message: 'Failed to fetch posts' });
-  };
-}
 
 const profilePic: RequestHandler = async (req, res, next) => {
   try {
@@ -51,4 +36,4 @@ const profilePic: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { getPosts, profilePic };
+export { profilePic };
