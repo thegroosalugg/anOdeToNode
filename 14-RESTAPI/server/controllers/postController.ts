@@ -71,7 +71,7 @@ const deletePost: RequestHandler = async (req, res, next) => {
     if (post) {
       if (post.imgURL) deleteFile(post.imgURL);
       await Post.deleteOne({ _id, author: req.user });
-      io.emit('post:update', post); // pushes socket to client
+      io.emit('post:delete', post); // pushes socket to client
       res.status(200).json(null); // truthy objects cause errors as they do not match Models
     }
   } catch (error) {
