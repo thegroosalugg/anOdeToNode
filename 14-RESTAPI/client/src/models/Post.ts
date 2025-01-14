@@ -6,7 +6,7 @@ type Post = {
     content: string;
     imgURL?: string;
   updatedAt: string;
-     author: User;
+    creator: User;
 };
 
 export default Post;

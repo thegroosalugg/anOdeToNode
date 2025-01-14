@@ -51,7 +51,7 @@ export default function Pagination({
   const changePage = (page: number) => {
     deferFn(() => setIsActive([current, page]), 1200);
   }
-  // ↪↩◈▾▾▾▿⁺⁺▿▴▵◂▸◃▹▪▪▪▫▫▫⁝⁘°ªº‥‥․․․……
+
   const       chars = alternate ?       '◈' : '…'
   const  defaultClr = alternate ?  '#454545' : 'var(--team-green)';
   const  defaultHvr = alternate ?  '#e1e1e1' : '#ebebeb';

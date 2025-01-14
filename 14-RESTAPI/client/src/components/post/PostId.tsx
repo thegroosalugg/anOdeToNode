@@ -17,7 +17,7 @@ export default function PostId({
       user: Auth['user'];
   setModal: (modal: string) => void;
 }) {
-  const { title, content, imgURL, author, updatedAt } = post;
+  const { title, content, imgURL, creator, updatedAt } = post;
   const transition = { duration: 0.8 };
   const    opacity = 0;
   const     hidden = { opacity };
@@ -45,10 +45,10 @@ export default function PostId({
           {title}
         </motion.span>
         <span>
-          {author?.name    || 'Account '}
-          {author?.surname || 'deleted'}
+          {creator?.name    || 'Account '}
+          {creator?.surname || 'deleted'}
         </span>
-        <ProfilePic user={author} />
+        <ProfilePic user={creator} />
       </motion.h1>
       <motion.time variants={variants}>
         {timeAgo(updatedAt)}
@@ -91,7 +91,7 @@ export default function PostId({
       {user && (
         <motion.section className={css['buttons']} variants={variants}>
           <Button hsl={[180, 40, 35]}> Reply</Button>
-          {user._id === author?._id && (
+          {user._id === creator?._id && (
             <>
               <Button hsl={[0, 0, 80]} onClick={() => setModal('edit')} style={{ color: '#000' }}>
                 Edit

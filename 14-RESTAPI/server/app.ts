@@ -11,6 +11,7 @@ import {   authJWT } from './middleware/auth.JWT';
 import    authRoutes from './routes/auth';
 import    postRoutes from './routes/post';
 import    feedRoutes from './routes/feed';
+import   replyRoutes from './routes/reply';
 import profileRoutes from './routes/profile';
 import   captainsLog from './util/captainsLog';
 import        dotenv from 'dotenv';
@@ -49,6 +50,7 @@ app.use((req, res, next) => {
 app.use(                        authRoutes);
 app.use('/feed',                feedRoutes);
 app.use('/post',    authJWT,    postRoutes);
+app.use('/post',    authJWT,   replyRoutes);
 app.use('/profile', authJWT, profileRoutes);
 
 mongoose

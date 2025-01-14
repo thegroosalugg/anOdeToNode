@@ -38,7 +38,7 @@ export default function PostFeed({ posts, pages, limit, alternate, deferring }: 
     >
       <AnimatePresence mode='popLayout'>
         {posts.length > 0 ? (
-          posts.map(({ _id, title, content, updatedAt, author }, i) => (
+          posts.map(({ _id, title, content, updatedAt, creator }, i) => (
             <motion.li
                layout
                   key={_id}
@@ -50,10 +50,10 @@ export default function PostFeed({ posts, pages, limit, alternate, deferring }: 
             >
               {!alternate && (
                 <h3>
-                  <ProfilePic user={author} />
+                  <ProfilePic user={creator} />
                   <span>
-                    {author?.name    || 'account '}
-                    {author?.surname || 'deleted'}
+                    {creator?.name    || 'account '}
+                    {creator?.surname || 'deleted'}
                   </span>
                 </h3>
               )}

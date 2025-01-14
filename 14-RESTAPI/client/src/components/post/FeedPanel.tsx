@@ -35,7 +35,7 @@ export default function FeedPanel({
       ) : (
         <PostFeed {...feedProps} />
       )}
-      {docCount > 4 && (
+      {docCount > limit && (
         <Pagination {...paginateProps} />
       )}
     </>
