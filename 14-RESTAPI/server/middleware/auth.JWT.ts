@@ -1,8 +1,8 @@
 import { RequestHandler } from 'express';
 import User from '../models/User';
-import { unlink } from 'fs';
 import jwt from 'jsonwebtoken';
-import errorMsg from '../util/errorMsg';
+import captainsLog from '../util/captainsLog';
+import { deleteFile } from '../util/deleteFile';
 
 export const authJWT: RequestHandler = async (req, res, next) => {
   if (req.method === 'OPTIONS') return next(); // Skip token validation for preflight
@@ -11,9 +11,7 @@ export const authJWT: RequestHandler = async (req, res, next) => {
   const token = req.get('authorization')?.split(' ')[1]; // split string @ 'Bearer ' whitespace
   if (!token) {
     res.status(401).json({ message: 'You are not logged in' });
-    if (image) { // delete req files if middleware catches error before controller
-      unlink(image.path, (error) => errorMsg({ error, where: 'authJWT FS !token' }));
-    }
+    if (image) deleteFile(image.path);
     return;
   }
 
@@ -22,19 +20,14 @@ export const authJWT: RequestHandler = async (req, res, next) => {
     const user = await User.findById(decodedTkn.userId).select('-password');
     if (!user) {
       res.status(404).json({ message: 'User not found' });
-      if (image) {
-        unlink(image.path, (error) => errorMsg({ error, where: 'authJWT FS !user' }));
-      }
+      if (image) deleteFile(image.path);
       return;
     }
     req.user = user;
     next();
   } catch (error) {
-    errorMsg({ error, where: 'authJWT' });
-
-    if (image) {
-      unlink(image.path, (error) => errorMsg({ error, where: 'authJWT FS Catch' }));
-    }
+    captainsLog(6, 'authJWT', error);
+    if (image) deleteFile(image.path);
 
     const refresh = error instanceof jwt.TokenExpiredError;
     const message =

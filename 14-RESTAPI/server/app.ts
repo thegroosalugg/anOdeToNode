@@ -12,13 +12,13 @@ import    authRoutes from './routes/auth';
 import    postRoutes from './routes/post';
 import    feedRoutes from './routes/feed';
 import profileRoutes from './routes/profile';
-import      errorMsg from './util/errorMsg';
+import   captainsLog from './util/captainsLog';
 import        dotenv from 'dotenv';
               dotenv.config();
 
 const    app = express();
 const server = app.listen(3000, () => {
-  console.log('Hudson River, 2 years ago');
+  captainsLog(7, 'Hudson River, 2 years ago');
 }); // createNewServer
 
 export const io = new Server(server, {
@@ -55,11 +55,11 @@ mongoose
   .connect(process.env.MONGO_URI!)
   .then(() => {
     io.on('connection', (socket) => {
-      console.log('App.ts Client connected');
+      captainsLog(2, 'App IO: Client connected');
 
       socket.on('disconnect', () => {
-        console.log('App.ts Client disconnected');
+        captainsLog(1, 'App IO: Client disconnected');
       });
     });
   })
-  .catch((error) => errorMsg({ error, where: 'Mongoose connect'}));
+  .catch((error) => captainsLog(1, 'Mongoose error', error));

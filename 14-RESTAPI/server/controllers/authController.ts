@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
-import errorMsg from '../util/errorMsg';
+import captainsLog from '../util/captainsLog';
 import { getErrors, hasErrors } from '../validation/validators';
 
 const mins = '15m';
@@ -42,7 +42,7 @@ const postLogin: RequestHandler = async (req, res, next) => {
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
     res.status(200).json({ JWTaccess, JWTrefresh, ...userDets });
   } catch (error) {
-    errorMsg({ error, where: 'postLogin' });
+    captainsLog(5, 'postLogin Catch', error);
     res.status(500).json({ message: 'Unable to login.' });
   }
 };
@@ -53,7 +53,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
 
     const errors = getErrors(req);
     if (hasErrors(errors)) {
-      errorMsg({ error: errors, where: 'postSignup' });
+      captainsLog(4, 'postSignUp hasErrors', errors);
       res.status(422).json(errors);
       return;
     }
@@ -74,7 +74,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
     res.status(201).json({ JWTaccess, JWTrefresh, ...userDets });
   } catch (error) {
-    errorMsg({ error, where: 'postSignup' });
+    captainsLog(5, 'postSignup Catch', error);
     res.status(500).json({ message: 'Sign up failed.' });
   }
 };
@@ -103,7 +103,7 @@ const refreshToken: RequestHandler = async (req, res, next) => {
     });
     res.status(200).json({ JWTaccess, JWTrefresh });
   } catch (error) {
-    errorMsg({ error, where: 'refreshToken' });
+    captainsLog(1, 'refreshToken Catch', error);
     res.status(401).json(null);
   }
 }

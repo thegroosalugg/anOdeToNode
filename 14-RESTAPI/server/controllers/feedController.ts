@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import Post from '../models/Post';
-import errorMsg from '../util/errorMsg';
+import captainsLog from '../util/captainsLog';
 import { Types } from 'mongoose';
 
 const getPosts: RequestHandler = async (req, res, next) => {
@@ -26,7 +26,7 @@ const getPosts: RequestHandler = async (req, res, next) => {
 
     res.status(200).json({ posts, docCount });
   } catch (error) {
-    errorMsg({ error, where: 'getPosts' });
+    captainsLog(5, 'getPosts Catch', error);
     res.status(500).json({ message: 'Unable to load posts.' });
   }
 };
@@ -41,7 +41,7 @@ const getPostById: RequestHandler = async (req, res, next) => {
     }
     res.status(200).json(post);
   } catch (error) {
-    errorMsg({ error, where: 'getPostById' });
+    captainsLog(5, 'getPostById Catch', error);
     res.status(500).json({ message: 'Unable to load post.' });
   }
 };

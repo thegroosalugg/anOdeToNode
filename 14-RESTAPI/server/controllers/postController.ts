@@ -1,9 +1,9 @@
-import { RequestHandler } from 'express';
-import { unlink } from 'fs';
 import Post from '../models/Post';
-import { getErrors, hasErrors } from '../validation/validators';
-import errorMsg from '../util/errorMsg';
+import { RequestHandler } from 'express';
 import { io } from '../app';
+import { getErrors, hasErrors } from '../validation/validators';
+import { deleteFile } from '../util/deleteFile';
+import captainsLog from '../util/captainsLog';
 
 const newPost: RequestHandler = async (req, res, next) => {
   try {
@@ -13,7 +13,7 @@ const newPost: RequestHandler = async (req, res, next) => {
     const errors = getErrors(req);
     if (hasErrors(errors)) {
       res.status(422).json(errors);
-      if (image) unlink(image.path, (error) => errorMsg({ error, where: 'FS Unlink' }));
+      if (image) deleteFile(image.path);
       return;
     }
 
@@ -23,7 +23,7 @@ const newPost: RequestHandler = async (req, res, next) => {
     io.emit('post:update', post); // pushes socket to client
     res.status(201).json(post);
   } catch (error) {
-    errorMsg({ error, where: 'newPost' });
+    captainsLog(5, 'newPost Catch', error);
     res.status(500).json({ message: 'Unable to submit your post.' });
   }
 };
@@ -37,11 +37,11 @@ const editPost: RequestHandler = async (req, res, next) => {
     const errors = getErrors(req);
     if (hasErrors(errors)) {
       res.status(422).json(errors);
-      if (image) unlink(image.path, (error) => errorMsg({ error, where: 'FS Unlink' }));
+      if (image) deleteFile(image.path);
       return;
     }
 
-    const post = await Post.findOne({ _id: postId, author: req.user })
+    const post = await Post.findOne({ _id: postId, author: req.user });
     if (!post) {
       res.status(404).json({ message: 'Post not found.' });
       return;
@@ -50,9 +50,7 @@ const editPost: RequestHandler = async (req, res, next) => {
     post.title = title;
     post.content = content;
     if (image) {
-      if (post.imgURL) {
-        unlink(post.imgURL, (error) => error && errorMsg({ error, where: 'FS Unlink' }));
-      }
+      if (post.imgURL) deleteFile(post.imgURL);
       post.imgURL = image.path;
     }
 
@@ -61,7 +59,7 @@ const editPost: RequestHandler = async (req, res, next) => {
     io.emit('post:update', post); // pushes socket to client
     res.status(200).json(post);
   } catch (error) {
-    errorMsg({ error, where: 'editPost' });
+    captainsLog(5, 'editPost Catch', error);
     res.status(500).json({ message: 'Unable to update your post.' });
   }
 };
@@ -69,16 +67,15 @@ const editPost: RequestHandler = async (req, res, next) => {
 const deletePost: RequestHandler = async (req, res, next) => {
   try {
     const { postId: _id } = req.params;
-    const post = await Post.findOne({ _id, author: req.user })
+    const post = await Post.findOne({ _id, author: req.user });
     if (post) {
-      if (post.imgURL) {
-        unlink(post.imgURL, (error) => error && errorMsg({ error, where: 'deletePost' }));
-      }
+      if (post.imgURL) deleteFile(post.imgURL);
       await Post.deleteOne({ _id, author: req.user });
+      io.emit('post:update', post); // pushes socket to client
       res.status(200).json(null); // truthy objects cause errors as they do not match Models
     }
   } catch (error) {
-    errorMsg({ error, where: 'deletePost' });
+    captainsLog(5, 'deletePost Catch', error);
     res.status(500).json({ message: 'Unable to delete post.' });
   }
 };
