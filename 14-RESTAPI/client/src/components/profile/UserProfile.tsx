@@ -5,10 +5,12 @@ import Post from '@/models/Post';
 import About from './About';
 import Modal from '../modal/Modal';
 import Button from '../button/Button';
-import FeedPanel from '../post/FeedPanel';
-import { Pages, Paginated } from '../pagination/Pagination';
+import Pagination, { Pages, Paginated } from '../pagination/Pagination';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import css from './UserProfile.module.css';
+import AsyncAwait from '../panel/AsyncAwait';
+import PostFeed from '../post/PostFeed';
+import useDebounce from '@/hooks/useDebounce';
 
 const initialData: Pick<Paginated<Post, 'posts'>, 'posts' | 'docCount'> = {
   docCount: 0,
@@ -16,10 +18,6 @@ const initialData: Pick<Paginated<Post, 'posts'>, 'posts' | 'docCount'> = {
 };
 
 export default function UserProfile({ user, setUser }: Auth) {
-  const [showModal, setShowModal] = useState(false);
-  const [pages,  setPages] = useState<Pages>([1, 1]);
-  const [, current] = pages;
-
   const {
           data: { docCount, posts },
        setData,
@@ -27,14 +25,16 @@ export default function UserProfile({ user, setUser }: Auth) {
          error,
     reqHandler: initialReq,
   } = useFetch(initialData);
+  const               isInitial   = useRef(true);
   const { reqHandler: updateReq } = useFetch(initialData);
- const isInitial = useRef(true);
- const url =  `profile/posts?page=${current}`;
+  const { deferring,    deferFn } = useDebounce();
+  const [showModal, setShowModal] = useState(false);
+  const [pages,         setPages] = useState<Pages>([1, 1]);
+  const [,               current] = pages;
+  const                      url  = `profile/posts?page=${current}`;
 
   const aboutProps = { user, setUser }
-  const  feedProps = {
-    docCount, posts, isLoading, error, limit: 6, pages, setPages, alternate: true
-  };
+  const  feedProps = { docCount, limit: 6, pages, setPages, deferring, deferFn, alternate: true };
 
   useEffect(() => {
     const mountData = async () => await initialReq({ url });
@@ -66,7 +66,10 @@ export default function UserProfile({ user, setUser }: Auth) {
       </Modal>
       <section className={css['user-profile']}>
         <About    {...aboutProps} />
-        <FeedPanel {...feedProps} />
+        <AsyncAwait {...{ isLoading, error }}>
+          <PostFeed posts={posts} {...feedProps} />
+          <Pagination {...feedProps} />
+        </AsyncAwait>
         <Button hsl={[10, 54, 51]} onClick={() => setShowModal(true)}>
           Logout
         </Button>

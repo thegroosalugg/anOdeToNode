@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
 import useFetch from '@/hooks/useFetch';
+import useDebounce from '@/hooks/useDebounce';
 import { Auth } from './RootLayout';
 import Post from '@/models/Post';
 import Modal from '@/components/modal/Modal';
 import Button from '@/components/button/Button';
-import FeedPanel from '@/components/post/FeedPanel';
 import PostForm from '@/components/form/PostForm';
-import { Pages, Paginated } from '@/components/pagination/Pagination';
+import PostFeed from '@/components/post/PostFeed';
+import AsyncAwait from '@/components/panel/AsyncAwait';
+import Pagination, { Pages, Paginated } from '@/components/pagination/Pagination';
 import { captainsLog } from '@/util/captainsLog';
 
 const initialData: Pick<Paginated<Post, 'posts'>, 'posts' | 'docCount'> = {
@@ -24,15 +26,15 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
          error,
      isLoading,
   } = useFetch(initialData);
+  const               isInitial   = useRef(true);
   const { reqHandler: updateReq } = useFetch(initialData);
+  const { deferring,    deferFn } = useDebounce();
   const [showModal, setShowModal] = useState(false);
   const [pages,         setPages] = useState<Pages>([1, 1]);
-  const isInitial = useRef(true);        // 0: prevPage, 1: currentPage
-  const feedProps = {
-    docCount, posts, error, isLoading, limit: 4, pages, setPages
-  };
-  const [, current] = pages;
-  const url = `feed/posts?page=${current}`;
+  const [,               current] = pages;
+  const                      url  = `feed/posts?page=${current}`;
+
+  const feedProps = { docCount, limit: 4, pages, setPages, deferring, deferFn };
 
   useEffect(() => {
     const  mountData = async () => await initialReq({ url });
@@ -100,7 +102,10 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
           </Button>
         )
       )}
-      <FeedPanel {...feedProps} />
+      <AsyncAwait {...{ isLoading, error }}>
+        <PostFeed posts={posts} {...feedProps} />
+        <Pagination {...feedProps} />
+      </AsyncAwait>
     </>
   );
 }

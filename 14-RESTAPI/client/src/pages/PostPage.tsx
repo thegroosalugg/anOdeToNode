@@ -3,9 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Auth } from './RootLayout';
 import Post from '@/models/Post';
-import Loader from '@/components/loading/Loader';
+import AsyncAwait from '@/components/panel/AsyncAwait';
 import PostId from '@/components/post/PostId';
-import Error from '@/components/error/Error';
 import Modal from '@/components/modal/Modal';
 import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
@@ -64,17 +63,9 @@ export default function PostPage({ user, setUser }: Auth) {
           />
         )}
       </Modal>
-      {isLoading ? (
-        <Loader />
-      ) : error ? (
-        <Error error={error} />
-      ) : post && (
-        <PostId
-              post={post}
-              user={user}
-          setModal={setModalState}
-        />
-      )}
+      <AsyncAwait {...{ isLoading, error }}>
+        {post && <PostId post={post} user={user} setModal={setModalState} />}
+      </AsyncAwait>
     </>
   );
 }
