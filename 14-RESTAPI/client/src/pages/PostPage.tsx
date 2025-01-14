@@ -8,6 +8,7 @@ import PostId from '@/components/post/PostId';
 import Modal from '@/components/modal/Modal';
 import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
+import ReplySubmit from '@/components/post/ReplySubmit';
 import { captainsLog } from '@/util/captainsLog';
 
 export default function PostPage({ user, setUser }: Auth) {
@@ -64,8 +65,9 @@ export default function PostPage({ user, setUser }: Auth) {
         )}
       </Modal>
       <AsyncAwait {...{ isLoading, error }}>
-        {post && <PostId post={post} user={user} setModal={setModalState} />}
+        {post && <PostId {...{post, user}} setModal={setModalState} />}
       </AsyncAwait>
+      {postId && user && <ReplySubmit {...{postId}} />}
     </>
   );
 }
