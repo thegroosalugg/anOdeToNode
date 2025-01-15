@@ -15,17 +15,23 @@ import Replies from '@/components/post/Replies';
 import { captainsLog } from '@/util/captainsLog';
 
 export default function PostPage({ user, setUser }: Auth) {
+  const {
+          data: post,
+       setData: setPost,
+    reqHandler,
+     isLoading,
+         error,
+      setError,
+  } = useFetch<Post | null>();
+  const [modalState, setModalState] = useState('');
   const   navigate = useNavigate();
   const { postId } = useParams();
-  const { data: post, setData: setPost, reqHandler, isLoading, error } = useFetch<Post | null>();
-  const [modalState, setModalState] = useState('');
-  const isInitial = useRef(true);
+  const  isInitial = useRef(true);
+  const closeModal = () => setModalState('');
 
   useEffect(() => {
     const fetchPost = async () => {
-      if (postId) {
-        await reqHandler({ url: `feed/find/${postId}` });
-      }
+      if (postId) await reqHandler({ url: `feed/find/${postId}` });
     }
 
     if (isInitial.current) {
@@ -45,34 +51,49 @@ export default function PostPage({ user, setUser }: Auth) {
       });
     });
 
+    socket.on(`post:${postId}:update`, (post) => {
+      captainsLog(-100, 15, ['POSTPAGE: POST UPDATED']);
+      setPost((prevPost) => {
+        if (post) return { ...prevPost, ...post };
+        return prevPost;
+      });
+      closeModal(); // viewers cannot open modals on this page
+    });
+
+    socket.on(`post:${postId}:delete`, (deleted) => {
+      captainsLog(-100, 10, ['POSTPAGE: POST DELETED']);
+      if (deleted.creator !== user?._id) {
+        setPost(null); // delete actions for viewers. Creator's state automatically set to null
+        setError({ message: 'The post was deleted' }); // creators redirected without msg
+      }
+    });
+
     return () => {
       socket.off('connect');
       socket.off(`post:${postId}:reply`);
+      socket.off(`post:${postId}:update`);
+      socket.off(`post:${postId}:delete`);
       socket.disconnect();
     };
-  }, [postId, setPost, reqHandler]);
-
-  function updatePost(post: Post | null) {
-    setPost((prevPost) => prevPost ? { ...prevPost, ...post } : post);
-    setModalState('');
-  }
+  }, [user?._id, postId, setPost, setError, reqHandler]);
 
   async function deletePost() {
-    setModalState('');
     await reqHandler(
       { url: `post/delete/${postId}`, method: 'DELETE' },
-      { onSuccess: () => navigate('/') },
+      {
+        onSuccess: () => {
+          closeModal(); // delete actions for creator
+          navigate('/');
+        },
+      }
     );
   }
-
-  const closeModal = () => setModalState('');
 
   return (
     <>
       <Modal show={modalState} close={closeModal}>
         {modalState ===  'edit'  && (
           <PostForm
-            onSuccess={updatePost}
               setUser={setUser}
                   url={`post/edit/${postId}`}
                method='PUT'

@@ -1,5 +1,5 @@
 import { useAnimate, stagger, AnimatePresence, motion } from 'motion/react';
-import useFetch, { ReqConfig } from '@/hooks/useFetch';
+import useFetch from '@/hooks/useFetch';
 import { FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import Post from '@/models/Post';
@@ -17,31 +17,30 @@ export default function PostForm({
     setUser,
        post,
 }: {
-       url?: 'post/new' | `post/edit/${string}`;
-    method?: 'POST' | 'PUT';
-  onSuccess: ReqConfig<Post | null>['onSuccess'];
-    setUser: Auth['setUser'];
-      post?: Post | null;
+        url?: 'post/new' | `post/edit/${string}`;
+     method?: 'POST' | 'PUT';
+  onSuccess?: () => void;
+     setUser: Auth['setUser'];
+       post?: Post | null;
 }) {
   const { isLoading, error, reqHandler } = useFetch<Post | null>();
   const [ scope, animate ] = useAnimate();
   const { title = '', content = '', imgURL = '' } = post || {};
 
+  const onError = (err: FetchError) => {
+    if (error && !error.message) {
+      animate(
+        'p',
+        { x: [null, 10, 0, 10, 0] },
+        { repeat: 1, duration: 0.3, delay: stagger(0.1) }
+      );
+    }
+    if (err.status === 401) setUser(null);
+  };
+
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget); // multipart/form-data
-
-    const onError = (err: FetchError) => {
-      if (error && !error.message) {
-        animate(
-          'p',
-          { x: [null, 10, 0, 10, 0] },
-          { repeat: 1, duration: 0.3, delay: stagger(0.1) }
-        );
-      }
-      if (err.status === 401) setUser(null);
-    }
-
     await reqHandler({ url, method, data }, { onError, onSuccess });
   }
 

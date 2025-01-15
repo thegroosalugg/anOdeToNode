@@ -56,7 +56,8 @@ const editPost: RequestHandler = async (req, res, next) => {
 
     await post.save();
     await post.populate('creator', '-email -password');
-    io.emit('post:update', post); // pushes socket to client
+    io.emit('post:update', post); // emits to main feed page
+    io.emit(`post:${postId}:update`, post); // emits to specfic path only
     res.status(200).json(post);
   } catch (error) {
     captainsLog(5, 'editPost Catch', error);
@@ -71,8 +72,9 @@ const deletePost: RequestHandler = async (req, res, next) => {
     if (post) {
       if (post.imgURL) deleteFile(post.imgURL);
       await Post.deleteOne({ _id, creator: req.user });
-      io.emit('post:delete', post); // pushes socket to client
-      res.status(200).json(null); // truthy objects cause errors as they do not match Models
+      io.emit('post:delete', post); // emits to main feed page
+      io.emit(`post:${_id}:delete`, post); // emits to specfic path only
+      res.status(200).json(null); // 200 replaces client Data, so post must be null
     }
   } catch (error) {
     captainsLog(5, 'deletePost Catch', error);
