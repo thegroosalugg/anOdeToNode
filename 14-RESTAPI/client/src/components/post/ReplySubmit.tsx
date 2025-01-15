@@ -2,7 +2,7 @@ import { FC, FormEvent } from 'react';
 import { motion, useAnimate, AnimatePresence } from 'motion/react';
 import useFetch from '@/hooks/useFetch';
 import useDebounce from '@/hooks/useDebounce';
-import { Reply } from '@/models/Reply';
+import Reply from '@/models/Reply';
 import Loader from '../loading/Loader';
 import css from './ReplySubmit.module.css';
 

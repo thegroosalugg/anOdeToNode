@@ -1,12 +1,9 @@
 import { RequestHandler } from "express";
+import { io } from "../app";
 import Post from "../models/Post";
 import Reply from "../models/Reply";
 import { getErrors, hasErrors } from "../validation/validators";
 import captainsLog from "../util/captainsLog";
-
-const getReplies: RequestHandler = async (req, res, next) => {
-
-}
 
 const postReply: RequestHandler = async (req, res, next) => {
   try {
@@ -28,12 +25,13 @@ const postReply: RequestHandler = async (req, res, next) => {
 
     const reply = new Reply({ post: post._id, content, creator });
     await reply.save();
+    io.emit(`post:${postId}:reply`, reply); // emits to specfic path only
     res.status(201).json(reply);
 
   } catch (error) {
     captainsLog(5, 'postReply Catch', error);
     res.status(500).json({ message: "Message couldn't be posted" });
   }
-}
+};
 
-export { getReplies, postReply };
+export { postReply };

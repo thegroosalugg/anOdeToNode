@@ -1,6 +1,8 @@
 import useFetch from '@/hooks/useFetch';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { io } from 'socket.io-client';
+import { BASE_URL } from '@/util/fetchData';
 import { Auth } from './RootLayout';
 import Post from '@/models/Post';
 import AsyncAwait from '@/components/panel/AsyncAwait';
@@ -9,6 +11,7 @@ import Modal from '@/components/modal/Modal';
 import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
 import ReplySubmit from '@/components/post/ReplySubmit';
+import Replies from '@/components/post/Replies';
 import { captainsLog } from '@/util/captainsLog';
 
 export default function PostPage({ user, setUser }: Auth) {
@@ -30,10 +33,27 @@ export default function PostPage({ user, setUser }: Auth) {
       captainsLog(-100, 30, ['POSTPAGE effect, ID:' + postId]); // **LOGDATA
       fetchPost();
     }
-  }, [postId, reqHandler]);
+
+    const socket = io(BASE_URL);
+    socket.on('connect', () => captainsLog(-100, 25, ['POSTPAGE: Socket connected']));
+
+    socket.on(`post:${postId}:reply`, (reply) => {
+      captainsLog(-100, 20, ['POSTPAGE: NEW REPLY']);
+      setPost((post) => {
+        if (post) return { ...post, replies: [reply, ...post.replies] };
+        return post;
+      });
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off(`post:${postId}:reply`);
+      socket.disconnect();
+    };
+  }, [postId, setPost, reqHandler]);
 
   function updatePost(post: Post | null) {
-    setPost(post);
+    setPost((prevPost) => prevPost ? { ...prevPost, ...post } : post);
     setModalState('');
   }
 
@@ -45,9 +65,11 @@ export default function PostPage({ user, setUser }: Auth) {
     );
   }
 
+  const closeModal = () => setModalState('');
+
   return (
     <>
-      <Modal show={modalState} close={() => setModalState('')}>
+      <Modal show={modalState} close={closeModal}>
         {modalState ===  'edit'  && (
           <PostForm
             onSuccess={updatePost}
@@ -60,14 +82,19 @@ export default function PostPage({ user, setUser }: Auth) {
         {modalState === 'delete' && (
           <ConfirmDialog
             onConfirm={deletePost}
-             onCancel={() => setModalState('')}
+             onCancel={closeModal}
           />
         )}
       </Modal>
       <AsyncAwait {...{ isLoading, error }}>
-        {post && <PostId {...{post, user}} setModal={setModalState} />}
+        {post && (
+          <>
+            <PostId {...{ post, user }} setModal={setModalState} />
+            {user && <ReplySubmit postId={post._id} />}
+            <Replies replies={post.replies} />
+          </>
+        )}
       </AsyncAwait>
-      {postId && user && <ReplySubmit {...{postId}} />}
     </>
   );
 }

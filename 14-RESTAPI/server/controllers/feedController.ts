@@ -1,7 +1,10 @@
 import { RequestHandler } from 'express';
 import { Types } from 'mongoose';
 import Post from '../models/Post';
+import Reply from '../models/Reply';
 import captainsLog from '../util/captainsLog';
+
+const _public = '-email -password';
 
 const getPosts: RequestHandler = async (req, res, next) => {
   try {
@@ -17,7 +20,7 @@ const getPosts: RequestHandler = async (req, res, next) => {
     const    posts = await Post.find(query)
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate('creator', '-email -password')
+      .populate('creator', _public)
       .sort({ _id: -1 }); // newest first
 
     if (!posts) {
@@ -34,12 +37,17 @@ const getPosts: RequestHandler = async (req, res, next) => {
 const getPostById: RequestHandler = async (req, res, next) => {
   try {
     const { postId } = req.params;
-    const post = await Post.findById(postId).populate('creator', '-email -password');
+    const post = await Post.findById(postId).populate('creator', _public);
     if (!post) {
       res.status(404).json({ message: 'Post not found.' });
       return;
     }
-    res.status(200).json(post);
+
+    const replies = await Reply.find({ post })
+      .populate('creator', _public)
+      .sort({ _id: -1 });
+
+    res.status(200).json({ ...post.toObject(), replies });
   } catch (error) {
     captainsLog(5, 'getPostById Catch', error);
     res.status(500).json({ message: 'Unable to load post.' });

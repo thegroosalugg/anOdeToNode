@@ -1,10 +1,11 @@
-import Post from './Post';
 import User from './User';
 
-export type Reply = {
+type Reply = {
         _id: string;
     content: string;
   updatedAt: string;
-    creator: User;
-       post: Post;
+       post: string; // id string only stored to find Post
+    creator: User;   // Backend populates creator ID with User object
 };
+
+export default Reply;
