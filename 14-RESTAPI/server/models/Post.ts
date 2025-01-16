@@ -1,4 +1,5 @@
 import { Model, model, Types, Schema } from 'mongoose';
+import Reply from './Reply';
 
 const required = true;
 
@@ -23,5 +24,10 @@ export const postSchema = new Schema<IPost, PostModel, IPostMethods>({
   },
   { timestamps: true }
 );
+
+postSchema.pre('deleteOne', { document: false, query: true }, async function() {
+  const post = this.getFilter()._id;
+  await Reply.deleteMany({ post }); // deletes all replies with this post ID
+});
 
 export default model<IPost, PostModel>('Post', postSchema);
