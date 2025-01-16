@@ -93,12 +93,7 @@ export default function PostPage({ user, setUser }: Auth) {
     <>
       <Modal show={modalState} close={closeModal}>
         {modalState ===  'edit'  && (
-          <PostForm
-              setUser={setUser}
-                  url={`post/edit/${postId}`}
-               method='PUT'
-                 post={post}
-          />
+          <PostForm setUser={setUser} postId={postId} post={post} />
         )}
         {modalState === 'delete' && (
           <ConfirmDialog

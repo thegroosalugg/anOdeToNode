@@ -18,6 +18,8 @@
 
   .fallback{
     text-align: center;
+    color: #fff;
+    padding: 0.5rem;
   }
 
   li {
