@@ -8,10 +8,12 @@ import Post from '@/models/Post';
 import Modal from '@/components/modal/Modal';
 import Button from '@/components/button/Button';
 import PostForm from '@/components/form/PostForm';
-import PostFeed from '@/components/post/PostFeed';
 import AsyncAwait from '@/components/panel/AsyncAwait';
+import MotionList from '@/components/list/MotionList';
+import PostItem from '@/components/post/PostItem';
 import Pagination, { Pages, Paginated } from '@/components/pagination/Pagination';
 import { captainsLog } from '@/util/captainsLog';
+import css from '@/components/post/PostItem.module.css';
 
 const initialData: Pick<Paginated<Post, 'posts'>, 'posts' | 'docCount'> = {
   docCount: 0,
@@ -34,7 +36,18 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
   const [,               current] = pages;
   const                      url  = `feed/posts?page=${current}`;
 
-  const feedProps = { docCount, limit: 4, pages, setPages, deferring, deferFn };
+  const     limit = 4;
+  const pageProps = { docCount, limit, pages, setPages, deferring, deferFn };
+  const feedProps = {
+    classNames: [css.feed],
+         items: posts,
+         limit,
+         pages,
+     deferring,
+         navTo: 'post' as const,
+         color: 'var(--team-green)',
+    itemHeight: 130,
+  };
 
   useEffect(() => {
     const  mountData = async () => await initialReq({ url });
@@ -103,8 +116,10 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
         )
       )}
       <AsyncAwait {...{ isLoading, error }}>
-        <PostFeed posts={posts} {...feedProps} />
-        <Pagination {...feedProps} />
+        <MotionList<Post> {...feedProps}>
+          {(post) => <PostItem {...post} />}
+        </MotionList>
+        <Pagination {...pageProps} />
       </AsyncAwait>
     </>
   );

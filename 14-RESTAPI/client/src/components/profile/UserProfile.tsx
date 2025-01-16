@@ -1,3 +1,4 @@
+import useDebounce from '@/hooks/useDebounce';
 import useFetch from '@/hooks/useFetch';
 import { useEffect, useRef, useState } from 'react';
 import { Auth } from '@/pages/RootLayout';
@@ -7,10 +8,11 @@ import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import Pagination, { Pages, Paginated } from '../pagination/Pagination';
 import ConfirmDialog from '../dialog/ConfirmDialog';
-import css from './UserProfile.module.css';
 import AsyncAwait from '../panel/AsyncAwait';
-import PostFeed from '../post/PostFeed';
-import useDebounce from '@/hooks/useDebounce';
+import MotionList from '../list/MotionList';
+import PostItem from '../post/PostItem';
+import cssList from '../post/PostItem.module.css';
+import css from './UserProfile.module.css';
 
 const initialData: Pick<Paginated<Post, 'posts'>, 'posts' | 'docCount'> = {
   docCount: 0,
@@ -34,7 +36,18 @@ export default function UserProfile({ user, setUser }: Auth) {
   const                      url  = `profile/posts?page=${current}`;
 
   const aboutProps = { user, setUser }
-  const  feedProps = { docCount, limit: 6, pages, setPages, deferring, deferFn, alternate: true };
+  const      limit = 6;
+  const  pageProps = { docCount, limit, pages, setPages, deferring, deferFn, alternate: true };
+  const  feedProps = {
+    classNames: [cssList.feed, cssList['on-user-page']],
+         items: posts,
+         limit,
+         pages,
+     deferring,
+         navTo: 'post' as const,
+         color: '#454545',
+    itemHeight: 60,
+  };
 
   useEffect(() => {
     const mountData = async () => await initialReq({ url });
@@ -67,8 +80,10 @@ export default function UserProfile({ user, setUser }: Auth) {
       <section className={css['user-profile']}>
         <About    {...aboutProps} />
         <AsyncAwait {...{ isLoading, error }}>
-          <PostFeed posts={posts} {...feedProps} />
-          <Pagination {...feedProps} />
+          <MotionList<Post> {...feedProps}>
+            {(post) => <PostItem {...post} onUserPage />}
+          </MotionList>
+          <Pagination {...pageProps} />
         </AsyncAwait>
         <Button hsl={[10, 54, 51]} onClick={() => setShowModal(true)}>
           Logout
