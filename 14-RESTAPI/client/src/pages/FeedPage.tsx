@@ -13,7 +13,7 @@ import PostItem from '@/components/post/PostItem';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
 import { captainsLog } from '@/util/captainsLog';
 
-const initialData: Pick<Paginated<Post, 'posts'>, 'posts' | 'docCount'> = {
+const initialData: Paginated<Post, 'posts'> = {
   docCount: 0,
      posts: [],
 };

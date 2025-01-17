@@ -12,7 +12,7 @@ import PagedList from '../panel/PagedList';
 import PostItem from '../post/PostItem';
 import css from './UserProfile.module.css';
 
-const initialData: Pick<Paginated<Post, 'posts'>, 'posts' | 'docCount'> = {
+const initialData: Paginated<Post, 'posts'> = {
   docCount: 0,
      posts: [],
 };
@@ -72,7 +72,7 @@ export default function UserProfile({ user, setUser }: Auth) {
       <section className={css['user-profile']}>
         <About    {...aboutProps} />
         <AsyncAwait {...{ isLoading, error }}>
-          <PagedList<Post> {...feedProps}>
+          <PagedList <Post> {...feedProps}>
             {(post) => <PostItem {...post} onUserPage />}
           </PagedList>
         </AsyncAwait>

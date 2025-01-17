@@ -17,7 +17,7 @@ import ReplyItem from '@/components/post/ReplyItem';
 import PagedList from '@/components/panel/PagedList';
 import { captainsLog } from '@/util/captainsLog';
 
-const initialData: Pick<Paginated<Reply, 'replies'>, 'replies' | 'docCount'> = {
+const initialData: Paginated<Reply, 'replies'> = {
   docCount: 0,
    replies: [],
 };

@@ -5,12 +5,15 @@ import css from './Pagination.module.css'; // must be imported before config for
 import { config } from '../panel/PagedListConfig'; // must be imported after modules here
 
 export type Pages = [previous: number, current: number];
+
+export type PageHook = {
+     pages: Pages;
+  setPages: Dispatch<SetStateAction<Pages>>;
+}
 // T: generic type (string/num/Model etc.)
 // K: declares a dynamic key. Extends: declares key type. Named 'data' if undeclared
 export type Paginated< T = null, K extends string = 'data' > = {
   docCount: number;
-     pages: Pages;
-  setPages: Dispatch<SetStateAction<Pages>>;
 } & {
   // combines fixed & dynamic Type. Dynamic types must be declared solo
   [key in K]: T[];
@@ -35,7 +38,7 @@ export default function Pagination({
   setPages: setIsActive,
  deferring,
    deferFn,
-}: Omit<Paginated, 'data'> & { type: keyof typeof config } & Debounce) {
+}: Omit<Paginated, 'data'> & { type: keyof typeof config } & Debounce & PageHook) {
   const { limit, pageCss } = config[type];
   const     last = Math.ceil(docCount / limit);
   const   middle = last < 5 ? 3 : Math.min(Math.max(current, 3), last - 2);

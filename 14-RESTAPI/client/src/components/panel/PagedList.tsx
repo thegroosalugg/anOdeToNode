@@ -1,11 +1,11 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
-import Pagination, { Paginated } from '../pagination/Pagination';
+import Pagination, { PageHook, Paginated } from '../pagination/Pagination';
 import { config } from './PagedListConfig';
 import css from './PagedList.module.css';
 
-interface PagedList<T> extends Paginated<T, 'items'> {
+interface PagedList<T> extends Paginated<T, 'items'>, PageHook {
         type: keyof typeof config;
     children: (item: T) => React.ReactNode;
 }
