@@ -8,7 +8,7 @@ export interface Fetch {
 
 export type FetchError = {
   [key: string]: string;
-} | {
+} & {
   message: string;
    status: number;
 };

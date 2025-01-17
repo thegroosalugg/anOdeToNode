@@ -48,7 +48,7 @@ const ReplySubmit: FC<{ postId: string }> = ({ postId }) => {
       className={css['reply-submit']}
             ref={scope}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: { delay: 1.5, duration: 0.8 } }}
+        animate={{ opacity: 1, transition: { delay: 1.2, duration: 0.8 } }}
        onSubmit={(e) => {
          e.preventDefault();
          deferFn(() => submitHandler(e), 1500);
