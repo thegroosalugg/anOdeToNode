@@ -14,7 +14,7 @@ import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
 import ReplySubmit from '@/components/post/ReplySubmit';
 import ReplyItem from '@/components/post/ReplyItem';
-import PagedList from '@/components/panel/PagedList';
+import PagedList from '@/components/pagination/PagedList';
 import { captainsLog } from '@/util/captainsLog';
 
 const initialData: Paginated<Reply, 'replies'> = {
@@ -129,7 +129,7 @@ export default function PostPage({ user, setUser }: Auth) {
           <>
             <PostId {...{ post, user }} setModal={setModalState} />
             {user && <ReplySubmit postId={post._id} />}
-            {replies && (
+            {replies.length > 0 && (
               <PagedList<Reply> {...replyProps}>
                 {(reply) => <ReplyItem {...reply} />}
               </PagedList>

@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
-import Pagination, { PageHook, Paginated } from '../pagination/Pagination';
+import Pagination, { PageHook, Paginated } from './Pagination';
 import { config } from './PagedListConfig';
 import css from './PagedList.module.css';
 

@@ -2,7 +2,7 @@ import { motion, AnimatePresence, LayoutGroup } from 'motion/react';
 import { Dispatch, SetStateAction } from 'react';
 import type { Debounce } from '@/hooks/useDebounce';
 import css from './Pagination.module.css'; // must be imported before config for overrides to work
-import { config } from '../panel/PagedListConfig'; // must be imported after modules here
+import { config } from './PagedListConfig'; // must be imported after modules here
 
 export type Pages = [previous: number, current: number];
 

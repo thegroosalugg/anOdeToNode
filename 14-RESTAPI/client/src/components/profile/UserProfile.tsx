@@ -8,7 +8,7 @@ import Button from '../button/Button';
 import { Pages, Paginated } from '../pagination/Pagination';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import AsyncAwait from '../panel/AsyncAwait';
-import PagedList from '../panel/PagedList';
+import PagedList from '../pagination/PagedList';
 import PostItem from '../post/PostItem';
 import css from './UserProfile.module.css';
 

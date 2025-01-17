@@ -8,7 +8,7 @@ import Modal from '@/components/modal/Modal';
 import Button from '@/components/button/Button';
 import PostForm from '@/components/form/PostForm';
 import AsyncAwait from '@/components/panel/AsyncAwait';
-import PagedList from '@/components/panel/PagedList';
+import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/post/PostItem';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
 import { captainsLog } from '@/util/captainsLog';
