@@ -1,15 +1,6 @@
 .replies {
-  margin: 0 auto;
-  padding: 0.2rem;
   border-top: 1px solid var(--text-grey);
   border-bottom: 1px solid var(--text-grey);
-  width: 100%;
-  max-width: 600px;
-  max-height: 450px;
-  overflow-y: scroll;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
 
   ::-webkit-scrollbar-thumb,
   &::-webkit-scrollbar-thumb {

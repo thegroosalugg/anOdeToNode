@@ -1,8 +1,8 @@
 import { motion, AnimatePresence, LayoutGroup } from 'motion/react';
 import { Dispatch, SetStateAction } from 'react';
 import type { Debounce } from '@/hooks/useDebounce';
-import { config } from '../panel/PagedListConfig';
-import css from './Pagination.module.css';
+import css from './Pagination.module.css'; // must be imported before config for overrides to work
+import { config } from '../panel/PagedListConfig'; // must be imported after modules here
 
 export type Pages = [previous: number, current: number];
 // T: generic type (string/num/Model etc.)

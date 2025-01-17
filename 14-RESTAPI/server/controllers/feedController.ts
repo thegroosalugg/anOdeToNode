@@ -1,7 +1,6 @@
 import { RequestHandler } from 'express';
 import { Types } from 'mongoose';
 import Post from '../models/Post';
-import Reply from '../models/Reply';
 import captainsLog from '../util/captainsLog';
 
 const _public = '-email -password';
@@ -43,11 +42,7 @@ const getPostById: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const replies = await Reply.find({ post })
-      .populate('creator', _public)
-      .sort({ _id: -1 });
-
-    res.status(200).json({ ...post.toObject(), replies });
+    res.status(200).json(post);
   } catch (error) {
     captainsLog(5, 'getPostById Catch', error);
     res.status(500).json({ message: 'Unable to load post.' });

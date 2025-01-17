@@ -1,4 +1,5 @@
 import feedCss from '../post/PostItem.module.css';
+import replyCss from '../post/ReplyItem.module.css';
 
 export const config = {
   feed: {
@@ -26,13 +27,13 @@ export const config = {
   },
 
   reply: {
-        height: '',
-         limit: 0,
-         color: '',
+        height: '450px',
+         limit: 10,
+         color: '#777777',
          navTo: false,
-       listCss: [],
+       listCss: [replyCss.replies],
        pageCss: [],
-         chars: '…',
+         chars: '◻',
     background: '#ebebeb',
   },
 };

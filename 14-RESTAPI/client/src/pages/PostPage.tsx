@@ -4,40 +4,63 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
 import { Auth } from './RootLayout';
+import { Pages, Paginated } from '@/components/pagination/Pagination';
 import Post from '@/models/Post';
+import Reply from '@/models/Reply';
 import AsyncAwait from '@/components/panel/AsyncAwait';
 import PostId from '@/components/post/PostId';
 import Modal from '@/components/modal/Modal';
 import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
 import ReplySubmit from '@/components/post/ReplySubmit';
-import Replies from '@/components/post/Replies';
+import ReplyItem from '@/components/post/ReplyItem';
+import PagedList from '@/components/panel/PagedList';
 import { captainsLog } from '@/util/captainsLog';
+
+const initialData: Pick<Paginated<Reply, 'replies'>, 'replies' | 'docCount'> = {
+  docCount: 0,
+   replies: [],
+};
 
 export default function PostPage({ user, setUser }: Auth) {
   const {
           data: post,
        setData: setPost,
-    reqHandler,
+    reqHandler: reqPost,
      isLoading,
          error,
       setError,
   } = useFetch<Post | null>();
+  const {
+          data: { docCount, replies },
+       setData: setReplies,
+    reqHandler: reqReplies,
+  } = useFetch(initialData);
   const [modalState, setModalState] = useState('');
+  const [pages,           setPages] = useState<Pages>([1, 1]);
+  const [,                 current] = pages;
   const   navigate = useNavigate();
   const { postId } = useParams();
   const  isInitial = useRef(true);
   const closeModal = () => setModalState('');
+  const replyProps = { type: 'reply' as const, items: replies, docCount, pages, setPages };
 
   useEffect(() => {
     const fetchPost = async () => {
-      if (postId) await reqHandler({ url: `feed/find/${postId}` });
+      if (postId) await reqPost({ url: `feed/find/${postId}` });
     }
 
+    const fetchReplies = async () => {
+      if (postId) await reqReplies({ url: `post/replies/${postId}?page=${current}` });
+    }
+
+    const initialData = async () => await Promise.all([fetchPost(), fetchReplies()]);
     if (isInitial.current) {
       isInitial.current = false;
       captainsLog(-100, 30, ['POSTPAGE effect, ID:' + postId]); // **LOGDATA
-      fetchPost();
+      initialData();
+    } else {
+      fetchReplies()
     }
 
     const socket = io(BASE_URL);
@@ -45,9 +68,8 @@ export default function PostPage({ user, setUser }: Auth) {
 
     socket.on(`post:${postId}:reply`, (reply) => {
       captainsLog(-100, 20, ['POSTPAGE: NEW REPLY']);
-      setPost((post) => {
-        if (post) return { ...post, replies: [reply, ...post.replies] };
-        return post;
+      setReplies(({ docCount, replies }) => {
+        return { docCount, replies: [reply, ...replies] };
       });
     });
 
@@ -75,10 +97,10 @@ export default function PostPage({ user, setUser }: Auth) {
       socket.off(`post:${postId}:delete`);
       socket.disconnect();
     };
-  }, [user?._id, postId, setPost, setError, reqHandler]);
+  }, [user?._id, postId, current, setError, setPost, reqPost, reqReplies, setReplies]);
 
   async function deletePost() {
-    await reqHandler(
+    await reqPost(
       { url: `post/delete/${postId}`, method: 'DELETE' },
       {
         onSuccess: () => {
@@ -107,7 +129,11 @@ export default function PostPage({ user, setUser }: Auth) {
           <>
             <PostId {...{ post, user }} setModal={setModalState} />
             {user && <ReplySubmit postId={post._id} />}
-            <Replies replies={post.replies} />
+            {replies && (
+              <PagedList<Reply> {...replyProps}>
+                {(reply) => <ReplyItem {...reply} />}
+              </PagedList>
+            )}
           </>
         )}
       </AsyncAwait>

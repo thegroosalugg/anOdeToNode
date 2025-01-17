@@ -5,6 +5,28 @@ import Reply from "../models/Reply";
 import { getErrors, hasErrors } from "../validation/validators";
 import captainsLog from "../util/captainsLog";
 
+const _public = '-email -password';
+
+const getReplies: RequestHandler = async (req, res, next) => {
+  const { postId: post } = req.params;
+  const page = +(req.query.page || 1);
+  const limit = 10;
+
+  try {
+    const docCount = await Reply.find({ post }).countDocuments();
+    const  replies = await Reply.find({ post })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate('creator', _public)
+      .sort({ _id: -1 });
+
+    res.status(200).json({ replies, docCount });
+  } catch (error) {
+    captainsLog(5, 'getReplies Catch', error);
+    res.status(500).json({ message: 'Unable to load comments' });
+  }
+};
+
 const postReply: RequestHandler = async (req, res, next) => {
   try {
     const errors = getErrors(req);
@@ -34,4 +56,4 @@ const postReply: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { postReply };
+export { getReplies, postReply };

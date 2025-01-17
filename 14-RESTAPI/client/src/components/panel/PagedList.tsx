@@ -27,9 +27,10 @@ export default function PagedList<T>({
   const   position = deferring ? 'sticky' : 'relative';
   const     cursor = deferring ?   'wait' : '';
   const    classes = [css['list'], ...listCss].filter(Boolean).join(' ');
+  const    opacity = 0;
+  const   duration = 0.5;
   let       height = config[type].height;
   if (items.length <= 0) height = 'auto';
-
 
   function clickHandler(_id: string) {
     if (!deferring) {
@@ -54,15 +55,23 @@ export default function PagedList<T>({
                     key={item._id}
                 onClick={() => clickHandler(item._id)}
                   style={{ cursor }}
-                initial={{ opacity: 0, x }}
-                animate={{ opacity: 1, x:  0, transition: { duration: 0.5, delay: i * 0.1 } }}
-                   exit={{ opacity: 0, x: -x, transition: { duration: 0.5 } }}
+                initial={{ opacity,    x }}
+                animate={{ opacity: 1, x:  0, transition: { duration, delay: i * 0.1 } }}
+                   exit={{ opacity,    x: -x, transition: { duration } }}
               >
                 {children(item)}
               </motion.li>
             ))
           ) : (
-            <p className={css['fallback']}>Nothing to see here.</p>
+            <motion.p
+                    key='fallback'
+              className={css['fallback']}
+                initial={{ opacity    }}
+                animate={{ opacity: 1 }}
+                   exit={{ opacity    }}
+            >
+                Nothing to see here.
+            </motion.p>
           )}
         </AnimatePresence>
       </motion.ul>
