@@ -1,6 +1,7 @@
 import { motion, AnimatePresence, LayoutGroup } from 'motion/react';
 import { Dispatch, SetStateAction } from 'react';
 import type { Debounce } from '@/hooks/useDebounce';
+import { config } from '../panel/PagedListConfig';
 import css from './Pagination.module.css';
 
 export type Pages = [previous: number, current: number];
@@ -8,7 +9,6 @@ export type Pages = [previous: number, current: number];
 // K: declares a dynamic key. Extends: declares key type. Named 'data' if undeclared
 export type Paginated< T = null, K extends string = 'data' > = {
   docCount: number;
-     limit: number;
      pages: Pages;
   setPages: Dispatch<SetStateAction<Pages>>;
 } & {
@@ -29,15 +29,14 @@ const Ellipsis = ({ chars }: { chars: string }) => (
 );
 
 export default function Pagination({
-     limit,
+      type,
   docCount,
      pages: [, current],
   setPages: setIsActive,
- alternate,
  deferring,
    deferFn,
-}: Omit<Paginated, 'data'> & { alternate?: boolean } & Debounce) {
-  const  classes = `${css['pagination']} ${alternate ? css['alternate'] : ''}`
+}: Omit<Paginated, 'data'> & { type: keyof typeof config } & Debounce) {
+  const { limit, pageCss } = config[type];
   const     last = Math.ceil(docCount / limit);
   const   middle = last < 5 ? 3 : Math.min(Math.max(current, 3), last - 2);
   const    pages: number[] = [];
@@ -52,20 +51,18 @@ export default function Pagination({
     deferFn(() => setIsActive([current, page]), 1200);
   }
 
-  const       chars = alternate ?       '◈' : '…'
-  const  defaultClr = alternate ?  '#454545' : 'var(--team-green)';
-  const  defaultHvr = alternate ?  '#e1e1e1' : '#ebebeb';
-  const  defaultBck = defaultHvr;
-  const      filter = `brightness(${deferring ? 0.9 : 1})`
+  const { chars, color: setColor, background: setBckGrd } = config[type];
+  const  filter = `brightness(${deferring ? 0.9 : 1})`
+  const classes = [css['pagination'], ...pageCss].filter(Boolean).join(' ');
 
   return (
     <section className={classes}>
       <LayoutGroup>
         {pages.map((page) => {
           const    isActive = current === page;
-          const       color =  isActive ? defaultHvr : defaultClr;
+          const       color =  isActive ? setBckGrd : setColor;
           const borderColor =  color;
-          const  background = !isActive ? defaultBck : defaultClr;
+          const  background = !isActive ? setBckGrd : setColor;
           return (
             <AnimatePresence key={page}>
               {last > 5 && page === last && pages[3] !== last - 1 && (

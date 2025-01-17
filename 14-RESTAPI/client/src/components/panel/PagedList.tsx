@@ -5,7 +5,7 @@ import Pagination, { Paginated } from '../pagination/Pagination';
 import { config } from './PagedListConfig';
 import css from './PagedList.module.css';
 
-interface PagedList<T> extends Omit<Paginated<T, 'items'>, 'limit'> {
+interface PagedList<T> extends Paginated<T, 'items'> {
         type: keyof typeof config;
     children: (item: T) => React.ReactNode;
 }
@@ -18,21 +18,18 @@ export default function PagedList<T>({
     docCount,
     children,
 }: PagedList<T & { _id: string }>) {
-  const { limit, color, classes, navTo } = config[type];
-  const { deferring, deferFn } = useDebounce();
+  const { limit, color, listCss, navTo } = config[type];
+  const { deferring,           deferFn } = useDebounce();
   const   navigate = useNavigate();
   const  direction = pages[0] < pages[1] ? 1 : -1;
   const          x = direction * 50;
   const background = limit > items.length ? color : '#00000000';
   const   position = deferring ? 'sticky' : 'relative';
   const     cursor = deferring ?   'wait' : '';
+  const    classes = [css['list'], ...listCss].filter(Boolean).join(' ');
   let       height = config[type].height;
   if (items.length <= 0) height = 'auto';
 
-  const classNames = [
-    css['list'],
-     ...classes,
-  ].filter(Boolean).join(' ');
 
   function clickHandler(_id: string) {
     if (!deferring) {
@@ -45,7 +42,7 @@ export default function PagedList<T>({
   return (
     <>
       <motion.ul
-        className={classNames}
+        className={classes}
             style={{ height, position }}
           animate={{ background, transition: { duration: 1, ease: 'easeInOut' } }}
       >
@@ -69,7 +66,7 @@ export default function PagedList<T>({
           )}
         </AnimatePresence>
       </motion.ul>
-      <Pagination {...{ classNames, pages, setPages, docCount, limit, deferring, deferFn }} />
+      <Pagination {...{ type, pages, setPages, docCount, deferring, deferFn }} />
     </>
   );
 }
