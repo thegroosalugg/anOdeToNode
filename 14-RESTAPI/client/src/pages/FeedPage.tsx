@@ -2,16 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
 import useFetch from '@/hooks/useFetch';
-import useDebounce from '@/hooks/useDebounce';
 import { Auth } from './RootLayout';
 import Post from '@/models/Post';
 import Modal from '@/components/modal/Modal';
 import Button from '@/components/button/Button';
 import PostForm from '@/components/form/PostForm';
 import AsyncAwait from '@/components/panel/AsyncAwait';
-import MotionList from '@/components/list/MotionList';
+import PagedList from '@/components/panel/PagedList';
 import PostItem from '@/components/post/PostItem';
-import Pagination, { Pages, Paginated } from '@/components/pagination/Pagination';
+import { Pages, Paginated } from '@/components/pagination/Pagination';
 import { captainsLog } from '@/util/captainsLog';
 import css from '@/components/post/PostItem.module.css';
 
@@ -30,20 +29,18 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
   } = useFetch(initialData);
   const               isInitial   = useRef(true);
   const { reqHandler: updateReq } = useFetch(initialData);
-  const { deferring,    deferFn } = useDebounce();
   const [showModal, setShowModal] = useState(false);
   const [pages,         setPages] = useState<Pages>([1, 1]);
   const [,               current] = pages;
   const                      url  = `feed/posts?page=${current}`;
 
-  const     limit = 4;
-  const pageProps = { docCount, limit, pages, setPages, deferring, deferFn };
   const feedProps = {
     classNames: [css.feed],
          items: posts,
-         limit,
+         limit: 4,
+      docCount,
          pages,
-     deferring,
+      setPages,
          navTo: 'post' as const,
          color: 'var(--team-green)',
     itemHeight: 130,
@@ -116,10 +113,9 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
         )
       )}
       <AsyncAwait {...{ isLoading, error }}>
-        <MotionList<Post> {...feedProps}>
+        <PagedList <Post> {...feedProps}>
           {(post) => <PostItem {...post} />}
-        </MotionList>
-        <Pagination {...pageProps} />
+        </PagedList>
       </AsyncAwait>
     </>
   );
