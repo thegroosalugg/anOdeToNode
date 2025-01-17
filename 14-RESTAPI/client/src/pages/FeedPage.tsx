@@ -12,7 +12,6 @@ import PagedList from '@/components/panel/PagedList';
 import PostItem from '@/components/post/PostItem';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
 import { captainsLog } from '@/util/captainsLog';
-import css from '@/components/post/PostItem.module.css';
 
 const initialData: Pick<Paginated<Post, 'posts'>, 'posts' | 'docCount'> = {
   docCount: 0,
@@ -35,15 +34,11 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
   const                      url  = `feed/posts?page=${current}`;
 
   const feedProps = {
-    classNames: [css.feed],
+          type: 'feed' as const,
          items: posts,
-         limit: 4,
-      docCount,
          pages,
       setPages,
-         navTo: 'post' as const,
-         color: 'var(--team-green)',
-    itemHeight: 130,
+      docCount,
   };
 
   useEffect(() => {

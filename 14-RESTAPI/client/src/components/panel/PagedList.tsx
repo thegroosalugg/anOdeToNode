@@ -1,29 +1,24 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import Pagination, { Paginated } from '../pagination/Pagination';
 import useDebounce from '@/hooks/useDebounce';
+import Pagination, { Paginated } from '../pagination/Pagination';
+import { config } from './PagedListConfig';
 import css from './PagedList.module.css';
 
-interface PagedList<T> extends Paginated<T, 'items'> {
-  classNames: string[];
-       color: string;
-  itemHeight: number;
-      navTo?: 'post';
+interface PagedList<T> extends Omit<Paginated<T, 'items'>, 'limit'> {
+        type: keyof typeof config;
     children: (item: T) => React.ReactNode;
 }
 
 export default function PagedList<T>({
        items,
+        type,
        pages,
     setPages,
     docCount,
-       limit,
-  itemHeight,
-       color,
-  classNames,
-       navTo,
     children,
 }: PagedList<T & { _id: string }>) {
+  const { limit, color, classes, navTo } = config[type];
   const { deferring, deferFn } = useDebounce();
   const   navigate = useNavigate();
   const  direction = pages[0] < pages[1] ? 1 : -1;
@@ -31,12 +26,12 @@ export default function PagedList<T>({
   const background = limit > items.length ? color : '#00000000';
   const   position = deferring ? 'sticky' : 'relative';
   const     cursor = deferring ?   'wait' : '';
-  let       height = itemHeight * limit + 'px';
+  let       height = config[type].height;
   if (items.length <= 0) height = 'auto';
 
-  const classes = [
+  const classNames = [
     css['list'],
-    ...classNames,
+     ...classes,
   ].filter(Boolean).join(' ');
 
   function clickHandler(_id: string) {
@@ -50,7 +45,7 @@ export default function PagedList<T>({
   return (
     <>
       <motion.ul
-        className={classes}
+        className={classNames}
             style={{ height, position }}
           animate={{ background, transition: { duration: 1, ease: 'easeInOut' } }}
       >

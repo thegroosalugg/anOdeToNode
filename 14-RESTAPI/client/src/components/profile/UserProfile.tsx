@@ -10,7 +10,6 @@ import ConfirmDialog from '../dialog/ConfirmDialog';
 import AsyncAwait from '../panel/AsyncAwait';
 import PagedList from '../panel/PagedList';
 import PostItem from '../post/PostItem';
-import cssList from '../post/PostItem.module.css';
 import css from './UserProfile.module.css';
 
 const initialData: Pick<Paginated<Post, 'posts'>, 'posts' | 'docCount'> = {
@@ -34,17 +33,12 @@ export default function UserProfile({ user, setUser }: Auth) {
   const                      url  = `profile/posts?page=${current}`;
 
   const aboutProps = { user, setUser }
-  const      limit = 6;
   const  feedProps = {
-    classNames: [cssList.feed, cssList['on-user-page']],
+          type: 'user' as const,
          items: posts,
-         limit,
-      docCount,
          pages,
       setPages,
-         navTo: 'post' as const,
-         color: '#454545',
-    itemHeight: 60,
+      docCount,
   };
 
   useEffect(() => {
