@@ -18,8 +18,8 @@ export default function PagedList<T>({
     docCount,
     children,
 }: PagedList<T & { _id: string }>) {
-  const { limit, color, listCss, navTo, delay } = config[type];
-  const { deferring,           deferFn } = useDebounce();
+  const { limit, color, listCss, navTo, delay, fallback } = config[type];
+  const { deferring, deferFn } = useDebounce();
   const   navigate = useNavigate();
   const  direction = pages[0] < pages[1] ? 1 : -1;
   const          x = direction * 50;
@@ -44,11 +44,12 @@ export default function PagedList<T>({
     <>
       <motion.ul
         className={classes}
-            style={{ height, position }}
-            initial={{ opacity }}
-            animate={{
-              background,
-                 opacity: 1,
+            style={{ position }}
+          initial={{ opacity, height: 100 }}
+          animate={{
+            background,
+                height,
+               opacity: 1,
               transition: {
                   duration: 1,
                       ease: 'easeInOut',
@@ -79,7 +80,7 @@ export default function PagedList<T>({
                 animate={{ opacity: 1 }}
                    exit={{ opacity    }}
             >
-                Nothing to see here.
+              {fallback}
             </motion.p>
           )}
         </AnimatePresence>

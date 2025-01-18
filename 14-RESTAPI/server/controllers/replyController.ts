@@ -1,9 +1,9 @@
-import { RequestHandler } from "express";
-import { io } from "../app";
-import Post from "../models/Post";
-import Reply from "../models/Reply";
-import { getErrors, hasErrors } from "../validation/validators";
-import captainsLog from "../util/captainsLog";
+import { RequestHandler } from 'express';
+import { io } from '../app';
+import Post from '../models/Post';
+import Reply from '../models/Reply';
+import { getErrors, hasErrors } from '../validation/validators';
+import captainsLog from '../util/captainsLog';
 
 const _public = '-email -password';
 
@@ -56,4 +56,23 @@ const postReply: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { getReplies, postReply };
+const deleteReply: RequestHandler = async (req, res, next) => {
+  try {
+    const { replyId: _id } = req.params;
+    const reply = await Reply.findOne({ _id, creator: req.user });
+
+    if (!reply) {
+      res.status(404).json({ message: 'Comment not found.' });
+      return;
+    }
+
+    await Reply.deleteOne({ _id, creator: req.user });
+    io.emit(`post:${reply.post}:reply:delete`, reply); // emits back to PostID page
+    res.status(200).json(null);
+  } catch (error) {
+    captainsLog(5, 'deletePost Catch', error);
+    res.status(500).json({ message: 'Unable to delete comment.' });
+  }
+}
+
+export { getReplies, postReply, deleteReply };

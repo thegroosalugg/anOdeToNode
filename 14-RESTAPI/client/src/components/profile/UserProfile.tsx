@@ -76,7 +76,11 @@ export default function UserProfile({ user, setUser }: Auth) {
             {(post) => <PostItem {...post} onUserPage />}
           </PagedList>
         </AsyncAwait>
-        <Button hsl={[10, 54, 51]} onClick={() => setShowModal(true)}>
+        <Button
+              hsl={[10, 54, 51]}
+          onClick={() => setShowModal(true)}
+          animate={{ opacity: 1, transition: { opacity: { delay: 2.2 }} }}
+        >
           Logout
         </Button>
       </section>

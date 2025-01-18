@@ -2,7 +2,7 @@ import useFetch from '@/hooks/useFetch';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
-import { BASE_URL } from '@/util/fetchData';
+import { BASE_URL, FetchError } from '@/util/fetchData';
 import { Auth } from './RootLayout';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
 import Post from '@/models/Post';
@@ -68,8 +68,18 @@ export default function PostPage({ user, setUser }: Auth) {
 
     socket.on(`post:${postId}:reply`, (reply) => {
       captainsLog(-100, 20, ['POSTPAGE: NEW REPLY']);
-      setReplies(({ docCount, replies }) => {
-        return { docCount, replies: [reply, ...replies] };
+      setTimeout(() => {
+        setReplies(({ docCount, replies }) => {
+          return { docCount, replies: [reply, ...replies] };
+        });
+      }, 1200); // delay for other animations to act first
+    });
+
+    socket.on(`post:${postId}:reply:delete`, (deleted) => {
+      setReplies(({ docCount, replies: prevReplies }) => {
+        const replies = prevReplies.filter(({ _id }) => _id !== deleted._id);
+        captainsLog(-100, 20, ['POSTPAGE: REPLY DELETED', deleted]);
+        return { docCount, replies };
       });
     });
 
@@ -86,15 +96,16 @@ export default function PostPage({ user, setUser }: Auth) {
       captainsLog(-100, 10, ['POSTPAGE: POST DELETED']);
       if (deleted.creator !== user?._id) {
         setPost(null); // delete actions for viewers. Creator's state automatically set to null
-        setError({ message: 'The post was deleted' }); // creators redirected without msg
+        setError({ message: 'The post was deleted' } as FetchError); // creators redirected without msg
       }
     });
 
     return () => {
       socket.off('connect');
       socket.off(`post:${postId}:reply`);
+      socket.off(`post:${postId}:reply:delete`); // deletes a reply to post
       socket.off(`post:${postId}:update`);
-      socket.off(`post:${postId}:delete`);
+      socket.off(`post:${postId}:delete`); // deletes the post (& all replies)
       socket.disconnect();
     };
   }, [user?._id, postId, current, setError, setPost, reqPost, reqReplies, setReplies]);
@@ -115,7 +126,7 @@ export default function PostPage({ user, setUser }: Auth) {
     <>
       <Modal show={modalState} close={closeModal}>
         {modalState ===  'edit'  && (
-          <PostForm setUser={setUser} postId={postId} post={post} />
+          <PostForm setUser={setUser} post={post} />
         )}
         {modalState === 'delete' && (
           <ConfirmDialog
@@ -129,11 +140,9 @@ export default function PostPage({ user, setUser }: Auth) {
           <>
             <PostId {...{ post, user }} setModal={setModalState} />
             {user && <ReplySubmit postId={post._id} />}
-            {replies.length > 0 && (
-              <PagedList<Reply> {...replyProps}>
-                {(reply) => <ReplyItem {...reply} />}
-              </PagedList>
-            )}
+            <PagedList <Reply> {...replyProps}>
+              {(reply) => <ReplyItem {...reply} userId={user?._id} />}
+            </PagedList>
           </>
         )}
       </AsyncAwait>

@@ -69,13 +69,17 @@ const deletePost: RequestHandler = async (req, res, next) => {
   try {
     const { postId: _id } = req.params;
     const post = await Post.findOne({ _id, creator: req.user });
-    if (post) {
-      if (post.imgURL) deleteFile(post.imgURL);
-      await Post.deleteOne({ _id, creator: req.user });
-      io.emit('post:delete', post); // emits to main feed page
-      io.emit(`post:${_id}:delete`, post); // emits to specfic path only
-      res.status(200).json(null); // 200 replaces client Data, so post must be null
+
+    if (!post) {
+      res.status(404).json({ message: 'Post not found.' });
+      return;
     }
+
+    if (post.imgURL) deleteFile(post.imgURL);
+    await Post.deleteOne({ _id, creator: req.user });
+    io.emit('post:delete', post); // emits to main feed page
+    io.emit(`post:${_id}:delete`, post); // emits to specfic path only
+    res.status(200).json(null); // 200 replaces client Data, so post must be null
   } catch (error) {
     captainsLog(5, 'deletePost Catch', error);
     res.status(500).json({ message: 'Unable to delete post.' });

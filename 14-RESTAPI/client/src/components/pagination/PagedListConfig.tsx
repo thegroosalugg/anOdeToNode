@@ -7,11 +7,12 @@ export const config = {
          limit: 4,
          color: 'var(--team-green)',
          navTo: 'post',
-         delay: 0,
+         delay: 1,
        listCss: [feedCss.feed],
        pageCss: [],
          chars: '…',
     background: '#ebebeb',
+      fallback: 'No posts yet.',
   },
 
   user: {
@@ -19,13 +20,12 @@ export const config = {
          limit: 6,
          color: '#454545',
          navTo: 'post',
-         delay: 0,
+         delay: 0.8,
        listCss: [feedCss.feed, feedCss['on-user-page']],
        pageCss: [feedCss['on-user-pagination']],
          chars: '◈',
     background: '#e1e1e1',
-
-
+      fallback: "You haven't post anything",
   },
 
   reply: {
@@ -38,5 +38,6 @@ export const config = {
        pageCss: [],
          chars: '◻',
     background: '#ebebeb',
+      fallback: 'No comments yet...',
   },
 };

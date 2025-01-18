@@ -44,5 +44,12 @@
       overflow-y: scroll;
       text-align: center;
     }
+
+    > button {
+      display: block;
+      margin: 0.75rem -0.75rem -0.75rem auto;
+      border-radius: 5px;
+      font-size: 0.7rem
+    }
   }
 }

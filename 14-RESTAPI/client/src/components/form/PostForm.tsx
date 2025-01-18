@@ -12,12 +12,10 @@ import Loader from '../loading/Loader';
 import css from './PostForm.module.css';
 
 export default function PostForm({
-    postId,
   onSuccess,
     setUser,
        post,
 }: {
-     postId?: string;
   onSuccess?: () => void;
      setUser: Auth['setUser'];
        post?: Post | null;
@@ -25,9 +23,9 @@ export default function PostForm({
   const { isLoading, error, reqHandler } = useFetch<Post | null>();
   const [ scope,               animate ] = useAnimate();
   const { deferring,           deferFn } = useDebounce();
-  const { title = '', content = '', imgURL = '' } = post || {};
-  const url = `post/${postId ? `edit/${postId}` : 'new'}`;
-  const method: 'PUT' | 'POST' = postId ? 'PUT' : 'POST';
+  const { _id = '', title = '', content = '', imgURL = '' } = post || {};
+  const url = `post/${_id ? `edit/${_id}` : 'new'}`;
+  const method: 'PUT' | 'POST' = _id ? 'PUT' : 'POST';
   const filter = `brightness(${deferring ? 0.8 : 1})`;
 
   const onError = (err: FetchError) => {

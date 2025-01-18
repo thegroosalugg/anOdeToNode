@@ -26,7 +26,8 @@ export default function Button({
   return (
     <motion.button
        className={css.button}
-         animate={{ background, ...animateEx }}
+         initial={{ background, opacity: 0 }}
+         animate={{ background, opacity: 1, ...animateEx }}
       whileHover={!isMobile ? { background: onHover } : {}}
         whileTap={{ scale: 0.9 }}
       transition={{ background: { duration: 0.5 } }}

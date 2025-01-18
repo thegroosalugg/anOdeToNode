@@ -39,7 +39,7 @@ export default function Pagination({
  deferring,
    deferFn,
 }: Omit<Paginated, 'data'> & { type: keyof typeof config } & Debounce & PageHook) {
-  const { limit, pageCss } = config[type];
+  const { limit, pageCss, delay } = config[type];
   const     last = Math.ceil(docCount / limit);
   const   middle = last < 5 ? 3 : Math.min(Math.max(current, 3), last - 2);
   const    pages: number[] = [];
@@ -59,7 +59,11 @@ export default function Pagination({
   const classes = [css['pagination'], ...pageCss].filter(Boolean).join(' ');
 
   return (
-    <section className={classes}>
+    <motion.section
+      className={classes}
+        initial={{ opacity: 0 }}            // 2nd component in line using this value, adds .5
+        animate={{ opacity: 1, transition: { delay: delay + 0.5, duration: 0.8 } }}
+    >
       <LayoutGroup>
         {pages.map((page) => {
           const    isActive = current === page;
@@ -92,6 +96,6 @@ export default function Pagination({
           );
         })}
       </LayoutGroup>
-    </section>
+    </motion.section>
   );
 }

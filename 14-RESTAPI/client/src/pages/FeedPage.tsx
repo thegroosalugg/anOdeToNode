@@ -99,9 +99,10 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
       ) : (
         user && (
           <Button
-                hsl={[180, 80, 35]}
-              style={{ margin: '0 auto 1rem' }}
-            onClick={() => setShowModal(true)}
+              onClick={() => setShowModal(true)}
+                  hsl={[180, 80, 35]}
+                style={{ margin: '0 auto 1rem' }}
+            animateEx={{ transition: { opacity: { delay: 0.8 }}}}
           >
             New Post
           </Button>

@@ -82,7 +82,7 @@ export default function PostId({
            animate={{
                  height: 'auto',
                 opacity: 1,
-             transition: { ease: 'linear', transition: 1 }
+             transition: { ease: 'easeInOut', duration: 1 }
            }}
         >
           {content}
