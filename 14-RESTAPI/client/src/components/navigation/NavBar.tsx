@@ -16,6 +16,7 @@ export default function NavBar({ user }: Auth) {
     <nav className={css['nav']}>
       <h1>Friendface</h1>
       <NavButton path='/'        navFn={navTo} deferring={deferring} />
+      <NavButton path='/social'  navFn={navTo} deferring={deferring} />
       <NavButton path='/account' navFn={navTo} deferring={deferring} user={user} />
     </nav>
   );

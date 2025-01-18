@@ -33,6 +33,6 @@
 
   #main {
     /* align main content by width of nav bar (position fixed, not in element flow) */
-    margin-left: 76px;
+    margin-left: 58px;
   }
 }
