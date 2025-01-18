@@ -59,6 +59,6 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #606060;
+  background: var(--team-green);
   border-radius: 25px;
 }

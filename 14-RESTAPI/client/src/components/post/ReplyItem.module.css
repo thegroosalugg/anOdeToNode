@@ -1,0 +1,55 @@
+.replies {
+  border-top: 1px solid var(--text-grey);
+  border-bottom: 1px solid var(--text-grey);
+
+  ::-webkit-scrollbar-thumb,
+  &::-webkit-scrollbar-thumb {
+    background: var(--text-grey);
+  }
+
+  li {
+    padding: 0.5rem;
+    background: var(--box-gradient);
+    border: 1px solid #000;
+
+    > h2 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--text-grey);
+      line-height: 1.5;
+      padding-bottom: 0.2rem;
+
+      > span, time {
+        text-wrap: nowrap;
+        overflow-x: scroll;
+        overflow-y: hidden;
+      }
+
+      > span {
+        max-width: 50%;
+      }
+
+      time {
+        margin-left: auto;
+        font-size: 0.8rem;
+        color: var(--text-grey);
+      }
+    }
+
+    > p {
+      color: var(--text-grey);
+      padding: 0.5rem 0.2rem 0;
+      max-height: 100px;
+      overflow-y: scroll;
+      text-align: center;
+    }
+
+    > button {
+      display: block;
+      margin: 0.75rem -0.75rem -0.75rem auto;
+      border-radius: 5px;
+      font-size: 0.7rem
+    }
+  }
+}

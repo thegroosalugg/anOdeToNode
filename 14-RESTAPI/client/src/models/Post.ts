@@ -1,4 +1,5 @@
-import User from "./User";
+import Reply from './Reply';
+import User from './User';
 
 type Post = {
         _id: string;
@@ -6,7 +7,8 @@ type Post = {
     content: string;
     imgURL?: string;
   updatedAt: string;
-     author: User;
+    creator: User;
+    replies: Reply[];
 };
 
 export default Post;

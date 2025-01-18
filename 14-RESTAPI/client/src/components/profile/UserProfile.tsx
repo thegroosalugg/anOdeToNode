@@ -5,21 +5,19 @@ import Post from '@/models/Post';
 import About from './About';
 import Modal from '../modal/Modal';
 import Button from '../button/Button';
-import FeedPanel from '../post/FeedPanel';
 import { Pages, Paginated } from '../pagination/Pagination';
 import ConfirmDialog from '../dialog/ConfirmDialog';
+import AsyncAwait from '../panel/AsyncAwait';
+import PagedList from '../pagination/PagedList';
+import PostItem from '../post/PostItem';
 import css from './UserProfile.module.css';
 
-const initialData: Pick<Paginated<Post, 'posts'>, 'posts' | 'docCount'> = {
+const initialData: Paginated<Post, 'posts'> = {
   docCount: 0,
      posts: [],
 };
 
 export default function UserProfile({ user, setUser }: Auth) {
-  const [showModal, setShowModal] = useState(false);
-  const [pages,  setPages] = useState<Pages>([1, 1]);
-  const [, current] = pages;
-
   const {
           data: { docCount, posts },
        setData,
@@ -27,13 +25,20 @@ export default function UserProfile({ user, setUser }: Auth) {
          error,
     reqHandler: initialReq,
   } = useFetch(initialData);
+  const               isInitial   = useRef(true);
   const { reqHandler: updateReq } = useFetch(initialData);
- const isInitial = useRef(true);
- const url =  `profile/posts?page=${current}`;
+  const [showModal, setShowModal] = useState(false);
+  const [pages,         setPages] = useState<Pages>([1, 1]);
+  const [,               current] = pages;
+  const                      url  = `profile/posts?page=${current}`;
 
   const aboutProps = { user, setUser }
   const  feedProps = {
-    docCount, posts, isLoading, error, limit: 6, pages, setPages, alternate: true
+          type: 'user' as const,
+         items: posts,
+         pages,
+      setPages,
+      docCount,
   };
 
   useEffect(() => {
@@ -66,8 +71,16 @@ export default function UserProfile({ user, setUser }: Auth) {
       </Modal>
       <section className={css['user-profile']}>
         <About    {...aboutProps} />
-        <FeedPanel {...feedProps} />
-        <Button hsl={[10, 54, 51]} onClick={() => setShowModal(true)}>
+        <AsyncAwait {...{ isLoading, error }}>
+          <PagedList <Post> {...feedProps}>
+            {(post) => <PostItem {...post} onUserPage />}
+          </PagedList>
+        </AsyncAwait>
+        <Button
+              hsl={[10, 54, 51]}
+          onClick={() => setShowModal(true)}
+          animate={{ opacity: 1, transition: { opacity: { delay: 2.2 }} }}
+        >
           Logout
         </Button>
       </section>

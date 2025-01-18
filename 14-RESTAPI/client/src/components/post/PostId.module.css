@@ -4,6 +4,7 @@
   width: 100%;
   max-width: 600px;
   background: var(--box-gradient);
+  padding: 0.1rem; /* scrollbar gap */
 
   > h1 {
     display: flex;

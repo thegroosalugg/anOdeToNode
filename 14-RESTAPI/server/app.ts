@@ -1,6 +1,7 @@
 import       express from 'express';
 import      mongoose from 'mongoose';
 import        multer from 'multer';
+import {   Server  } from 'socket.io';
 import {    join   } from 'path';
 import {
          storage,
@@ -10,12 +11,24 @@ import {   authJWT } from './middleware/auth.JWT';
 import    authRoutes from './routes/auth';
 import    postRoutes from './routes/post';
 import    feedRoutes from './routes/feed';
+import   replyRoutes from './routes/reply';
 import profileRoutes from './routes/profile';
-import      errorMsg from './util/errorMsg';
+import   captainsLog from './util/captainsLog';
 import        dotenv from 'dotenv';
               dotenv.config();
 
-const app = express();
+const    app = express();
+const server = app.listen(3000, () => {
+  captainsLog(7, 'Hudson River, 2 years ago');
+}); // createNewServer
+
+export const io = new Server(server, {
+  cors: {
+            origin: process.env.CLIENT_URL,
+           methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }
+}); // set up websockets. CORS applies only to sockets, not regular HTTP
 
 app.use('/uploads', express.static(join(import.meta.dirname, 'uploads'))); // serve static paths
 
@@ -37,13 +50,18 @@ app.use((req, res, next) => {
 app.use(                        authRoutes);
 app.use('/feed',                feedRoutes);
 app.use('/post',    authJWT,    postRoutes);
+app.use('/post',    authJWT,   replyRoutes);
 app.use('/profile', authJWT, profileRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI!)
   .then(() => {
-    app.listen(3000, () => {
-      console.log('Hudson River, 2 years ago');
+    io.on('connection', (socket) => {
+      captainsLog(2, 'App IO: Client connected');
+
+      socket.on('disconnect', () => {
+        captainsLog(1, 'App IO: Client disconnected');
+      });
     });
   })
-  .catch((error) => errorMsg({ error, where: 'Mongoose connect'}));
+  .catch((error) => captainsLog(1, 'Mongoose error', error));

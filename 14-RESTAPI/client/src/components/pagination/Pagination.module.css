@@ -27,18 +27,3 @@
     height: 0; /* appears on shake. Needs to be hidden on form */
   }
 }
-
-.alternate {
-  gap: 0;
-  margin: 0 auto;
-
-  > span {
-    color: #454545;
-    margin: 0 0.1rem;
-  }
-
-  > button {
-    font-weight: 700;
-    min-width: 2.5rem;
-  }
-}

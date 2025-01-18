@@ -17,7 +17,7 @@ export default function PostId({
       user: Auth['user'];
   setModal: (modal: string) => void;
 }) {
-  const { title, content, imgURL, author, updatedAt } = post;
+  const { title, content, imgURL, creator, updatedAt } = post;
   const transition = { duration: 0.8 };
   const    opacity = 0;
   const     hidden = { opacity };
@@ -45,10 +45,10 @@ export default function PostId({
           {title}
         </motion.span>
         <span>
-          {author?.name    || 'Account '}
-          {author?.surname || 'deleted'}
+          {creator?.name    || 'Account '}
+          {creator?.surname || 'deleted'}
         </span>
-        <ProfilePic user={author} />
+        <ProfilePic user={creator} />
       </motion.h1>
       <motion.time variants={variants}>
         {timeAgo(updatedAt)}
@@ -82,25 +82,20 @@ export default function PostId({
            animate={{
                  height: 'auto',
                 opacity: 1,
-             transition: { ease: 'linear', transition: 1 }
+             transition: { ease: 'easeInOut', duration: 1 }
            }}
         >
           {content}
         </motion.p>
       </AnimatePresence>
-      {user && (
+      {user?._id === creator?._id && (
         <motion.section className={css['buttons']} variants={variants}>
-          <Button hsl={[180, 80, 35]}> Reply</Button>
-          {user._id === author?._id && (
-            <>
-              <Button hsl={[28, 64, 50]} onClick={() => setModal('edit')}>
-                Edit
-              </Button>
-              <Button hsl={[10, 54, 51]} onClick={() => setModal('delete')}>
-                Delete
-              </Button>
-            </>
-          )}
+          <Button hsl={[180, 80, 35]} onClick={() => setModal('edit')}>
+            Edit
+          </Button>
+          <Button hsl={[10, 54, 51]} onClick={() => setModal('delete')}>
+            Delete
+          </Button>
         </motion.section>
       )}
     </motion.section>

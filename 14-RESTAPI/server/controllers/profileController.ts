@@ -1,7 +1,7 @@
-import { RequestHandler } from 'express';
-import { unlink } from 'fs';
 import User from '../models/User';
-import errorMsg from '../util/errorMsg';
+import { RequestHandler } from 'express';
+import { deleteFile } from '../util/deleteFile';
+import captainsLog from '../util/captainsLog';
 
 const profilePic: RequestHandler = async (req, res, next) => {
   try {
@@ -10,8 +10,7 @@ const profilePic: RequestHandler = async (req, res, next) => {
 
     if (!user) {
       res.status(404).json({ message: 'User not found' });
-      if (image)
-        unlink(image.path, (error) => errorMsg({ error, where: 'profilePic UNLINK' }));
+      if (image) deleteFile(image.path);
       return;
     }
 
@@ -20,19 +19,14 @@ const profilePic: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    if (user.imgURL) {
-      unlink(
-        user.imgURL,
-        (error) => error && errorMsg({ error, where: 'profilePic UNLINK' })
-      );
-    }
+    if (user.imgURL) deleteFile(user.imgURL);
     const imgURL = image.path
     user.imgURL  = imgURL;
     await user.save();
     res.status(201).json({ imgURL });
   } catch (error) {
-    errorMsg({ error, where: 'profilePic' });
-    res.status(500).json({ message: 'Image upload failed ' });
+    captainsLog(5, 'profilePic Catch', error);
+    res.status(500).json({ message: 'Image upload failed' });
   }
 };
 

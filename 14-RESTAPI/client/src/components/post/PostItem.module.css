@@ -1,33 +1,9 @@
 .feed {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  align-self: center;
-  width: 100%;
-  max-width: 600px;
-  gap: 0.2rem;
-  padding: 0 0.1rem;
-  overflow-y: scroll;
-
-  &::-webkit-scrollbar {
-    height: 0;
-    width: 2px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #e19d3d;
-  }
-
-  .fallback{
-    text-align: center;
-  }
+  border-top: 2px solid var(--team-green);
+  border-bottom: 2px solid var(--team-green);
 
   li {
-    width: 100%;
-    padding: 1rem;
     border: 2px solid var(--team-green);
-    background: var(--box-gradient);
     cursor: pointer;
 
     > h3 {
@@ -79,13 +55,31 @@
   }
 }
 
-.alternate {
+.on-user-page {
+  border-top-color: var(--text-grey);
+  border-bottom-color: var(--text-grey);
+
   &::-webkit-scrollbar-thumb {
-    background: #7fa145;
+    background: var(--text-grey);
   }
 
   li {
     border: none;
     padding: 0.5rem;
+  }
+}
+
+.on-user-pagination {
+  gap: 0;
+  margin: 0 auto;
+
+  > span {
+    color: #454545;
+    margin: 0 0.1rem;
+  }
+
+  > button {
+    font-weight: 700;
+    min-width: 2.5rem;
   }
 }

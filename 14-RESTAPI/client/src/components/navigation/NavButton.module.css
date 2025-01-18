@@ -13,7 +13,7 @@
     position: absolute;
     width: 100%;
     height: 2px;
-    background: #b7cc15;
+    background: #85eded;
     left: 0;
     bottom: 0.1rem;
     border-radius: 3px;
@@ -26,13 +26,13 @@
   }
 
   &.active {
-    color: #b7cc15;
+    color: #85eded;
 
     &:hover {
-      color: #8d9e10;
+      color: #74caca;
 
       .active-tab {
-        background: #8d9e10;
+        background: #74caca;
       }
     }
   }
@@ -47,10 +47,10 @@
 
   &.mobile {
     &:hover {
-      color: #b7cc15;
+      color: #85eded;
 
       .active-tab {
-        background: #b7cc15;
+        background: #85eded;
       }
     }
   }

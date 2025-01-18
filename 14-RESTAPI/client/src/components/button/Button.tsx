@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { motion, HTMLMotionProps } from 'motion/react';
+import { motion, HTMLMotionProps, TargetAndTransition  } from 'motion/react';
 import { isMobile } from 'react-device-detect';
 import css from './Button.module.css';
 
@@ -10,18 +10,24 @@ type HSL = [
  ];
 
 export default function Button({
-       hsl,
-  children,
-  ...props
-}: { hsl: HSL, children: ReactNode } & HTMLMotionProps<'button'>) {
-  const [h, s, l] = hsl;
+        hsl,
+  animateEx = {},
+   children,
+   ...props
+  }: {
+           hsl: HSL;
+    animateEx?: TargetAndTransition;
+      children: ReactNode;
+  } & HTMLMotionProps<'button'>) {
+  const  [h, s, l] = hsl;
   const background = `hsl(${h}, ${s}%, ${l}%)`;
   const    onHover = `hsl(${h}, ${s}%, ${l - 10}%)`
 
   return (
     <motion.button
        className={css.button}
-         animate={{ background }}
+         initial={{ background, opacity: 0 }}
+         animate={{ background, opacity: 1, ...animateEx }}
       whileHover={!isMobile ? { background: onHover } : {}}
         whileTap={{ scale: 0.9 }}
       transition={{ background: { duration: 0.5 } }}

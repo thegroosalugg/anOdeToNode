@@ -1,5 +1,6 @@
 import { useAnimate, stagger, AnimatePresence, motion } from 'motion/react';
-import useFetch, { ReqConfig } from '@/hooks/useFetch';
+import useDebounce from '@/hooks/useDebounce';
+import useFetch from '@/hooks/useFetch';
 import { FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import Post from '@/models/Post';
@@ -11,38 +12,39 @@ import Loader from '../loading/Loader';
 import css from './PostForm.module.css';
 
 export default function PostForm({
-        url = 'post/new',
-     method = 'POST',
   onSuccess,
     setUser,
        post,
 }: {
-       url?: 'post/new' | `post/edit/${string}`;
-    method?: 'POST' | 'PUT';
-  onSuccess: ReqConfig<Post | null>['onSuccess'];
-    setUser: Auth['setUser'];
-      post?: Post | null;
+  onSuccess?: () => void;
+     setUser: Auth['setUser'];
+       post?: Post | null;
 }) {
   const { isLoading, error, reqHandler } = useFetch<Post | null>();
-  const [ scope, animate ] = useAnimate();
-  const { title = '', content = '', imgURL = '' } = post || {};
+  const [ scope,               animate ] = useAnimate();
+  const { deferring,           deferFn } = useDebounce();
+  const { _id = '', title = '', content = '', imgURL = '' } = post || {};
+  const url = `post/${_id ? `edit/${_id}` : 'new'}`;
+  const method: 'PUT' | 'POST' = _id ? 'PUT' : 'POST';
+  const filter = `brightness(${deferring ? 0.8 : 1})`;
+
+  const onError = (err: FetchError) => {
+    if (error && !error.message) {
+      animate(
+        'p',
+        { x: [null, 10, 0, 10, 0] },
+        { repeat: 1, duration: 0.3, delay: stagger(0.1) }
+      );
+    }
+    if (err.status === 401) setUser(null);
+  };
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = new FormData(e.currentTarget); // multipart/form-data
-
-    const onError = (err: FetchError) => {
-      if (error && !error.message) {
-        animate(
-          'p',
-          { x: [null, 10, 0, 10, 0] },
-          { repeat: 1, duration: 0.3, delay: stagger(0.1) }
-        );
-      }
-      if (err.status === 401) setUser(null);
-    }
-
-    await reqHandler({ url, method, data }, { onError, onSuccess });
+    deferFn(async () => {
+      const data = new FormData(e.currentTarget); // multipart/form-data
+      await reqHandler({ url, method, data }, { onError, onSuccess });
+    }, 1200)
   }
 
   return (
@@ -64,7 +66,12 @@ export default function PostForm({
             </section>
             <ImagePicker imgURL={imgURL} style={{ marginTop: '2px' }} /> {/* applies to this layout only */}
           </section>
-          <Button hsl={[28, 64, 50]}>
+          <Button
+                 hsl={[180, 80, 35]}
+            disabled={deferring}
+            whileTap={{ scale: deferring ? 1 : 0.9 }} // overwrites default
+           animateEx={{ filter }} // additional animate props without overwriting default
+          >
             {isLoading ? <Loader small /> : 'Post'}
           </Button>
         </motion.form>
