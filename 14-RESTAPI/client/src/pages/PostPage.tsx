@@ -129,10 +129,7 @@ export default function PostPage({ user, setUser }: Auth) {
           <PostForm setUser={setUser} post={post} />
         )}
         {modalState === 'delete' && (
-          <ConfirmDialog
-            onConfirm={deletePost}
-             onCancel={closeModal}
-          />
+          <ConfirmDialog onConfirm={deletePost} onCancel={closeModal} />
         )}
       </Modal>
       <AsyncAwait {...{ isLoading, error }}>

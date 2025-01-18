@@ -59,6 +59,7 @@ export default function UserProfile({ user, setUser }: Auth) {
   const closeModal = () => setShowModal(false);
 
   function logout() {
+    closeModal();
     setUser(null);
     localStorage.removeItem('jwt-access');
     localStorage.removeItem('jwt-refresh');
