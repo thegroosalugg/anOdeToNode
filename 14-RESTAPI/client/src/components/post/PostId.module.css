@@ -70,10 +70,6 @@
     > button {
       width: 70px;
       margin-left: 0.05rem;
-
-      &:first-of-type {
-        color: #000;
-      }
     }
   }
 }

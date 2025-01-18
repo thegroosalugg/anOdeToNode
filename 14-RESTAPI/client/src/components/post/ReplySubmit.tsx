@@ -21,7 +21,7 @@ const ReplySubmit: FC<{ postId: string }> = ({ postId }) => {
     );
     animate(
       'button',
-      { background: [null, '#52a456', '#52a456', '#949494'] },
+      { background: [null, '#12a1a1', '#12a1a1', '#949494'] },
       { duration: 2, times: [0, 0.1, 0.85, 1] }
     );
     setTimeout(() => scope.current.reset(), 800);

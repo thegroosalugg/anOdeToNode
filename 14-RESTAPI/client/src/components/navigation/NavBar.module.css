@@ -4,7 +4,7 @@
   gap: 0.5rem;
   padding: 0.5rem;
   overflow-x: scroll;
-  background: linear-gradient(to right, #1d9737, #52a456);
+  background: linear-gradient(to right, #12a1a1, #379d9d);
 
   &::-webkit-scrollbar-thumb {
     background: #ffffff;
