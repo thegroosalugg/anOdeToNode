@@ -7,11 +7,12 @@ const _public = '-email -password';
 
 const getPosts: RequestHandler = async (req, res, next) => {
   try {
-    const  page = +(req.query.page || 1);
-    const limit = req.user ? 6 : 4;
+    const isProfile = req.baseUrl === '/profile'; // controller accessed via /feed & /profile
+    const      page = +(req.query.page || 1);
+    const     limit = isProfile ? 6 : 4;
     const query: Record<string, Types.ObjectId> = {};
 
-    if (req.user) {
+    if (req.user && isProfile) {
       query.creator = req.user._id;
     }
 

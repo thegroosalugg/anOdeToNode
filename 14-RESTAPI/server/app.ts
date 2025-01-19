@@ -48,7 +48,7 @@ app.use((req, res, next) => {
 });
 
 app.use(                        authRoutes);
-app.use('/feed',                feedRoutes);
+app.use('/feed',    authJWT,    feedRoutes);
 app.use('/post',    authJWT,    postRoutes);
 app.use('/post',    authJWT,   replyRoutes);
 app.use('/profile', authJWT, profileRoutes);
