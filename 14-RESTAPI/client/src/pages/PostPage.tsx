@@ -136,7 +136,7 @@ export default function PostPage({ user, setUser }: Auth) {
         {post && (
           <>
             <PostId {...{ post, user }} setModal={setModalState} />
-            {user && <ReplySubmit postId={post._id} />}
+            <ReplySubmit postId={post._id} />
             <PagedList <Reply> {...replyProps}>
               {(reply) => <ReplyItem {...reply} userId={user?._id} />}
             </PagedList>

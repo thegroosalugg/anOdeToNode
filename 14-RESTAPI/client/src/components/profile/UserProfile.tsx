@@ -25,7 +25,7 @@ export default function UserProfile({ user, setUser }: Auth) {
          error,
     reqHandler: initialReq,
   } = useFetch(initialData);
-  const               isInitial   = useRef(true);
+  const                isInitial  = useRef(true);
   const { reqHandler: updateReq } = useFetch(initialData);
   const [showModal, setShowModal] = useState(false);
   const [pages,         setPages] = useState<Pages>([1, 1]);
@@ -42,7 +42,7 @@ export default function UserProfile({ user, setUser }: Auth) {
   };
 
   useEffect(() => {
-    const mountData = async () => await initialReq({ url });
+    const  mountData = async () => await initialReq({ url });
 
     const updateData = async () =>
       await updateReq({ url }, { onSuccess: (updated) => setData(updated) });

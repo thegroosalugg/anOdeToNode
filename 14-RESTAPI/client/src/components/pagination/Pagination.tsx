@@ -2,7 +2,7 @@ import { motion, AnimatePresence, LayoutGroup } from 'motion/react';
 import { Dispatch, SetStateAction } from 'react';
 import type { Debounce } from '@/hooks/useDebounce';
 import css from './Pagination.module.css'; // must be imported before config for overrides to work
-import { config } from './PagedListConfig'; // must be imported after modules here
+import { LIST_CONFIG } from './PagedListConfig'; // must be imported after modules here
 
 export type Pages = [previous: number, current: number];
 
@@ -38,8 +38,8 @@ export default function Pagination({
   setPages: setIsActive,
  deferring,
    deferFn,
-}: Omit<Paginated, 'data'> & { type: keyof typeof config } & Debounce & PageHook) {
-  const { limit, pageCss, delay } = config[type];
+}: Omit<Paginated, 'data'> & { type: 'reply' | 'user' | 'feed' } & Debounce & PageHook) {
+  const { limit, pageCss, delay } = LIST_CONFIG[type];
   const     last = Math.ceil(docCount / limit);
   const   middle = last < 5 ? 3 : Math.min(Math.max(current, 3), last - 2);
   const    pages: number[] = [];
@@ -54,7 +54,7 @@ export default function Pagination({
     deferFn(() => setIsActive([current, page]), 1200);
   }
 
-  const { chars, color: setColor, background: setBckGrd } = config[type];
+  const { chars, color: setColor, background: setBckGrd } = LIST_CONFIG[type];
   const  filter = `brightness(${deferring ? 0.9 : 1})`
   const classes = [css['pagination'], ...pageCss].filter(Boolean).join(' ');
 

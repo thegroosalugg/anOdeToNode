@@ -1,7 +1,7 @@
 import feedCss from '../post/PostItem.module.css';
 import replyCss from '../post/ReplyItem.module.css';
 
-export const config = {
+export const LIST_CONFIG = {
   feed: {
         height: '560px',
          limit: 4,

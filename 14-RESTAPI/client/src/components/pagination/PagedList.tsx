@@ -2,11 +2,11 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import Pagination, { PageHook, Paginated } from './Pagination';
-import { config } from './PagedListConfig';
+import { LIST_CONFIG } from './PagedListConfig';
 import css from './PagedList.module.css';
 
 interface PagedList<T> extends Paginated<T, 'items'>, PageHook {
-        type: keyof typeof config;
+        type: 'reply' | 'user' | 'feed';
     children: (item: T) => React.ReactNode;
 }
 
@@ -18,7 +18,7 @@ export default function PagedList<T>({
     docCount,
     children,
 }: PagedList<T & { _id: string }>) {
-  const { limit, color, listCss, navTo, delay, fallback } = config[type];
+  const { limit, color, listCss, navTo, delay, fallback } = LIST_CONFIG[type];
   const { deferring, deferFn } = useDebounce();
   const   navigate = useNavigate();
   const  direction = pages[0] < pages[1] ? 1 : -1;
@@ -29,7 +29,7 @@ export default function PagedList<T>({
   const    classes = [css['list'], ...listCss].filter(Boolean).join(' ');
   const    opacity = 0;
   const   duration = 0.5;
-  let       height = config[type].height;
+  let       height = LIST_CONFIG[type].height;
   if (items.length <= 0) height = 'auto';
 
   function clickHandler(_id: string) {

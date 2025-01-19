@@ -3,11 +3,11 @@ import { useLocation } from 'react-router-dom';
 import { Debounce } from '@/hooks/useDebounce';
 import { isMobile } from 'react-device-detect';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { NAV_CONFIG } from './NavConfig';
 import css from './NavButton.module.css';
 
 interface NavProps {
-       path: string;
+       path: '/feed' | '/social' | '/';
       navFn: (path: string) => void;
   deferring: Debounce['deferring'];
 }
@@ -19,24 +19,23 @@ export default function NavButton({ path, navFn, deferring }: NavProps) {
     isActive ? css['active'] : ''} ${
     isMobile ? css['mobile'] : ''
   }`;
+  const { label, icon, delay } = NAV_CONFIG[path];
 
-  const labels: Record<string, string> = {
-          '/': 'Profile',
-      '/feed': 'Feed',
-    '/social': 'Social',
-  };
-
-  const icons: Record<string, IconProp> = {
-          '/': 'user',
-      '/feed': 'rss',
-    '/social': 'users',
-  };
+  const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;
+  const [x, y] = isLandscape ? [50, 0] : [0, 50];
 
   return (
-    <button className={classes} onClick={() => navFn(path)} disabled={deferring}>
-      <FontAwesomeIcon icon={icons[path]} />
-      {labels[path]}
+    <motion.button
+      className={classes}
+        onClick={() => navFn(path)}
+       disabled={deferring}
+        initial={{ opacity: 0, y,    x }}
+        animate={{ opacity: 1, y: 0, x: 0, transition: {    delay      } }}
+           exit={{ opacity: 0,             transition: { duration: 0.8 } }}
+    >
+      <FontAwesomeIcon icon={icon} />
+      {label}
       {isActive && <motion.div layoutId='tab-indicator' className={css['active-tab']} />}
-    </button>
+    </motion.button>
   );
 }

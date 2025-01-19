@@ -15,7 +15,7 @@ import { captainsLog } from './util/captainsLog';
 
 library.add(fab, fas, far);
 
-const validate = (path: string, props: Auth) => {
+const validate = (path: 'feed' | 'post' | 'social', props: Auth) => {
   const { user } = props;
 
   if (!user) return <UserPage auth={props} />;
@@ -24,14 +24,14 @@ const validate = (path: string, props: Auth) => {
       feed: <FeedPage   {...props} />,
       post: <PostPage   {...props} />,
     social: <SocialPage {...props} />,
-  };
+  } as const;
 
-  return elements[path as keyof typeof elements];
+  return elements[path];
 }
 
 export default function App() {
   // console.clear(); // **LOGDATA
-  captainsLog(-100, -10, ['⇚⇚⇚App⇛⇛⇛'])
+  captainsLog(-100, -10, ['⇚⇚⇚App⇛⇛⇛']);
 
   const element = useRoutes([
     {    path: '/',

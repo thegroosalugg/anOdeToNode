@@ -18,7 +18,7 @@ const initialData: Paginated<Post, 'posts'> = {
      posts: [],
 };
 
-export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Auth) {
+export default function FeedPage({ setUser }: Auth) {
   const {
           data: { docCount, posts },
        setData,
@@ -94,20 +94,14 @@ export default function FeedPage({ user, setUser, isLoading: fetchingUser }: Aut
       <Modal show={showModal}           close={closeModal}>
         <PostForm setUser={setUser} onSuccess={closeModal} />
       </Modal>
-      {fetchingUser ? (
-        <p style={{ alignSelf: 'center' }}>Logging in...</p>
-      ) : (
-        user && (
-          <Button
-              onClick={() => setShowModal(true)}
-                  hsl={[180, 80, 35]}
-                style={{ margin: '0 auto 1rem' }}
-            animateEx={{ transition: { opacity: { delay: 0.8 }}}}
-          >
-            New Post
-          </Button>
-        )
-      )}
+      <Button
+          onClick={() => setShowModal(true)}
+              hsl={[180, 80, 35]}
+            style={{ margin: '0 auto 1rem' }}
+        animateEx={{ transition: { opacity: { delay: 0.8 }}}}
+      >
+        New Post
+      </Button>
       <AsyncAwait {...{ isLoading, error }}>
         <PagedList <Post> {...feedProps}>
           {(post) => <PostItem {...post} />}
