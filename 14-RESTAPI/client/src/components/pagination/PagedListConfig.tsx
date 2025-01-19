@@ -15,7 +15,7 @@ export const LIST_CONFIG = {
       fallback: 'No posts yet.',
   },
 
-  user: {
+  profile: {
         height: '360px',
          limit: 6,
          color: '#454545',
@@ -39,5 +39,18 @@ export const LIST_CONFIG = {
          chars: '◻',
     background: '#ebebeb',
       fallback: 'No comments yet...',
+  },
+
+    users: {
+        height: '450px',
+         limit: 20,
+         color: '#777777',
+         navTo: false,
+         delay: 0.5,
+       listCss: [],
+       pageCss: [],
+         chars: '◻',
+    background: '#ebebeb',
+      fallback: 'Nobody here...',
   },
 };

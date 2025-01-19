@@ -25,6 +25,7 @@ const getPosts: RequestHandler = async (req, res, next) => {
 
     if (!posts) {
       res.status(404).json({ message: 'Nothing posted yet.' });
+      return;
     }
 
     res.status(200).json({ posts, docCount });

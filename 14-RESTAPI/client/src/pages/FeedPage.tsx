@@ -34,11 +34,11 @@ export default function FeedPage({ setUser }: Auth) {
   const                      url  = `feed/posts?page=${current}`;
 
   const feedProps = {
-          type: 'feed' as const,
-         items: posts,
-         pages,
-      setPages,
-      docCount,
+        type: 'feed' as const,
+       items: posts,
+       pages,
+    setPages,
+    docCount,
   };
 
   useEffect(() => {

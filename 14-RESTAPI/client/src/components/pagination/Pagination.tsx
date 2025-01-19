@@ -1,6 +1,7 @@
 import { motion, AnimatePresence, LayoutGroup } from 'motion/react';
 import { Dispatch, SetStateAction } from 'react';
 import type { Debounce } from '@/hooks/useDebounce';
+import type { PagedConfig } from './PagedList';
 import css from './Pagination.module.css'; // must be imported before config for overrides to work
 import { LIST_CONFIG } from './PagedListConfig'; // must be imported after modules here
 
@@ -38,7 +39,7 @@ export default function Pagination({
   setPages: setIsActive,
  deferring,
    deferFn,
-}: Omit<Paginated, 'data'> & { type: 'reply' | 'user' | 'feed' } & Debounce & PageHook) {
+}: Omit<Paginated, 'data'> & { type: PagedConfig } & Debounce & PageHook) {
   const { limit, pageCss, delay } = LIST_CONFIG[type];
   const     last = Math.ceil(docCount / limit);
   const   middle = last < 5 ? 3 : Math.min(Math.max(current, 3), last - 2);

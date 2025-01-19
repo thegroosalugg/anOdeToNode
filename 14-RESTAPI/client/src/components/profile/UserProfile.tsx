@@ -34,7 +34,7 @@ export default function UserProfile({ user, setUser }: Auth) {
 
   const aboutProps = { user, setUser }
   const  feedProps = {
-          type: 'user' as const,
+          type: 'profile' as const,
          items: posts,
          pages,
       setPages,

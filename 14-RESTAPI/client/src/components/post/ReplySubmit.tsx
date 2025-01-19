@@ -1,12 +1,14 @@
 import { FC, FormEvent } from 'react';
 import { motion, useAnimate, AnimatePresence } from 'motion/react';
+import { Auth } from '@/pages/RootLayout';
+import { FetchError } from '@/util/fetchData';
 import useFetch from '@/hooks/useFetch';
 import useDebounce from '@/hooks/useDebounce';
 import Reply from '@/models/Reply';
 import Loader from '../loading/Loader';
 import css from './ReplySubmit.module.css';
 
-const ReplySubmit: FC<{ postId: string }> = ({ postId }) => {
+const ReplySubmit: FC<{ postId: string, setUser: Auth['setUser'] }> = ({ postId, setUser }) => {
   const { data, reqHandler, isLoading, error, setError } = useFetch<Reply | null>();
   const [ scope,     animate ] = useAnimate();
   const { deferring, deferFn } = useDebounce();
@@ -27,12 +29,13 @@ const ReplySubmit: FC<{ postId: string }> = ({ postId }) => {
     setTimeout(() => scope.current.reset(), 800);
   };
 
-  const onError = () => {
+  const onError = (err: FetchError) => {
     animate(
       'button',
       { background: 'var(--error-red)', x: [null, 5, 0, 5, 0] },
       { background: { duration: 1 },    x: { repeat: 1, duration: 0.3 } }
     );
+    if (err.status === 401) setUser(null);
   };
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {

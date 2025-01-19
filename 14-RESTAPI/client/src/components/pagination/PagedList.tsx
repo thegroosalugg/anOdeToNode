@@ -5,18 +5,20 @@ import Pagination, { PageHook, Paginated } from './Pagination';
 import { LIST_CONFIG } from './PagedListConfig';
 import css from './PagedList.module.css';
 
+export type PagedConfig = 'reply' | 'profile' | 'feed' | 'users';
+
 interface PagedList<T> extends Paginated<T, 'items'>, PageHook {
-        type: 'reply' | 'user' | 'feed';
-    children: (item: T) => React.ReactNode;
+      type: PagedConfig;
+  children: (item: T) => React.ReactNode;
 }
 
 export default function PagedList<T>({
-       items,
-        type,
-       pages,
-    setPages,
-    docCount,
-    children,
+     items,
+      type,
+     pages,
+  setPages,
+  docCount,
+  children,
 }: PagedList<T & { _id: string }>) {
   const { limit, color, listCss, navTo, delay, fallback } = LIST_CONFIG[type];
   const { deferring, deferFn } = useDebounce();
@@ -50,10 +52,10 @@ export default function PagedList<T>({
             background,
                 height,
                opacity: 1,
-              transition: {
-                  duration: 1,
-                      ease: 'easeInOut',
-                   opacity: { delay, duration: 1 }
+            transition: {
+                duration: 1,
+                    ease: 'easeInOut',
+                 opacity: { delay, duration: 1 }
               }
             }}
       >
