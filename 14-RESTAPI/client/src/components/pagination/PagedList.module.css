@@ -9,6 +9,12 @@
   padding: 0.2rem;
   overflow-y: scroll;
 
+  li {
+    width: 100%;
+    padding: 1rem;
+    background: var(--box-gradient);
+  }
+
   &::-webkit-scrollbar {
     height: 0;
     width: 2px;
@@ -18,11 +24,5 @@
     text-align: center;
     color: #fff;
     padding: 0.5rem;
-  }
-
-  li {
-    width: 100%;
-    padding: 1rem;
-    background: var(--box-gradient);
   }
 }

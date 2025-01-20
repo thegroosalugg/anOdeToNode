@@ -20,12 +20,12 @@ export default function PagedList<T>({
   docCount,
   children,
 }: PagedList<T & { _id: string }>) {
-  const { limit, color, listCss, navTo, delay, fallback } = LIST_CONFIG[type];
+  const { limit, setColor, listCss, navTo, delay, fallback } = LIST_CONFIG[type];
   const { deferring, deferFn } = useDebounce();
   const   navigate = useNavigate();
   const  direction = pages[0] < pages[1] ? 1 : -1;
   const          x = direction * 50;
-  const background = limit > items.length ? color : '#00000000';
+  const background = limit > items.length ? setColor : '#00000000';
   const   position = deferring ? 'sticky' : 'relative';
   const     cursor = deferring ?   'wait' : '';
   const    classes = [css['list'], ...listCss].filter(Boolean).join(' ');

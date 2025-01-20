@@ -7,7 +7,7 @@ const _public = '-email -password';
 
 const getUsers: RequestHandler = async (req, res, next) => {
   try {
-    const    limit = 20;
+    const    limit = 15;
     const    page  = +(req.query.page || 1);
     const docCount = await User.find().countDocuments();
     const    users = await User.find()
@@ -21,7 +21,6 @@ const getUsers: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    console.log('USERS', users)
     res.status(200).json({ users, docCount });
   } catch (error) {
     captainsLog(5, 'getUsers Catch', error);

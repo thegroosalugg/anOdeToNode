@@ -1,0 +1,32 @@
+/* element.class increases specificity to override defaults */
+ul.community {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 100px);
+  justify-content: center;
+
+  > li {
+    padding: 0;
+    border: 1px solid var(--team-green);
+    cursor: pointer;
+
+    > h2 {
+      padding: 0.1rem 0.2rem;
+      margin: 0.1rem;
+      text-align: center;
+      text-wrap: nowrap;
+      overflow-x: scroll;
+      color: var(--text-grey);
+      font-size: 0.6rem;
+      font-weight: 600;
+    }
+
+    > img {
+      width: 100%;
+
+      border: none;
+      border-radius: 0;
+      object-fit: cover;
+      background: var(--box-gradient);
+    }
+  }
+}

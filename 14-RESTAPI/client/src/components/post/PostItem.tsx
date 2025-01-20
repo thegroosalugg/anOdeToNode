@@ -15,7 +15,8 @@ export default function PostItem({
         <h3>
           <ProfilePic user={creator} />
           <span>
-            {creator?.name    || 'account '}
+            {creator?.name    || 'account'}
+            {' '}
             {creator?.surname || 'deleted'}
           </span>
         </h3>

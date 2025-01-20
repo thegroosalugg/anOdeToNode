@@ -45,7 +45,8 @@ export default function PostId({
           {title}
         </motion.span>
         <span>
-          {creator?.name    || 'Account '}
+          {creator?.name    || 'Account'}
+          {' '}
           {creator?.surname || 'deleted'}
         </span>
         <ProfilePic user={creator} />

@@ -1,4 +1,5 @@
-.feed {
+/* increase specificity to override defaults with element.class */
+ul.feed {
   border-top: 2px solid var(--team-green);
   border-bottom: 2px solid var(--team-green);
 
@@ -55,7 +56,7 @@
   }
 }
 
-.on-user-page {
+ul.on-user-page {
   border-top-color: var(--text-grey);
   border-bottom-color: var(--text-grey);
 
@@ -69,7 +70,7 @@
   }
 }
 
-.on-user-pagination {
+section.on-user-pagination {
   gap: 0;
   margin: 0 auto;
 

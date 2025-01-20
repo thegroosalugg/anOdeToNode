@@ -31,7 +31,8 @@ export default function ReplyItem({
       <h2>
         <ProfilePic user={creator} />
         <span>
-          {creator?.name    || 'Account '}
+          {creator?.name    || 'Account'}
+          {' '}
           {creator?.surname || 'deleted'}
         </span>
         <time>{timeAgo(updatedAt)}</time>

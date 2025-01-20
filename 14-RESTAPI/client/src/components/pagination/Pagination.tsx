@@ -2,8 +2,8 @@ import { motion, AnimatePresence, LayoutGroup } from 'motion/react';
 import { Dispatch, SetStateAction } from 'react';
 import type { Debounce } from '@/hooks/useDebounce';
 import type { PagedConfig } from './PagedList';
-import css from './Pagination.module.css'; // must be imported before config for overrides to work
-import { LIST_CONFIG } from './PagedListConfig'; // must be imported after modules here
+import { LIST_CONFIG } from './PagedListConfig';
+import css from './Pagination.module.css';
 
 export type Pages = [previous: number, current: number];
 
@@ -55,7 +55,7 @@ export default function Pagination({
     deferFn(() => setIsActive([current, page]), 1200);
   }
 
-  const { chars, color: setColor, background: setBckGrd } = LIST_CONFIG[type];
+  const { chars, setColor, setBckGrd } = LIST_CONFIG[type];
   const  filter = `brightness(${deferring ? 0.9 : 1})`
   const classes = [css['pagination'], ...pageCss].filter(Boolean).join(' ');
 

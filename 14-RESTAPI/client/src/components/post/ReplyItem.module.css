@@ -1,4 +1,5 @@
-.replies {
+/* increase specificity to override defaults with element.class */
+ul.replies {
   border-top: 1px solid var(--text-grey);
   border-bottom: 1px solid var(--text-grey);
 
@@ -47,7 +48,7 @@
 
     > button {
       display: block;
-      margin: 0.75rem -0.75rem -0.75rem auto;
+      margin: 0 -0.25rem -0.25rem auto;
       border-radius: 5px;
       font-size: 0.7rem
     }
