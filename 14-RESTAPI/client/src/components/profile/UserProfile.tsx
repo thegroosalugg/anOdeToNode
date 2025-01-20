@@ -20,13 +20,10 @@ const initialData: Paginated<Post, 'posts'> = {
 export default function UserProfile({ user, setUser }: Auth) {
   const {
           data: { docCount, posts },
-       setData,
-     isLoading,
          error,
-    reqHandler: initialReq,
+    reqHandler,
   } = useFetch(initialData);
   const                isInitial  = useRef(true);
-  const { reqHandler: updateReq } = useFetch(initialData);
   const [showModal, setShowModal] = useState(false);
   const [pages,         setPages] = useState<Pages>([1, 1]);
   const [,               current] = pages;
@@ -42,19 +39,12 @@ export default function UserProfile({ user, setUser }: Auth) {
   };
 
   useEffect(() => {
-    const  mountData = async () => await initialReq({ url });
-
-    const updateData = async () =>
-      await updateReq({ url }, { onSuccess: (updated) => setData(updated) });
-
-    if (isInitial.current) {
-      isInitial.current = false;
-      mountData();
-    } else {
-      updateData();
+    const mountData = async () => {
+      await reqHandler({ url });
+      if (isInitial.current) isInitial.current = false;
     }
-
-  }, [initialReq, updateReq, setData, url]);
+    mountData();
+  }, [reqHandler, url]);
 
   const closeModal = () => setShowModal(false);
 
@@ -67,12 +57,12 @@ export default function UserProfile({ user, setUser }: Auth) {
 
   return (
     <>
-      <Modal show={showModal} close={closeModal}>
+      <Modal show={showModal}                close={closeModal}>
         <ConfirmDialog onConfirm={logout} onCancel={closeModal} />
       </Modal>
       <section className={css['user-profile']}>
-        <About    {...aboutProps} />
-        <AsyncAwait {...{ isLoading, error }}>
+        <About {...aboutProps} />
+        <AsyncAwait isLoading={isInitial.current} error={error}>
           <PagedList <Post> {...feedProps}>
             {(post) => <PostItem {...post} onUserPage />}
           </PagedList>

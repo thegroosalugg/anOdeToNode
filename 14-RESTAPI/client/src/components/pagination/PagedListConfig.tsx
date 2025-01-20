@@ -43,7 +43,7 @@ export const LIST_CONFIG = {
   },
 
   users: {
-       height: '',
+       height: '418px',
         limit: 15,
      setColor: 'var(--team-green)',
         navTo: false,

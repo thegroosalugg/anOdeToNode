@@ -6,6 +6,7 @@ import { Pages, Paginated } from '@/components/pagination/Pagination';
 import AsyncAwait from '@/components/panel/AsyncAwait';
 import PagedList from '@/components/pagination/PagedList';
 import UserItem from '@/components/social/UserItem';
+import { captainsLog } from '@/util/captainsLog';
 
 const initialData: Paginated<User, 'users'> = {
   docCount: 0,
@@ -35,9 +36,9 @@ export default function SocialPage({ user }: Auth) {
     const mountData = async () => {
       await reqHandler({ url });
       if (isInitial.current) isInitial.current = false;
+      captainsLog(-100, 80, ['SOCIAL PAGE']); // **LOGDATA
     }
     mountData();
-
   }, [url, reqHandler]);
 
   return (

@@ -22,12 +22,10 @@ export default function FeedPage({ setUser }: Auth) {
   const {
           data: { docCount, posts },
        setData,
-    reqHandler: initialReq,
+    reqHandler,
          error,
-     isLoading,
   } = useFetch(initialData);
   const               isInitial   = useRef(true);
-  const { reqHandler: updateReq } = useFetch(initialData);
   const [showModal, setShowModal] = useState(false);
   const [pages,         setPages] = useState<Pages>([1, 1]);
   const [,               current] = pages;
@@ -42,19 +40,12 @@ export default function FeedPage({ setUser }: Auth) {
   };
 
   useEffect(() => {
-    const  mountData = async () => await initialReq({ url });
-    const updateData = async () => await  updateReq({ url },
-      { onSuccess: (updated) => setData(updated) }
-    );
-
-    if (isInitial.current) {
-      isInitial.current = false;
-      mountData();
-      captainsLog(-100, 270, ['FEEDPAGE INITIAL'] ); // **LOGDATA
-    } else {
-      updateData();
-      captainsLog(-100, 260, ['FEEDPAGE UPDATING'] ); // **LOGDATA
+    const mountData = async () => {
+      await reqHandler({ url });
+      if (isInitial.current) isInitial.current = false;
+      captainsLog(-100, 270, ['FEEDPAGE'] ); // **LOGDATA
     }
+    mountData();
 
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog(-100, 250, ['FEEDPAGE: Socket connected']));
@@ -85,7 +76,7 @@ export default function FeedPage({ setUser }: Auth) {
       socket.off('post:delete');
       socket.disconnect();
     };
-  }, [initialReq, updateReq, setData, url]);
+  }, [reqHandler, setData, url]);
 
   const closeModal = () => setShowModal(false);
 
@@ -102,7 +93,7 @@ export default function FeedPage({ setUser }: Auth) {
       >
         New Post
       </Button>
-      <AsyncAwait {...{ isLoading, error }}>
+      <AsyncAwait isLoading={isInitial.current} error={error}>
         <PagedList <Post> {...feedProps}>
           {(post) => <PostItem {...post} />}
         </PagedList>

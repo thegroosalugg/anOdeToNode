@@ -1,8 +1,9 @@
 /* element.class increases specificity to override defaults */
 ul.community {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 100px);
-  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  align-items: start; /* not required, however will overwrite Default's center alignement */
+  align-content: start; /* forces rows to stack at top */
 
   > li {
     padding: 0;
@@ -22,10 +23,8 @@ ul.community {
 
     > img {
       width: 100%;
-
       border: none;
       border-radius: 0;
-      object-fit: cover;
       background: var(--box-gradient);
     }
   }

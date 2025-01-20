@@ -48,7 +48,7 @@ ul.replies {
 
     > button {
       display: block;
-      margin: 0 -0.25rem -0.25rem auto;
+      margin: 0.5rem -0.25rem -0.25rem auto;
       border-radius: 5px;
       font-size: 0.7rem
     }
