@@ -70,14 +70,15 @@ export default function PostPage({ user, setUser }: Auth) {
       captainsLog(-100, 20, ['POSTPAGE: NEW REPLY']);
       setTimeout(() => {
         setReplies(({ docCount, replies }) => {
-          return { docCount, replies: [reply, ...replies] };
+          return { docCount: docCount + 1, replies: [reply, ...replies] };
         });
       }, 1200); // delay for other animations to act first
     });
 
     socket.on(`post:${postId}:reply:delete`, (deleted) => {
-      setReplies(({ docCount, replies: prevReplies }) => {
-        const replies = prevReplies.filter(({ _id }) => _id !== deleted._id);
+      setReplies(({ docCount: prevCount, replies: prevReplies }) => {
+        const  replies = prevReplies.filter(({ _id }) => _id !== deleted._id);
+        const docCount = prevCount - 1;
         captainsLog(-100, 20, ['POSTPAGE: REPLY DELETED', deleted]);
         return { docCount, replies };
       });

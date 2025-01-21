@@ -34,7 +34,7 @@ export default function PagedList<T>({
   const      duration = 0.5;
   const       listRef = useRef<HTMLUListElement |   null>(null);
   const        height = useRef<number           | 'auto'>('auto');
-  const shouldRecount = docCount <= limit && items.length < limit;
+  const shouldRecount = docCount < limit && items.length < limit;
 
   useEffect(() => {
     setTimeout(() => {
@@ -98,7 +98,9 @@ export default function PagedList<T>({
           )}
         </AnimatePresence>
       </motion.ul>
-      <Pagination {...{ type, pages, setPages, docCount, deferring, deferFn }} />
+      {docCount >= limit && (
+        <Pagination {...{ type, pages, setPages, docCount, deferring, deferFn }} />
+      )}
     </>
   );
 }

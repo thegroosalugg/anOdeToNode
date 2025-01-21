@@ -51,20 +51,22 @@ export default function FeedPage({ setUser }: Auth) {
     socket.on('connect', () => captainsLog(-100, 250, ['FEEDPAGE: Socket connected']));
 
     socket.on('post:update', (newPost) => {
-      setData(({ docCount, posts: prevPosts }) => {
+      setData(({ docCount: prevCount, posts: prevPosts }) => {
         const isFound = prevPosts.some(({ _id }) => _id === newPost._id);
-        const posts = isFound
+        const   posts = isFound
           ? prevPosts.map((oldPost) => (newPost._id === oldPost._id ? newPost : oldPost))
           : [newPost, ...prevPosts];
 
+        const docCount = prevCount + 1;
         captainsLog(-100, 240, ['FEEDPAGE ' + (isFound ? 'EDIT' : 'NEW'), newPost]);
         return { docCount, posts };
       });
     });
 
     socket.on('post:delete', (deleted) => {
-      setData(({ docCount, posts: prevPosts }) => {
-        const posts = prevPosts.filter(({ _id }) => _id !== deleted._id);
+      setData(({ docCount: prevCount, posts: prevPosts }) => {
+        const    posts = prevPosts.filter(({ _id }) => _id !== deleted._id);
+        const docCount = prevCount - 1;
         captainsLog(-100, 280, ['FEEDPAGE DELETED', deleted]);
         return { docCount, posts };
       });
