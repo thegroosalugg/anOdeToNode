@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, HTMLMotionProps } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
@@ -20,7 +20,9 @@ export default function PagedList<T>({
   setPages,
   docCount,
   children,
-}: PagedList<T & { _id: string }>) {
+  ...props
+  // merge MotionProps while excluding any that conflict with PagedList's own prop types
+}: PagedList<T & { _id: string }> & Omit<HTMLMotionProps<'li'>, keyof PagedList<T>>) {
   const { limit, setColor, listCss, navTo, delay, fallback } = LIST_CONFIG[type];
   const { deferring, deferFn } = useDebounce();
   const      navigate = useNavigate();
@@ -81,6 +83,7 @@ export default function PagedList<T>({
                 initial={{ opacity,    x }}
                 animate={{ opacity: 1, x:  0, transition: { duration, delay: i * 0.1 } }}
                    exit={{ opacity,    x: -x, transition: { duration } }}
+                {...props}
               >
                 {children(item)}
               </motion.li>

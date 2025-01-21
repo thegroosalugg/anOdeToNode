@@ -43,7 +43,10 @@ export default function SocialPage({ user }: Auth) {
 
   return (
     <AsyncAwait isLoading={isInitial.current} error={error}>
-      <PagedList <User> {...commProps}>
+      <PagedList<User>
+        {...commProps}
+        whileHover={{ y: -2, transition: { ease: 'easeInOut' } }}
+      >
         {(user) => <UserItem user={user} />}
       </PagedList>
     </AsyncAwait>
