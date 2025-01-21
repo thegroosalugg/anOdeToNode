@@ -19,9 +19,9 @@ export default function SocialPage({ user }: Auth) {
     reqHandler,
          error,
   } = useFetch(initialData);
-  const [pages, setPages] = useState<Pages>([1, 1]);
   const isInitial = useRef(true);
-  const [, current] = pages;
+  const [pages, setPages] = useState<Pages>([1, 1]);
+  const [,       current] = pages;
   const url = `social/users?page=${current}`;
 
   const commProps = {

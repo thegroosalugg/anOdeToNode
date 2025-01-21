@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import Pagination, { PageHook, Paginated } from './Pagination';
@@ -22,17 +23,27 @@ export default function PagedList<T>({
 }: PagedList<T & { _id: string }>) {
   const { limit, setColor, listCss, navTo, delay, fallback } = LIST_CONFIG[type];
   const { deferring, deferFn } = useDebounce();
-  const   navigate = useNavigate();
-  const  direction = pages[0] < pages[1] ? 1 : -1;
-  const          x = direction * 50;
-  const background = limit > items.length ? setColor : '#00000000';
-  const   position = deferring ? 'sticky' : 'relative';
-  const     cursor = deferring ?   'wait' : '';
-  const    classes = [css['list'], ...listCss].filter(Boolean).join(' ');
-  const    opacity = 0;
-  const   duration = 0.5;
-  let       height = LIST_CONFIG[type].height;
-  if (items.length <= 0) height = 'auto';
+  const      navigate = useNavigate();
+  const     direction = pages[0] < pages[1] ? 1 : -1;
+  const             x = direction * 50;
+  const    background = limit > items.length ? setColor : '#00000000';
+  const      position = deferring ? 'sticky' : 'relative';
+  const        cursor = deferring ?   'wait' : '';
+  const       classes = [css['list'], ...listCss].filter(Boolean).join(' ');
+  const       opacity = 0;
+  const      duration = 0.5;
+  const       listRef = useRef<HTMLUListElement |   null>(null);
+  const        height = useRef<number           | 'auto'>('auto');
+  const shouldRecount = docCount <= limit && items.length < limit;
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (listRef.current) {
+        height.current = listRef.current.offsetHeight;
+      }
+      if (shouldRecount) height.current = 'auto';
+    }, 1000);
+  }, [shouldRecount]);
 
   function clickHandler(_id: string) {
     if (!deferring) {
@@ -45,12 +56,12 @@ export default function PagedList<T>({
   return (
     <>
       <motion.ul
+              ref={listRef}
         className={classes}
-            style={{ position }}
-          initial={{ opacity, height: 100 }}
+            style={{ position, height: height.current }}
+          initial={{ opacity }}
           animate={{
             background,
-                height,
                opacity: 1,
             transition: {
                 duration: 1,

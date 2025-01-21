@@ -3,21 +3,19 @@ import  replyCss from '../post/ReplyItem.module.css';
 import socialCss from '../social/UserItem.module.css';
 
 export const LIST_CONFIG = {
-  feed: {
-       height: '560px',
-        limit: 4,
-     setColor: 'var(--team-green)',
-        navTo: 'post',
-        delay: 1,
-      listCss: [feedCss.feed],
-      pageCss: [],
-        chars: '…',
-    setBckGrd: '#ebebeb',
-     fallback: 'No posts yet.',
+  feed: {                           // each component calls only this key
+        limit: 4,                   // docs per page. Matching no. must be set on Server
+     setColor: 'var(--team-green)', // last list page && pagination color & border
+        navTo: 'post',              // if list item should navigate to an ID page
+        delay: 1,                   // enter animation. Cascades with other components
+      listCss: [feedCss.feed],      // override/extra UL styles. Default always applied
+      pageCss: [],                  // same as above for Pagination
+        chars: '…',                 // Pagination ellipsis
+    setBckGrd: '#ebebeb',           // pagination button background color
+     fallback: 'No posts yet.',     // when list is empty
   },
 
   profile: {
-       height: '360px',
         limit: 6,
      setColor: '#454545',
         navTo: 'post',
@@ -30,8 +28,7 @@ export const LIST_CONFIG = {
   },
 
   reply: {
-       height: '450px',
-        limit: 10,
+        limit: 8,
      setColor: '#777777',
         navTo: false,
         delay: 1.5,
@@ -43,7 +40,6 @@ export const LIST_CONFIG = {
   },
 
   users: {
-       height: '418px',
         limit: 15,
      setColor: 'var(--team-green)',
         navTo: false,
