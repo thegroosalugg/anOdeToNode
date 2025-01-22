@@ -1,6 +1,6 @@
 import   feedCss from '../post/PostItem.module.css';
 import  replyCss from '../post/ReplyItem.module.css';
-import socialCss from '../social/UserItem.module.css';
+import socialCss from '../social/PeerItem.module.css';
 
 export const LIST_CONFIG = {
   feed: {                           // each component calls only this key

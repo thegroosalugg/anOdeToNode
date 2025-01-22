@@ -5,7 +5,7 @@ import User from '@/models/User';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
 import AsyncAwait from '@/components/panel/AsyncAwait';
 import PagedList from '@/components/pagination/PagedList';
-import UserItem from '@/components/social/UserItem';
+import PeerItem from '@/components/social/PeerItem';
 import { captainsLog } from '@/util/captainsLog';
 
 const initialData: Paginated<User, 'users'> = {
@@ -47,7 +47,7 @@ export default function SocialPage({ user }: Auth) {
         {...commProps}
         whileHover={{ y: -2, transition: { ease: 'easeInOut' } }}
       >
-        {(user) => <UserItem user={user} />}
+        {(user) => <PeerItem user={user} />}
       </PagedList>
     </AsyncAwait>
   );

@@ -96,7 +96,7 @@ export default function FeedPage({ setUser }: Auth) {
         New Post
       </Button>
       <AsyncAwait isLoading={isInitial.current} error={error}>
-        <PagedList <Post> {...feedProps}>
+        <PagedList<Post> {...feedProps}>
           {(post) => <PostItem {...post} />}
         </PagedList>
       </AsyncAwait>

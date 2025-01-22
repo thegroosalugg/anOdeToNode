@@ -1,0 +1,31 @@
+.peer-profile {
+  overflow: auto;
+  margin-bottom: 1rem;
+
+  > div {
+    width: 150px;
+
+    > img {
+      width: 150px;
+      border-radius: 5px 5px 0 0;
+      background: var(--box-gradient);
+    }
+
+    > h2 {
+      padding: 0.2rem 0.2rem 0.3rem;
+      border-radius: 0 0 5px 5px;
+      text-align: center;
+      font-weight: 600;
+      font-family: 'Oswald', sans-serif;
+      color: #fff;
+      background: var(--team-green);
+      overflow: auto;
+      width: 100%;
+      max-height: 3rem;
+
+      &::-webkit-scrollbar-thumb {
+        background: #fff;
+      }
+    }
+  }
+}

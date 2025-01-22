@@ -32,7 +32,7 @@ const getUsers: RequestHandler = async (req, res, next) => {
 const getUserById: RequestHandler = async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select(_public);
     if (!user) {
       res.status(404).json({ message: 'User not found.' });
       return;

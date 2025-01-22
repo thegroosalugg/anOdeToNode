@@ -1,7 +1,7 @@
 import User from '@/models/User';
 import ProfilePic from '../profile/ProfilePic';
 
-export default function UserItem({ user }: { user: User }) {
+export default function PeerItem({ user }: { user: User }) {
   const { name, surname } = user;
   return (
     <>

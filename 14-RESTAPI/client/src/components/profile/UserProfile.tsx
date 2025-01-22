@@ -63,7 +63,7 @@ export default function UserProfile({ user, setUser }: Auth) {
       <section className={css['user-profile']}>
         <About {...aboutProps} />
         <AsyncAwait isLoading={isInitial.current} error={error}>
-          <PagedList <Post> {...feedProps}>
+          <PagedList<Post> {...feedProps}>
             {(post) => <PostItem {...post} onUserPage />}
           </PagedList>
         </AsyncAwait>
