@@ -1,10 +1,11 @@
 import { useRoutes } from 'react-router-dom';
 import {    Auth   } from './pages/RootLayout';
+import     AuthPage  from './pages/AuthPage';
 import   RootLayout  from './pages/RootLayout';
 import     FeedPage  from './pages/FeedPage';
 import     PostPage  from './pages/PostPage';
 import   SocialPage  from './pages/SocialPage';
-import     UserPage  from './pages/UserPage';
+import     PeerPage  from './pages/PeerPage';
 import    ErrorPage  from './pages/ErrorPage';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -15,27 +16,30 @@ import { captainsLog } from './util/captainsLog';
 
 library.add(fab, fas, far);
 
-const validate = (path: 'feed' | 'post' | 'social', props: Auth) => {
+type AppRoutes = 'feed' | 'post' | 'social' | 'peer';
+
+const validate = (path: AppRoutes, props: Auth) => {
   const { user } = props;
 
-  if (!user) return <UserPage auth={props} />;
+  if (!user) return <AuthPage auth={props} />;
 
   const elements = {
       feed: <FeedPage   {...props} />,
       post: <PostPage   {...props} />,
     social: <SocialPage {...props} />,
+      peer: <PeerPage   {...props} />,
   } as const;
 
   return elements[path];
-}
+};
 
 export default function App() {
-  // console.clear(); // **LOGDATA
+  console.clear(); // **LOGDATA
   captainsLog(-100, -10, ['⇚⇚⇚App⇛⇛⇛']);
 
   const element = useRoutes([
     {    path: '/',
-      element: <RootLayout children={(props) => <UserPage auth={props} />} />,
+      element: <RootLayout children={(props) => <AuthPage auth={props} />} />,
     },
     {
          path: '/feed',
@@ -48,6 +52,10 @@ export default function App() {
     {
          path: '/social',
       element: <RootLayout children={(props) => validate('social', props)} />,
+    },
+    {
+         path: '/user/:userId',
+      element: <RootLayout children={(props) => validate('peer',   props)} />,
     },
     {    path: '*',
       element: <RootLayout children={() => <ErrorPage />} />,

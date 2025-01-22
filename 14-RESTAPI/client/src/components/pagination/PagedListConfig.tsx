@@ -42,7 +42,7 @@ export const LIST_CONFIG = {
   users: {
         limit: 15,
      setColor: 'var(--team-green)',
-        navTo: false,
+        navTo: 'user',
         delay: 0.5,
       listCss: [socialCss.community],
       pageCss: [],
