@@ -17,7 +17,7 @@ export const LIST_CONFIG = {
 
   profile: {
         limit: 6,
-     setColor: '#454545',
+     setColor: 'var(--dark-grey)',
         navTo: 'post',
         delay: 0.8,
       listCss: [feedCss.feed, feedCss['on-user-page']],

@@ -57,11 +57,13 @@ ul.feed {
 }
 
 ul.on-user-page {
-  border-top-color: var(--text-grey);
-  border-bottom-color: var(--text-grey);
+  border-top-color: var(--dark-grey);
+  border-bottom-color: var(--dark-grey);
+  border-radius: 5px;
+  padding: 0.25rem;
 
   &::-webkit-scrollbar-thumb {
-    background: var(--text-grey);
+    background: var(--dark-grey);
   }
 
   li {
@@ -75,7 +77,7 @@ section.on-user-pagination {
   margin: 0 auto;
 
   > span {
-    color: #454545;
+    color: var(--dark-grey);
     margin: 0 0.1rem;
   }
 

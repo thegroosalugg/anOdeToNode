@@ -14,11 +14,17 @@ interface NavProps {
 
 export default function NavButton({ path, navFn, deferring }: NavProps) {
   const { pathname } = useLocation();
-  const   isActive   = pathname === path || (pathname.startsWith('/post') && path === '/feed');
-  const   classes    = `${css['nav-button']} ${
+
+  const isActive =
+    pathname === path ||
+    (pathname.startsWith('/post') && path === '/feed') ||
+    (pathname.startsWith('/user') && path === '/social');
+
+  const classes = `${css['nav-button']} ${
     isActive ? css['active'] : ''} ${
     isMobile ? css['mobile'] : ''
   }`;
+  
   const { label, icon, delay } = NAV_CONFIG[path];
 
   const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '@/util/fetchData';
 import { timeAgo } from '@/util/timeStamps';
 import { Auth } from '@/pages/RootLayout';
@@ -23,6 +24,7 @@ export default function PostId({
   const     hidden = { opacity };
   const    visible = { opacity: 1, transition };
   const   variants = { hidden, visible };
+  const   navigate = useNavigate();
 
   const htnlRef = useRef<HTMLParagraphElement | null>(null);
   const [height, setHeight] = useState<number | 'auto'>('auto');
@@ -44,12 +46,12 @@ export default function PostId({
         <motion.span key={title} initial={false} animate={{ opacity: [0, 1] }}>
           {title}
         </motion.span>
-        <span>
+        <span onClick={() => navigate('/user/' + creator._id)}>
           {creator?.name    || 'Account'}
           {' '}
           {creator?.surname || 'deleted'}
+          <ProfilePic user={creator} />
         </span>
-        <ProfilePic user={creator} />
       </motion.h1>
       <motion.time variants={variants}>
         {timeAgo(updatedAt)}

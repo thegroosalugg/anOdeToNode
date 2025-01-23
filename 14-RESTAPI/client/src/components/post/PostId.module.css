@@ -26,7 +26,10 @@
 
       &:last-of-type {
         margin-left: 0.5rem;
-        margin-right: 0.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+        cursor: pointer;
       }
     }
   }

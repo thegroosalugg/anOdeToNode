@@ -60,7 +60,7 @@ export default function PostPage({ user, setUser }: Auth) {
       captainsLog(-100, 30, ['POSTPAGE effect, ID:' + postId]); // **LOGDATA
       initialData();
     } else {
-      fetchReplies()
+      fetchReplies();
     }
 
     const socket = io(BASE_URL);

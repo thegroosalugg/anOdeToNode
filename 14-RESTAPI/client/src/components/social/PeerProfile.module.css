@@ -1,19 +1,26 @@
 .peer-profile {
+  align-self: center;
+  max-width: 600px;
+  width: 100%;
   overflow: auto;
+  padding: 0.75rem;
   margin-bottom: 1rem;
+  border: 1px solid var(--team-green);
+  background: var(--box-gradient);
 
   > div {
     width: 150px;
+    box-shadow: 2.5px 2.5px 5px #5a5a5a;
 
     > img {
       width: 150px;
-      border-radius: 5px 5px 0 0;
+      border-radius: 0;
       background: var(--box-gradient);
     }
 
     > h2 {
-      padding: 0.2rem 0.2rem 0.3rem;
-      border-radius: 0 0 5px 5px;
+      padding: 0.2rem;
+      padding-bottom: 0.4rem;
       text-align: center;
       font-weight: 600;
       font-family: 'Oswald', sans-serif;
