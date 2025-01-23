@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUsers, getUserById } from '../controllers/socialController';
+import { getUsers, getUserById, sendFriendReq } from '../controllers/socialController';
 import { getPosts } from '../controllers/feedController';
 
 const router = express.Router();
@@ -8,5 +8,6 @@ const router = express.Router();
 router.get('/users', getUsers);
 router.get('/find/:userId', getUserById);
 router.get('/posts/:userId', getPosts);
+router.post('/add/:userId', sendFriendReq);
 
 export default router;

@@ -4,6 +4,7 @@ type User = {
      surname: string;
        email: string;
      imgURL?: string;
+   createdAt: string;
    JWTaccess: string;
   JWTrefresh: string;
 };

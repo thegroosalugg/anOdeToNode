@@ -45,4 +45,42 @@ const getUserById: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { getUsers, getUserById };
+const sendFriendReq: RequestHandler = async (req, res, next) => {
+  if (!req.user) {
+    res.status(401).json({ message: 'incorrect use of controller' });
+    return;
+  }
+
+  try {
+    const { userId } = req.params;
+    const peer = await User.findById(userId);
+    const user = req.user;
+
+    if (!peer) {
+      res.status(404).json({ message: 'User not found.' });
+      return;
+    }
+
+    const reqExists = peer.friends.some(friend =>
+      friend.user.toString() === user._id.toString()
+    );
+
+    if (reqExists) {
+      res.status(409).json({ message: 'Request already sent' });
+      return;
+    }
+
+    peer.friends.push({ user: user._id, status: 'pending' });
+    await peer.save();
+
+    user.friends.push({ user: peer._id, status: 'sent' });
+    await user.save();
+
+    res.status(201).json({ message: 'success' });
+  } catch (error) {
+    captainsLog(5, 'addFriend Catch', error);
+    res.status(500).json({ message: 'Add request could not be completed.' });
+  }
+};
+
+export { getUsers, getUserById, sendFriendReq };
