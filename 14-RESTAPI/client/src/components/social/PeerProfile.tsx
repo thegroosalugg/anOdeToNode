@@ -22,13 +22,11 @@ export default function PeerProfile({
   const { _id, name, surname } = peer;
 
   const connection = user?.friends.find((friend) => friend.user === _id);
-  const { text, icon, hsl, color } = PEER_CONFIG[connection?.status || 'none'];
+  const { text, icon, hsl, color, action } = PEER_CONFIG[connection?.status || 'none'];
   const borderColor = connection ? 'transparent' : 'var(--team-green)';
 
   async function clickHandler() {
-    if (!connection) {
-      await reqHandler({ url: `social/add/${_id}`, method: 'POST' });
-    }
+    await reqHandler({ url: `social/${_id}/${action}`, method: 'POST' });
   }
 
   useEffect(() => {

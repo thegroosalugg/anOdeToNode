@@ -45,14 +45,14 @@ const getUserById: RequestHandler = async (req, res, next) => {
   }
 };
 
-const sendFriendReq: RequestHandler = async (req, res, next) => {
+const friendRequest: RequestHandler = async (req, res, next) => {
   if (!req.user) {
     res.status(401).json({ message: 'incorrect use of controller' });
     return;
   }
 
   try {
-    const { userId } = req.params;
+    const { userId, action } = req.params;
     const peer = await User.findById(userId);
     const user = req.user;
 
@@ -61,27 +61,41 @@ const sendFriendReq: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const reqExists = peer.friends.some(friend =>
-      friend.user.toString() === user._id.toString()
+    const peerIndex = peer.friends.findIndex(
+      (friend) => friend.user.toString() === user._id.toString()
     );
 
-    if (reqExists) {
-      res.status(409).json({ message: 'Request already sent' });
-      return;
+    const userIndex = user.friends.findIndex(
+      (friend) => friend.user.toString() === peer._id.toString()
+    );
+
+    switch (action) {
+      case 'add':
+        peer.friends.push({ user: user._id, status: 'received' });
+        user.friends.push({ user: peer._id, status: 'sent' });
+        break;
+      case 'accept':
+        peer.friends[peerIndex].status = 'accepted';
+        user.friends[userIndex].status = 'accepted';
+        break;
+      case 'delete':
+        peer.friends.splice(peerIndex, 1);
+        user.friends.splice(userIndex, 1);
+        break;
+      default:
+        res.status(400).json({ message: 'Invalid action' });
+        return;
     }
 
-    peer.friends.push({ user: user._id, status: 'received' });
     await peer.save();
-
-    user.friends.push({ user: peer._id, status: 'sent' });
     await user.save();
-
     io.emit(`peer:${peer._id}:update`, user);
+    io.emit(`peer:${user._id}:update`, peer);
     res.status(201).json({ message: 'success' });
   } catch (error) {
     captainsLog(5, 'addFriend Catch', error);
-    res.status(500).json({ message: 'Add request could not be completed.' });
+    res.status(500).json({ message: 'Request could not be completed.' });
   }
 };
 
-export { getUsers, getUserById, sendFriendReq };
+export { getUsers, getUserById, friendRequest };
