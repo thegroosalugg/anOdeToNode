@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
 import { Auth } from './RootLayout';
+import { BASE_URL } from '@/util/fetchData';
+import { io } from 'socket.io-client';
 import User from '@/models/User';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
 import AsyncAwait from '@/components/panel/AsyncAwait';
@@ -16,6 +18,7 @@ const initialData: Paginated<User, 'users'> = {
 export default function SocialPage({ user }: Auth) {
   const {
           data: { docCount, users },
+       setData: setUsers,
     reqHandler,
          error,
   } = useFetch(initialData);
@@ -37,9 +40,26 @@ export default function SocialPage({ user }: Auth) {
       await reqHandler({ url });
       if (isInitial.current) isInitial.current = false;
       captainsLog(-100, 80, ['SOCIAL PAGE']); // **LOGDATA
-    }
+    };
+
     mountData();
-  }, [url, reqHandler]);
+
+    const socket = io(BASE_URL);
+    socket.on('connect', () => captainsLog(-100, 80, ['SOCIAL PAGE: Socket connected']));
+
+    socket.on('user:new', (newUser) => {
+      setUsers(({ docCount, users }) => {
+        captainsLog(-100, 80, ['SOCIAL PAGE NEW USER', newUser]); // **LOGDATA
+        return { docCount: docCount + 1, users: [newUser, ...users] };
+      });
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('user:new');
+      socket.disconnect();
+    }
+  }, [url, reqHandler, setUsers]);
 
   return (
     <AsyncAwait isLoading={isInitial.current} error={error}>

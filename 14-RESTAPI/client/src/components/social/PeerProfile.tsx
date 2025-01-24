@@ -36,9 +36,15 @@ export default function PeerProfile({
     socket.on('connect', () => captainsLog(-100, 150, ['PEER PROFILE: Socket connected']));
 
     socket.on(`peer:${_id}:update`, (updated) => {
+      captainsLog(-100, 150, ['PEER PROFILE: UPDATE', updated]);
       setUser(updated);
     })
 
+    return () => {
+      socket.off('connect');
+      socket.off(`peer:${_id}:update`);
+      socket.disconnect();
+    }
   }, [_id, setUser]);
 
   return (
