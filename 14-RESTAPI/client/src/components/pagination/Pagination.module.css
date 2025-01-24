@@ -17,10 +17,6 @@
     color: var(--team-green);
     border: 1.5px solid var(--team-green);
     background: #ededed;
-
-    &:disabled {
-      cursor: wait;
-    }
   }
 
   &::-webkit-scrollbar {

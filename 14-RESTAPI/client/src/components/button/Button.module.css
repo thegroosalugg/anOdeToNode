@@ -3,4 +3,8 @@
   border: none;
   color: #fff;
   width: fit-content;
+
+  &:disabled {
+    cursor: wait;
+  }
 }

@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'motion/react';
 import { useEffect } from 'react';
+import useDebounce from '@/hooks/useDebounce';
 import { io } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
 import { PEER_CONFIG } from './peerProfileConfig';
@@ -19,14 +20,20 @@ export default function PeerProfile({
      peer,
 }: Pick<Auth, 'user' | 'setUser'> & { peer: User }) {
   const { isLoading, reqHandler } = useFetch();
-  const { _id, name, surname } = peer;
+  const { deferring,    deferFn } = useDebounce();
+  const {   _id, name, surname  } = peer;
 
   const connection = user?.friends.find((friend) => friend.user === _id);
+  const   isFriend = connection?.status === 'accepted';
   const { text, icon, hsl, color, action } = PEER_CONFIG[connection?.status || 'none'];
   const borderColor = connection ? 'transparent' : 'var(--team-green)';
 
   async function clickHandler() {
-    await reqHandler({ url: `social/${_id}/${action}`, method: 'POST' });
+    if (!isFriend) {
+      deferFn(async () => {
+        await reqHandler({ url: `social/${_id}/${action}`, method: 'POST' });
+      }, 1000);
+    }
   }
 
   useEffect(() => {
@@ -59,9 +66,10 @@ export default function PeerProfile({
           </h2>
         </div>
         <Button
-              hsl={hsl as HSL}
-          onClick={clickHandler}
-            style={{ color, borderColor }}
+               hsl={hsl as HSL}
+           onClick={clickHandler}
+             style={{ color, borderColor }}
+          disabled={deferring}
          >
           {isLoading ? (
             <Loader small />
