@@ -3,7 +3,7 @@ import { motion, HTMLMotionProps, TargetAndTransition  } from 'motion/react';
 import { isMobile } from 'react-device-detect';
 import css from './Button.module.css';
 
-type HSL = [
+export type HSL = [
          hue: number, // 0-360
   saturation: number, // 0-100
    lightness: number  // 0-100

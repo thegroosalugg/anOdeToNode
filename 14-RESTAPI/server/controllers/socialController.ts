@@ -70,12 +70,13 @@ const sendFriendReq: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    peer.friends.push({ user: user._id, status: 'pending' });
+    peer.friends.push({ user: user._id, status: 'received' });
     await peer.save();
 
     user.friends.push({ user: peer._id, status: 'sent' });
     await user.save();
 
+    io.emit(`peer:${peer._id}:update`, user);
     res.status(201).json({ message: 'success' });
   } catch (error) {
     captainsLog(5, 'addFriend Catch', error);

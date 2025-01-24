@@ -15,7 +15,7 @@ const initialData: Paginated<Post, 'posts'> = {
      posts: [],
 }
 
-export default function UserPage({ user }: Auth) {
+export default function PeerPage({ user, setUser }: Auth) {
   const { data: peer, isLoading, error, reqHandler: reqPeer } = useFetch<User | null>();
   const {
           data: { posts, docCount },
@@ -52,7 +52,7 @@ export default function UserPage({ user }: Auth) {
 
   return (
     <AsyncAwait {...{ isLoading, error }}>
-      {peer && <PeerProfile peer={peer} />}
+      {peer && user && <PeerProfile {...{ user, setUser, peer }} />}
       <PagedList<Post> {...feedProps}>
         {(post) => <PostItem {...post} />}
       </PagedList>

@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import Pagination, { PageHook, Paginated } from './Pagination';
-import { LIST_CONFIG } from './PagedListConfig';
+import { LIST_CONFIG } from './pagedListConfig';
 import css from './PagedList.module.css';
 
 export type PagedConfig = 'reply' | 'profile' | 'feed' | 'users';

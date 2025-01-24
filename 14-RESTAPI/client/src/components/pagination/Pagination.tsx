@@ -2,7 +2,7 @@ import { motion, LayoutGroup } from 'motion/react';
 import { Dispatch, Fragment, SetStateAction } from 'react';
 import type { Debounce } from '@/hooks/useDebounce';
 import type { PagedConfig } from './PagedList';
-import { LIST_CONFIG } from './PagedListConfig';
+import { LIST_CONFIG } from './pagedListConfig';
 import css from './Pagination.module.css';
 
 export type Pages = [previous: number, current: number];

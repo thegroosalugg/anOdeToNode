@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Debounce } from '@/hooks/useDebounce';
 import { isMobile } from 'react-device-detect';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { NAV_CONFIG } from './NavConfig';
+import { NAV_CONFIG } from './navConfig';
 import css from './NavButton.module.css';
 
 interface NavProps {
@@ -24,7 +24,7 @@ export default function NavButton({ path, navFn, deferring }: NavProps) {
     isActive ? css['active'] : ''} ${
     isMobile ? css['mobile'] : ''
   }`;
-  
+
   const { label, icon, delay } = NAV_CONFIG[path];
 
   const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;

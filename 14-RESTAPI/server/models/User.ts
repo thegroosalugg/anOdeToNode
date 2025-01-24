@@ -8,7 +8,7 @@ interface IUser {
      email: string;
   password: string;
     imgURL: string;
-   friends: { status: 'sent' | 'pending' | 'accepted', user: Types.ObjectId }[];
+   friends: { status: 'sent' | 'received' | 'accepted', user: Types.ObjectId }[];
 }
 
 interface IUserMethods {
@@ -31,8 +31,8 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
              status: {
                  type: String,
                  // enum is a type validator that restricts values to a predefined set
-                 enum: ['sent', 'pending', 'accepted'],
-              default: 'pending'
+                 enum: ['sent', 'received', 'accepted'],
+              // default: 'pending'
           },
         },
       ],

@@ -1,18 +1,45 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'motion/react';
+import { useEffect } from 'react';
+import { io } from 'socket.io-client';
+import { BASE_URL } from '@/util/fetchData';
+import { PEER_CONFIG } from './peerProfileConfig';
+import { Auth } from '@/pages/RootLayout';
 import useFetch from '@/hooks/useFetch';
 import User from '@/models/User';
 import ProfilePic from '../profile/ProfilePic';
-import Button from '../button/Button';
+import Button, { HSL } from '../button/Button';
+import Loader from '../loading/Loader';
+import { captainsLog } from '@/util/captainsLog';
 import css from './PeerProfile.module.css';
 
-export default function PeerProfile({ peer }: { peer: User }) {
+export default function PeerProfile({
+     user,
+  setUser,
+     peer,
+}: Pick<Auth, 'user' | 'setUser'> & { peer: User }) {
+  const { isLoading, reqHandler } = useFetch();
   const { _id, name, surname } = peer;
-  const { reqHandler } = useFetch();
+
+  const connection = user?.friends.find((friend) => friend.user === _id);
+  const { text, icon, hsl, color } = PEER_CONFIG[connection?.status || 'none'];
+  const borderColor = connection ? 'transparent' : 'var(--team-green)';
 
   async function clickHandler() {
-    await reqHandler({ url: `social/add/${_id}`, method: 'POST' });
+    if (!connection) {
+      await reqHandler({ url: `social/add/${_id}`, method: 'POST' });
+    }
   }
+
+  useEffect(() => {
+    const socket = io(BASE_URL);
+    socket.on('connect', () => captainsLog(-100, 150, ['PEER PROFILE: Socket connected']));
+
+    socket.on(`peer:${_id}:update`, (updated) => {
+      setUser(updated);
+    })
+
+  }, [_id, setUser]);
 
   return (
     <motion.section
@@ -27,9 +54,19 @@ export default function PeerProfile({ peer }: { peer: User }) {
             {name} {surname}
           </h2>
         </div>
-        <Button hsl={[0, 0, 89]} onClick={clickHandler}>
-          Add Friend
-          <FontAwesomeIcon icon='user-plus' size='xs' />
+        <Button
+              hsl={hsl as HSL}
+          onClick={clickHandler}
+            style={{ color, borderColor }}
+         >
+          {isLoading ? (
+            <Loader small />
+          ) : (
+            <span>
+              {text}
+              <FontAwesomeIcon icon={icon} size='xs' />
+            </span>
+          )}
         </Button>
       </div>
     </motion.section>

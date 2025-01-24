@@ -1,0 +1,26 @@
+export const PEER_CONFIG = {
+  sent: {
+     text: 'Cancel',
+     icon: 'rectangle-xmark',
+      hsl: [10, 54, 51],
+    color: '#fff',
+  },
+  received: {
+     text: 'Accept',
+     icon: 'check-to-slot',
+      hsl: [150, 54, 50],
+    color: '#fff',
+  },
+  accepted: {
+     text: 'Message',
+     icon: 'comment',
+      hsl: [10, 54, 35],
+    color: '#fff',
+  },
+  none: {
+     text: 'Add Friend',
+     icon: 'user-plus',
+      hsl: [0, 0, 89],
+    color: 'var(--team-green)',
+  },
+} as const;

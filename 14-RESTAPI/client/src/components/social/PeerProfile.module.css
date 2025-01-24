@@ -37,16 +37,18 @@
       }
     }
     > button {
-      display: block;
       width: 100%;
       font-weight: 700;
       margin-top: 0.5rem;
       box-shadow: 1.25px 1.25px 2.5px #5a5a5a;
+      border: 1px solid transparent;
       color: var(--team-green);
-      border-color: var(--team-green);
 
-      > svg {
-        margin-left: 0.2rem;
+      > span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.2rem;
       }
     }
   }
