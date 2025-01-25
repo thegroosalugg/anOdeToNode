@@ -9,13 +9,14 @@ import { captainsLog } from '@/util/captainsLog';
 
 type  isUser =       User | null;
 type isError = FetchError | null;
+
 export interface Auth {
-        user: isUser;
-     setUser: Dispatch<SetStateAction<isUser>>;
-     reqUser: (params: Fetch, config?: ReqConfig<isUser>) => Promise<isUser | void>;
-   isLoading: boolean;
-       error: isError;
-    setError: Dispatch<SetStateAction<isError>>;
+       user: isUser;
+    setUser: Dispatch<SetStateAction<isUser>>;
+    reqUser: (params: Fetch, config?: ReqConfig<isUser>) => Promise<isUser | void>;
+  isLoading: boolean;
+      error: isError;
+   setError: Dispatch<SetStateAction<isError>>;
 }
 
 export default function RootLayout({
@@ -31,12 +32,16 @@ export default function RootLayout({
      isLoading,
          error,
       setError,
-  } = useFetch<Auth['user']>();
+  } = useFetch<Auth['user']>(null, true); // null initial, true loading before useEffect
   const props = { user, setUser, reqUser, isLoading, error, setError };
 
-  useEffect(() => {                                                 // callback on Error
-    const mountData = async () => await reqUser({ url: 'user' }, { onError: () => setUser(null)});
-    captainsLog(-100, 105, ['ROOT Mount Data']); // **LOGDATA
+  useEffect(() => {
+    const mountData = async () => {
+      await reqUser({ url: 'user' }, { onError: () => setUser(null) });
+      captainsLog(-100, 105, ['ROOT Mount Data']); // **LOGDATA
+    };
+
+
     mountData();
   }, [reqUser, setUser, pathname]);
 

@@ -1,8 +1,9 @@
-import { motion, AnimatePresence, LayoutGroup } from 'motion/react';
-import { Dispatch, SetStateAction } from 'react';
+import { motion, LayoutGroup } from 'motion/react';
+import { Dispatch, Fragment, SetStateAction } from 'react';
 import type { Debounce } from '@/hooks/useDebounce';
-import css from './Pagination.module.css'; // must be imported before config for overrides to work
-import { config } from './PagedListConfig'; // must be imported after modules here
+import type { PagedConfig } from './PagedList';
+import { LIST_CONFIG } from './pagedListConfig';
+import css from './Pagination.module.css';
 
 export type Pages = [previous: number, current: number];
 
@@ -38,8 +39,8 @@ export default function Pagination({
   setPages: setIsActive,
  deferring,
    deferFn,
-}: Omit<Paginated, 'data'> & { type: keyof typeof config } & Debounce & PageHook) {
-  const { limit, pageCss, delay } = config[type];
+}: Omit<Paginated, 'data'> & { type: PagedConfig } & Debounce & PageHook) {
+  const { limit, pageCss, delay } = LIST_CONFIG[type];
   const     last = Math.ceil(docCount / limit);
   const   middle = last < 5 ? 3 : Math.min(Math.max(current, 3), last - 2);
   const    pages: number[] = [];
@@ -54,14 +55,14 @@ export default function Pagination({
     deferFn(() => setIsActive([current, page]), 1200);
   }
 
-  const { chars, color: setColor, background: setBckGrd } = config[type];
+  const { chars, setColor, setBckGrd } = LIST_CONFIG[type];
   const  filter = `brightness(${deferring ? 0.9 : 1})`
   const classes = [css['pagination'], ...pageCss].filter(Boolean).join(' ');
 
   return (
     <motion.section
       className={classes}
-        initial={{ opacity: 0 }}            // 2nd component in line using this value, adds .5
+        initial={{ opacity: 0 }} // 2nd component in line using this value, adds .5
         animate={{ opacity: 1, transition: { delay: delay + 0.5, duration: 0.8 } }}
     >
       <LayoutGroup>
@@ -71,13 +72,12 @@ export default function Pagination({
           const borderColor =  color;
           const  background = !isActive ? setBckGrd : setColor;
           return (
-            <AnimatePresence key={page}>
+            <Fragment key={page}>
               {last > 5 && page === last && pages[3] !== last - 1 && (
-                <Ellipsis key='e1' chars={chars} />
+                <Ellipsis chars={chars} />
               )}
               <motion.button
-                     layout
-                       key={page}
+                    layout
                   disabled={deferring}
                    onClick={() => changePage(page)}
                    initial={{ opacity: 0 }}
@@ -90,9 +90,9 @@ export default function Pagination({
                 {page}
               </motion.button>
               {last > 5 && page === 1 && pages[1] !== 2 && (
-                <Ellipsis key='e2' chars={chars} />
+                <Ellipsis chars={chars} />
               )}
-            </AnimatePresence>
+            </Fragment>
           );
         })}
       </LayoutGroup>

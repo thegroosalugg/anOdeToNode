@@ -13,6 +13,7 @@ import    postRoutes from './routes/post';
 import    feedRoutes from './routes/feed';
 import   replyRoutes from './routes/reply';
 import profileRoutes from './routes/profile';
+import  socialRoutes from './routes/social';
 import   captainsLog from './util/captainsLog';
 import        dotenv from 'dotenv';
               dotenv.config();
@@ -48,10 +49,11 @@ app.use((req, res, next) => {
 });
 
 app.use(                        authRoutes);
-app.use('/feed',                feedRoutes);
+app.use('/feed',    authJWT,    feedRoutes);
 app.use('/post',    authJWT,    postRoutes);
 app.use('/post',    authJWT,   replyRoutes);
 app.use('/profile', authJWT, profileRoutes);
+app.use('/social',  authJWT,  socialRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI!)

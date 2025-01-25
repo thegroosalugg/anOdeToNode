@@ -10,7 +10,7 @@ const _public = '-email -password';
 const getReplies: RequestHandler = async (req, res, next) => {
   const { postId: post } = req.params;
   const page = +(req.query.page || 1);
-  const limit = 10;
+  const limit = 8;
 
   try {
     const docCount = await Reply.find({ post }).countDocuments();

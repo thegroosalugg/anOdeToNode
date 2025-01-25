@@ -1,13 +1,19 @@
 .nav-button {
-  color: #ffffff;
-  transition: 0.5s ease-in-out;
+  position: relative;
   padding: 0.25rem;
   font-family: "Oswald", serif;
   font-weight: 700;
-  font-size: 1.2rem;
-  background: none;
+  font-size: 0.75rem;
+  color: #ffffff;
   border: none;
-  position: relative;
+  background: none;
+  transition: 0.5s ease-in-out;
+
+  > svg {
+    display: block;
+    margin: 0 auto;
+    font-size: 1rem;
+  }
 
   .active-tab {
     position: absolute;

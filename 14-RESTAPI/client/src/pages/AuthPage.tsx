@@ -6,20 +6,20 @@ import UserProfile from '@/components/profile/UserProfile';
 import LoginForm from '@/components/form/LoginForm';
 import { captainsLog } from '@/util/captainsLog';
 
-export default function UserPage({ auth }: { auth: Auth }) {
+export default function AuthPage({ auth }: { auth: Auth }) {
   captainsLog(-100, 250, ['USER PAGE']); // **LOGDATA
   const { user, isLoading } = auth;
-  const [initialLoad, setInitialLoad] = useState(true);
+  const [isInitial, setIsInitial] = useState(true);
 
   useEffect(() => {
-    if (!isLoading && initialLoad) {
-      setInitialLoad(false); // loader only on page render. IsLoading also powers submit buttons
+    if (!isLoading && isInitial) {
+      setIsInitial(false); // loader only on page render. IsLoading also powers submit buttons
     }
-  }, [initialLoad, isLoading]);
+  }, [isInitial, isLoading]);
 
   return (
     <AnimatePresence mode='wait'>
-      {initialLoad ? (
+      {isInitial ? (
         <Loader      key='loader' />
       ) : user ? (
         <UserProfile key='profile' {...auth} />

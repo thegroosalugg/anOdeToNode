@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { io } from '../app';
 import User from '../models/User';
 import captainsLog from '../util/captainsLog';
 import { getErrors, hasErrors } from '../validation/validators';
@@ -72,6 +73,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
     });
 
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
+    io.emit('user:new', userDets);
     res.status(201).json({ JWTaccess, JWTrefresh, ...userDets });
   } catch (error) {
     captainsLog(5, 'postSignup Catch', error);

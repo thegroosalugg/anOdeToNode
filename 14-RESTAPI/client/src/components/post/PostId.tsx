@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '@/util/fetchData';
 import { timeAgo } from '@/util/timeStamps';
-import { Auth } from '@/pages/RootLayout';
+import User from '@/models/User';
 import Post from '@/models/Post';
 import ProfilePic from '../profile/ProfilePic';
 import Button from '../button/Button';
@@ -14,7 +15,7 @@ export default function PostId({
   setModal,
 }: {
       post: Post;
-      user: Auth['user'];
+      user: User;
   setModal: (modal: string) => void;
 }) {
   const { title, content, imgURL, creator, updatedAt } = post;
@@ -23,6 +24,7 @@ export default function PostId({
   const     hidden = { opacity };
   const    visible = { opacity: 1, transition };
   const   variants = { hidden, visible };
+  const   navigate = useNavigate();
 
   const htnlRef = useRef<HTMLParagraphElement | null>(null);
   const [height, setHeight] = useState<number | 'auto'>('auto');
@@ -44,11 +46,12 @@ export default function PostId({
         <motion.span key={title} initial={false} animate={{ opacity: [0, 1] }}>
           {title}
         </motion.span>
-        <span>
-          {creator?.name    || 'Account '}
+        <span onClick={() => navigate('/user/' + creator._id)}>
+          {creator?.name    || 'Account'}
+          {' '}
           {creator?.surname || 'deleted'}
+          <ProfilePic user={creator} />
         </span>
-        <ProfilePic user={creator} />
       </motion.h1>
       <motion.time variants={variants}>
         {timeAgo(updatedAt)}
@@ -88,7 +91,7 @@ export default function PostId({
           {content}
         </motion.p>
       </AnimatePresence>
-      {user?._id === creator?._id && (
+      {user._id === creator?._id && (
         <motion.section className={css['buttons']} variants={variants}>
           <Button hsl={[180, 80, 35]} onClick={() => setModal('edit')}>
             Edit

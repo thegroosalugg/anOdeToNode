@@ -1,0 +1,55 @@
+.peer-profile {
+  align-self: center;
+  max-width: 600px;
+  width: 100%;
+  overflow: auto;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--team-green);
+  background: var(--box-gradient);
+
+  .profile-pic {
+    width: 150px;
+    > div {
+      box-shadow: 2.5px 2.5px 5px #5a5a5a;
+
+      > img {
+        width: 150px;
+        border-radius: 0;
+        background: var(--box-gradient);
+      }
+
+      > h2 {
+        padding: 0.2rem;
+        padding-bottom: 0.4rem;
+        text-align: center;
+        font-weight: 600;
+        font-family: 'Oswald', sans-serif;
+        color: #fff;
+        background: var(--team-green);
+        overflow: auto;
+        width: 100%;
+        max-height: 3rem;
+
+        &::-webkit-scrollbar-thumb {
+          background: #fff;
+        }
+      }
+    }
+    > button {
+      width: 100%;
+      font-weight: 700;
+      margin-top: 0.5rem;
+      box-shadow: 1.25px 1.25px 2.5px #5a5a5a;
+      border: 1px solid transparent;
+      color: #fff;
+
+      > span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.2rem;
+      }
+    }
+  }
+}

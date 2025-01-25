@@ -1,36 +1,51 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, HTMLMotionProps } from 'motion/react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import Pagination, { PageHook, Paginated } from './Pagination';
-import { config } from './PagedListConfig';
+import { LIST_CONFIG } from './pagedListConfig';
 import css from './PagedList.module.css';
 
+export type PagedConfig = 'reply' | 'profile' | 'feed' | 'users';
+
 interface PagedList<T> extends Paginated<T, 'items'>, PageHook {
-        type: keyof typeof config;
-    children: (item: T) => React.ReactNode;
+      type: PagedConfig;
+  children: (item: T) => React.ReactNode;
 }
 
 export default function PagedList<T>({
-       items,
-        type,
-       pages,
-    setPages,
-    docCount,
-    children,
-}: PagedList<T & { _id: string }>) {
-  const { limit, color, listCss, navTo, delay, fallback } = config[type];
+     items,
+      type,
+     pages,
+  setPages,
+  docCount,
+  children,
+  ...props
+  // merge MotionProps while excluding any that conflict with PagedList's own prop types
+}: PagedList<T & { _id: string }> & Omit<HTMLMotionProps<'li'>, keyof PagedList<T>>) {
+  const { limit, setColor, listCss, navTo, delay, fallback } = LIST_CONFIG[type];
   const { deferring, deferFn } = useDebounce();
-  const   navigate = useNavigate();
-  const  direction = pages[0] < pages[1] ? 1 : -1;
-  const          x = direction * 50;
-  const background = limit > items.length ? color : '#00000000';
-  const   position = deferring ? 'sticky' : 'relative';
-  const     cursor = deferring ?   'wait' : '';
-  const    classes = [css['list'], ...listCss].filter(Boolean).join(' ');
-  const    opacity = 0;
-  const   duration = 0.5;
-  let       height = config[type].height;
-  if (items.length <= 0) height = 'auto';
+  const      navigate = useNavigate();
+  const     direction = pages[0] < pages[1] ? 1 : -1;
+  const             x = direction * 50;
+  const    background = limit > items.length ? setColor : '#00000000';
+  const      position = deferring ? 'sticky' : 'relative';
+  const        cursor = deferring ?   'wait' : '';
+  const       classes = [css['list'], ...listCss].filter(Boolean).join(' ');
+  const       opacity = 0;
+  const      duration = 0.5;
+  const       listRef = useRef<HTMLUListElement |   null>(null);
+  const        height = useRef<number           | 'auto'>('auto');
+  const shouldRecount = docCount < limit && items.length < limit;
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (listRef.current) {
+        height.current = listRef.current.offsetHeight;
+      }
+      if (shouldRecount) height.current = 'auto';
+    }, 1000);
+  }, [shouldRecount]);
 
   function clickHandler(_id: string) {
     if (!deferring) {
@@ -43,17 +58,17 @@ export default function PagedList<T>({
   return (
     <>
       <motion.ul
+              ref={listRef}
         className={classes}
-            style={{ position }}
-          initial={{ opacity, height: 100 }}
+            style={{ position, height: height.current }}
+          initial={{ opacity }}
           animate={{
             background,
-                height,
                opacity: 1,
-              transition: {
-                  duration: 1,
-                      ease: 'easeInOut',
-                   opacity: { delay, duration: 1 }
+            transition: {
+                duration: 1,
+                    ease: 'easeInOut',
+                 opacity: { delay, duration: 1 }
               }
             }}
       >
@@ -68,6 +83,7 @@ export default function PagedList<T>({
                 initial={{ opacity,    x }}
                 animate={{ opacity: 1, x:  0, transition: { duration, delay: i * 0.1 } }}
                    exit={{ opacity,    x: -x, transition: { duration } }}
+                {...props}
               >
                 {children(item)}
               </motion.li>
@@ -85,7 +101,9 @@ export default function PagedList<T>({
           )}
         </AnimatePresence>
       </motion.ul>
-      <Pagination {...{ type, pages, setPages, docCount, deferring, deferFn }} />
+      {docCount >= limit && (
+        <Pagination {...{ type, pages, setPages, docCount, deferring, deferFn }} />
+      )}
     </>
   );
 }

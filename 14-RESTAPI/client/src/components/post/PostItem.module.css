@@ -1,4 +1,5 @@
-.feed {
+/* increase specificity to override defaults with element.class */
+ul.feed {
   border-top: 2px solid var(--team-green);
   border-bottom: 2px solid var(--team-green);
 
@@ -55,12 +56,14 @@
   }
 }
 
-.on-user-page {
-  border-top-color: var(--text-grey);
-  border-bottom-color: var(--text-grey);
+ul.on-user-page {
+  border-top-color: var(--dark-grey);
+  border-bottom-color: var(--dark-grey);
+  border-radius: 5px;
+  padding: 0.25rem;
 
   &::-webkit-scrollbar-thumb {
-    background: var(--text-grey);
+    background: var(--dark-grey);
   }
 
   li {
@@ -69,12 +72,12 @@
   }
 }
 
-.on-user-pagination {
+section.on-user-pagination {
   gap: 0;
   margin: 0 auto;
 
   > span {
-    color: #454545;
+    color: var(--dark-grey);
     margin: 0 0.1rem;
   }
 

@@ -7,9 +7,9 @@ export interface ReqConfig<T> {
     onError?: (err: FetchError) => void;
 }
 
-const useFetch = <T>(initialData: T = null as T) => {
+const useFetch = <T>(initialData: T = null as T, loading = false) => {
   const [     data,      setData] = useState<T>(initialData);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(loading);
   const [    error,     setError] = useState<FetchError | null>(null);
 
   const reqHandler = useCallback(

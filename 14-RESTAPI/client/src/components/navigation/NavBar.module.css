@@ -3,6 +3,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem;
+  height: 60px;
   overflow-x: scroll;
   background: linear-gradient(to right, #12a1a1, #379d9d);
 
@@ -16,6 +17,10 @@
     font-size: 1.2rem;
     font-weight: 900;
     padding: 0.25rem 0.5rem;
+
+    span:last-of-type {
+      display: none;
+    }
   }
 
   button {
@@ -29,12 +34,20 @@
 @media screen and (pointer: coarse) and (orientation: landscape) {
   .nav {
     flex-direction: column;
-    position: fixed; /* ensures nav buttons do not scroll away */
+    position: fixed;
     height: 100vh;
-    width: 76px;
+    width: 60px;
 
     > h1 {
-      display: none;
+      span {
+        &:first-of-type {
+          display: none;
+        }
+
+        &:last-of-type {
+          display: block;
+        }
+      }
     }
 
     button {
