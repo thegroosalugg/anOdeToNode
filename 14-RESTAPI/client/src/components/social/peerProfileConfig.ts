@@ -12,7 +12,7 @@ export const PEER_CONFIG = {
        hsl: [150, 54, 50],
   },
   accepted: {
-    action: '',
+    action: undefined,
       text: 'Message',
       icon: 'comment',
        hsl: [110, 54, 35],

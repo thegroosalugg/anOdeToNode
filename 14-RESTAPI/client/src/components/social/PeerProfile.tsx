@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'motion/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useDebounce from '@/hooks/useDebounce';
 import { io } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
@@ -8,6 +8,8 @@ import { PEER_CONFIG } from './peerProfileConfig';
 import { Auth } from '@/pages/RootLayout';
 import useFetch from '@/hooks/useFetch';
 import User from '@/models/User';
+import Modal from '../modal/Modal';
+import ConfirmDialog from '../dialog/ConfirmDialog';
 import ProfilePic from '../profile/ProfilePic';
 import Button, { HSL } from '../button/Button';
 import Loader from '../loading/Loader';
@@ -25,6 +27,7 @@ export default function PeerProfile({
 }) {
   const { isLoading, reqHandler } = useFetch();
   const { deferring,    deferFn } = useDebounce();
+  const [showModal, setShowModal] = useState(false);
   const {   _id, name, surname  } = peer;
 
   const  connection = user.friends.find((friend) => friend.user === _id);
@@ -34,21 +37,39 @@ export default function PeerProfile({
   const       color = connection ?     '#ffffff' : 'var(--team-green)';
   const borderColor = connection ? 'transparent' : 'var(--team-green)';
 
-  async function clickHandler() {
+  const closeModal = () => setShowModal(false);
+
+  const friendRequest = async (reqAction = action) => {
+    if (!reqAction) return; // action = undefined if isFriend
+    // in this case an argument must be passed
+    deferFn(async () => {
+      await reqHandler(
+        { url: `social/${_id}/${reqAction}`, method: 'POST' },
+        {
+          onError: (err) => {
+            if (err.status === 401) setUser(null);
+          },
+        }
+      );
+    }, 1000);
+  }
+
+  async function handleAction() {
     if (!isFriend) {
-      deferFn(async () => {
-        await reqHandler(
-          { url: `social/${_id}/${action}`, method: 'POST' },
-          {
-            onError: (err) => {
-              if (err.status === 401) setUser(null);
-            },
-          }
-        );
-      }, 1000);
+      await friendRequest();
+    } else {
+      captainsLog(150, -90, ['MESSAGE FUNCTION']);
     }
   }
-  
+
+  async function deleteFriend() {
+    if (isFriend) {
+      setShowModal(true);
+    } else if (isRequested) {
+      await friendRequest('delete');
+    }
+  }
+
   useEffect(() => {
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog(-100, 150, ['PEER PROFILE: Socket connected']));
@@ -56,47 +77,66 @@ export default function PeerProfile({
     socket.on(`peer:${_id}:${user._id}:update`, (updated) => {
       captainsLog(-100, 150, ['PEER PROFILE: UPDATE', updated]);
       setUser(updated);
-    })
+    });
 
     return () => {
       socket.off('connect');
       socket.off(`peer:${_id}:${user._id}:update`);
       socket.disconnect();
-    }
+    };
   }, [_id, user._id, setUser]);
 
   return (
-    <motion.section
-      className={css['peer-profile']}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: { duration: 0.8, delay: 0.5 } }}
-    >
-      <div className={css['profile-pic']}>
-        <div>
-          <ProfilePic user={peer} />
-          <h2>
-            {name} {surname}
-          </h2>
-        </div>
-        <Button
-               hsl={hsl as HSL}
-           onClick={clickHandler}
-             style={{ color, borderColor }}
-          disabled={deferring}
-         >
-          {isLoading ? (
-            <Loader small />
-          ) : (
-            <span>
-              {text}
-              <FontAwesomeIcon icon={icon} size='xs' />
-            </span>
+    <>
+      <Modal show={showModal} close={closeModal}>
+        <ConfirmDialog
+          onConfirm={async () => {
+            await friendRequest('delete');
+            closeModal();
+          }}
+          onCancel={closeModal}
+        />
+      </Modal>
+      <motion.section
+        className={css['peer-profile']}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: 0.8, delay: 0.5 } }}
+      >
+        <div className={css['profile-pic']}>
+          <div>
+            <ProfilePic user={peer} />
+            <h2>
+              {name} {surname}
+            </h2>
+          </div>
+          <Button
+                hsl={hsl as HSL}
+            onClick={handleAction}
+              style={{ color, borderColor }}
+            disabled={deferring}
+          >
+            {isLoading ? (
+              <Loader small />
+            ) : (
+              <span>
+                {text}
+                <FontAwesomeIcon icon={icon} size='xs' />
+              </span>
+            )}
+          </Button>
+          {(isRequested || isFriend) && (
+            <Button hsl={[10, 54, 51]} onClick={deleteFriend}>
+              {isRequested ? (
+                <span>
+                  Decline <FontAwesomeIcon icon='rectangle-xmark' size='xs' />
+                </span>
+              ) : (
+                'Remove Friend'
+              )}
+            </Button>
           )}
-        </Button>
-        {(isRequested || isFriend) && (
-          <Button hsl={[10, 54, 51]}>{isRequested ? 'Decline' : 'Remove Friend'}</Button>
-        )}
-      </div>
-    </motion.section>
+        </div>
+      </motion.section>
+    </>
   );
 }
