@@ -1,9 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import useDebounce from '@/hooks/useDebounce';
-import { io } from 'socket.io-client';
-import { BASE_URL } from '@/util/fetchData';
 import { PEER_CONFIG } from './peerProfileConfig';
 import { Auth } from '@/pages/RootLayout';
 import useFetch from '@/hooks/useFetch';
@@ -33,9 +31,9 @@ export default function PeerProfile({
   const  connection = user.friends.find((friend) => friend.user === _id);
   const    isFriend = connection?.status === 'accepted';
   const isRequested = connection?.status === 'received';
-  const { text, icon, hsl, action } = PEER_CONFIG[connection?.status || 'none'];
   const       color = connection ?     '#ffffff' : 'var(--team-green)';
   const borderColor = connection ? 'transparent' : 'var(--team-green)';
+  const { text, icon, hsl, action } = PEER_CONFIG[connection?.status || 'none'];
 
   const closeModal = () => setShowModal(false);
 
@@ -70,22 +68,6 @@ export default function PeerProfile({
     }
   }
 
-  useEffect(() => {
-    const socket = io(BASE_URL);
-    socket.on('connect', () => captainsLog(-100, 150, ['PEER PROFILE: Socket connected']));
-
-    socket.on(`peer:${_id}:${user._id}:update`, (updated) => {
-      captainsLog(-100, 150, ['PEER PROFILE: UPDATE', updated]);
-      setUser(updated);
-    });
-
-    return () => {
-      socket.off('connect');
-      socket.off(`peer:${_id}:${user._id}:update`);
-      socket.disconnect();
-    };
-  }, [_id, user._id, setUser]);
-
   return (
     <>
       <Modal show={showModal} close={closeModal}>
@@ -110,9 +92,9 @@ export default function PeerProfile({
             </h2>
           </div>
           <Button
-                hsl={hsl as HSL}
-            onClick={handleAction}
-              style={{ color, borderColor }}
+                 hsl={hsl as HSL}
+             onClick={handleAction}
+               style={{ color, borderColor }}
             disabled={deferring}
           >
             {isLoading ? (

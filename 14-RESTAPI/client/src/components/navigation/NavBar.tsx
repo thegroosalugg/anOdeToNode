@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import { Auth } from '@/pages/RootLayout';
 import NavButton from './NavButton';
+import Notifications from '../notifications/Notifications';
 import css from './NavBar.module.css';
 
-export default function NavBar({ user }: Auth) {
+export default function NavBar({ user, setUser }: Auth) {
   const navigate = useNavigate();
   const { deferring, deferFn } = useDebounce();
 
@@ -29,6 +30,7 @@ export default function NavBar({ user }: Auth) {
           <>
             <NavButton path='/feed'   navFn={navTo} deferring={deferring} />
             <NavButton path='/social' navFn={navTo} deferring={deferring} />
+            <Notifications {...{ user, setUser }} />
             <NavButton path='/'       navFn={navTo} deferring={deferring} />
           </>
         )}
