@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '@/util/fetchData';
 import { timeAgo } from '@/util/timeStamps';
-import { Auth } from '@/pages/RootLayout';
+import User from '@/models/User';
 import Post from '@/models/Post';
 import ProfilePic from '../profile/ProfilePic';
 import Button from '../button/Button';
@@ -15,7 +15,7 @@ export default function PostId({
   setModal,
 }: {
       post: Post;
-      user: Auth['user'];
+      user: User;
   setModal: (modal: string) => void;
 }) {
   const { title, content, imgURL, creator, updatedAt } = post;
@@ -91,7 +91,7 @@ export default function PostId({
           {content}
         </motion.p>
       </AnimatePresence>
-      {user?._id === creator?._id && (
+      {user._id === creator?._id && (
         <motion.section className={css['buttons']} variants={variants}>
           <Button hsl={[180, 80, 35]} onClick={() => setModal('edit')}>
             Edit

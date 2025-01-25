@@ -5,6 +5,7 @@ import { io } from 'socket.io-client';
 import { BASE_URL, FetchError } from '@/util/fetchData';
 import { Auth } from './RootLayout';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
+import User from '@/models/User';
 import Post from '@/models/Post';
 import Reply from '@/models/Reply';
 import AsyncAwait from '@/components/panel/AsyncAwait';
@@ -22,7 +23,7 @@ const initialData: Paginated<Reply, 'replies'> = {
    replies: [],
 };
 
-export default function PostPage({ user, setUser }: Auth) {
+export default function PostPage({ user, setUser }: Auth & { user: User }) {
   const {
           data: post,
        setData: setPost,
@@ -95,7 +96,7 @@ export default function PostPage({ user, setUser }: Auth) {
 
     socket.on(`post:${postId}:delete`, (deleted) => {
       captainsLog(-100, 10, ['POSTPAGE: POST DELETED']);
-      if (deleted.creator !== user?._id) {
+      if (deleted.creator !== user._id) {
         setPost(null); // delete actions for viewers. Creator's state automatically set to null
         setError({ message: 'The post was deleted' } as FetchError); // creators redirected without msg
       }
@@ -109,7 +110,7 @@ export default function PostPage({ user, setUser }: Auth) {
       socket.off(`post:${postId}:delete`); // deletes the post (& all replies)
       socket.disconnect();
     };
-  }, [user?._id, postId, current, setError, setPost, reqPost, reqReplies, setReplies]);
+  }, [user._id, postId, current, setError, setPost, reqPost, reqReplies, setReplies]);
 
   async function deletePost() {
     await reqPost(
@@ -117,7 +118,7 @@ export default function PostPage({ user, setUser }: Auth) {
       {
         onSuccess: () => {
           closeModal(); // delete actions for creator
-          navigate('/');
+          navigate('/feed');
         },
       }
     );
@@ -139,7 +140,7 @@ export default function PostPage({ user, setUser }: Auth) {
             <PostId {...{ post, user }} setModal={setModalState} />
             <ReplySubmit postId={post._id} setUser={setUser} />
             <PagedList<Reply> {...replyProps}>
-              {(reply) => <ReplyItem {...reply} userId={user?._id} />}
+              {(reply) => <ReplyItem {...reply} userId={user._id} />}
             </PagedList>
           </>
         )}
