@@ -23,9 +23,11 @@ export default function PeerProfile({
   const { deferring,    deferFn } = useDebounce();
   const {   _id, name, surname  } = peer;
 
-  const connection = user?.friends.find((friend) => friend.user === _id);
-  const   isFriend = connection?.status === 'accepted';
-  const { text, icon, hsl, color, action } = PEER_CONFIG[connection?.status || 'none'];
+  const  connection = user?.friends.find((friend) => friend.user === _id);
+  const    isFriend = connection?.status === 'accepted';
+  const isRequested = connection?.status === 'received';
+  const { text, icon, hsl, action } = PEER_CONFIG[connection?.status || 'none'];
+  const       color = connection ?     '#ffffff' : 'var(--team-green)';
   const borderColor = connection ? 'transparent' : 'var(--team-green)';
 
   async function clickHandler() {
@@ -40,17 +42,17 @@ export default function PeerProfile({
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog(-100, 150, ['PEER PROFILE: Socket connected']));
 
-    socket.on(`peer:${_id}:update`, (updated) => {
+    socket.on(`peer:${_id}:${user?._id}:update`, (updated) => {
       captainsLog(-100, 150, ['PEER PROFILE: UPDATE', updated]);
       setUser(updated);
     })
 
     return () => {
       socket.off('connect');
-      socket.off(`peer:${_id}:update`);
+      socket.off(`peer:${_id}:${user?._id}:update`);
       socket.disconnect();
     }
-  }, [_id, setUser]);
+  }, [_id, user?._id, setUser]);
 
   return (
     <motion.section
@@ -80,6 +82,9 @@ export default function PeerProfile({
             </span>
           )}
         </Button>
+        {(isRequested || isFriend) && (
+          <Button hsl={[10, 54, 51]}>{isRequested ? 'Decline' : 'Remove Friend'}</Button>
+        )}
       </div>
     </motion.section>
   );

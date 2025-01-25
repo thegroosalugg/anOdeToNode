@@ -42,7 +42,7 @@
       margin-top: 0.5rem;
       box-shadow: 1.25px 1.25px 2.5px #5a5a5a;
       border: 1px solid transparent;
-      color: var(--team-green);
+      color: #fff;
 
       > span {
         display: flex;
