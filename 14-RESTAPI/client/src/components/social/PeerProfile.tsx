@@ -18,12 +18,16 @@ export default function PeerProfile({
      user,
   setUser,
      peer,
-}: Pick<Auth, 'user' | 'setUser'> & { peer: User }) {
+}: {
+     user: User;
+  setUser: Auth['setUser'];
+     peer: User;
+}) {
   const { isLoading, reqHandler } = useFetch();
   const { deferring,    deferFn } = useDebounce();
   const {   _id, name, surname  } = peer;
 
-  const  connection = user?.friends.find((friend) => friend.user === _id);
+  const  connection = user.friends.find((friend) => friend.user === _id);
   const    isFriend = connection?.status === 'accepted';
   const isRequested = connection?.status === 'received';
   const { text, icon, hsl, action } = PEER_CONFIG[connection?.status || 'none'];
@@ -33,26 +37,33 @@ export default function PeerProfile({
   async function clickHandler() {
     if (!isFriend) {
       deferFn(async () => {
-        await reqHandler({ url: `social/${_id}/${action}`, method: 'POST' });
+        await reqHandler(
+          { url: `social/${_id}/${action}`, method: 'POST' },
+          {
+            onError: (err) => {
+              if (err.status === 401) setUser(null);
+            },
+          }
+        );
       }, 1000);
     }
   }
-
+  
   useEffect(() => {
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog(-100, 150, ['PEER PROFILE: Socket connected']));
 
-    socket.on(`peer:${_id}:${user?._id}:update`, (updated) => {
+    socket.on(`peer:${_id}:${user._id}:update`, (updated) => {
       captainsLog(-100, 150, ['PEER PROFILE: UPDATE', updated]);
       setUser(updated);
     })
 
     return () => {
       socket.off('connect');
-      socket.off(`peer:${_id}:${user?._id}:update`);
+      socket.off(`peer:${_id}:${user._id}:update`);
       socket.disconnect();
     }
-  }, [_id, user?._id, setUser]);
+  }, [_id, user._id, setUser]);
 
   return (
     <motion.section

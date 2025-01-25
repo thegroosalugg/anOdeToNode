@@ -15,7 +15,7 @@ const initialData: Paginated<Post, 'posts'> = {
      posts: [],
 }
 
-export default function PeerPage({ user, setUser }: Auth) {
+export default function PeerPage({ user, setUser }: Auth & { user: User }) {
   const { data: peer, isLoading, error, reqHandler: reqPeer } = useFetch<User | null>();
   const {
           data: { posts, docCount },
@@ -36,7 +36,7 @@ export default function PeerPage({ user, setUser }: Auth) {
       if (userId) await reqPosts({ url: `social/posts/${userId}?page=${current}` });
     }
 
-    if (userId === user?._id) {
+    if (userId === user._id) {
       navigate('/');
       return;
     }
