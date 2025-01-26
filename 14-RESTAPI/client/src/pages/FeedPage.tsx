@@ -90,7 +90,7 @@ export default function FeedPage({ setUser }: Auth) {
       <Button
           onClick={() => setShowModal(true)}
               hsl={[180, 80, 35]}
-            style={{ margin: '0 auto 1rem' }}
+            style={{ margin: '0 auto 0.5rem' }}
         animateEx={{ transition: { opacity: { delay: 0.8 }}}}
       >
         New Post

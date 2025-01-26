@@ -1,0 +1,9 @@
+.notifications {
+  position: fixed;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: #fff;
+  border: 1px solid #000;
+  padding: 1rem;
+  z-index: 99;
+}

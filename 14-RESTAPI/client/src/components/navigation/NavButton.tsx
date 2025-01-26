@@ -28,7 +28,7 @@ export default function NavButton({ path, navFn, deferring }: NavProps) {
   const { label, icon, delay } = NAV_CONFIG[path];
 
   const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;
-  const [x, y] = isLandscape ? [50, 0] : [0, 50];
+  const [x, y] = isLandscape ? [75, 0] : [0, 75];
 
   return (
     <motion.button
