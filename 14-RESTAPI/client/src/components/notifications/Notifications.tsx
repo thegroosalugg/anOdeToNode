@@ -11,15 +11,20 @@ import { captainsLog } from '@/util/captainsLog';
 import nav from '../navigation/NavButton.module.css';
 import css from './Notifications.module.css';
 
-export default function Notifications({ user, setUser }: Auth) {
+export default function Notifications({
+     user,
+  setUser,
+}: {
+     user: User;
+  setUser: Auth['setUser'];
+}) {
   const { reqHandler } = useFetch<User>();
   const [menu, showMenu] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const  alerts =
-    user?.friends.reduce((total, { status, meta }) => {
-      if (status !== 'sent' && !meta.read) total += 1;
-      return total;
-    }, 0) || 0;
+  const menuRef = useRef<HTMLUListElement>(null);
+  const  alerts = user.friends.reduce((total, { status, meta }) => {
+    if (status !== 'sent' && !meta.read) total += 1;
+    return total;
+  }, 0);
 
   const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;
   const [x, y] = isLandscape ? [75, 0] : [0, 75];
@@ -65,9 +70,20 @@ export default function Notifications({ user, setUser }: Auth) {
     <>
       <AnimatePresence>
         {menu && (
-          <motion.section className={css['notifications']} ref={menuRef} {...animation}>
-            MENU
-          </motion.section>
+          <motion.ul className={css['notifications']} ref={menuRef} {...animation}>
+          {user.friends.map((friend) => {
+            const { status, user: peer } = friend;
+            if (typeof peer === 'object') {
+              return (
+                <li key={peer._id}>
+                  {status === 'received'
+                    ? `${peer.name} sent you a friend request`
+                    : `You are now friends with ${peer.name}`}
+                </li>
+              );
+            }
+          })}
+        </motion.ul>
         )}
       </AnimatePresence>
       <motion.button

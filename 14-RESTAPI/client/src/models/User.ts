@@ -1,6 +1,9 @@
+export const getId = (user: User | string) =>
+  typeof user === 'object' && '_id' in user ? user._id : user;
+
 type Friend = {
      status: 'sent' | 'received' | 'accepted';
-       user: string; // reference ID only
+       user: string | User;
   createdAt: string;
        meta: {
          read: boolean;

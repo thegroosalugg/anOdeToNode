@@ -8,7 +8,13 @@ const markAsRead: RequestHandler = async (req, res, next) => {
     return;
   }
   try {
-    user.friends.map(({ meta }) => meta!.read = true); // meta is created by schema
+    await user.populate({
+        path: 'friends.user', // Populate the user field of each friend
+      select: '-email -password -friends', // remove unwanted fields
+       match: { 'friends.meta.show': true }, // Only populate friends whose meta.show is true
+    });
+
+    user.friends.forEach(({ meta }) => meta!.read = true); // meta is created by schema
     await user.save();
     res.status(200).json(user);
   } catch (error) {
