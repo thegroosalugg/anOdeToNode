@@ -7,6 +7,7 @@ import { io } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
+import FriendAlerts from './FriendAlerts';
 import { captainsLog } from '@/util/captainsLog';
 import nav from '../navigation/NavButton.module.css';
 import css from './Notifications.module.css';
@@ -21,7 +22,8 @@ export default function Notifications({
   const { reqHandler } = useFetch<User>();
   const [menu, showMenu] = useState(false);
   const menuRef = useRef<HTMLUListElement>(null);
-  const  alerts = user.friends.reduce((total, { status, meta }) => {
+  const { friends } = user;
+  const  alerts = friends.reduce((total, { status, meta }) => {
     if (status !== 'sent' && !meta.read) total += 1;
     return total;
   }, 0);
@@ -71,20 +73,7 @@ export default function Notifications({
       <AnimatePresence>
         {menu && (
           <motion.ul className={css['notifications']} ref={menuRef} {...animation}>
-            {user.friends.map((friend) => {
-              const { status, user: peer } = friend;
-              if (typeof peer === 'object' && status !== 'sent') {
-                return (
-                  <li key={peer._id}>
-                    {status === 'received'
-                      ? `${peer.name} sent you a friend request`
-                      : friend.meta.init === user._id
-                      ? `${peer.name} accepted your friend request`
-                      : `You are now friends with ${peer.name}`}
-                  </li>
-                );
-              }
-            })}
+            <FriendAlerts {...{ user, friends }} />
           </motion.ul>
         )}
       </AnimatePresence>
