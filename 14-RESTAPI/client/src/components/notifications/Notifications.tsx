@@ -2,19 +2,22 @@ import { isMobile } from 'react-device-detect';
 import { AnimatePresence, motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef, useState } from 'react';
+import useFetch from '@/hooks/useFetch';
 import { io } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
+import User from '@/models/User';
 import { captainsLog } from '@/util/captainsLog';
 import nav from '../navigation/NavButton.module.css';
 import css from './Notifications.module.css';
 
 export default function Notifications({ user, setUser }: Auth) {
-  const [menu,    showMenu] = useState(false);
+  const { reqHandler } = useFetch<User>();
+  const [menu, showMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const  alerts =
-    user?.friends.reduce((total, { status, read }) => {
-      if (status !== 'sent' && !read) total += 1;
+    user?.friends.reduce((total, { status, meta }) => {
+      if (status !== 'sent' && !meta.read) total += 1;
       return total;
     }, 0) || 0;
 
@@ -26,9 +29,13 @@ export default function Notifications({ user, setUser }: Auth) {
        exit: { opacity: 0 },
   };
 
-  const openMenu = () => {
+  const openMenu = async () => {
     showMenu(true);
-  }
+    await reqHandler(
+      { url: 'notify/read', method: 'POST' },
+      { onSuccess: (updated) => setUser(updated) }
+    );
+  };
 
   const closeMenu = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node))

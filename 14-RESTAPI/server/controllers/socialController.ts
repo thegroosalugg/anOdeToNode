@@ -47,7 +47,7 @@ const getUserById: RequestHandler = async (req, res, next) => {
 
 const friendRequest: RequestHandler = async (req, res, next) => {
   if (!req.user) {
-    res.status(401).json({ message: 'incorrect use of controller' });
+    res.status(403).json({ message: 'Access denied: missing authentication' });
     return;
   }
 

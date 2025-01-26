@@ -2,7 +2,10 @@ type Friend = {
      status: 'sent' | 'received' | 'accepted';
        user: string; // reference ID only
   createdAt: string;
-       read: boolean;
+       meta: {
+         read: boolean;
+         show: boolean;
+       };
 };
 
 type User = {
