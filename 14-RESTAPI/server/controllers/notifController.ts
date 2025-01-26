@@ -14,7 +14,7 @@ const markAsRead: RequestHandler = async (req, res, next) => {
        match: { 'friends.meta.show': true }, // Only populate friends whose meta.show is true
     });
 
-    user.friends.forEach(({ meta }) => meta!.read = true); // meta is created by schema
+    user.friends.forEach(({ meta }) => meta.read = true); // meta is created by schema
     await user.save();
     res.status(200).json(user);
   } catch (error) {

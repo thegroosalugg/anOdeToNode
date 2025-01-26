@@ -8,6 +8,7 @@ type Friend = {
        meta: {
          read: boolean;
          show: boolean;
+         init: string;
        };
 };
 

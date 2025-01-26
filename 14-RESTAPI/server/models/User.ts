@@ -2,12 +2,13 @@ import { Model, model, Types, Schema } from 'mongoose';
 
 const required = true;
 
-interface IFriend {
+export interface IFriend {
   status: 'sent' | 'received' | 'accepted';
     user: Types.ObjectId;
-   meta?: {
-     read: boolean;
-     show: boolean;
+    meta: {
+      read: boolean;
+      show: boolean;
+      init: Types.ObjectId;
   };
 }
 
@@ -42,11 +43,22 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
           meta: {
             read: { type: Boolean, default: false },
             show: { type: Boolean, default: true  },
+            init: { type: Schema.Types.ObjectId, ref: 'User' },
           }
         },
       ],
     },
   { timestamps: true }
 );
+
+userSchema.pre('save', function (next) {
+  this.friends.forEach((friend) => {
+    if (!friend.meta.init) {
+      friend.meta.init =
+        friend.status === 'sent' ? this._id : friend.user;
+    }
+  });
+  next();
+});
 
 export default model<IUser, UserModel>('User', userSchema);

@@ -53,7 +53,7 @@ export default function Notifications({
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog(-100, 15, ['NAV: Socket connected']));
 
-    socket.on(`peer:${user?._id}:update`, (updated) => {
+    socket.on(`peer:${user._id}:update`, (updated) => {
       captainsLog(-100, 15, ['NAV: UPDATE', updated]);
       setUser(updated);
     });
@@ -64,26 +64,28 @@ export default function Notifications({
       socket.disconnect();
       document.removeEventListener('mousedown', closeMenu);
     };
-  }, [user?._id, setUser]);
+  }, [user._id, setUser]);
 
   return (
     <>
       <AnimatePresence>
         {menu && (
           <motion.ul className={css['notifications']} ref={menuRef} {...animation}>
-          {user.friends.map((friend) => {
-            const { status, user: peer } = friend;
-            if (typeof peer === 'object') {
-              return (
-                <li key={peer._id}>
-                  {status === 'received'
-                    ? `${peer.name} sent you a friend request`
-                    : `You are now friends with ${peer.name}`}
-                </li>
-              );
-            }
-          })}
-        </motion.ul>
+            {user.friends.map((friend) => {
+              const { status, user: peer } = friend;
+              if (typeof peer === 'object' && status !== 'sent') {
+                return (
+                  <li key={peer._id}>
+                    {status === 'received'
+                      ? `${peer.name} sent you a friend request`
+                      : friend.meta.init === user._id
+                      ? `${peer.name} accepted your friend request`
+                      : `You are now friends with ${peer.name}`}
+                  </li>
+                );
+              }
+            })}
+          </motion.ul>
         )}
       </AnimatePresence>
       <motion.button

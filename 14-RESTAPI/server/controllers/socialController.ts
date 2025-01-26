@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { io } from '../app';
-import User from '../models/User';
+import User, { IFriend } from '../models/User';
 import captainsLog from '../util/captainsLog';
 
 const _public = '-email -password';
@@ -70,9 +70,9 @@ const friendRequest: RequestHandler = async (req, res, next) => {
     );
 
     switch (action) {
-      case 'add':
-        peer.friends.push({ user: user._id, status: 'received' });
-        user.friends.push({ user: peer._id, status: 'sent' });
+      case 'add': // meta is created by Mongoose, but required here, therefore type asserted
+        peer.friends.push({ user: user._id, status: 'received' } as IFriend);
+        user.friends.push({ user: peer._id, status: 'sent'     } as IFriend);
         break;
       case 'accept':
         peer.friends[peerIndex].status = 'accepted';
