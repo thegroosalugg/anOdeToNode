@@ -10,10 +10,25 @@ import nav from '../navigation/NavButton.module.css';
 import css from './Notifications.module.css';
 
 export default function Notifications({ user, setUser }: Auth) {
-  const [menu, showMenu] = useState(false);
+  const [menu,    showMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const  alerts =
+    user?.friends.reduce((total, { status, read }) => {
+      if (status !== 'sent' && !read) total += 1;
+      return total;
+    }, 0) || 0;
+
   const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;
   const [x, y] = isLandscape ? [75, 0] : [0, 75];
+  const animation = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+       exit: { opacity: 0 },
+  };
+
+  const openMenu = () => {
+    showMenu(true);
+  }
 
   const closeMenu = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node))
@@ -43,26 +58,27 @@ export default function Notifications({ user, setUser }: Auth) {
     <>
       <AnimatePresence>
         {menu && (
-          <motion.section
-            className={css['notifications']}
-                  ref={menuRef}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-                 exit={{ opacity: 0 }}
-          >
+          <motion.section className={css['notifications']} ref={menuRef} {...animation}>
             MENU
           </motion.section>
         )}
       </AnimatePresence>
       <motion.button
         className={nav['nav-button']}
-          onClick={() => showMenu(true)}
+          onClick={openMenu}
           initial={{ opacity: 0, y,    x }}
           animate={{ opacity: 1, y: 0, x: 0, transition: {    delay: 0.4 } }}
              exit={{ opacity: 0,             transition: { duration: 0.8 } }}
       >
         <FontAwesomeIcon icon='bell' />
         <span>Alerts</span>
+        <AnimatePresence>
+          {alerts > 0 && (
+            <motion.span className={css['alert']} {...animation}>
+              {alerts}
+            </motion.span>
+          )}
+        </AnimatePresence>
       </motion.button>
     </>
   );

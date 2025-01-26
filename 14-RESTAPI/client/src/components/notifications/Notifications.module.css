@@ -2,8 +2,19 @@
   position: fixed;
   top: 0.5rem;
   right: 0.5rem;
-  background: #fff;
-  border: 1px solid #000;
+  background: var(--box-gradient);
+  color: var(--team-green);
+  border: 1px solid var(--team-green);
   padding: 1rem;
   z-index: 99;
+}
+
+.alert {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.4rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 50%;
+  font-size: 0.5rem;
+  background: var(--error-red);
 }

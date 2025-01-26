@@ -8,7 +8,11 @@ interface IUser {
      email: string;
   password: string;
     imgURL: string;
-   friends: { status: 'sent' | 'received' | 'accepted', user: Types.ObjectId }[];
+   friends: {
+      status: 'sent' | 'received' | 'accepted',
+        user: Types.ObjectId
+       read?: boolean;
+  }[];
 }
 
 interface IUserMethods {
@@ -27,13 +31,10 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
      friends: [
         {
                user: { type: Schema.Types.ObjectId, ref: 'User' },
-          createdAt: { type: Date, default: Date.now },
-             status: {
-                 type: String,
-                 // enum is a type validator that restricts values to a predefined set
-                 enum: ['sent', 'received', 'accepted'],
-              // default: 'pending'
-          },
+          createdAt: { type: Date,    default: Date.now },
+               read: { type: Boolean, default: false },
+             status: { type: String,  enum: ['sent', 'received', 'accepted'] },
+          // enum is a type validator that restricts values to a predefined set
         },
       ],
     },
