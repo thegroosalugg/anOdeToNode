@@ -1,0 +1,40 @@
+.friend-alert {
+  font-size: 0.8rem;
+  padding: 0.25rem;
+  border: 1px solid var(--team-green);
+  background: var(--main-gradient);
+  overflow-wrap: break-word;
+
+  .alert-text{
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    text-align: center;
+  }
+
+  .name-tag {
+    cursor: pointer;
+    color: var(--dark-grey);
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+
+    > button {
+      width: 52px;
+      border-radius: 5px;
+      padding: 0.1rem 0.2rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+  }
+}
+
+.fallback {
+  font-size: 0.9rem;
+  text-align: center;
+}

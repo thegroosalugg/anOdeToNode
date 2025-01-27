@@ -89,7 +89,9 @@ export default function Notifications({
       <AnimatePresence>
         {menu && (
           <motion.ul className={css['notifications']} ref={menuRef} {...animation}>
-            <FriendAlerts {...{ user, setUser, friends }} />
+            <FriendAlerts
+              {...{ user, setUser, friends, closeMenu: () => showMenu(false) }}
+            />
           </motion.ul>
         )}
       </AnimatePresence>

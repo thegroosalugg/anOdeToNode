@@ -9,13 +9,13 @@ export const PEER_CONFIG = {
       action: 'accept',
         text: 'Accept',
         icon: 'check-to-slot',
-         hsl: [150, 54, 50],
+         hsl: [102, 44, 40],
   },
   accepted: {
       action: undefined,
         text: 'Message',
         icon: 'comment',
-         hsl: [110, 54, 35],
+         hsl: [200, 54, 35],
   },
       none: {
       action: 'add',
