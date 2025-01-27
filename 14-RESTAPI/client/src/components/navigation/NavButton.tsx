@@ -29,6 +29,7 @@ export default function NavButton({ path, navFn, deferring }: NavProps) {
 
   const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;
   const [x, y] = isLandscape ? [75, 0] : [0, 75];
+  const opacity = deferring ? 0.6 : 1;
 
   return (
     <motion.button
@@ -36,7 +37,7 @@ export default function NavButton({ path, navFn, deferring }: NavProps) {
         onClick={() => navFn(path)}
        disabled={deferring}
         initial={{ opacity: 0, y,    x }}
-        animate={{ opacity: 1, y: 0, x: 0, transition: {    delay      } }}
+        animate={{ opacity,    y: 0, x: 0, transition: {    delay      } }}
            exit={{ opacity: 0,             transition: { duration: 0.8 } }}
     >
       <FontAwesomeIcon icon={icon} />

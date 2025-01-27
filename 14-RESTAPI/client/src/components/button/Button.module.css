@@ -5,6 +5,6 @@
   width: fit-content;
 
   &:disabled {
-    cursor: wait;
+    pointer-events: none;
   }
 }

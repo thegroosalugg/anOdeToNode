@@ -1,8 +1,9 @@
 import { isMobile } from 'react-device-detect';
 import { AnimatePresence, motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
+import useDebounce from '@/hooks/useDebounce';
 import { io } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
@@ -19,8 +20,9 @@ export default function Notifications({
      user: User;
   setUser: Auth['setUser'];
 }) {
-  const { reqHandler } = useFetch<User>();
-  const [menu, showMenu] = useState(false);
+  const {     reqHandler     } = useFetch<User>();
+  const [ menu,     showMenu ] = useState(false);
+  const { deferring, deferFn } = useDebounce();
   const menuRef = useRef<HTMLUListElement>(null);
   const { friends } = user;
   const  alerts = friends.reduce((total, { status, meta }) => {
@@ -35,18 +37,28 @@ export default function Notifications({
     animate: { opacity: 1 },
        exit: { opacity: 0 },
   };
+  const opacity = deferring ? 0.6 : 1;
+
+  const getAlerts = useCallback(
+    async () =>
+      await reqHandler(
+        { url: 'notify/read', method: 'POST' },
+        { onSuccess: (updated) => setUser(updated) }
+      ),
+    [reqHandler, setUser]
+  );
 
   const openMenu = async () => {
-    showMenu(true);
-    await reqHandler(
-      { url: 'notify/read', method: 'POST' },
-      { onSuccess: (updated) => setUser(updated) }
-    );
+    deferFn(async () => {
+      showMenu(true);
+      await getAlerts();
+    }, 1500)
   };
 
   const closeMenu = (event: MouseEvent) => {
-    if (menuRef.current && !menuRef.current.contains(event.target as Node))
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       showMenu(false);
+    }
   };
 
   useEffect(() => {
@@ -55,9 +67,13 @@ export default function Notifications({
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog(-100, 15, ['NAV: Socket connected']));
 
-    socket.on(`peer:${user._id}:update`, (updated) => {
+    socket.on(`peer:${user._id}:update`, async (updated) => {
       captainsLog(-100, 15, ['NAV: UPDATE', updated]);
-      setUser(updated);
+      if (menu) {
+        await getAlerts();
+      } else {
+        setUser(updated);
+      }
     });
 
     return () => {
@@ -66,7 +82,7 @@ export default function Notifications({
       socket.disconnect();
       document.removeEventListener('mousedown', closeMenu);
     };
-  }, [user._id, setUser]);
+  }, [menu, user._id, getAlerts, setUser]);
 
   return (
     <>
@@ -80,8 +96,9 @@ export default function Notifications({
       <motion.button
         className={nav['nav-button']}
           onClick={openMenu}
+         disabled={deferring}
           initial={{ opacity: 0, y,    x }}
-          animate={{ opacity: 1, y: 0, x: 0, transition: {    delay: 0.4 } }}
+          animate={{ opacity,    y: 0, x: 0, transition: {    delay: 0.4 } }}
              exit={{ opacity: 0,             transition: { duration: 0.8 } }}
       >
         <FontAwesomeIcon icon='bell' />
