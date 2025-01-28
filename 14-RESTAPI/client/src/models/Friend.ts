@@ -1,6 +1,7 @@
 import User from './User';
 
 type Friend = {
+        _id: string;
      status: 'sent' | 'received' | 'accepted';
        user: string | User;
   createdAt: string;

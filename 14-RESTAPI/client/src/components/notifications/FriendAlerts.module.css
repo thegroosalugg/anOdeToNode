@@ -1,4 +1,7 @@
 .friend-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
   font-size: 0.8rem;
   padding: 0.25rem;
   border: 1px solid var(--team-green);
@@ -7,9 +10,13 @@
 
   .alert-text{
     display: flex;
-    align-items: center;
-    gap: 0.5em;
+    align-items: start;
     text-align: center;
+    gap: 0.2em;
+
+    > span {
+       padding-top: 0.1rem;
+    }
   }
 
   .name-tag {
@@ -32,9 +39,16 @@
       font-weight: 600;
     }
   }
+
+  .x-button {
+    border: 0;
+    background: none;
+    margin-right: 0.25rem;
+  }
 }
 
 .fallback {
+  padding: 0.25rem;
   font-size: 0.9rem;
   text-align: center;
 }

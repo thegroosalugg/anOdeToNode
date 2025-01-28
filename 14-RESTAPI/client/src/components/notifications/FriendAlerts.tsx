@@ -1,7 +1,9 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import useFetch from '@/hooks/useFetch';
 import { Auth } from '@/pages/RootLayout';
+import { FetchError } from '@/util/fetchData';
 import { ReactNode } from 'react';
 import User from '@/models/User';
 import Friend from '@/models/Friend';
@@ -31,13 +33,15 @@ export default function FriendAlerts({
     setUser: Auth['setUser'];
   closeMenu: () => void;
 }) {
-  const { reqHandler } = useFetch();
-  const { deferFn } = useDebounce();
-  const    navigate = useNavigate();
-  const connections = friends.filter(
-    (friend): friend is Friend & { user: User } =>
-      typeof friend.user === 'object' && friend.status !== 'sent'
-  ).reverse();
+  const { reqHandler } = useFetch<User>();
+  const {   deferFn  } = useDebounce();
+  const       navigate = useNavigate();
+  const connections = friends
+    .filter((friend): friend is Friend & { user: User } => {
+      const { user, status, meta } = friend;
+      return typeof user === 'object' && status !== 'sent' && meta.show;
+    })
+    .reverse();
 
   if (connections.length === 0) {
     return <p className={css['fallback']}>You have no new notifications</p>;
@@ -56,24 +60,38 @@ export default function FriendAlerts({
     );
   };
 
+  const onError = (err: FetchError) => {
+    if (err.status === 401) setUser(null);
+  };
+
   const friendRequest = async (_id: string, action: 'accept' | 'delete') => {
     deferFn(async () => {
+      await reqHandler({ url: `social/${_id}/${action}`, method: 'POST' }, { onError });
+    }, 1000);
+  };
+
+  const clearAlert = async (_id: string) => {
+    deferFn(async () => {
       await reqHandler(
-        { url: `social/${_id}/${action}`, method: 'POST' },
-        {
-          onError: (err) => {
-            if (err.status === 401) setUser(null);
-          },
-        }
+        { url: `alert/${_id}`, method: 'POST' },
+        { onError, onSuccess: (updated) => setUser(updated) }
       );
     }, 1000);
   };
 
+  function X({ _id }: { _id: string }) {
+    return (
+      <button className={css['x-button']} onClick={() => clearAlert(_id)}>
+        <FontAwesomeIcon icon='x' size='2xl' />
+      </button>
+    );
+  }
+
   return connections.map((connection) => {
-    const { meta, status, user: peer } = connection;
+    const { _id: alertId, meta, status, user: peer } = connection;
     const { _id, name, surname } = peer;
     return (
-      <li className={css['friend-alert']} key={_id}>
+      <li className={css['friend-alert']} key={alertId}>
         {status === 'received' ? (
           <div>
             <Alert user={peer}>
@@ -92,13 +110,19 @@ export default function FriendAlerts({
             </div>
           </div>
         ) : meta.init === user._id ? (
-          <Alert user={peer}>
-            <NameTag {...{ _id, children: name }} /> accepted your friend request
-          </Alert>
+          <>
+            <Alert user={peer}>
+              <NameTag {...{ _id, children: name }} /> accepted your friend request
+            </Alert>
+            <X _id={alertId} />
+          </>
         ) : (
-          <Alert user={peer}>
-            You are now friends with <NameTag {...{ _id, children: name }} />
-          </Alert>
+          <>
+            <Alert user={peer}>
+              You accepted <NameTag {...{ _id, children: name + "'s" }} /> friend request
+            </Alert>
+            <X _id={alertId} />
+          </>
         )}
       </li>
     );

@@ -14,7 +14,7 @@ import    feedRoutes from './routes/feed';
 import   replyRoutes from './routes/reply';
 import profileRoutes from './routes/profile';
 import  socialRoutes from './routes/social';
-import   notifRoutes from './routes/notification';
+import   alertRoutes from './routes/alert';
 import   captainsLog from './util/captainsLog';
 import        dotenv from 'dotenv';
               dotenv.config();
@@ -55,7 +55,7 @@ app.use('/post',    authJWT,    postRoutes);
 app.use('/post',    authJWT,   replyRoutes);
 app.use('/profile', authJWT, profileRoutes);
 app.use('/social',  authJWT,  socialRoutes);
-app.use('/notify',  authJWT,   notifRoutes);
+app.use('/alert',   authJWT,   alertRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI!)

@@ -3,6 +3,7 @@ import { Model, model, Types, Schema } from 'mongoose';
 const required = true;
 
 export interface IFriend {
+     _id: Types.ObjectId;
   status: 'sent' | 'received' | 'accepted';
     user: Types.ObjectId;
     meta: {

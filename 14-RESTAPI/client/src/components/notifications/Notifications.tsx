@@ -42,7 +42,7 @@ export default function Notifications({
   const getAlerts = useCallback(
     async () =>
       await reqHandler(
-        { url: 'notify/read', method: 'POST' },
+        { url: 'alert/read', method: 'POST' },
         { onSuccess: (updated) => setUser(updated) }
       ),
     [reqHandler, setUser]
