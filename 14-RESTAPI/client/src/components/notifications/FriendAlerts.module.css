@@ -49,6 +49,7 @@
 
 .fallback {
   padding: 0.25rem;
+  margin: auto;
   font-size: 0.9rem;
   text-align: center;
 }

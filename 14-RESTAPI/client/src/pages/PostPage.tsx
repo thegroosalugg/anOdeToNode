@@ -120,6 +120,12 @@ export default function PostPage({ user, setUser }: Auth & { user: User }) {
           closeModal(); // delete actions for creator
           navigate('/feed');
         },
+        onError: (err) => {
+          if (err.status === 401) {
+            setUser(null);
+            closeModal();
+          }
+        }
       }
     );
   }

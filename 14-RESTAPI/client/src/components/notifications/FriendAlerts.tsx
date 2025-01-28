@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
@@ -43,10 +44,6 @@ export default function FriendAlerts({
     })
     .reverse();
 
-  if (connections.length === 0) {
-    return <p className={css['fallback']}>You have no new notifications</p>;
-  }
-
   const navTo = (_id: string) => {
     closeMenu();
     navigate('/user/' + _id);
@@ -87,44 +84,77 @@ export default function FriendAlerts({
     );
   }
 
-  return connections.map((connection) => {
-    const { _id: alertId, meta, status, user: peer } = connection;
-    const { _id, name, surname } = peer;
-    return (
-      <li className={css['friend-alert']} key={alertId}>
-        {status === 'received' ? (
-          <div>
-            <Alert user={peer}>
-              <NameTag {...{ _id }}>
-                {name} {surname}
-              </NameTag>{' '}
-              sent you a friend request
-            </Alert>
-            <div className={css['buttons']}>
-              <Button hsl={[102, 44, 40]} onClick={async () => friendRequest(_id, 'accept')}>
-                Accept
-              </Button>
-              <Button hsl={[ 10, 54, 51]} onClick={async () => friendRequest(_id, 'delete')}>
-                Decline
-              </Button>
-            </div>
-          </div>
-        ) : meta.init === user._id ? (
-          <>
-            <Alert user={peer}>
-              <NameTag {...{ _id, children: name }} /> accepted your friend request
-            </Alert>
-            <X _id={alertId} />
-          </>
-        ) : (
-          <>
-            <Alert user={peer}>
-              You accepted <NameTag {...{ _id, children: name + "'s" }} /> friend request
-            </Alert>
-            <X _id={alertId} />
-          </>
-        )}
-      </li>
-    );
-  });
+  const    opacity = 0;
+  const transition = { duration: 0.5 };
+
+  return (
+    <AnimatePresence mode='popLayout'>
+      {connections.length > 0 ? (
+        connections.map((connection) => {
+          const { _id: alertId, meta, status, user: peer } = connection;
+          const { _id, name, surname } = peer;
+          return (
+            <motion.li
+                 layout
+              className={css['friend-alert']}
+                    key={alertId + status}
+                initial={{ opacity,    x:  20 }}
+                animate={{ opacity: 1, x:   0, transition }}
+                   exit={{ opacity,    x: -20, transition }}
+            >
+              {status === 'received' ? (
+                <div>
+                  <Alert user={peer}>
+                    <NameTag {...{ _id }}>
+                      {name} {surname}
+                    </NameTag>{' '}
+                    sent you a friend request
+                  </Alert>
+                  <div className={css['buttons']}>
+                    <Button
+                      hsl={[102, 44, 40]}
+                      onClick={async () => await friendRequest(_id, 'accept')}
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      hsl={[10, 54, 51]}
+                      onClick={async () => await friendRequest(_id, 'delete')}
+                    >
+                      Decline
+                    </Button>
+                  </div>
+                </div>
+              ) : meta.init === user._id ? (
+                <>
+                  <Alert user={peer}>
+                    <NameTag {...{ _id, children: name }} /> accepted your friend request
+                  </Alert>
+                  <X _id={alertId} />
+                </>
+              ) : (
+                <>
+                  <Alert user={peer}>
+                    You accepted <NameTag {...{ _id, children: name + "'s" }} /> friend
+                    request
+                  </Alert>
+                  <X _id={alertId} />
+                </>
+              )}
+            </motion.li>
+          );
+        })
+      ) : (
+        <motion.p
+                key='fallback'
+          className={css['fallback']}
+            initial={{ opacity }}
+            animate={{ opacity: 1, transition }}
+               exit={{ opacity,    transition }}
+        >
+          You have no new notifications
+        </motion.p>
+      )}
+    </AnimatePresence>
+  );
 }

@@ -9,6 +9,7 @@ import { BASE_URL } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
 import FriendAlerts from './FriendAlerts';
+import AsyncAwait from '../panel/AsyncAwait';
 import { captainsLog } from '@/util/captainsLog';
 import nav from '../navigation/NavButton.module.css';
 import css from './Notifications.module.css';
@@ -20,10 +21,11 @@ export default function Notifications({
      user: User;
   setUser: Auth['setUser'];
 }) {
-  const {     reqHandler     } = useFetch<User>();
-  const [ menu,     showMenu ] = useState(false);
-  const { deferring, deferFn } = useDebounce();
-  const menuRef = useRef<HTMLUListElement>(null);
+  const {     error, reqHandler } = useFetch<User>();
+  const [      menu,   showMenu ] = useState(false);
+  const { deferring,    deferFn } = useDebounce();
+  const   menuRef = useRef<HTMLUListElement>(null);
+  const isInitial = useRef(true);
   const { friends } = user;
   const  alerts = friends.reduce((total, { status, meta }) => {
     if (status !== 'sent' && !meta.read) total += 1;
@@ -38,6 +40,7 @@ export default function Notifications({
        exit: { opacity: 0 },
   };
   const opacity = deferring ? 0.6 : 1;
+  const justifyContent = isInitial.current || error ? 'center' : 'start';
 
   const getAlerts = useCallback(
     async () =>
@@ -49,9 +52,11 @@ export default function Notifications({
   );
 
   const openMenu = async () => {
+    isInitial.current = true;
     deferFn(async () => {
       showMenu(true);
       await getAlerts();
+      isInitial.current = false
     }, 1500)
   };
 
@@ -87,11 +92,18 @@ export default function Notifications({
   return (
     <>
       <AnimatePresence>
-        {menu && (
-          <motion.ul className={css['notifications']} ref={menuRef} {...animation}>
-            <FriendAlerts
-              {...{ user, setUser, friends, closeMenu: () => showMenu(false) }}
-            />
+      {menu && (
+          <motion.ul
+            className={css['notifications']}
+                style={{ justifyContent }}
+                  ref={menuRef}
+            {...animation}
+          >
+            <AsyncAwait {...{ isLoading: isInitial.current, error }}>
+              <FriendAlerts
+                {...{ user, setUser, friends, closeMenu: () => showMenu(false) }}
+              />
+            </AsyncAwait>
           </motion.ul>
         )}
       </AnimatePresence>

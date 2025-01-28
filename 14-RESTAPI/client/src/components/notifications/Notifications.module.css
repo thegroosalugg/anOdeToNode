@@ -2,6 +2,7 @@
   position: fixed;
   top: 0.25rem;
   right: 0.25rem;
+  height: 200px;
   max-height: calc(100vh - 0.5rem);
   max-width: calc(100% - 0.5rem);
   width: 225px;
@@ -14,11 +15,6 @@
   background: var(--box-gradient);
   color: var(--team-green);
   z-index: 99;
-
-  &::-webkit-scrollbar {
-    width: .5px;
-    height: .5px;
-  }
 
   &::-webkit-scrollbar-thumb {
     background: var(--dark-grey);
