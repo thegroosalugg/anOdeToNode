@@ -52,10 +52,14 @@ export default function PeerPage({ user, setUser }: Auth & { user: User }) {
 
   return (
     <AsyncAwait {...{ isLoading, error }}>
-      {peer && <PeerProfile {...{ user, setUser, peer }} />}
-      <PagedList<Post> {...feedProps}>
-        {(post) => <PostItem {...post} />}
-      </PagedList>
+      {peer && (
+        <>
+          <PeerProfile {...{ user, setUser, peer }} />
+          <PagedList<Post> {...feedProps}>
+            {(post) => <PostItem {...post} />}
+          </PagedList>
+        </>
+      )}
     </AsyncAwait>
   );
 }
