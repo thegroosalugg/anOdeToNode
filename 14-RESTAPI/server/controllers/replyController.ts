@@ -28,6 +28,8 @@ const getReplies: RequestHandler = async (req, res, next) => {
 };
 
 const postReply: RequestHandler = async (req, res, next) => {
+  if (!req.user) return next('Do not use without AuthJWT');
+
   try {
     const errors = getErrors(req);
     if (hasErrors(errors)) {

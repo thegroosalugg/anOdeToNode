@@ -1,4 +1,5 @@
-import       express from 'express';
+import       express, { ErrorRequestHandler }
+                     from 'express';
 import      mongoose from 'mongoose';
 import        multer from 'multer';
 import {   Server  } from 'socket.io';
@@ -51,11 +52,15 @@ app.use((req, res, next) => {
 
 app.use(                        authRoutes);
 app.use('/feed',    authJWT,    feedRoutes);
-app.use('/post',    authJWT,    postRoutes);
-app.use('/post',    authJWT,   replyRoutes);
+app.use('/post',    authJWT,   [postRoutes, replyRoutes]);
 app.use('/profile', authJWT, profileRoutes);
 app.use('/social',  authJWT,  socialRoutes);
 app.use('/alert',   authJWT,   alertRoutes);
+
+app.use(((error, req, res, next) => {
+  captainsLog(3, 'APP CATCH:', error);
+  res.status(403).json({ message: "Something wen't wrong" });
+}) as ErrorRequestHandler);
 
 mongoose
   .connect(process.env.MONGO_URI!)

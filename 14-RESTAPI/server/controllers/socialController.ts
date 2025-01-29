@@ -46,10 +46,7 @@ const getUserById: RequestHandler = async (req, res, next) => {
 };
 
 const friendRequest: RequestHandler = async (req, res, next) => {
-  if (!req.user) {
-    res.status(403).json({ message: 'Access denied: missing authentication' });
-    return;
-  }
+  if (!req.user) return next('Do not use without AuthJWT');
 
   try {
     const { userId, action } = req.params;

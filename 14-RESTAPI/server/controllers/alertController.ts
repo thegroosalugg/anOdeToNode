@@ -5,10 +5,8 @@ const _public = '-email -password -friends';
 
 const markAsRead: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) {
-    res.status(403).json({ message: 'Access denied: missing authentication' });
-    return;
-  }
+  if (!user) return next('Do not use without AuthJWT');
+
   try {
     user.friends.forEach(({ meta }) => meta.read = true);
     await user.save();
@@ -22,10 +20,8 @@ const markAsRead: RequestHandler = async (req, res, next) => {
 
 const clearAlert: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) {
-    res.status(403).json({ message: 'Access denied: missing authentication' });
-    return;
-  }
+  if (!user) return next('Do not use without AuthJWT');
+
   try {
     const { alertId } = req.params;
     user.friends.forEach(({ _id, meta }) => {

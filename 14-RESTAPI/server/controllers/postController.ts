@@ -6,6 +6,8 @@ import { deleteFile } from '../util/deleteFile';
 import captainsLog from '../util/captainsLog';
 
 const newPost: RequestHandler = async (req, res, next) => {
+  if (!req.user) return next('Do not use without AuthJWT');
+
   try {
     const { title, content } = req.body;
     const image = req.file;
@@ -17,7 +19,7 @@ const newPost: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const post = new Post({ title, content, creator: req.user });
+    const post = new Post({ title, content, creator: req.user._id });
     if (image) post.imgURL = image.path;
     await post.save();
     io.emit('post:update', post); // pushes socket to client

@@ -4,16 +4,14 @@ import { deleteFile } from '../util/deleteFile';
 import captainsLog from '../util/captainsLog';
 
 const profilePic: RequestHandler = async (req, res, next) => {
+  const  user = req.user;
+  const image = req.file;
+  if (!user) {
+    if (image) deleteFile(image.path);
+    return next('Do not use without AuthJWT');
+  }
+
   try {
-    const  user = await User.findById(req.user);
-    const image = req.file;
-
-    if (!user) {
-      res.status(404).json({ message: 'User not found' });
-      if (image) deleteFile(image.path);
-      return;
-    }
-
     if (!image) {
       res.status(422).json({ message: 'Image required' });
       return;
