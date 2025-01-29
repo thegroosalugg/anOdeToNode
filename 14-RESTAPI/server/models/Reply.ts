@@ -1,11 +1,12 @@
 import { Model, model, Types, Schema } from 'mongoose';
+import { IPost } from './Post';
 
 const required = true;
 
 export interface IReply {
   content: string;
   creator: Types.ObjectId;
-     post: Types.ObjectId;
+     post: Types.ObjectId | IPost;
 }
 
 interface IReplyMethods {

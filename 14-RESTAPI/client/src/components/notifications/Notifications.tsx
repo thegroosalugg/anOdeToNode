@@ -83,9 +83,14 @@ export default function Notifications({
       }
     });
 
+    socket.on(`nav:${user._id}:reply`, (reply) => {
+      captainsLog(-100, 12, ['NAV: NEW REPLY', reply]);
+    })
+
     return () => {
       socket.off('connect');
       socket.off(`peer:${user?._id}:update`);
+      socket.off(`nav:${user._id}:reply`);
       socket.disconnect();
       document.removeEventListener('mousedown', closeMenu);
     };
@@ -114,9 +119,15 @@ export default function Notifications({
               ))}
             </section>
             <AsyncAwait {...{ isLoading: isInitial.current, error }}>
-              <FriendAlerts
-                {...{ user, setUser, friends, menuType, closeMenu: () => showMenu(false) }}
-              />
+            {menuType === 'replies' ? (
+              <motion.p initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+                Replies
+              </motion.p>
+            ) : (
+                <FriendAlerts
+                  {...{ user, setUser, friends, menuType, closeMenu: () => showMenu(false) }}
+                />
+              )}
             </AsyncAwait>
           </motion.ul>
         )}

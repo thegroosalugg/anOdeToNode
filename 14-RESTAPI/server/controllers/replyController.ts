@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { io } from '../app';
-import Post from '../models/Post';
+import Post, { IPost } from '../models/Post';
 import Reply from '../models/Reply';
 import { getErrors, hasErrors } from '../validation/validators';
 import captainsLog from '../util/captainsLog';
@@ -37,7 +37,7 @@ const postReply: RequestHandler = async (req, res, next) => {
 
     const {  postId } = req.params;
     const { content } = req.body;
-    const   creator   = req.user;
+    const   creator   = req.user._id;
 
     const post = await Post.findById(postId);
     if (!post) {
@@ -47,7 +47,9 @@ const postReply: RequestHandler = async (req, res, next) => {
 
     const reply = new Reply({ post: post._id, content, creator });
     await reply.save();
-    io.emit(`post:${postId}:reply`, reply); // emits to specfic path only
+    await reply.populate('post');
+    io.emit(`post:${postId}:reply`, reply); // notify Post Page
+    io.emit(`nav:${(reply.post as IPost).creator}:reply`, reply); // alert original post user
     res.status(201).json(reply);
 
   } catch (error) {
