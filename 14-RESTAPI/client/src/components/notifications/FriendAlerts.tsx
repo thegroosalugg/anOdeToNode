@@ -6,6 +6,7 @@ import useFetch from '@/hooks/useFetch';
 import { Auth } from '@/pages/RootLayout';
 import { FetchError } from '@/util/fetchData';
 import { ReactNode } from 'react';
+import { Menu } from './Notifications';
 import User from '@/models/User';
 import Friend from '@/models/Friend';
 import Button from '../button/Button';
@@ -27,11 +28,13 @@ export default function FriendAlerts({
     friends,
        user,
     setUser,
+   menuType,
   closeMenu,
 }: {
     friends: Friend[];
        user: User;
     setUser: Auth['setUser'];
+   menuType: Menu;
   closeMenu: () => void;
 }) {
   const { reqHandler } = useFetch<User>();
@@ -40,7 +43,8 @@ export default function FriendAlerts({
   const connections = friends
     .filter((friend): friend is Friend & { user: User } => {
       const { user, status, meta } = friend;
-      return typeof user === 'object' && status !== 'sent' && meta.show;
+      const condition = menuType === 'sent' ? status === 'sent' : status !== 'sent';
+      return typeof user === 'object' && condition && meta.show;
     })
     .reverse();
 
@@ -79,7 +83,7 @@ export default function FriendAlerts({
   function X({ _id }: { _id: string }) {
     return (
       <button className={css['x-button']} onClick={() => clearAlert(_id)}>
-        <FontAwesomeIcon icon='x' size='2xl' />
+        <FontAwesomeIcon icon='x' size='xl' />
       </button>
     );
   }
@@ -113,18 +117,37 @@ export default function FriendAlerts({
                   <div className={css['buttons']}>
                     <Button
                       hsl={[102, 44, 40]}
-                      onClick={async () => await friendRequest(_id, 'accept')}
+                      onClick={() => friendRequest(_id, 'accept')}
                     >
                       Accept
                     </Button>
                     <Button
                       hsl={[10, 54, 51]}
-                      onClick={async () => await friendRequest(_id, 'delete')}
+                      onClick={() => friendRequest(_id, 'delete')}
                     >
                       Decline
                     </Button>
                   </div>
                 </div>
+              ) : status === 'sent' ? (
+                <>
+                  <Alert user={peer}>
+                    <NameTag {...{ _id }}>
+                      {name} {surname}
+                    </NameTag>
+                  </Alert>
+                  <Button
+                        hsl={[10, 54, 51]}
+                      style={{
+                             padding: '0.1rem 0.25rem',
+                            fontSize: '0.6rem',
+                        borderRadius: '5px',
+                      }}
+                    onClick={() => friendRequest(_id, 'delete')}
+                  >
+                    Cancel
+                  </Button>
+                </>
               ) : meta.init === user._id ? (
                 <>
                   <Alert user={peer}>
@@ -146,13 +169,13 @@ export default function FriendAlerts({
         })
       ) : (
         <motion.p
-                key='fallback'
+                key={menuType}
           className={css['fallback']}
             initial={{ opacity }}
             animate={{ opacity: 1, transition }}
                exit={{ opacity,    transition }}
         >
-          You have no new notifications
+          {menuType === 'sent' ? 'No sent requests' : 'You have no new notifications'}
         </motion.p>
       )}
     </AnimatePresence>

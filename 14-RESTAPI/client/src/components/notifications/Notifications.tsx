@@ -14,6 +14,8 @@ import { captainsLog } from '@/util/captainsLog';
 import nav from '../navigation/NavButton.module.css';
 import css from './Notifications.module.css';
 
+export type Menu = 'received' | 'sent' | 'replies';
+
 export default function Notifications({
      user,
   setUser,
@@ -21,9 +23,10 @@ export default function Notifications({
      user: User;
   setUser: Auth['setUser'];
 }) {
-  const {     error, reqHandler } = useFetch<User>();
-  const [      menu,   showMenu ] = useState(false);
-  const { deferring,    deferFn } = useDebounce();
+  const {     error,  reqHandler } = useFetch<User>();
+  const [      menu,    showMenu ] = useState(false);
+  const [  menuType, setMenuType ] = useState<Menu>('received');
+  const { deferring,     deferFn } = useDebounce();
   const   menuRef = useRef<HTMLUListElement>(null);
   const isInitial = useRef(true);
   const { friends } = user;
@@ -40,7 +43,6 @@ export default function Notifications({
        exit: { opacity: 0 },
   };
   const opacity = deferring ? 0.6 : 1;
-  const justifyContent = isInitial.current || error ? 'center' : 'start';
 
   const getAlerts = useCallback(
     async () =>
@@ -89,19 +91,31 @@ export default function Notifications({
     };
   }, [menu, user._id, getAlerts, setUser]);
 
+  const icons = {
+    received: 'envelope',
+        sent: 'paper-plane',
+     replies: 'reply',
+  } as const;
+
   return (
     <>
       <AnimatePresence>
-      {menu && (
-          <motion.ul
-            className={css['notifications']}
-                style={{ justifyContent }}
-                  ref={menuRef}
-            {...animation}
-          >
+        {menu && (
+          <motion.ul className={css['notifications']} ref={menuRef} {...animation}>
+            <section className={css['menu-bar']}>
+              {(['received', 'sent', 'replies'] as Menu[]).map((name) => (
+                <motion.button
+                      key={name}
+                  onClick={() => setMenuType(name)}
+                  animate={{ color: menuType === name ? '#888' : 'var(--team-green)' }}
+                >
+                  <FontAwesomeIcon icon={icons[name]} />
+                </motion.button>
+              ))}
+            </section>
             <AsyncAwait {...{ isLoading: isInitial.current, error }}>
               <FriendAlerts
-                {...{ user, setUser, friends, closeMenu: () => showMenu(false) }}
+                {...{ user, setUser, friends, menuType, closeMenu: () => showMenu(false) }}
               />
             </AsyncAwait>
           </motion.ul>

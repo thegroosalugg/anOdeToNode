@@ -11,7 +11,6 @@ const markAsRead: RequestHandler = async (req, res, next) => {
   }
   try {
     user.friends.forEach(({ meta }) => meta.read = true);
-
     await user.save();
     await user.populate('friends.user', _public);
     res.status(200).json(user);
