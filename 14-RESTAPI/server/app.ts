@@ -22,7 +22,7 @@ import        dotenv from 'dotenv';
 
 const    app = express();
 const server = app.listen(3000, () => {
-  captainsLog(7, 'Hudson River, 2 years ago');
+  captainsLog(0, '<<Hudson River, 2 years ago>>');
 }); // createNewServer
 
 export const io = new Server(server, {
@@ -58,21 +58,20 @@ app.use('/social',  authJWT,  socialRoutes);
 app.use('/alert',   authJWT,   alertRoutes);
 
 app.use(((appError, req, res, next) => {
-  const { status, message, dev, error } = appError;
-    captainsLog(3, `[status: ${status}] :::${dev}:::`, error);
-    const response = status === 422 ? error : { message };
-    res.status(status).json(response);
+  const { status, client, dev, where } = appError;
+    captainsLog(status, `[status: ${status}] :::${where}:::`, [client, dev]);
+    res.status(status).json(client);
 }) as ErrorRequestHandler);
 
 mongoose
   .connect(process.env.MONGO_URI!)
   .then(() => {
     io.on('connection', (socket) => {
-      captainsLog(2, 'App IO: Client connected');
+      captainsLog(200, '<App IO: <Client connected>>');
 
       socket.on('disconnect', () => {
-        captainsLog(1, 'App IO: Client disconnected');
+        captainsLog(403, '<App IO: <Client disconnected>>');
       });
     });
   })
-  .catch((error) => captainsLog(1, 'Mongoose error', error));
+  .catch((error) => captainsLog(403, '<<Mongoose error>>', error));

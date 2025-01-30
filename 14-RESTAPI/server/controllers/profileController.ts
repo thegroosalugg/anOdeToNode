@@ -9,21 +9,18 @@ const profilePic: RequestHandler = async (req, res, next) => {
   const image = req.file;
   if (!user) {
     if (image) deleteFile(image.path);
-    return next(new AppError(403, ['', 'profilePic !user'], devErr));
+    return next(new AppError(403, 'Something went wrong', devErr));
   }
+  if (!image) return next(new AppError(422, { message: 'Image required' }));
 
   try {
-    if (!image) {
-      return next(new AppError(422, ['', 'profilePic !image'], { message: 'Image required' }));
-    } // 422 errors send 3rd arg to client instead of 2nd arg [0]
-
     if (user.imgURL) deleteFile(user.imgURL);
     const imgURL = image.path
     user.imgURL  = imgURL;
     await user.save();
     res.status(201).json({ imgURL });
   } catch (error) {
-    next(new AppError(500, ['Image upload failed', 'profilePic catch'], error));
+    next(new AppError(500, 'Image upload failed', error));
   }
 };
 

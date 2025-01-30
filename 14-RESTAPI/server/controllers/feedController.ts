@@ -28,11 +28,11 @@ const getPosts: RequestHandler = async (req, res, next) => {
       .populate('creator', _public)
       .sort({ _id: -1 }); // newest first
 
-    if (!posts) return next(new AppError(404, ['Nothing posted yet', 'getPosts !posts']));
+    if (!posts) return next(new AppError(404, 'Nothing posted yet'));
 
     res.status(200).json({ posts, docCount });
   } catch (error) {
-    next(new AppError(500, ['Unable to load posts', 'getPosts catch'], error));
+    next(new AppError(500, 'Unable to load posts', error));
   }
 };
 
@@ -40,11 +40,11 @@ const getPostById: RequestHandler = async (req, res, next) => {
   try {
     const { postId } = req.params;
     const post = await Post.findById(postId).populate('creator', _public);
-    if (!post) return next(new AppError(404, ['Post not found', 'getPostById !post']));
+    if (!post) return next(new AppError(404, 'Post not found'));
 
     res.status(200).json(post);
   } catch (error) {
-    next(new AppError(500, ['Unable to load post', 'getPostById catch'], error));
+    next(new AppError(500, 'Unable to load post', error));
   }
 };
 

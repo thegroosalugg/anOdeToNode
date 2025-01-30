@@ -18,10 +18,10 @@ const getUsers: RequestHandler = async (req, res, next) => {
       .select(_public)
       .sort({ _id: -1 });
 
-    if (!users) return next(new AppError(404, ['No users found', 'getUsers !users']));
+    if (!users) return next(new AppError(404, 'No users found'));
     res.status(200).json({ users, docCount });
   } catch (error) {
-    next(new AppError(500, ['unable to load users', 'getUsers catch'], error));
+    next(new AppError(500, 'unable to load users', error));
   }
 };
 
@@ -29,22 +29,22 @@ const getUserById: RequestHandler = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const user = await User.findById(userId).select(_public);
-    if (!user) return next(new AppError(404, ['User not found', 'getUserById !user']));
+    if (!user) return next(new AppError(404, 'User not found'));
     res.status(200).json(user);
   } catch (error) {
-    next(new AppError(500, ['unable to load user', 'getUserById catch'], error));
+    next(new AppError(500, 'unable to load user', error));
   }
 };
 
 const friendRequest: RequestHandler = async (req, res, next) => {
-  if (!req.user) return next(new AppError(403, ['', 'friendRequest !req.user'], devErr));
+  if (!req.user) return next(new AppError(403, 'Something went wrong', devErr));
 
   try {
     const { userId, action } = req.params;
     const peer = await User.findById(userId);
     const user = req.user;
 
-    if (!peer) return next(new AppError(404, ['User not found', 'friendRequest !peer']));
+    if (!peer) return next(new AppError(404, 'User not found'));
 
     const peerIndex = peer.friends.findIndex(
       (friend) => friend.user.toString() === user._id.toString()
@@ -68,7 +68,7 @@ const friendRequest: RequestHandler = async (req, res, next) => {
         user.friends.splice(userIndex, 1);
         break;
       default:
-        return next(new AppError(400, ['Invalid action', 'friendRequest switch']));
+        return next(new AppError(400, 'Invalid action'));
     }
 
     await peer.save();
@@ -77,7 +77,7 @@ const friendRequest: RequestHandler = async (req, res, next) => {
     io.emit(`peer:${peer._id}:update`, peer);
     res.status(201).json({ message: 'success' });
   } catch (error) {
-    next(new AppError(500, ['Request could not be completed.', 'friendRequest catch'], error));
+    next(new AppError(500, 'Request could not be completed.', error));
   }
 };
 
