@@ -1,21 +1,21 @@
-import User from '../models/User';
 import { RequestHandler } from 'express';
+import AppError from '../models/Error';
 import { deleteFile } from '../util/deleteFile';
-import captainsLog from '../util/captainsLog';
+
+const devErr = 'Do not use without AuthJWT';
 
 const profilePic: RequestHandler = async (req, res, next) => {
   const  user = req.user;
   const image = req.file;
   if (!user) {
     if (image) deleteFile(image.path);
-    return next('Do not use without AuthJWT');
+    return next(new AppError(403, ['', 'profilePic !user'], devErr));
   }
 
   try {
     if (!image) {
-      res.status(422).json({ message: 'Image required' });
-      return;
-    }
+      return next(new AppError(422, ['', 'profilePic !image'], { message: 'Image required' }));
+    } // 422 errors send 3rd arg to client instead of 2nd arg [0]
 
     if (user.imgURL) deleteFile(user.imgURL);
     const imgURL = image.path
@@ -23,8 +23,7 @@ const profilePic: RequestHandler = async (req, res, next) => {
     await user.save();
     res.status(201).json({ imgURL });
   } catch (error) {
-    captainsLog(5, 'profilePic Catch', error);
-    res.status(500).json({ message: 'Image upload failed' });
+    next(new AppError(500, ['Image upload failed', 'profilePic catch'], error));
   }
 };
 

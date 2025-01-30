@@ -123,8 +123,8 @@ export default function PostPage({ user, setUser }: Auth & { user: User }) {
         onError: (err) => {
           if (err.status === 401) {
             setUser(null);
-            closeModal();
           }
+          closeModal();
         }
       }
     );

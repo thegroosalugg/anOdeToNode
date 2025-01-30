@@ -2,10 +2,11 @@ import { RequestHandler } from 'express';
 import AppError from '../models/Error';
 
 const _public = '-email -password -friends';
+const  devErr = 'Do not use without AuthJWT';
 
 const markAsRead: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, ['', 'Do not use without AuthJWT']));
+  if (!user) return next(new AppError(403, ['', 'markAsRead !user'], devErr));
 
   try {
     user.friends.forEach(({ meta }) => (meta.read = true));
@@ -13,13 +14,13 @@ const markAsRead: RequestHandler = async (req, res, next) => {
     await user.populate('friends.user', _public);
     res.status(200).json(user);
   } catch (error) {
-    return next(new AppError(500, ['unable to update notifications', 'markAsRead'], error));
+    next(new AppError(500, ['unable to update notifications', 'markAsRead'], error));
   }
 };
 
 const clearAlert: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, ['', 'Do not use without AuthJWT']));
+  if (!user) return next(new AppError(403, ['', 'clearAlert !user'], devErr));
 
   try {
     const { alertId } = req.params;
@@ -30,7 +31,7 @@ const clearAlert: RequestHandler = async (req, res, next) => {
     await user.populate('friends.user', _public);
     res.status(200).json(user);
   } catch (error) {
-    return next(new AppError(500, ['unable to remove notification', 'clearAlert'], error));
+    next(new AppError(500, ['unable to remove notification', 'clearAlert'], error));
   }
 };
 

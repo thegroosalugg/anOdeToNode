@@ -60,7 +60,8 @@ app.use('/alert',   authJWT,   alertRoutes);
 app.use(((appError, req, res, next) => {
   const { status, message, dev, error } = appError;
     captainsLog(3, `[status: ${status}] :::${dev}:::`, error);
-    res.status(status).json({ message });
+    const response = status === 422 ? error : { message };
+    res.status(status).json(response);
 }) as ErrorRequestHandler);
 
 mongoose

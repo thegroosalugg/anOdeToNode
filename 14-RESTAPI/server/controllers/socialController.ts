@@ -1,9 +1,10 @@
 import { RequestHandler } from 'express';
 import { io } from '../app';
 import User, { IFriend } from '../models/User';
-import captainsLog from '../util/captainsLog';
+import AppError from '../models/Error';
 
 const _public = '-email -password';
+const  devErr = 'Do not use without AuthJWT';
 
 const getUsers: RequestHandler = async (req, res, next) => {
   try {
@@ -17,15 +18,10 @@ const getUsers: RequestHandler = async (req, res, next) => {
       .select(_public)
       .sort({ _id: -1 });
 
-    if (!users) {
-      res.status(404).json({ message: 'No users found' });
-      return;
-    }
-
+    if (!users) return next(new AppError(404, ['No users found', 'getUsers !users']));
     res.status(200).json({ users, docCount });
   } catch (error) {
-    captainsLog(5, 'getUsers Catch', error);
-    res.status(500).json({ message: 'unable to load users' });
+    next(new AppError(500, ['unable to load users', 'getUsers catch'], error));
   }
 };
 
@@ -33,30 +29,22 @@ const getUserById: RequestHandler = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const user = await User.findById(userId).select(_public);
-    if (!user) {
-      res.status(404).json({ message: 'User not found.' });
-      return;
-    }
-
+    if (!user) return next(new AppError(404, ['User not found', 'getUserById !user']));
     res.status(200).json(user);
   } catch (error) {
-    captainsLog(5, 'getUserById Catch', error);
-    res.status(500).json({ message: 'Unable to load user.' });
+    next(new AppError(500, ['unable to load user', 'getUserById catch'], error));
   }
 };
 
 const friendRequest: RequestHandler = async (req, res, next) => {
-  if (!req.user) return next('Do not use without AuthJWT');
+  if (!req.user) return next(new AppError(403, ['', 'friendRequest !req.user'], devErr));
 
   try {
     const { userId, action } = req.params;
     const peer = await User.findById(userId);
     const user = req.user;
 
-    if (!peer) {
-      res.status(404).json({ message: 'User not found.' });
-      return;
-    }
+    if (!peer) return next(new AppError(404, ['User not found', 'friendRequest !peer']));
 
     const peerIndex = peer.friends.findIndex(
       (friend) => friend.user.toString() === user._id.toString()
@@ -80,8 +68,7 @@ const friendRequest: RequestHandler = async (req, res, next) => {
         user.friends.splice(userIndex, 1);
         break;
       default:
-        res.status(400).json({ message: 'Invalid action' });
-        return;
+        return next(new AppError(400, ['Invalid action', 'friendRequest switch']));
     }
 
     await peer.save();
@@ -90,8 +77,7 @@ const friendRequest: RequestHandler = async (req, res, next) => {
     io.emit(`peer:${peer._id}:update`, peer);
     res.status(201).json({ message: 'success' });
   } catch (error) {
-    captainsLog(5, 'addFriend Catch', error);
-    res.status(500).json({ message: 'Request could not be completed.' });
+    next(new AppError(500, ['Request could not be completed.', 'friendRequest catch'], error));
   }
 };
 
