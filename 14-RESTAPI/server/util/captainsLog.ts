@@ -27,10 +27,14 @@ const captainsLog = (col: number, title: string, log: unknown = '') => {
     hour12: false,
   });
 
-  const content =
-    typeof log === 'object' && log !== null
-      ? JSON.stringify(log, null, 2)
-      : log;
+  let content = '';
+  if (log instanceof Error) {
+    content = `<<${log.name}>> \n ${log.stack?.split(')')[0]}`;
+  } else if (typeof log === 'object' && log !== null) {
+    content = JSON.stringify(log, null, 2);
+  } else {
+    content = String(log);
+  }
 
   console.log(
     coloredText(col, `${title.toUpperCase()} ${time} ${content}`)

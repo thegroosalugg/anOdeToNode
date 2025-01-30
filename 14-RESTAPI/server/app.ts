@@ -57,9 +57,10 @@ app.use('/profile', authJWT, profileRoutes);
 app.use('/social',  authJWT,  socialRoutes);
 app.use('/alert',   authJWT,   alertRoutes);
 
-app.use(((error, req, res, next) => {
-  captainsLog(3, 'APP CATCH:', error);
-  res.status(403).json({ message: "Something wen't wrong" });
+app.use(((appError, req, res, next) => {
+  const { status, message, dev, error } = appError;
+    captainsLog(3, `[status: ${status}] :::${dev}:::`, error);
+    res.status(status).json({ message });
 }) as ErrorRequestHandler);
 
 mongoose
