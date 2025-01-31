@@ -4,11 +4,9 @@ import { IUser } from './User';
 
 const required = true;
 
-type _Private = 'email' | 'password' | 'friends';
-
 export interface IReply {
   content: string;
-  creator: Types.ObjectId | Omit<IUser, _Private>;
+  creator: Types.ObjectId | IUser;
      post: Types.ObjectId | IPost;
      meta: {
       read: boolean;

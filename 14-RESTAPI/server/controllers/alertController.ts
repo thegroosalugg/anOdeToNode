@@ -42,13 +42,14 @@ const readReplies: RequestHandler = async (req, res, next) => {
   if (!user) return next(new AppError(403, 'Something went wrong', devErr));
 
   try {
-    const   posts = await Post.find({ creator: user._id }, '_id');
+    const   posts = await  Post.find({ creator: user._id }, '_id');
     const replies = await Reply.find({
-      post: { $in: posts.map(post => post._id) },
-      'meta.show': true
+             post: { $in: posts.map((post) => post._id) },
+          creator: { $ne: user._id },
+      'meta.show': true,
     })
-    .populate('creator', _public)
-    .populate('post', 'title creator');
+      .populate('creator', _public)
+      .populate('post', 'title creator');
 
     res.status(200).json(replies);
   } catch (error) {

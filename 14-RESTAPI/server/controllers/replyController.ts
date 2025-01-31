@@ -44,14 +44,13 @@ const postReply: RequestHandler = async (req, res, next) => {
     const reply = new Reply({ content, post: post._id, creator: user._id });
     await reply.save();
 
-    const { email, friends, ...creator } = user.toObject(); // remove sensitive fields
-    const sanitized   = reply.toObject() // create modifyiable copy for client
-    sanitized.post    = post; // skip populate as required post/user data is already fetched
-    sanitized.creator = creator;
-    
-    io.emit(`post:${postId}:reply`, sanitized); // notify Post Page
-    io.emit(`nav:${post.creator}:reply`, sanitized); // alert original post user
-    res.status(201).json(sanitized);
+    user.set({ email: 'hidden', friends: [] });
+    reply.creator = user
+    reply.post    = post;
+
+    io.emit(`post:${postId}:reply`, reply); // notify Post Page
+    io.emit(`nav:${post.creator}:reply`, reply); // alert original post user
+    res.status(201).json(reply);
   } catch (error) {
     next(new AppError(500, "Message couldn't be posted", error));
   }

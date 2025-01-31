@@ -8,11 +8,12 @@ import { deleteFile } from '../util/deleteFile';
 const devErr = 'Do not use without AuthJWT';
 
 const newPost: RequestHandler = async (req, res, next) => {
-  if (!req.user) return next(new AppError(403, 'Something went wrong', devErr));
+  const user = req.user;
+  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
 
   try {
     const { title, content } = req.body;
-    const image = req.file;
+    const        image       = req.file;
 
     const errors = getErrors(req);
     if (hasErrors(errors)) {
@@ -20,9 +21,13 @@ const newPost: RequestHandler = async (req, res, next) => {
       return next(new AppError(422, errors));
     }
 
-    const post = new Post({ title, content, creator: req.user._id });
+    const post = new Post({ title, content, creator: user._id });
     if (image) post.imgURL = image.path;
     await post.save();
+
+    user.set({ email: 'hidden', friends: [] });
+    post.creator = user;
+
     io.emit('post:update', post); // pushes socket to client
     res.status(201).json(post);
   } catch (error) {
@@ -32,9 +37,9 @@ const newPost: RequestHandler = async (req, res, next) => {
 
 const editPost: RequestHandler = async (req, res, next) => {
   try {
-    const { postId } = req.params;
+    const {     postId     } = req.params;
     const { title, content } = req.body;
-    const image = req.file;
+    const       image        = req.file;
 
     const errors = getErrors(req);
     if (hasErrors(errors)) {
