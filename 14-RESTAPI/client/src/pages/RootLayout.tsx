@@ -19,6 +19,10 @@ export interface Auth {
    setError: Dispatch<SetStateAction<isError>>;
 }
 
+export interface Authorized extends Auth {
+  user: User;
+}
+
 export default function RootLayout({
   children,
 }: {

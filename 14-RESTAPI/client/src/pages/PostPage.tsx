@@ -3,9 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { BASE_URL, FetchError } from '@/util/fetchData';
-import { Auth } from './RootLayout';
+import { Authorized } from './RootLayout';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
-import User from '@/models/User';
 import Post from '@/models/Post';
 import Reply from '@/models/Reply';
 import AsyncAwait from '@/components/panel/AsyncAwait';
@@ -23,7 +22,7 @@ const initialData: Paginated<Reply, 'replies'> = {
    replies: [],
 };
 
-export default function PostPage({ user, setUser }: Auth & { user: User }) {
+export default function PostPage({ user, setUser }: Authorized) {
   const {
           data: post,
        setData: setPost,

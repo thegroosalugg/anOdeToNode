@@ -1,6 +1,6 @@
 import useFetch from '@/hooks/useFetch';
 import { useEffect, useRef, useState } from 'react';
-import { Auth } from '@/pages/RootLayout';
+import { Authorized } from '@/pages/RootLayout';
 import Post from '@/models/Post';
 import About from './About';
 import Modal from '../modal/Modal';
@@ -17,7 +17,7 @@ const initialData: Paginated<Post, 'posts'> = {
      posts: [],
 };
 
-export default function UserProfile({ user, setUser }: Auth) {
+export default function UserProfile({ user, setUser }: Authorized) {
   const {
           data: { docCount, posts },
          error,

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
 import useFetch from '@/hooks/useFetch';
-import { Auth } from './RootLayout';
+import { Authorized } from './RootLayout';
 import Post from '@/models/Post';
 import Modal from '@/components/modal/Modal';
 import Button from '@/components/button/Button';
@@ -18,7 +18,7 @@ const initialData: Paginated<Post, 'posts'> = {
      posts: [],
 };
 
-export default function FeedPage({ setUser }: Auth) {
+export default function FeedPage({ setUser }: Authorized) {
   const {
           data: { docCount, posts },
        setData,

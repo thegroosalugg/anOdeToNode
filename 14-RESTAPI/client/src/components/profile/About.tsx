@@ -2,15 +2,15 @@ import useFetch from '@/hooks/useFetch';
 import { useState } from 'react';
 import { BASE_URL, FetchError } from '@/util/fetchData';
 import { motion, useAnimate, stagger } from 'motion/react';
-import { Auth } from '@/pages/RootLayout';
+import { Authorized } from '@/pages/RootLayout';
 import ImagePicker from '../form/ImagePicker';
 import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import ErrorPopUp from '../error/ErrorPopUp';
 import css from './About.module.css';
 
-export default function About({ user, setUser }: Pick<Auth, 'user' | 'setUser'>) {
-  const { name,    surname,    imgURL } = user || {};
+export default function About({ user, setUser }: Pick<Authorized, 'user' | 'setUser'>) {
+  const { name,    surname,    imgURL } = user;
   const [ showModal,     setShowModal ] = useState(false);
   const [ displayPic,   setDisplayPic ] = useState(imgURL);
   const [ scope,              animate ] = useAnimate();

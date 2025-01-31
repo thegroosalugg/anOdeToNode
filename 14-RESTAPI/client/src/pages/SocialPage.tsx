@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
-import { Auth } from './RootLayout';
+import { Authorized } from './RootLayout';
 import { BASE_URL } from '@/util/fetchData';
 import { io } from 'socket.io-client';
 import User from '@/models/User';
@@ -15,7 +15,7 @@ const initialData: Paginated<User, 'users'> = {
      users: [],
 };
 
-export default function SocialPage({ user }: Auth) {
+export default function SocialPage({ user }: Authorized) {
   const {
           data: { docCount, users },
        setData: setUsers,
