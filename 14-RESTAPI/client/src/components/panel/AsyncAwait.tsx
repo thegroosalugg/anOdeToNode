@@ -1,3 +1,4 @@
+import { AnimatePresence } from 'motion/react';
 import Error from '../error/Error';
 import Loader from '../loading/Loader';
 import { FetchError } from '@/util/fetchData';
@@ -10,14 +11,14 @@ interface AsyncAwait {
 
 export default function AsyncAwait({ isLoading, error, children }: AsyncAwait) {
   return (
-    <>
+    <AnimatePresence mode='wait'>
       {isLoading ? (
-        <Loader />
+        <Loader key='loader' />
       ) : error ? (
-        <Error error={error} />
+        <Error key='error' error={error} />
       ) : (
         <>{children}</>
       )}
-    </>
+    </AnimatePresence>
   );
 }

@@ -74,7 +74,7 @@ export default function FriendAlerts({
   const clearAlert = async (_id: string) => {
     deferFn(async () => {
       await reqHandler(
-        { url: `alert/${_id}`, method: 'POST' },
+        { url: `alert/social/hide/${_id}`, method: 'POST' },
         { onError, onSuccess: (updated) => setUser(updated) }
       );
     }, 1000);
@@ -90,6 +90,8 @@ export default function FriendAlerts({
 
   const    opacity = 0;
   const transition = { duration: 0.5 };
+  const        dir = menuType === 'sent' ? 1 : -1;
+  const          x = 20 * dir;
 
   return (
     <AnimatePresence mode='popLayout'>
@@ -102,9 +104,9 @@ export default function FriendAlerts({
                  layout
               className={css['friend-alert']}
                     key={alertId + status}
-                initial={{ opacity,    x:  20 }}
-                animate={{ opacity: 1, x:   0, transition }}
-                   exit={{ opacity,    x: -20, transition }}
+                initial={{ opacity,    x }}
+                animate={{ opacity: 1, x:  0, transition: { ...transition, delay: 0.3 } }}
+                   exit={{ opacity,    x,     transition }}
             >
               {status === 'received' ? (
                 <div>

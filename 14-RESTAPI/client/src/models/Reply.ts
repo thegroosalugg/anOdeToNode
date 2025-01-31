@@ -7,6 +7,7 @@ type Reply = {
   updatedAt: string;
        post: Post;
     creator: User;
+       meta: { read: boolean, show: boolean }
 };
 
 export default Reply;

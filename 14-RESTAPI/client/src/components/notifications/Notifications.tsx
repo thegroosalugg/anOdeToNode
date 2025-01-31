@@ -8,7 +8,9 @@ import { io } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
+import Reply from '@/models/Reply';
 import FriendAlerts from './FriendAlerts';
+import ReplyAlerts from './ReplyAlerts';
 import AsyncAwait from '../panel/AsyncAwait';
 import { captainsLog } from '@/util/captainsLog';
 import nav from '../navigation/NavButton.module.css';
@@ -23,8 +25,12 @@ export default function Notifications({
      user: User;
   setUser: Auth['setUser'];
 }) {
-  const {     error,  reqHandler } = useFetch<User>();
-  const [      menu,    showMenu ] = useState(false);
+  const { error, reqHandler: reqSocialAlerts } = useFetch<User>();
+  const {
+          data: replies,
+       setData: setReplies,
+    reqHandler: reqReplyAlerts,
+  } = useFetch<Reply[]>([]);  const [      menu,    showMenu ] = useState(false);
   const [  menuType, setMenuType ] = useState<Menu>('received');
   const { deferring,     deferFn } = useDebounce();
   const   menuRef = useRef<HTMLUListElement>(null);
@@ -44,20 +50,25 @@ export default function Notifications({
   };
   const opacity = deferring ? 0.6 : 1;
 
-  const getAlerts = useCallback(
+  const getFriendAlerts = useCallback(
     async () =>
-      await reqHandler(
-        { url: 'alert/read', method: 'POST' },
+      await reqSocialAlerts(
+        { url: 'alert/social/read', method: 'POST' },
         { onSuccess: (updated) => setUser(updated) }
       ),
-    [reqHandler, setUser]
+    [reqSocialAlerts, setUser]
+  );
+
+  const getReplyAlerts = useCallback(
+    async () => await reqReplyAlerts({ url: 'alert/replies/read', method: 'POST' }),
+    [reqReplyAlerts]
   );
 
   const openMenu = async () => {
     isInitial.current = true;
     deferFn(async () => {
       showMenu(true);
-      await getAlerts();
+      await Promise.all([getFriendAlerts(), getReplyAlerts()]);
       isInitial.current = false
     }, 1500)
   };
@@ -77,7 +88,7 @@ export default function Notifications({
     socket.on(`peer:${user._id}:update`, async (updated) => {
       captainsLog([-100, 15], ['NAV: UPDATE', updated]);
       if (menu) {
-        await getAlerts();
+        await getFriendAlerts();
       } else {
         setUser(updated);
       }
@@ -85,6 +96,7 @@ export default function Notifications({
 
     socket.on(`nav:${user._id}:reply`, (reply) => {
       captainsLog([-100, 12], ['NAV: NEW REPLY', reply]);
+      setReplies((prev) => [reply, ...prev]);
     })
 
     return () => {
@@ -94,7 +106,7 @@ export default function Notifications({
       socket.disconnect();
       document.removeEventListener('mousedown', closeMenu);
     };
-  }, [menu, user._id, getAlerts, setUser]);
+  }, [menu, user._id, getFriendAlerts, getReplyAlerts, setUser, setReplies]);
 
   const icons = {
     received: 'envelope',
@@ -119,11 +131,9 @@ export default function Notifications({
               ))}
             </section>
             <AsyncAwait {...{ isLoading: isInitial.current, error }}>
-            {menuType === 'replies' ? (
-              <motion.p initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-                Replies
-              </motion.p>
-            ) : (
+              {menuType === 'replies' ? (
+                <ReplyAlerts {...{ replies }} />
+              ) : (
                 <FriendAlerts
                   {...{ user, setUser, friends, menuType, closeMenu: () => showMenu(false) }}
                 />

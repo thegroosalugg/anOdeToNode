@@ -1,10 +1,12 @@
 import { RequestHandler } from 'express';
 import AppError from '../models/Error';
+import Post from '../models/Post';
+import Reply from '../models/Reply';
 
 const _public = '-email -password -friends';
 const  devErr = 'Do not use without AuthJWT';
 
-const markAsRead: RequestHandler = async (req, res, next) => {
+const readRequests: RequestHandler = async (req, res, next) => {
   const user = req.user;
   if (!user) return next(new AppError(403, 'Something went wrong', devErr));
 
@@ -18,7 +20,7 @@ const markAsRead: RequestHandler = async (req, res, next) => {
   }
 };
 
-const clearAlert: RequestHandler = async (req, res, next) => {
+const clearRequests: RequestHandler = async (req, res, next) => {
   const user = req.user;
   if (!user) return next(new AppError(403, 'Something went wrong', devErr));
 
@@ -35,4 +37,27 @@ const clearAlert: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { markAsRead, clearAlert };
+const readReplies: RequestHandler = async (req, res, next) => {
+  const user = req.user;
+  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+
+  try {
+    const   posts = await Post.find({ creator: user._id }, '_id');
+    const replies = await Reply.find({
+      post: { $in: posts.map(post => post._id) },
+      'meta.show': true
+    })
+    .populate('creator', _public)
+    .populate('post', 'title creator');
+
+    res.status(200).json(replies);
+  } catch (error) {
+    next(new AppError(500, 'unable to fetch notifications', error));
+  }
+};
+
+const clearReplies: RequestHandler = async (req, res, next) => {
+
+};
+
+export { readRequests, clearRequests, readReplies, clearReplies };
