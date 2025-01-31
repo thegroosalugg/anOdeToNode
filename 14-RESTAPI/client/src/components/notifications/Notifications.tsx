@@ -30,7 +30,8 @@ export default function Notifications({
           data: replies,
        setData: setReplies,
     reqHandler: reqReplyAlerts,
-  } = useFetch<Reply[]>([]);  const [      menu,    showMenu ] = useState(false);
+  } = useFetch<Reply[]>([]);
+  const [      menu,    showMenu ] = useState(false);
   const [  menuType, setMenuType ] = useState<Menu>('received');
   const { deferring,     deferFn } = useDebounce();
   const   menuRef = useRef<HTMLUListElement>(null);

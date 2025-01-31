@@ -2,14 +2,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'motion/react';
 import { useState } from 'react';
 import useDebounce from '@/hooks/useDebounce';
-import { PEER_CONFIG } from './peerProfileConfig';
+import { getPeerConfig } from './peerProfileConfig';
 import { Auth } from '@/pages/RootLayout';
 import useFetch from '@/hooks/useFetch';
 import User, { getId } from '@/models/User';
 import Modal from '../modal/Modal';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import ProfilePic from '../profile/ProfilePic';
-import Button, { HSL } from '../button/Button';
+import Button from '../button/Button';
 import Loader from '../loading/Loader';
 import { captainsLog } from '@/util/captainsLog';
 import css from './PeerProfile.module.css';
@@ -30,22 +30,13 @@ export default function PeerProfile({
 
   const  connection = user.friends.find((friend) => getId(friend.user) === _id);
   const { accepted, initiated } = connection ?? {};
-  const status = accepted
-    ? 'accepted'
-    : connection && !accepted && initiated
-    ? 'sent'
-    : connection && !accepted && !initiated
-    ? 'received'
-    : 'none';
-
   const       color = connection ?     '#ffffff' : 'var(--team-green)';
   const borderColor = connection ? 'transparent' : 'var(--team-green)';
-  const { text, icon, hsl, action } = PEER_CONFIG[status];
-
+  const { text, icon, hsl, action } = getPeerConfig(connection);
   const closeModal = () => setShowModal(false);
 
   const friendRequest = async (reqAction = action) => {
-    if (!reqAction) return; // action = undefined if isFriend
+    if (!reqAction) return; // action = undefined if connection accepted
     // in this case an argument must be passed
     deferFn(async () => {
       await reqHandler(
@@ -99,7 +90,7 @@ export default function PeerProfile({
             </h2>
           </div>
           <Button
-                 hsl={hsl as HSL}
+                 hsl={hsl}
              onClick={handleAction}
                style={{ color, borderColor }}
             disabled={deferring}
