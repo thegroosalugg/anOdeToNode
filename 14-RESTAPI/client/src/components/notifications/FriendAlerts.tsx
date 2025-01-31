@@ -26,13 +26,11 @@ function Alert({ user, children }: { user: User; children: ReactNode }) {
 
 export default function FriendAlerts({
     friends,
-       user,
     setUser,
    menuType,
   closeMenu,
 }: {
     friends: Friend[];
-       user: User;
     setUser: Auth['setUser'];
    menuType: Menu;
   closeMenu: () => void;
@@ -42,8 +40,8 @@ export default function FriendAlerts({
   const       navigate = useNavigate();
   const connections = friends
     .filter((friend): friend is Friend & { user: User } => {
-      const { user, status, meta } = friend;
-      const condition = menuType === 'sent' ? status === 'sent' : status !== 'sent';
+      const { user, initiated, meta } = friend;
+      const condition = menuType === 'sent' ? initiated : !initiated;
       return typeof user === 'object' && condition && meta.show;
     })
     .reverse();
@@ -97,18 +95,18 @@ export default function FriendAlerts({
     <AnimatePresence mode='popLayout'>
       {connections.length > 0 ? (
         connections.map((connection) => {
-          const { _id: alertId, meta, status, user: peer } = connection;
+          const { _id: alertId, accepted, initiated, user: peer } = connection;
           const { _id, name, surname } = peer;
           return (
             <motion.li
                  layout
               className={css['friend-alert']}
-                    key={alertId + status}
+                    key={alertId + accepted + initiated}
                 initial={{ opacity,    x }}
                 animate={{ opacity: 1, x:  0, transition: { ...transition, delay: 0.3 } }}
                    exit={{ opacity,    x,     transition }}
             >
-              {status === 'received' ? (
+              {!accepted && !initiated ? (
                 <div>
                   <Alert user={peer}>
                     <NameTag {...{ _id }}>
@@ -131,7 +129,7 @@ export default function FriendAlerts({
                     </Button>
                   </div>
                 </div>
-              ) : status === 'sent' ? (
+              ) : !accepted && initiated ? (
                 <>
                   <Alert user={peer}>
                     <NameTag {...{ _id }}>
@@ -150,7 +148,7 @@ export default function FriendAlerts({
                     Cancel
                   </Button>
                 </>
-              ) : meta.init === user._id ? (
+              ) : accepted && initiated ? (
                 <>
                   <Alert user={peer}>
                     <NameTag {...{ _id, children: name }} /> accepted your friend request

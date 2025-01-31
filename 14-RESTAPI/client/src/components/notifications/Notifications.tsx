@@ -36,8 +36,8 @@ export default function Notifications({
   const   menuRef = useRef<HTMLUListElement>(null);
   const isInitial = useRef(true);
   const { friends } = user;
-  const  alerts = friends.reduce((total, { status, meta }) => {
-    if (status !== 'sent' && !meta.read) total += 1;
+  const  alerts = friends.reduce((total, { initiated, accepted, meta }) => {
+    if ((!initiated || (accepted && initiated)) && !meta.read) total += 1;
     return total;
   }, 0);
 
@@ -135,7 +135,7 @@ export default function Notifications({
                 <ReplyAlerts {...{ replies }} />
               ) : (
                 <FriendAlerts
-                  {...{ user, setUser, friends, menuType, closeMenu: () => showMenu(false) }}
+                  {...{ setUser, friends, menuType, closeMenu: () => showMenu(false) }}
                 />
               )}
             </AsyncAwait>

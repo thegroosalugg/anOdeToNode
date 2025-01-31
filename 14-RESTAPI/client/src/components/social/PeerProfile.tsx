@@ -29,11 +29,18 @@ export default function PeerProfile({
   const {   _id, name, surname  } = peer;
 
   const  connection = user.friends.find((friend) => getId(friend.user) === _id);
-  const    isFriend = connection?.status === 'accepted';
-  const isRequested = connection?.status === 'received';
+  const { accepted, initiated } = connection ?? {};
+  const status = accepted
+    ? 'accepted'
+    : connection && !accepted && initiated
+    ? 'sent'
+    : connection && !accepted && !initiated
+    ? 'received'
+    : 'none';
+
   const       color = connection ?     '#ffffff' : 'var(--team-green)';
   const borderColor = connection ? 'transparent' : 'var(--team-green)';
-  const { text, icon, hsl, action } = PEER_CONFIG[connection?.status || 'none'];
+  const { text, icon, hsl, action } = PEER_CONFIG[status];
 
   const closeModal = () => setShowModal(false);
 
@@ -53,7 +60,7 @@ export default function PeerProfile({
   }
 
   async function handleAction() {
-    if (!isFriend) {
+    if (!accepted) {
       await friendRequest();
     } else {
       captainsLog([150, -90], ['MESSAGE FUNCTION']);
@@ -61,9 +68,9 @@ export default function PeerProfile({
   }
 
   async function deleteFriend() {
-    if (isFriend) {
+    if (accepted) {
       setShowModal(true);
-    } else if (isRequested) {
+    } else if (connection && !initiated) {
       await friendRequest('delete');
     }
   }
@@ -106,14 +113,14 @@ export default function PeerProfile({
               </span>
             )}
           </Button>
-          {(isRequested || isFriend) && (
+          {(accepted || (connection && !initiated)) && (
             <Button hsl={[10, 54, 51]} onClick={deleteFriend}>
-              {isRequested ? (
+              {accepted ? (
+                  'Remove Friend'
+              ) : (
                 <span>
                   Decline <FontAwesomeIcon icon='rectangle-xmark' size='xs' />
                 </span>
-              ) : (
-                'Remove Friend'
               )}
             </Button>
           )}

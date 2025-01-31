@@ -56,12 +56,12 @@ const friendRequest: RequestHandler = async (req, res, next) => {
 
     switch (action) {
       case 'add': // meta is created by Mongoose, but required here, therefore type asserted
-        peer.friends.push({ user: user._id, status: 'received' } as IFriend);
-        user.friends.push({ user: peer._id, status: 'sent'     } as IFriend);
+        peer.friends.push({ user: user._id, initiated: false } as IFriend);
+        user.friends.push({ user: peer._id, initiated: true  } as IFriend);
         break;
       case 'accept':
-        peer.friends[peerIndex].status = 'accepted';
-        user.friends[userIndex].status = 'accepted';
+        peer.friends[peerIndex].accepted = true;
+        user.friends[userIndex].accepted = true;
         break;
       case 'delete':
         peer.friends.splice(peerIndex, 1);

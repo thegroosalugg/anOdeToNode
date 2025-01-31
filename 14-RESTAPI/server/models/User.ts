@@ -3,14 +3,11 @@ import { Model, model, Types, Schema } from 'mongoose';
 const required = true;
 
 export interface IFriend {
-     _id: Types.ObjectId;
-  status: 'sent' | 'received' | 'accepted';
-    user: Types.ObjectId;
-    meta: {
-      read: boolean;
-      show: boolean;
-      init: Types.ObjectId;
-  };
+       _id: Types.ObjectId;
+  accepted: boolean;
+ initiated: boolean;
+      user: Types.ObjectId;
+      meta: { read: boolean; show: boolean };
 }
 
 export interface IUser {
@@ -38,28 +35,17 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
      friends: [
         {
           user: { type: Schema.Types.ObjectId, ref: 'User' },
-     createdAt: { type: Date,    default: Date.now },
-        status: { type: String,  enum: ['sent', 'received', 'accepted'] },
-     // enum is a type validator that restricts values to a predefined set
+     createdAt: { type: Date, default: Date.now },
+      accepted: { type: Boolean,   default: false },
+     initiated: { type: Boolean, immutable: true  },
           meta: {
             read: { type: Boolean, default: false },
             show: { type: Boolean, default: true  },
-            init: { type: Schema.Types.ObjectId, ref: 'User' },
           }
         },
       ],
     },
   { timestamps: true }
 );
-
-userSchema.pre('save', function (next) {
-  this.friends.forEach((friend) => {
-    if (!friend.meta.init) {
-      friend.meta.init =
-        friend.status === 'sent' ? this._id : friend.user;
-    }
-  });
-  next();
-});
 
 export default model<IUser, UserModel>('User', userSchema);
