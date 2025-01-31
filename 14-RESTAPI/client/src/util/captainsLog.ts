@@ -6,7 +6,7 @@ const getHSL = (hue: number) => {
   return `hsl(${h}, ${s}%, ${l}%);`;
 };
 
-export const captainsLog = (hue1: number, hue2: number, data: unknown[]) => {
+export const captainsLog = ([hue1, hue2]: [number, number], data: unknown[]) => {
   const time = new Date().toLocaleTimeString([], {
       hour: '2-digit',
     minute: '2-digit',

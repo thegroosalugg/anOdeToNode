@@ -39,17 +39,17 @@ export default function SocialPage({ user }: Auth) {
     const mountData = async () => {
       await reqHandler({ url });
       if (isInitial.current) isInitial.current = false;
-      captainsLog(-100, 80, ['SOCIAL PAGE']); // **LOGDATA
+      captainsLog([-100, 80], ['SOCIAL PAGE']); // **LOGDATA
     };
 
     mountData();
 
     const socket = io(BASE_URL);
-    socket.on('connect', () => captainsLog(-100, 80, ['SOCIAL PAGE: Socket connected']));
+    socket.on('connect', () => captainsLog([-100, 80], ['SOCIAL PAGE: Socket connected']));
 
     socket.on('user:new', (newUser) => {
       setUsers(({ docCount, users }) => {
-        captainsLog(-100, 80, ['SOCIAL PAGE NEW USER', newUser]); // **LOGDATA
+        captainsLog([-100, 80], ['SOCIAL PAGE NEW USER', newUser]); // **LOGDATA
         return { docCount: docCount + 1, users: [newUser, ...users] };
       });
     });

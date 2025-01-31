@@ -36,7 +36,7 @@ const validate = (path: AppRoutes, props: Auth) => {
 
 export default function App() {
   console.clear(); // **LOGDATA
-  captainsLog(-100, -10, ['⇚⇚⇚App⇛⇛⇛']);
+  captainsLog([-100, -10], ['⇚⇚⇚App⇛⇛⇛']);
 
   const element = useRoutes([
     {    path: '/',

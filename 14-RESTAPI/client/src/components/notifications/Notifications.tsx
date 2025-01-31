@@ -72,10 +72,10 @@ export default function Notifications({
     document.addEventListener('mousedown', closeMenu);
 
     const socket = io(BASE_URL);
-    socket.on('connect', () => captainsLog(-100, 15, ['NAV: Socket connected']));
+    socket.on('connect', () => captainsLog([-100, 15], ['NAV: Socket connected']));
 
     socket.on(`peer:${user._id}:update`, async (updated) => {
-      captainsLog(-100, 15, ['NAV: UPDATE', updated]);
+      captainsLog([-100, 15], ['NAV: UPDATE', updated]);
       if (menu) {
         await getAlerts();
       } else {
@@ -84,7 +84,7 @@ export default function Notifications({
     });
 
     socket.on(`nav:${user._id}:reply`, (reply) => {
-      captainsLog(-100, 12, ['NAV: NEW REPLY', reply]);
+      captainsLog([-100, 12], ['NAV: NEW REPLY', reply]);
     })
 
     return () => {

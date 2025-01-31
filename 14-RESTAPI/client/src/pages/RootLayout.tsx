@@ -38,14 +38,14 @@ export default function RootLayout({
   useEffect(() => {
     const mountData = async () => {
       await reqUser({ url: 'user' }, { onError: () => setUser(null) });
-      captainsLog(-100, 105, ['ROOT Mount Data']); // **LOGDATA
+      captainsLog([-100, 105], ['ROOT Mount Data']); // **LOGDATA
     };
 
 
     mountData();
   }, [reqUser, setUser, pathname]);
 
-  captainsLog(105, -90, ['ROOT RENDER CYCLE user', user]); // **LOGDATA
+  captainsLog([105, -90], ['ROOT RENDER CYCLE user', user]); // **LOGDATA
 
   return (
     <>

@@ -7,7 +7,7 @@ import LoginForm from '@/components/form/LoginForm';
 import { captainsLog } from '@/util/captainsLog';
 
 export default function AuthPage({ auth }: { auth: Auth }) {
-  captainsLog(-100, 250, ['USER PAGE']); // **LOGDATA
+  captainsLog([-100, 250], ['USER PAGE']); // **LOGDATA
   const { user, isLoading } = auth;
   const [isInitial, setIsInitial] = useState(true);
 

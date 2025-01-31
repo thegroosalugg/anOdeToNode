@@ -56,7 +56,7 @@ export default function PeerProfile({
     if (!isFriend) {
       await friendRequest();
     } else {
-      captainsLog(150, -90, ['MESSAGE FUNCTION']);
+      captainsLog([150, -90], ['MESSAGE FUNCTION']);
     }
   }
 
