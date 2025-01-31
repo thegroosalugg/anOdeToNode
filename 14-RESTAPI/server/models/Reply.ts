@@ -1,12 +1,19 @@
 import { Model, model, Types, Schema } from 'mongoose';
 import { IPost } from './Post';
+import { IUser } from './User';
 
 const required = true;
 
+type _Private = 'email' | 'password' | 'friends';
+
 export interface IReply {
   content: string;
-  creator: Types.ObjectId;
+  creator: Types.ObjectId | Omit<IUser, _Private>;
      post: Types.ObjectId | IPost;
+     meta: {
+      read: boolean;
+      show: boolean;
+  };
 }
 
 interface IReplyMethods {
@@ -19,6 +26,10 @@ export const replySchema = new Schema<IReply, ReplyModel, IReplyMethods>({
   content: { type: String, required },
   creator: { type: Schema.Types.ObjectId, ref: 'User', required },
      post: { type: Schema.Types.ObjectId, ref: 'Post', required },
+     meta: {
+      read: { type: Boolean, default: false },
+      show: { type: Boolean, default: true  },
+    }
   },
   { timestamps: true }
 );

@@ -57,7 +57,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     const initialData = async () => await Promise.all([fetchPost(), fetchReplies()]);
     if (isInitial.current) {
       isInitial.current = false;
-      captainsLog([-100, 30], ['POSTPAGE effect, ID:' + postId]); // **LOGDATA
+      captainsLog([-100, 185], ['POSTPAGE effect, ID:' + postId]); // **LOGDATA
       initialData();
     } else {
       fetchReplies();
@@ -67,7 +67,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     socket.on('connect', () => captainsLog([-100, 25], ['POSTPAGE: Socket connected']));
 
     socket.on(`post:${postId}:reply`, (reply) => {
-      captainsLog([-100, 20], ['POSTPAGE: NEW REPLY']);
+      captainsLog([-100, 190], ['POSTPAGE: NEW REPLY']);
       setTimeout(() => {
         setReplies(({ docCount, replies }) => {
           return { docCount: docCount + 1, replies: [reply, ...replies] };
@@ -79,13 +79,13 @@ export default function PostPage({ user, setUser }: Authorized) {
       setReplies(({ docCount: prevCount, replies: prevReplies }) => {
         const  replies = prevReplies.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;
-        captainsLog([-100, 20], ['POSTPAGE: REPLY DELETED', deleted]);
+        captainsLog([-100, 190], ['POSTPAGE: REPLY DELETED', deleted]);
         return { docCount, replies };
       });
     });
 
     socket.on(`post:${postId}:update`, (post) => {
-      captainsLog([-100, 15], ['POSTPAGE: POST UPDATED']);
+      captainsLog([-100, 195], ['POSTPAGE: POST UPDATED']);
       setPost((prevPost) => {
         if (post) return { ...prevPost, ...post };
         return prevPost;
@@ -94,7 +94,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     });
 
     socket.on(`post:${postId}:delete`, (deleted) => {
-      captainsLog([-100, 10], ['POSTPAGE: POST DELETED']);
+      captainsLog([-100, 200], ['POSTPAGE: POST DELETED']);
       if (deleted.creator !== user._id) {
         setPost(null); // delete actions for viewers. Creator's state automatically set to null
         setError({ message: 'The post was deleted' } as FetchError); // creators redirected without msg

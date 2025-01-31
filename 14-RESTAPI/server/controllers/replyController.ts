@@ -1,11 +1,11 @@
 import { RequestHandler } from 'express';
 import { io } from '../app';
-import Post, { IPost } from '../models/Post';
+import Post from '../models/Post';
 import Reply from '../models/Reply';
 import AppError from '../models/Error';
 import { getErrors, hasErrors } from '../validation/validators';
 
-const _public = '-email -password';
+const _public = '-email -password -friends';
 const  devErr = 'Do not use without AuthJWT';
 
 const getReplies: RequestHandler = async (req, res, next) => {
@@ -28,7 +28,8 @@ const getReplies: RequestHandler = async (req, res, next) => {
 };
 
 const postReply: RequestHandler = async (req, res, next) => {
-  if (!req.user) return next(new AppError(403, 'Something went wrong', devErr));
+  const user = req.user;
+  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
 
   try {
     const errors = getErrors(req);
@@ -36,17 +37,21 @@ const postReply: RequestHandler = async (req, res, next) => {
 
     const {  postId } = req.params;
     const { content } = req.body;
-    const   creator   = req.user._id;
 
     const post = await Post.findById(postId);
     if (!post) return next(new AppError(404, 'Post not found'));
 
-    const reply = new Reply({ post: post._id, content, creator });
+    const reply = new Reply({ content, post: post._id, creator: user._id });
     await reply.save();
-    await reply.populate('post');
-    io.emit(`post:${postId}:reply`, reply); // notify Post Page
-    io.emit(`nav:${(reply.post as IPost).creator}:reply`, reply); // alert original post user
-    res.status(201).json(reply);
+
+    const { email, friends, ...creator } = user.toObject(); // remove sensitive fields
+    const sanitized   = reply.toObject() // create modifyiable copy for client
+    sanitized.post    = post; // skip populate as required post/user data is already fetched
+    sanitized.creator = creator;
+    
+    io.emit(`post:${postId}:reply`, sanitized); // notify Post Page
+    io.emit(`nav:${post.creator}:reply`, sanitized); // alert original post user
+    res.status(201).json(sanitized);
   } catch (error) {
     next(new AppError(500, "Message couldn't be posted", error));
   }
