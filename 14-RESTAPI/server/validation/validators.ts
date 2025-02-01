@@ -11,11 +11,13 @@ export const getErrors = (req: Request) =>
 
 export const hasErrors = (obj: Object) => Object.keys(obj).length > 0;
 
-export const validateField = (field: string, min: number) =>
+export const validateField = (field: string, [min, max]: [number, number]) =>
   body(field)
     .trim()
     .isLength({ min })
     .withMessage(`requires at least ${min} characters`)
+    .isLength({ max })
+    .withMessage(`should not exceed ${max} characters`)
     .customSanitizer((value) => value.replace(/<|>/g, '')); // escapes only dangerous values
 
 export const validateEmail = check('email')
@@ -41,10 +43,10 @@ export const validatePassword = body('password')
   });
 
   export const validateSignUp = [
-    validateField('name', 2),
-    validateField('surname', 2),
+    validateField('name', [2, 15]),
+    validateField('surname', [2, 15]),
     validateEmail,
     validatePassword,
   ];
 
-  export const validatePost = [validateField('title', 5), validateField('content', 30)];
+  export const validatePost = [validateField('title', [5, 100]), validateField('content', [30, 1000])];
