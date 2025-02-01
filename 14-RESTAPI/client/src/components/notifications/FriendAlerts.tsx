@@ -11,6 +11,7 @@ import User from '@/models/User';
 import Friend from '@/models/Friend';
 import Button from '../button/Button';
 import ProfilePic from '../profile/ProfilePic';
+import { timeAgo } from '@/util/timeStamps';
 import css from './FriendAlerts.module.css';
 
 function Alert({ user, children }: { user: User; children: ReactNode }) {
@@ -80,7 +81,7 @@ export default function FriendAlerts({
 
   function X({ _id }: { _id: string }) {
     return (
-      <button className={css['x-button']} onClick={() => clearAlert(_id)}>
+      <button className={css['x-btn']} onClick={() => clearAlert(_id)}>
         <FontAwesomeIcon icon='x' size='xl' />
       </button>
     );
@@ -95,7 +96,7 @@ export default function FriendAlerts({
     <AnimatePresence mode='popLayout'>
       {connections.length > 0 ? (
         connections.map((connection) => {
-          const { _id: alertId, accepted, initiated, user: peer } = connection;
+          const { _id: alertId, accepted, initiated, user: peer, createdAt } = connection;
           const { _id, name, surname } = peer;
           return (
             <motion.li
@@ -106,6 +107,7 @@ export default function FriendAlerts({
                 animate={{ opacity: 1, x:  0, transition: { ...transition, delay: 0.3 } }}
                    exit={{ opacity,    x,     transition }}
             >
+              <time className={css['time-stamp']}>{timeAgo(createdAt)}</time>
               {!accepted && !initiated ? (
                 <div>
                   <Alert user={peer}>
@@ -138,11 +140,7 @@ export default function FriendAlerts({
                   </Alert>
                   <Button
                         hsl={[10, 54, 51]}
-                      style={{
-                             padding: '0.1rem 0.25rem',
-                            fontSize: '0.6rem',
-                        borderRadius: '5px',
-                      }}
+                  className={css['cancel-btn']}
                     onClick={() => friendRequest(_id, 'delete')}
                   >
                     Cancel

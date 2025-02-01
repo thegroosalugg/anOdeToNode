@@ -8,9 +8,13 @@ const coloredText = (n: number, text: string) => {
   return lines.map((line) => ANSI(line)).join('\n') + barrier;
 };
 
+const errors = [TypeError, RangeError] as const;
+const nonSerializable = (value: unknown): value is Error =>
+  errors.some((err) => value instanceof err);
+
 const formatText = (value: unknown) => {
   let content = '';
-  if (value instanceof TypeError) {
+  if (nonSerializable(value)) {
     content = `<<${value.name}>> \n ${value.stack?.split('\n')[1].trim()}`;
   } else if (typeof value === 'object' && value !== null) {
     content = JSON.stringify(value, null, 1);
@@ -39,9 +43,7 @@ const captainsLog = (status: number, title: string, log?: unknown[]) => {
   let content = '';
   if (log) content = log.map(item => formatText(item)).join('\n');
 
-  console.log(
-    coloredText(color, `${title.toUpperCase()} [${time}] ${content}`)
-  );
+  console.log(coloredText(color, `${title.toUpperCase()} [${time}] ${content}`));
 };
 
 export default captainsLog;

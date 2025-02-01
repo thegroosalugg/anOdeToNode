@@ -35,9 +35,9 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
      friends: [
         {
           user: { type: Schema.Types.ObjectId, ref: 'User' },
-     createdAt: { type: Date, default: Date.now },
-      accepted: { type: Boolean,   default: false },
-     initiated: { type: Boolean, immutable: true  },
+     createdAt: { type: Date,      default: Date.now },
+      accepted: { type: Boolean,   default: false    },
+     initiated: { type: Boolean, immutable: true     },
           meta: {
             read: { type: Boolean, default: false },
             show: { type: Boolean, default: true  },

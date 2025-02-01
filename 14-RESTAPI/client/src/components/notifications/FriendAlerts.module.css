@@ -1,22 +1,36 @@
 .friend-alert {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.25em;
   font-size: 0.8rem;
-  padding: 0.25rem;
+  padding: 0.5rem 0.25rem;
   border: 1px solid var(--team-green);
   background: var(--main-gradient);
   overflow-wrap: break-word;
+  overflow-x: scroll;
 
-  .alert-text{
+  .time-stamp {
+    position: absolute;
+    top: 0.05rem;
+    right: 0.25rem;
+    font-size: 0.5rem;
+    color: var(--text-grey);
+  }
+
+  .alert-text {
     display: flex;
-    align-items: start;
+    align-items: center;
     text-align: center;
     gap: 0.2em;
     width: 100%;
 
+    > img {
+      align-self: start;
+    }
+
     > span {
-       padding-top: 0.1rem;
+      padding-top: 0.1rem;
     }
   }
 
@@ -41,10 +55,19 @@
     }
   }
 
-  .x-button {
+  .x-btn {
     border: 0;
     background: none;
     margin-right: 0.25rem;
+  }
+
+  .cancel-btn {
+    padding: 0.1rem 0.25rem;
+    margin-top: 0.2rem;
+    font-size: 0.6rem;
+    border: 0;
+    border-radius: 5px;
+    color: #fff;
   }
 }
 
