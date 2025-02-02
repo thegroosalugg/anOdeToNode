@@ -37,7 +37,7 @@ ul, ol {
   list-style: none;
 }
 
-span {
+span, strong, em {
   display: inline-block;
 }
 

@@ -6,7 +6,7 @@
   max-height: calc(100vh - 0.5rem);
   max-width: calc(100% - 0.5rem);
   width: 225px;
-  overflow: auto;
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   gap: 0.2rem;

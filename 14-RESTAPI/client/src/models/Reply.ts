@@ -4,7 +4,7 @@ import User from './User';
 type Reply = {
         _id: string;
     content: string;
-  updatedAt: string;
+  createdAt: string;
        post: Post;
     creator: User;
        meta: { read: boolean, show: boolean }

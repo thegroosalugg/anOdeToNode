@@ -49,4 +49,4 @@ export const validatePassword = body('password')
     validatePassword,
   ];
 
-  export const validatePost = [validateField('title', [5, 100]), validateField('content', [30, 1000])];
+  export const validatePost = [validateField('title', [5, 50]), validateField('content', [30, 1000])];

@@ -3,20 +3,11 @@
   display: flex;
   align-items: center;
   gap: 0.25em;
-  font-size: 0.8rem;
-  padding: 0.5rem 0.25rem;
+  font-size: 0.7rem;
+  padding: 0.5rem 0.25rem 0.25rem;
   border: 1px solid var(--team-green);
   background: var(--main-gradient);
   overflow-wrap: break-word;
-  overflow-x: scroll;
-
-  .time-stamp {
-    position: absolute;
-    top: 0.05rem;
-    right: 0.25rem;
-    font-size: 0.5rem;
-    color: var(--text-grey);
-  }
 
   .alert-text {
     display: flex;
@@ -37,6 +28,10 @@
   .name-tag {
     cursor: pointer;
     color: var(--dark-grey);
+    /* max-width: 5rem;
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; */
   }
 
   .buttons {
@@ -69,6 +64,14 @@
     border-radius: 5px;
     color: #fff;
   }
+}
+
+.time-stamp {
+  position: absolute;
+  top: 0.05rem;
+  right: 0.25rem;
+  font-size: 0.5rem;
+  color: var(--text-grey);
 }
 
 .fallback {
