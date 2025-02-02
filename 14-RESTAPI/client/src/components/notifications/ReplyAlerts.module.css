@@ -7,16 +7,14 @@
   padding: 0.55rem 0.25rem 0.2rem;
   background: var(--main-gradient);
   border: 1px solid var(--dark-grey);
-  overflow-wrap: break-word;
-  width: 100%;
 
   > section {
     display: flex;
     flex-direction: column;
     width: 100%;
+    min-width: 0; /* Important! Tells flex child it can shrink below content size */
 
     > p {
-      max-width: 66%;
       margin-left: 0.5rem;
       font-size: 0.7rem;
       text-wrap: nowrap;

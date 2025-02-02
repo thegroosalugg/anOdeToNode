@@ -49,7 +49,8 @@ const readReplies: RequestHandler = async (req, res, next) => {
       'meta.show': true,
     })
       .populate('creator', _public)
-      .populate('post', 'title creator');
+      .populate('post', 'title creator')
+      .sort({ _id: -1 });
 
     res.status(200).json(replies);
   } catch (error) {
