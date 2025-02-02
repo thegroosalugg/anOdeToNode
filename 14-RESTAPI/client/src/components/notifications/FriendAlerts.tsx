@@ -1,29 +1,15 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import useFetch from '@/hooks/useFetch';
 import { Auth } from '@/pages/RootLayout';
 import { FetchError } from '@/util/fetchData';
-import { ReactNode } from 'react';
 import { Menu } from './Notifications';
 import User from '@/models/User';
 import Friend from '@/models/Friend';
+import { Alert, Strong, Time, X } from './UIElements';
 import Button from '../button/Button';
-import ProfilePic from '../profile/ProfilePic';
-import { timeAgo } from '@/util/timeStamps';
 import css from './FriendAlerts.module.css';
-
-function Alert({ user, children }: { user: User; children: ReactNode }) {
-  return (
-    <p className={css['alert-text']}>
-      <ProfilePic {...{ user }} />
-      <span>
-        {children}
-      </span>
-    </p>
-  );
-};
 
 export default function FriendAlerts({
     friends,
@@ -52,14 +38,6 @@ export default function FriendAlerts({
     navigate('/user/' + _id);
   };
 
-  function NameTag({ _id, children }: { _id: string; children: ReactNode }) {
-    return (
-      <strong className={css['name-tag']} onClick={() => navTo(_id)}>
-        {children}
-      </strong>
-    );
-  };
-
   const onError = (err: FetchError) => {
     if (err.status === 401) setUser(null);
   };
@@ -78,14 +56,6 @@ export default function FriendAlerts({
       );
     }, 1000);
   };
-
-  function X({ _id }: { _id: string }) {
-    return (
-      <button className={css['x-btn']} onClick={() => clearAlert(_id)}>
-        <FontAwesomeIcon icon='x' size='xl' />
-      </button>
-    );
-  }
 
   const    opacity = 0;
   const transition = { duration: 0.5 };
@@ -107,24 +77,24 @@ export default function FriendAlerts({
                 animate={{ opacity: 1, x:  0, transition: { ...transition, delay: 0.3 } }}
                    exit={{ opacity,    x,     transition }}
             >
-              <time className={css['time-stamp']}>{timeAgo(createdAt)}</time>
+              <Time time={createdAt} />
               {!accepted && !initiated ? (
                 <div>
                   <Alert user={peer}>
-                    <NameTag {...{ _id }}>
+                    <Strong callback={() => navTo(_id)}>
                       {name} {surname}
-                    </NameTag>{' '}
-                    sent you a friend request
+                    </Strong>
+                    {' sent you a friend request'}
                   </Alert>
                   <div className={css['buttons']}>
                     <Button
-                      hsl={[102, 44, 40]}
+                          hsl={[102, 44, 40]}
                       onClick={() => friendRequest(_id, 'accept')}
                     >
                       Accept
                     </Button>
                     <Button
-                      hsl={[10, 54, 51]}
+                          hsl={[10, 54, 51]}
                       onClick={() => friendRequest(_id, 'delete')}
                     >
                       Decline
@@ -134,9 +104,9 @@ export default function FriendAlerts({
               ) : !accepted && initiated ? (
                 <>
                   <Alert user={peer}>
-                    <NameTag {...{ _id }}>
+                    <Strong callback={() => navTo(_id)}>
                       {name} {surname}
-                    </NameTag>
+                    </Strong>
                   </Alert>
                   <Button
                         hsl={[10, 54, 51]}
@@ -149,17 +119,23 @@ export default function FriendAlerts({
               ) : accepted && initiated ? (
                 <>
                   <Alert user={peer}>
-                    <NameTag {...{ _id, children: name }} /> accepted your friend request
+                    <Strong callback={() => navTo(_id)}>
+                      {name}
+                    </Strong>
+                    {' accepted your friend request'}
                   </Alert>
-                  <X _id={alertId} />
+                  <X callback={() => clearAlert(alertId)} />
                 </>
               ) : (
                 <>
                   <Alert user={peer}>
-                    You accepted <NameTag {...{ _id, children: name + "'s" }} /> friend
-                    request
+                    {'You accepted '}
+                    <Strong callback={() => navTo(_id)}>
+                      {name + "'s" }
+                    </Strong>
+                    {' friend request'}
                   </Alert>
-                  <X _id={alertId} />
+                  <X callback={() => clearAlert(alertId)} />
                 </>
               )}
             </motion.li>

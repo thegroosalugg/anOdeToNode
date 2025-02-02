@@ -9,31 +9,6 @@
   background: var(--main-gradient);
   overflow-wrap: break-word;
 
-  .alert-text {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    gap: 0.2em;
-    width: 100%;
-
-    > img {
-      align-self: start;
-    }
-
-    > span {
-      padding-top: 0.1rem;
-    }
-  }
-
-  .name-tag {
-    cursor: pointer;
-    color: var(--dark-grey);
-    /* max-width: 5rem;
-    text-wrap: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; */
-  }
-
   .buttons {
     display: flex;
     justify-content: center;
@@ -49,13 +24,6 @@
       font-weight: 600;
     }
   }
-
-  .x-btn {
-    border: 0;
-    background: none;
-    margin-right: 0.25rem;
-  }
-
   .cancel-btn {
     padding: 0.1rem 0.25rem;
     margin-top: 0.2rem;
@@ -64,14 +32,6 @@
     border-radius: 5px;
     color: #fff;
   }
-}
-
-.time-stamp {
-  position: absolute;
-  top: 0.05rem;
-  right: 0.25rem;
-  font-size: 0.5rem;
-  color: var(--text-grey);
 }
 
 .fallback {

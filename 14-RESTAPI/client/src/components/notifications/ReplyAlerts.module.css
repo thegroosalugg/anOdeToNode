@@ -15,22 +15,6 @@
     flex-direction: column;
     width: 100%;
 
-    > h2 {
-      display: flex;
-      align-items: start;
-      text-align: center;
-
-      span {
-        strong {
-          color: #000;
-          /* max-width: 5rem;
-          text-wrap: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis; */
-        }
-      }
-    }
-
     > p {
       max-width: 66%;
       margin-left: 0.5rem;
