@@ -34,7 +34,7 @@ export default function Notifications({
   const [      menu,    showMenu ] = useState(false);
   const [  menuType, setMenuType ] = useState<Menu>('received');
   const { deferring,     deferFn } = useDebounce();
-  const   menuRef = useRef<HTMLUListElement>(null);
+  const   menuRef = useRef<HTMLDivElement>(null);
   const isInitial = useRef(true);
   const { friends } = user;
   const  alerts = friends.reduce((total, { initiated, accepted, meta }) => {
@@ -119,7 +119,7 @@ export default function Notifications({
     <>
       <AnimatePresence>
         {menu && (
-          <motion.ul className={css['notifications']} ref={menuRef} {...animation}>
+          <motion.section className={css['notifications']} ref={menuRef} {...animation}>
             <section className={css['menu-bar']}>
               {(['received', 'sent', 'replies'] as Menu[]).map((name) => (
                 <motion.button
@@ -140,7 +140,7 @@ export default function Notifications({
                 />
               )}
             </AsyncAwait>
-          </motion.ul>
+          </motion.section>
         )}
       </AnimatePresence>
       <motion.button

@@ -1,31 +1,43 @@
-.reply-alert {
-  position: relative;
+.reply-alerts {
   display: flex;
-  align-items: center;
-  gap: 0.25em;
-  font-size: 0.7rem;
-  padding: 0.55rem 0.25rem 0.2rem;
-  background: var(--main-gradient);
-  border: 1px solid var(--dark-grey);
+  flex-direction: column;
+  gap: 0.2rem;
+  overflow-y: scroll;
 
-  > section {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-width: 0; /* Important! Tells flex child it can shrink below content size */
-
-    > p {
-      margin-left: 0.5rem;
-      font-size: 0.7rem;
-      text-wrap: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: var(--text-grey);
-    }
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
   }
 
-  > button {
-    background: none;
-    border: none;
+  li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    font-size: 0.7rem;
+    padding: 0.55rem 0.25rem 0.2rem;
+    background: var(--main-gradient);
+    border: 1px solid var(--dark-grey);
+
+    > section {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      min-width: 0; /* Important! Tells flex child it can shrink below content size */
+
+      > p {
+        margin-left: 0.5rem;
+        font-size: 0.7rem;
+        text-wrap: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--text-grey);
+      }
+    }
+
+    > button {
+      background: none;
+      border: none;
+    }
   }
 }

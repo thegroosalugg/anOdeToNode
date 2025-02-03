@@ -1,36 +1,48 @@
-.friend-alert {
-  position: relative;
+.friend-alerts {
   display: flex;
-  align-items: center;
-  gap: 0.25em;
-  font-size: 0.7rem;
-  padding: 0.5rem 0.25rem 0.25rem;
-  border: 1px solid var(--team-green);
-  background: var(--main-gradient);
-  overflow-wrap: break-word;
+  flex-direction: column;
+  gap: 0.2rem;
+  overflow-y: scroll;
 
-  .buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.25rem;
-    margin-top: 0.25rem;
-
-    > button {
-      width: 52px;
-      border-radius: 5px;
-      padding: 0.1rem 0.2rem;
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
   }
-  .cancel-btn {
-    padding: 0.1rem 0.25rem;
-    margin-top: 0.2rem;
-    font-size: 0.6rem;
-    border: 0;
-    border-radius: 5px;
-    color: #fff;
+
+  li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    font-size: 0.7rem;
+    padding: 0.5rem 0.25rem 0.25rem;
+    background: var(--main-gradient);
+    border: 1px solid var(--team-green);
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 0.25rem;
+
+      > button {
+        width: 52px;
+        border-radius: 5px;
+        padding: 0.1rem 0.2rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+      }
+    }
+
+    .cancel-btn {
+      padding: 0.1rem 0.25rem;
+      margin-top: 0.2rem;
+      font-size: 0.6rem;
+      border: 0;
+      border-radius: 5px;
+      color: #fff;
+    }
   }
 }
 
