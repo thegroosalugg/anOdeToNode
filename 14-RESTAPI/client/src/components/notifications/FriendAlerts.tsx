@@ -23,7 +23,7 @@ export default function FriendAlerts({
   closeMenu: () => void;
 }) {
   const { reqHandler } = useFetch<User>();
-  const {   deferFn  } = useDebounce();
+  const {  deferFn   } = useDebounce();
   const       navigate = useNavigate();
   const connections = friends
     .filter((friend): friend is Friend & { user: User } => {
@@ -63,7 +63,7 @@ export default function FriendAlerts({
   const          x = 20 * dir;
 
   return (
-    <ul className={css['friend-alerts']}>
+    <motion.ul className={css['friend-alerts']} exit={{ x: -20, opacity: 0, transition }}>
       <AnimatePresence mode='popLayout'>
         {connections.length > 0 ? (
           connections.map((connection) => {
@@ -153,6 +153,6 @@ export default function FriendAlerts({
           </motion.p>
         )}
       </AnimatePresence>
-    </ul>
+    </motion.ul>
   );
 }

@@ -132,13 +132,16 @@ export default function Notifications({
               ))}
             </section>
             <AsyncAwait {...{ isLoading: isInitial.current, error }}>
-              {menuType === 'replies' ? (
-                <ReplyAlerts {...{ replies }} />
-              ) : (
-                <FriendAlerts
-                  {...{ setUser, friends, menuType, closeMenu: () => showMenu(false) }}
-                />
-              )}
+              <AnimatePresence mode='wait'>
+                {menuType === 'replies' ? (
+                  <ReplyAlerts {...{ replies }} key='replies' />
+                ) : (
+                  <FriendAlerts
+                    key='friends'
+                    {...{ setUser, friends, menuType, closeMenu: () => showMenu(false) }}
+                  />
+                )}
+              </AnimatePresence>
             </AsyncAwait>
           </motion.section>
         )}
