@@ -68,7 +68,16 @@ const readReplies: RequestHandler = async (req, res, next) => {
 };
 
 const clearReplies: RequestHandler = async (req, res, next) => {
-
+  try {
+    const { replyId } = req.params;
+    const reply = await Reply.findById(replyId);
+    if (!reply) return next(new AppError(404, 'Comment not found'));
+    reply.meta.show = false;
+    await reply.save();
+    res.status(200).json(reply);
+  } catch (error) {
+    next(new AppError(500, 'unable to remove notification', error));
+  }
 };
 
 export { readSocials, clearSocials, readReplies, clearReplies };

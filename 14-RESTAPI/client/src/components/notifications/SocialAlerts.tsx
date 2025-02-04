@@ -1,10 +1,9 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import useFetch from '@/hooks/useFetch';
-import { Auth } from '@/pages/RootLayout';
 import { FetchError } from '@/util/fetchData';
+import { Auth } from '@/pages/RootLayout';
 import { Menu } from './Notifications';
 import User from '@/models/User';
 import Friend from '@/models/Friend';
@@ -13,20 +12,21 @@ import Button from '../button/Button';
 import css from './SocialAlerts.module.css';
 
 export default function SocialAlerts({
-    friends,
-    setUser,
-   menuType,
-  closeMenu,
+   friends,
+   setUser,
+  menuType,
+     navTo,
+   onError,
 }: {
     friends: Friend[];
     setUser: Auth['setUser'];
    menuType: Menu;
-  closeMenu: () => void;
+      navTo: (path: string) => void;
+    onError: (err: FetchError) => void;
 }) {
   const { reqHandler } = useFetch<User>();
   const {  deferFn   } = useDebounce();
   const [ x,    setX ] = useState(0)
-  const       navigate = useNavigate();
   const    connections = friends
     .filter((friend): friend is Friend & { user: User } => {
       const { user, initiated, meta } = friend;
@@ -34,15 +34,6 @@ export default function SocialAlerts({
       return typeof user === 'object' && condition && meta.show;
     })
     .reverse();
-
-  const navTo = (_id: string) => {
-    closeMenu();
-    navigate('/user/' + _id);
-  };
-
-  const onError = (err: FetchError) => {
-    if (err.status === 401) setUser(null);
-  };
 
   const friendRequest = async (_id: string, action: 'accept' | 'delete') => {
     setX(-20);
@@ -71,6 +62,7 @@ export default function SocialAlerts({
           connections.map((connection) => {
             const { _id: alertId, accepted, initiated, user: peer, createdAt } = connection;
             const { _id, name, surname } = peer;
+            const path = '/user/' + _id;
             return (
               <motion.li
                    layout
@@ -84,7 +76,7 @@ export default function SocialAlerts({
                 {!accepted && !initiated ? (
                   <div>
                     <Alert user={peer}>
-                      <Strong callback={() => navTo(_id)}>
+                      <Strong callback={() => navTo(path)}>
                         {name} {surname}
                       </Strong>
                       {' sent you a friend request'}
@@ -107,7 +99,7 @@ export default function SocialAlerts({
                 ) : !accepted && initiated ? (
                   <>
                     <Alert user={peer}>
-                      <Strong callback={() => navTo(_id)}>
+                      <Strong callback={() => navTo(path)}>
                         {name} {surname}
                       </Strong>
                     </Alert>
@@ -122,7 +114,7 @@ export default function SocialAlerts({
                 ) : accepted && initiated ? (
                   <>
                     <Alert user={peer}>
-                      <Strong callback={() => navTo(_id)}>
+                      <Strong callback={() => navTo(path)}>
                         {name}
                       </Strong>
                       {' accepted your friend request'}
@@ -133,7 +125,7 @@ export default function SocialAlerts({
                   <>
                     <Alert user={peer}>
                       {'You accepted '}
-                      <Strong callback={() => navTo(_id)}>
+                      <Strong callback={() => navTo(path)}>
                         {name + "'s"}
                       </Strong>
                       {' friend request'}

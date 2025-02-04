@@ -1,4 +1,8 @@
 import { AnimatePresence, motion } from 'motion/react';
+import useDebounce from '@/hooks/useDebounce';
+import useFetch from '@/hooks/useFetch';
+import { FetchError } from '@/util/fetchData';
+import { Dispatch, SetStateAction } from 'react';
 import Reply from '@/models/Reply';
 import { Alert, Strong, Time, X } from './UIElements';
 import css from './ReplyAlerts.module.css';
@@ -7,9 +11,34 @@ import css from './ReplyAlerts.module.css';
 // but due to the way it uses recreational keys for both <li> & <fallback>
 // it is not possible to combine them further
 
-export default function ReplyAlerts({ replies }: { replies: Reply[] }) {
+export default function ReplyAlerts({
+     replies,
+  setReplies,
+       navTo,
+     onError,
+}: {
+     replies: Reply[];
+  setReplies: Dispatch<SetStateAction<Reply[]>>;
+       navTo: (path: string) => void;
+     onError: (err: FetchError) => void;
+}) {
+  const { reqHandler } = useFetch<Reply | null>();
+  const {  deferFn   } = useDebounce();
   const    opacity = 0;
   const transition = { duration: 0.5 };
+
+  const clearAlert = async (_id: string) => {
+    deferFn(async () => {
+      await reqHandler(
+        { url: `alerts/reply/hide/${_id}` },
+        {
+          onError,
+          onSuccess: (updated) =>
+            setReplies((prev) => prev.filter(({ _id }) => updated?._id !== _id)),
+        }
+      );
+    }, 1000);
+  };
 
   return (
     <motion.ul className={css['reply-alerts']} exit={{ opacity: 0, transition }}>
@@ -26,15 +55,15 @@ export default function ReplyAlerts({ replies }: { replies: Reply[] }) {
               <Time time={createdAt} />
               <section>
                 <Alert user={creator}>
-                  <Strong callback={() => {}}>
+                  <Strong callback={() => navTo('/user/' + creator._id)}>
                     {creator.name} {creator.surname}
                   </Strong>
                   {' replied to your post '}
-                  <Strong callback={() => {}}>{post.title}</Strong>
+                  <Strong callback={() => navTo('/post/' + post._id)}>{post.title}</Strong>
                 </Alert>
                 <p>{content}</p>
               </section>
-              <X callback={() => {}} />
+              <X callback={() => clearAlert(_id)} />
             </motion.li>
           ))
         ) : (

@@ -2,10 +2,11 @@ import { isMobile } from 'react-device-detect';
 import { AnimatePresence, motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import useDebounce from '@/hooks/useDebounce';
 import { io } from 'socket.io-client';
-import { BASE_URL } from '@/util/fetchData';
+import { BASE_URL, FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
 import Reply from '@/models/Reply';
@@ -36,6 +37,7 @@ export default function Notifications({
   const { deferring,     deferFn } = useDebounce();
   const     menuRef = useRef<HTMLDivElement>(null);
   const   isInitial = useRef(true);
+  const    navigate = useNavigate();
   const { friends } = user;
 
   const socialAlerts = friends.reduce((total, { initiated, accepted, meta }) => {
@@ -86,6 +88,15 @@ export default function Notifications({
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       showMenu(false);
     }
+  };
+
+  const navTo = (path: string) => {
+    showMenu(false);
+    navigate(path);
+  };
+
+  const onError = (err: FetchError) => {
+    if (err.status === 401) setUser(null);
   };
 
   useEffect(() => {
@@ -149,11 +160,11 @@ export default function Notifications({
             <AsyncAwait {...{ isLoading: isInitial.current, error }}>
               <AnimatePresence mode='wait'>
                 {menuType === 'replies' ? (
-                  <ReplyAlerts {...{ replies }} key='replies' />
+                  <ReplyAlerts {...{ replies, setReplies, navTo, onError }} key='replies' />
                 ) : (
                   <SocialAlerts
                     key='friends'
-                    {...{ setUser, friends, menuType, closeMenu: () => showMenu(false) }}
+                    {...{ setUser, friends, menuType, navTo, onError }}
                   />
                 )}
               </AnimatePresence>
