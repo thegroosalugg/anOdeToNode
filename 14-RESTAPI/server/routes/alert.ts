@@ -1,12 +1,12 @@
 import Express from 'express';
-import { readRequests, clearRequests, readReplies, clearReplies } from '../controllers/alertController';
+import { readSocials, clearSocials, readReplies, clearReplies } from '../controllers/alertController';
 
 const router = Express.Router();
 
-// all routes prepended by /alert & JWT middleware
-router.post('/social/read', readRequests);
-router.post('/social/hide/:alertId', clearRequests);
-router.post('/replies/read', readReplies);
-router.post('/reply/hide/:replyId', clearReplies);
+// all routes prepended by /alerts & JWT middleware
+router.get('/social', readSocials);
+router.get('/social/hide/:alertId', clearSocials);
+router.get('/replies', readReplies);
+router.get('/reply/hide/:replyId', clearReplies);
 
 export default router;

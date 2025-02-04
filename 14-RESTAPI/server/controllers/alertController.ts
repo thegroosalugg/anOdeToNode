@@ -6,7 +6,7 @@ import Reply from '../models/Reply';
 const _public = '-email -password -friends';
 const  devErr = 'Do not use without AuthJWT';
 
-const readRequests: RequestHandler = async (req, res, next) => {
+const readSocials: RequestHandler = async (req, res, next) => {
   const user = req.user;
   if (!user) return next(new AppError(403, 'Something went wrong', devErr));
 
@@ -20,7 +20,7 @@ const readRequests: RequestHandler = async (req, res, next) => {
   }
 };
 
-const clearRequests: RequestHandler = async (req, res, next) => {
+const clearSocials: RequestHandler = async (req, res, next) => {
   const user = req.user;
   if (!user) return next(new AppError(403, 'Something went wrong', devErr));
 
@@ -42,6 +42,7 @@ const readReplies: RequestHandler = async (req, res, next) => {
   if (!user) return next(new AppError(403, 'Something went wrong', devErr));
 
   try {
+    const { read } = req.query;
     const   posts = await  Post.find({ creator: user._id }, '_id');
     const replies = await Reply.find({
              post: { $in: posts.map((post) => post._id) },
@@ -51,6 +52,14 @@ const readReplies: RequestHandler = async (req, res, next) => {
       .populate('creator', _public)
       .populate('post', 'title creator')
       .sort({ _id: -1 });
+
+    if (read === 'true') {
+      await Reply.updateMany(
+        { _id: { $in: replies.map((reply) => reply._id) } },
+        { 'meta.read': true }
+      );
+      replies.forEach((reply) => (reply.meta.read = true));
+    }
 
     res.status(200).json(replies);
   } catch (error) {
@@ -62,4 +71,4 @@ const clearReplies: RequestHandler = async (req, res, next) => {
 
 };
 
-export { readRequests, clearRequests, readReplies, clearReplies };
+export { readSocials, clearSocials, readReplies, clearReplies };

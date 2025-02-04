@@ -55,7 +55,7 @@ app.use('/feed',    authJWT,    feedRoutes);
 app.use('/post',    authJWT,   [postRoutes, replyRoutes]);
 app.use('/profile', authJWT, profileRoutes);
 app.use('/social',  authJWT,  socialRoutes);
-app.use('/alert',   authJWT,   alertRoutes);
+app.use('/alerts',   authJWT,   alertRoutes);
 
 app.use(((appError, req, res, next) => {
   const { status, client, dev, where } = appError;

@@ -10,9 +10,9 @@ import User from '@/models/User';
 import Friend from '@/models/Friend';
 import { Alert, Strong, Time, X } from './UIElements';
 import Button from '../button/Button';
-import css from './FriendAlerts.module.css';
+import css from './SocialAlerts.module.css';
 
-export default function FriendAlerts({
+export default function SocialAlerts({
     friends,
     setUser,
    menuType,
@@ -55,7 +55,7 @@ export default function FriendAlerts({
     setX(-20);
     deferFn(async () => {
       await reqHandler(
-        { url: `alert/social/hide/${_id}`, method: 'POST' },
+        { url: `alerts/social/hide/${_id}` },
         { onError, onSuccess: (updated) => setUser(updated) }
       );
     }, 1000);
@@ -65,7 +65,7 @@ export default function FriendAlerts({
   const transition = { duration: 0.5 };
 
   return (
-    <motion.ul className={css['friend-alerts']} exit={{ opacity: 0, transition }}>
+    <motion.ul className={css['social-alerts']} exit={{ opacity: 0, transition }}>
       <AnimatePresence mode='popLayout'>
         {connections.length > 0 ? (
           connections.map((connection) => {

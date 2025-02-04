@@ -9,7 +9,7 @@ import { BASE_URL } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
 import Reply from '@/models/Reply';
-import FriendAlerts from './FriendAlerts';
+import SocialAlerts from './SocialAlerts';
 import ReplyAlerts from './ReplyAlerts';
 import AsyncAwait from '../panel/AsyncAwait';
 import { captainsLog } from '@/util/captainsLog';
@@ -34,13 +34,21 @@ export default function Notifications({
   const [      menu,    showMenu ] = useState(false);
   const [  menuType, setMenuType ] = useState<Menu>('received');
   const { deferring,     deferFn } = useDebounce();
-  const   menuRef = useRef<HTMLDivElement>(null);
-  const isInitial = useRef(true);
+  const     menuRef = useRef<HTMLDivElement>(null);
+  const   isInitial = useRef(true);
   const { friends } = user;
-  const  alerts = friends.reduce((total, { initiated, accepted, meta }) => {
+
+  const socialAlerts = friends.reduce((total, { initiated, accepted, meta }) => {
     if ((!initiated || (accepted && initiated)) && !meta.read) total += 1;
     return total;
   }, 0);
+
+  const replyAlerts = replies.reduce((total, { meta }) => {
+    if (!meta.read) total += 1;
+    return total;
+  }, 0);
+
+  const alerts = socialAlerts + replyAlerts;
 
   const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;
   const [x, y] = isLandscape ? [75, 0] : [0, 75];
@@ -51,17 +59,17 @@ export default function Notifications({
   };
   const opacity = deferring ? 0.6 : 1;
 
-  const getFriendAlerts = useCallback(
+  const markSocialsAsRead = useCallback(
     async () =>
       await reqSocialAlerts(
-        { url: 'alert/social/read', method: 'POST' },
+        { url: 'alerts/social' },
         { onSuccess: (updated) => setUser(updated) }
       ),
     [reqSocialAlerts, setUser]
   );
 
-  const getReplyAlerts = useCallback(
-    async () => await reqReplyAlerts({ url: 'alert/replies/read', method: 'POST' }),
+  const markRepliesAsRead = useCallback(
+    async () => await reqReplyAlerts({ url: 'alerts/replies?read=true' }),
     [reqReplyAlerts]
   );
 
@@ -69,7 +77,7 @@ export default function Notifications({
     isInitial.current = true;
     deferFn(async () => {
       showMenu(true);
-      await Promise.all([getFriendAlerts(), getReplyAlerts()]);
+      await Promise.all([markSocialsAsRead(), markRepliesAsRead()]);
       isInitial.current = false
     }, 1500)
   };
@@ -83,13 +91,16 @@ export default function Notifications({
   useEffect(() => {
     document.addEventListener('mousedown', closeMenu);
 
+    const getReplyAlerts = async () => await reqReplyAlerts({ url: 'alerts/replies' });
+    getReplyAlerts();
+
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog([-100, 15], ['NAV: Socket connected']));
 
     socket.on(`peer:${user._id}:update`, async (updated) => {
       captainsLog([-100, 15], ['NAV: UPDATE', updated]);
       if (menu) {
-        await getFriendAlerts();
+        await markSocialsAsRead();
       } else {
         setUser(updated);
       }
@@ -107,7 +118,7 @@ export default function Notifications({
       socket.disconnect();
       document.removeEventListener('mousedown', closeMenu);
     };
-  }, [menu, user._id, getFriendAlerts, getReplyAlerts, setUser, setReplies]);
+  }, [menu, user._id, reqReplyAlerts, markSocialsAsRead, markRepliesAsRead, setUser, setReplies]);
 
   const icons = {
     received: 'envelope',
@@ -136,7 +147,7 @@ export default function Notifications({
                 {menuType === 'replies' ? (
                   <ReplyAlerts {...{ replies }} key='replies' />
                 ) : (
-                  <FriendAlerts
+                  <SocialAlerts
                     key='friends'
                     {...{ setUser, friends, menuType, closeMenu: () => showMenu(false) }}
                   />
