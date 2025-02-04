@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import useFetch from '@/hooks/useFetch';
@@ -24,8 +25,9 @@ export default function FriendAlerts({
 }) {
   const { reqHandler } = useFetch<User>();
   const {  deferFn   } = useDebounce();
+  const [ x,    setX ] = useState(0)
   const       navigate = useNavigate();
-  const connections = friends
+  const    connections = friends
     .filter((friend): friend is Friend & { user: User } => {
       const { user, initiated, meta } = friend;
       const condition = menuType === 'sent' ? initiated : !initiated;
@@ -43,12 +45,14 @@ export default function FriendAlerts({
   };
 
   const friendRequest = async (_id: string, action: 'accept' | 'delete') => {
+    setX(-20);
     deferFn(async () => {
       await reqHandler({ url: `social/${_id}/${action}`, method: 'POST' }, { onError });
     }, 1000);
   };
 
   const clearAlert = async (_id: string) => {
+    setX(-20);
     deferFn(async () => {
       await reqHandler(
         { url: `alert/social/hide/${_id}`, method: 'POST' },
@@ -59,11 +63,9 @@ export default function FriendAlerts({
 
   const    opacity = 0;
   const transition = { duration: 0.5 };
-  const        dir = menuType === 'sent' ? 1 : -1;
-  const          x = 20 * dir;
 
   return (
-    <motion.ul className={css['friend-alerts']} exit={{ x: -20, opacity: 0, transition }}>
+    <motion.ul className={css['friend-alerts']} exit={{ opacity: 0, transition }}>
       <AnimatePresence mode='popLayout'>
         {connections.length > 0 ? (
           connections.map((connection) => {
@@ -73,9 +75,10 @@ export default function FriendAlerts({
               <motion.li
                    layout
                       key={alertId + accepted + initiated}
-                  initial={{ opacity, x }}
-                  animate={{ opacity: 1, x: 0, transition: { ...transition, delay: 0.3 } }}
+                  initial={{ opacity }}
+                  animate={{ opacity: 1, transition: { ...transition, delay: 0.3 } }}
                      exit={{ opacity, x, transition }}
+                  onAnimationComplete={() => setX(0)}
               >
                 <Time time={createdAt} />
                 {!accepted && !initiated ? (

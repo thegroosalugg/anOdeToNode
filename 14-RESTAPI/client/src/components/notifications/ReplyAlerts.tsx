@@ -9,20 +9,19 @@ import css from './ReplyAlerts.module.css';
 
 export default function ReplyAlerts({ replies }: { replies: Reply[] }) {
   const    opacity = 0;
-  const          x = 20;
   const transition = { duration: 0.5 };
 
   return (
-    <motion.ul className={css['reply-alerts']} exit={{ x, opacity: 0, transition }}>
+    <motion.ul className={css['reply-alerts']} exit={{ opacity: 0, transition }}>
       <AnimatePresence mode='popLayout'>
         {replies.length > 0 ? (
           replies.map(({ _id, creator, content, post, createdAt }) => (
             <motion.li
                layout
                   key={_id}
-              initial={{ opacity, x }}
-              animate={{ opacity: 1, x: 0, transition }}
-                 exit={{ opacity, x, transition }}
+              initial={{ opacity }}
+              animate={{ opacity: 1,      transition }}
+                 exit={{ opacity, x: -10, transition }}
             >
               <Time time={createdAt} />
               <section>
