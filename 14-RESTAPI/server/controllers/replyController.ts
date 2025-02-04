@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { io } from '../app';
-import Post from '../models/Post';
+import Post, { IPost } from '../models/Post';
 import Reply from '../models/Reply';
 import AppError from '../models/Error';
 import { getErrors, hasErrors } from '../validation/validators';
@@ -48,8 +48,8 @@ const postReply: RequestHandler = async (req, res, next) => {
     reply.creator = user
     reply.post    = post;
 
-    io.emit(`post:${postId}:reply`, reply); // notify Post Page
-    io.emit(`nav:${post.creator}:reply`, reply); // alert original post user
+    io.emit(`post:${postId}:reply:new`, reply); // notify Post Page
+    io.emit(`nav:${post.creator}:reply`, { action: 'new', reply}); // alert original post user
     res.status(201).json(reply);
   } catch (error) {
     next(new AppError(500, "Message couldn't be posted", error));
@@ -59,11 +59,13 @@ const postReply: RequestHandler = async (req, res, next) => {
 const deleteReply: RequestHandler = async (req, res, next) => {
   try {
     const { replyId: _id } = req.params;
-    const reply = await Reply.findOne({ _id, creator: req.user });
+    const reply = await Reply.findOne({ _id, creator: req.user }).populate('post', 'creator');
     if (!reply) return next(new AppError(404, 'Comment not found'));
 
     await Reply.deleteOne({ _id, creator: req.user });
-    io.emit(`post:${reply.post}:reply:delete`, reply); // emits back to PostID page
+    const post = reply.post as IPost;
+    io.emit(`post:${post._id}:reply:delete`, reply); // emits back to PostID page
+    io.emit(`nav:${post.creator}:reply`, { action: 'delete', reply }); // alert original post user
     res.status(200).json(null);
   } catch (error) {
     next(new AppError(500, 'Unable to delete comment', error));

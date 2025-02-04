@@ -43,8 +43,8 @@ const readReplies: RequestHandler = async (req, res, next) => {
 
   try {
     const { read } = req.query;
-    const   posts = await  Post.find({ creator: user._id }, '_id');
-    const replies = await Reply.find({
+    const    posts = await  Post.find({ creator: user._id }, '_id');
+    const  replies = await Reply.find({
              post: { $in: posts.map((post) => post._id) },
           creator: { $ne: user._id },
       'meta.show': true,
@@ -55,8 +55,8 @@ const readReplies: RequestHandler = async (req, res, next) => {
 
     if (read === 'true') {
       await Reply.updateMany(
-        { _id: { $in: replies.map((reply) => reply._id) } },
-        { 'meta.read': true }
+        { _id: { $in: replies.map((reply) => reply._id) } }, // update query
+        { 'meta.read': true } // update operation
       );
       replies.forEach((reply) => (reply.meta.read = true));
     }

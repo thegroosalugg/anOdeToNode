@@ -106,9 +106,13 @@ export default function Notifications({
       }
     });
 
-    socket.on(`nav:${user._id}:reply`, (reply) => {
-      captainsLog([-100, 12], ['NAV: NEW REPLY', reply]);
-      setReplies((prev) => [reply, ...prev]);
+    socket.on(`nav:${user._id}:reply`, ({ action, reply }) => {
+      captainsLog([-100, 12], [`NAV: ${action} REPLY`, reply]);
+      if (action === 'new') {
+        setReplies((prev) => [reply, ...prev]);
+      } else if (action === 'delete') {
+        setReplies((prev) => prev.filter(({ _id }) => _id !== reply._id))
+      }
     })
 
     return () => {

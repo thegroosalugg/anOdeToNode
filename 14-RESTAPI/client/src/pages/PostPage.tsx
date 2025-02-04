@@ -66,7 +66,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog([-100, 25], ['POSTPAGE: Socket connected']));
 
-    socket.on(`post:${postId}:reply`, (reply) => {
+    socket.on(`post:${postId}:reply:new`, (reply) => {
       captainsLog([-100, 190], ['POSTPAGE: NEW REPLY']);
       setTimeout(() => {
         setReplies(({ docCount, replies }) => {
@@ -103,7 +103,7 @@ export default function PostPage({ user, setUser }: Authorized) {
 
     return () => {
       socket.off('connect');
-      socket.off(`post:${postId}:reply`);
+      socket.off(`post:${postId}:reply:new`);
       socket.off(`post:${postId}:reply:delete`); // deletes a reply to post
       socket.off(`post:${postId}:update`);
       socket.off(`post:${postId}:delete`); // deletes the post (& all replies)

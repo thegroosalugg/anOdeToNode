@@ -5,6 +5,7 @@ import { IUser } from './User';
 const required = true;
 
 export interface IPost {
+      _id: Types.ObjectId;
     title: string;
   content: string;
    imgURL: string;
