@@ -12,7 +12,6 @@ const readSocials: RequestHandler = async (req, res, next) => {
 
   try {
     const { type } = req.query;
-    console.log('QUERY', req.query)
     user.friends.forEach(({ meta, accepted, initiated }) => {
       if (
         (type ===  'inbound' && !initiated) ||

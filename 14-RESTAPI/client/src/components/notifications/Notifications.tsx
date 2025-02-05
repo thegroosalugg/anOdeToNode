@@ -66,9 +66,9 @@ export default function Notifications({
   const opacity = deferring ? 0.6 : 1;
 
   const markSocialsAsRead = useCallback(
-    async () =>
+    async (index = activeTab) =>
       await reqSocialAlerts(
-        { url: `alerts/social?type=${['inbound', 'outbound'][activeTab]}` },
+        { url: `alerts/social?type=${['inbound', 'outbound'][index]}` },
         { onSuccess: (updated) => setUser(updated) }
       ),
     [activeTab, reqSocialAlerts, setUser]
@@ -79,9 +79,9 @@ export default function Notifications({
     [reqReplyAlerts]
   );
 
-  const handleAlerts = async () => {
-    if (activeTab < 2) await markSocialsAsRead();
-    else               await markRepliesAsRead();
+  const handleAlerts = async (index = activeTab) => {
+    if (index < 2) await markSocialsAsRead(index);
+    else           await markRepliesAsRead();
   };
 
   const openMenu = async () => {
@@ -102,7 +102,7 @@ export default function Notifications({
 
   const changeTab = async (index: number) => {
     setActiveTab(index);
-    await handleAlerts();
+    await handleAlerts(index);
   };
 
   const navTo = (path: string) => {
@@ -122,7 +122,7 @@ export default function Notifications({
 
     socket.on(`peer:${user._id}:update`, async (updated) => {
       captainsLog([-100, 15], ['NAV: UPDATE', updated]);
-      if (menu) {
+      if (menu && activeTab < 2) {
         await markSocialsAsRead();
       } else {
         setUser(updated);
