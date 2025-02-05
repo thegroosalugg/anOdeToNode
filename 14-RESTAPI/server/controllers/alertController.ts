@@ -11,7 +11,16 @@ const readSocials: RequestHandler = async (req, res, next) => {
   if (!user) return next(new AppError(403, 'Something went wrong', devErr));
 
   try {
-    user.friends.forEach(({ meta }) => (meta.read = true));
+    const { type } = req.query;
+    console.log('QUERY', req.query)
+    user.friends.forEach(({ meta, accepted, initiated }) => {
+      if (
+        (type ===  'inbound' && !initiated) ||
+        (type === 'outbound' &&  initiated && accepted)
+      ) {
+        meta.read = true;
+      }
+    });
     await user.save();
     await user.populate('friends.user', _public);
     res.status(200).json(user);

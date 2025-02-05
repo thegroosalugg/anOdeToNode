@@ -66,9 +66,9 @@ export default function Notifications({
   const opacity = deferring ? 0.6 : 1;
 
   const markSocialsAsRead = useCallback(
-    async () =>
+    async (index: number) =>
       await reqSocialAlerts(
-        { url: 'alerts/social' },
+        { url: `alerts/social?type=${['inbound', 'outbound'][index]}` },
         { onSuccess: (updated) => setUser(updated) }
       ),
     [reqSocialAlerts, setUser]
@@ -79,11 +79,18 @@ export default function Notifications({
     [reqReplyAlerts]
   );
 
+  const requests = [
+    () => markSocialsAsRead(0),
+    () => markSocialsAsRead(1),
+    markRepliesAsRead
+  ];
+
   const openMenu = async () => {
     isInitial.current = true;
     deferFn(async () => {
       showMenu(true);
-      await Promise.all([markSocialsAsRead(), markRepliesAsRead()]);
+      // await Promise.all([markSocialsAsRead(), markRepliesAsRead()]);
+      await requests[activeTab]();
       isInitial.current = false
     }, 1500)
   };
@@ -92,6 +99,11 @@ export default function Notifications({
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       showMenu(false);
     }
+  };
+
+  const changeTab = async (index: number) => {
+    setActiveTab(index);
+    await requests[index]();
   };
 
   const navTo = (path: string) => {
@@ -115,7 +127,7 @@ export default function Notifications({
     socket.on(`peer:${user._id}:update`, async (updated) => {
       captainsLog([-100, 15], ['NAV: UPDATE', updated]);
       if (menu) {
-        await markSocialsAsRead();
+        await markSocialsAsRead(activeTab);
       } else {
         setUser(updated);
       }
@@ -137,7 +149,7 @@ export default function Notifications({
       socket.disconnect();
       document.removeEventListener('mousedown', closeMenu);
     };
-  }, [menu, user._id, reqReplyAlerts, markSocialsAsRead, markRepliesAsRead, setUser, setReplies]);
+  }, [menu, activeTab, user._id, reqReplyAlerts, markSocialsAsRead, markRepliesAsRead, setUser, setReplies]);
 
   const icons = ['envelope', 'paper-plane', 'reply'] as const;
 
@@ -150,7 +162,7 @@ export default function Notifications({
               {[inbound, outbound, newReplies].map((count, i) => (
                 <motion.button
                       key={i}
-                  onClick={() => setActiveTab(i)}
+                  onClick={() => changeTab(i)}
                   animate={{ color: activeTab === i ? '#888' : 'var(--team-green)' }}
                 >
                   <FontAwesomeIcon icon={icons[i]} />{count}
