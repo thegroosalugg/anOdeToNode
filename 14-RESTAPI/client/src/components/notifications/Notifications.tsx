@@ -17,8 +17,6 @@ import { captainsLog } from '@/util/captainsLog';
 import nav from '../navigation/NavButton.module.css';
 import css from './Notifications.module.css';
 
-export type Menu = 'received' | 'sent' | 'replies';
-
 export default function Notifications({
      user,
   setUser,
@@ -32,25 +30,31 @@ export default function Notifications({
        setData: setReplies,
     reqHandler: reqReplyAlerts,
   } = useFetch<Reply[]>([]);
-  const [      menu,    showMenu ] = useState(false);
-  const [  menuType, setMenuType ] = useState<Menu>('received');
-  const { deferring,     deferFn } = useDebounce();
+  const [      menu,     showMenu ] = useState(false);
+  const [ activeTab, setActiveTab ] = useState(0);
+  const { deferring,      deferFn } = useDebounce();
   const     menuRef = useRef<HTMLDivElement>(null);
   const   isInitial = useRef(true);
   const    navigate = useNavigate();
   const { friends } = user;
 
-  const socialAlerts = friends.reduce((total, { initiated, accepted, meta }) => {
-    if ((!initiated || (accepted && initiated)) && !meta.read) total += 1;
-    return total;
-  }, 0);
+  const [inbound, outbound] = friends.reduce(
+    ([inTotal, outTotal], { initiated, accepted, meta }) => {
+      if (!meta.read) {
+        if (           !initiated)  inTotal += 1;
+        if (accepted && initiated) outTotal += 1;
+      }
+      return [inTotal, outTotal];
+    },
+    [0, 0]
+  );
 
-  const replyAlerts = replies.reduce((total, { meta }) => {
+  const newReplies = replies.reduce((total, { meta }) => {
     if (!meta.read) total += 1;
     return total;
   }, 0);
 
-  const alerts = socialAlerts + replyAlerts;
+  const alerts = inbound + outbound + newReplies;
 
   const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;
   const [x, y] = isLandscape ? [75, 0] : [0, 75];
@@ -135,11 +139,7 @@ export default function Notifications({
     };
   }, [menu, user._id, reqReplyAlerts, markSocialsAsRead, markRepliesAsRead, setUser, setReplies]);
 
-  const icons = {
-    received: 'envelope',
-        sent: 'paper-plane',
-     replies: 'reply',
-  } as const;
+  const icons = ['envelope', 'paper-plane', 'reply'] as const;
 
   return (
     <>
@@ -147,24 +147,24 @@ export default function Notifications({
         {menu && (
           <motion.section className={css['notifications']} ref={menuRef} {...animation}>
             <section className={css['menu-bar']}>
-              {(['received', 'sent', 'replies'] as Menu[]).map((name) => (
+              {[inbound, outbound, newReplies].map((count, i) => (
                 <motion.button
-                      key={name}
-                  onClick={() => setMenuType(name)}
-                  animate={{ color: menuType === name ? '#888' : 'var(--team-green)' }}
+                      key={i}
+                  onClick={() => setActiveTab(i)}
+                  animate={{ color: activeTab === i ? '#888' : 'var(--team-green)' }}
                 >
-                  <FontAwesomeIcon icon={icons[name]} />
+                  <FontAwesomeIcon icon={icons[i]} />{count}
                 </motion.button>
               ))}
             </section>
             <AsyncAwait {...{ isLoading: isInitial.current, error }}>
               <AnimatePresence mode='wait'>
-                {menuType === 'replies' ? (
+                {activeTab === 2 ? (
                   <ReplyAlerts {...{ replies, setReplies, navTo, onError }} key='replies' />
                 ) : (
                   <SocialAlerts
                     key='friends'
-                    {...{ setUser, friends, menuType, navTo, onError }}
+                    {...{ setUser, friends, activeTab, navTo, onError }}
                   />
                 )}
               </AnimatePresence>

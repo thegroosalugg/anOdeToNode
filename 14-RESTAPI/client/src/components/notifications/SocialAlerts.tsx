@@ -4,7 +4,6 @@ import useDebounce from '@/hooks/useDebounce';
 import useFetch from '@/hooks/useFetch';
 import { FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
-import { Menu } from './Notifications';
 import User from '@/models/User';
 import Friend from '@/models/Friend';
 import { Alert, Strong, Time, X } from './UIElements';
@@ -12,15 +11,15 @@ import Button from '../button/Button';
 import css from './SocialAlerts.module.css';
 
 export default function SocialAlerts({
-   friends,
-   setUser,
-  menuType,
-     navTo,
-   onError,
+    friends,
+    setUser,
+  activeTab,
+      navTo,
+    onError,
 }: {
     friends: Friend[];
     setUser: Auth['setUser'];
-   menuType: Menu;
+  activeTab: number;
       navTo: (path: string) => void;
     onError: (err: FetchError) => void;
 }) {
@@ -30,7 +29,7 @@ export default function SocialAlerts({
   const    connections = friends
     .filter((friend): friend is Friend & { user: User } => {
       const { user, initiated, meta } = friend;
-      const condition = menuType === 'sent' ? initiated : !initiated;
+      const condition = activeTab === 1 ? initiated : !initiated;
       return typeof user === 'object' && condition && meta.show;
     })
     .reverse();
@@ -138,13 +137,13 @@ export default function SocialAlerts({
           })
         ) : (
           <motion.p
-                  key={menuType}
+                  key={activeTab}
             className={css['fallback']}
               initial={{ opacity }}
               animate={{ opacity: 1, transition }}
                  exit={{ opacity, transition }}
           >
-            {menuType === 'sent' ? 'No sent requests' : 'You have no new notifications'}
+            {activeTab === 1 ? 'No sent requests' : 'You have no new notifications'}
           </motion.p>
         )}
       </AnimatePresence>
