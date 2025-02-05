@@ -129,12 +129,16 @@ export default function Notifications({
       }
     });
 
-    socket.on(`nav:${user._id}:reply`, ({ action, reply }) => {
+    socket.on(`nav:${user._id}:reply`, async ({ action, reply }) => {
       captainsLog([-100, 12], [`NAV: ${action} REPLY`, reply]);
-      if (action === 'new') {
-        setReplies((prev) => [reply, ...prev]);
-      } else if (action === 'delete') {
-        setReplies((prev) => prev.filter(({ _id }) => _id !== reply._id))
+      if (menu && activeTab === 2) {
+        await markRepliesAsRead();
+      } else {
+        if (action === 'new') {
+          setReplies((prev) => [reply, ...prev]);
+        } else if (action === 'delete') {
+          setReplies((prev) => prev.filter(({ _id }) => _id !== reply._id))
+        }
       }
     })
 
@@ -145,7 +149,7 @@ export default function Notifications({
       socket.disconnect();
       document.removeEventListener('mousedown', closeMenu);
     };
-  }, [menu, user._id, reqReplyAlerts, markSocialsAsRead, markRepliesAsRead, setUser, setReplies]);
+  }, [menu, activeTab, user._id, reqReplyAlerts, markSocialsAsRead, markRepliesAsRead, setUser, setReplies]);
 
   const icons = ['envelope', 'paper-plane', 'reply'] as const;
 
