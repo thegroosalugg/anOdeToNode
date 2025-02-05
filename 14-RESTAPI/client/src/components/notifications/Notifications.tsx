@@ -66,12 +66,12 @@ export default function Notifications({
   const opacity = deferring ? 0.6 : 1;
 
   const markSocialsAsRead = useCallback(
-    async (index: number) =>
+    async () =>
       await reqSocialAlerts(
-        { url: `alerts/social?type=${['inbound', 'outbound'][index]}` },
+        { url: `alerts/social?type=${['inbound', 'outbound'][activeTab]}` },
         { onSuccess: (updated) => setUser(updated) }
       ),
-    [reqSocialAlerts, setUser]
+    [activeTab, reqSocialAlerts, setUser]
   );
 
   const markRepliesAsRead = useCallback(
@@ -79,20 +79,19 @@ export default function Notifications({
     [reqReplyAlerts]
   );
 
-  const requests = [
-    () => markSocialsAsRead(0),
-    () => markSocialsAsRead(1),
-    markRepliesAsRead
-  ];
+  const handleAlerts = async () => {
+    if (activeTab < 2) await markSocialsAsRead();
+    else               await markRepliesAsRead();
+  };
 
   const openMenu = async () => {
     isInitial.current = true;
     deferFn(async () => {
       showMenu(true);
-      // await Promise.all([markSocialsAsRead(), markRepliesAsRead()]);
-      await requests[activeTab]();
-      isInitial.current = false
-    }, 1500)
+      await reqReplyAlerts({ url: 'alerts/replies' }); // should run first
+      await handleAlerts();
+      isInitial.current = false;
+    }, 1500);
   };
 
   const closeMenu = (event: MouseEvent) => {
@@ -103,7 +102,7 @@ export default function Notifications({
 
   const changeTab = async (index: number) => {
     setActiveTab(index);
-    await requests[index]();
+    await handleAlerts();
   };
 
   const navTo = (path: string) => {
@@ -118,16 +117,13 @@ export default function Notifications({
   useEffect(() => {
     document.addEventListener('mousedown', closeMenu);
 
-    const getReplyAlerts = async () => await reqReplyAlerts({ url: 'alerts/replies' });
-    getReplyAlerts();
-
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog([-100, 15], ['NAV: Socket connected']));
 
     socket.on(`peer:${user._id}:update`, async (updated) => {
       captainsLog([-100, 15], ['NAV: UPDATE', updated]);
       if (menu) {
-        await markSocialsAsRead(activeTab);
+        await markSocialsAsRead();
       } else {
         setUser(updated);
       }
@@ -144,12 +140,12 @@ export default function Notifications({
 
     return () => {
       socket.off('connect');
-      socket.off(`peer:${user?._id}:update`);
+      socket.off(`peer:${user._id}:update`);
       socket.off(`nav:${user._id}:reply`);
       socket.disconnect();
       document.removeEventListener('mousedown', closeMenu);
     };
-  }, [menu, activeTab, user._id, reqReplyAlerts, markSocialsAsRead, markRepliesAsRead, setUser, setReplies]);
+  }, [menu, user._id, reqReplyAlerts, markSocialsAsRead, markRepliesAsRead, setUser, setReplies]);
 
   const icons = ['envelope', 'paper-plane', 'reply'] as const;
 
