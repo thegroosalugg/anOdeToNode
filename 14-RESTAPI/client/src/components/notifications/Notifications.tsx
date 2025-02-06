@@ -13,6 +13,7 @@ import Reply from '@/models/Reply';
 import SocialAlerts from './SocialAlerts';
 import ReplyAlerts from './ReplyAlerts';
 import AsyncAwait from '../panel/AsyncAwait';
+import Counter from './Counter';
 import { captainsLog } from '@/util/captainsLog';
 import nav from '../navigation/NavButton.module.css';
 import css from './Notifications.module.css';
@@ -165,14 +166,18 @@ export default function Notifications({
                   onClick={() => changeTab(i)}
                   animate={{ color: activeTab === i ? '#888' : 'var(--team-green)' }}
                 >
-                  <FontAwesomeIcon icon={icons[i]} />{count}
+                  <FontAwesomeIcon icon={icons[i]} />
+                  <Counter {...{ count, scale: 0.5 }} />
                 </motion.button>
               ))}
             </section>
             <AsyncAwait {...{ isLoading: isInitial.current, error }}>
               <AnimatePresence mode='wait'>
                 {activeTab === 2 ? (
-                  <ReplyAlerts {...{ replies, setReplies, navTo, onError }} key='replies' />
+                  <ReplyAlerts
+                    key='replies'
+                    {...{ replies, setReplies, navTo, onError }}
+                  />
                 ) : (
                   <SocialAlerts
                     key='friends'
@@ -194,13 +199,7 @@ export default function Notifications({
       >
         <FontAwesomeIcon icon='bell' />
         <span>Alerts</span>
-        <AnimatePresence>
-          {alerts > 0 && (
-            <motion.span className={css['alert']} {...animation}>
-              {alerts}
-            </motion.span>
-          )}
-        </AnimatePresence>
+        <Counter count={alerts} />
       </motion.button>
     </>
   );
