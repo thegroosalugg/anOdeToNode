@@ -1,8 +1,9 @@
 import { Model, model, Types, Schema } from 'mongoose';
 
 interface IChat {
-   host: Types.ObjectId;
-  guest: Types.ObjectId;
+        host: Types.ObjectId;
+       guest: Types.ObjectId;
+  deletedFor: Types.ObjectId[];
 }
 
 interface IChatMethods {
@@ -11,10 +12,13 @@ interface IChatMethods {
 
 type ChatModel = Model<IChat, {}, IChatMethods>;
 
+const user = { type: Schema.Types.ObjectId, ref: 'User' };
+
 export const chatSchema = new Schema<IChat, ChatModel, IChatMethods>(
   {
-     host: { type: Schema.Types.ObjectId, ref: 'User' },
-    guest: { type: Schema.Types.ObjectId, ref: 'User' },
+          host:  user,
+         guest:  user,
+    deletedFor: [user]
   },
   { timestamps: true }
 );
