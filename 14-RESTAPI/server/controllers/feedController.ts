@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { Types } from 'mongoose';
 import Post from '../models/Post';
-import captainsLog from '../util/captainsLog';
+import AppError from '../models/Error';
 
 const _public = '-email -password';
 
@@ -28,15 +28,11 @@ const getPosts: RequestHandler = async (req, res, next) => {
       .populate('creator', _public)
       .sort({ _id: -1 }); // newest first
 
-    if (!posts) {
-      res.status(404).json({ message: 'Nothing posted yet.' });
-      return;
-    }
+    if (!posts) return next(new AppError(404, 'Nothing posted yet'));
 
     res.status(200).json({ posts, docCount });
   } catch (error) {
-    captainsLog(5, 'getPosts Catch', error);
-    res.status(500).json({ message: 'Unable to load posts.' });
+    next(new AppError(500, 'Unable to load posts', error));
   }
 };
 
@@ -44,15 +40,11 @@ const getPostById: RequestHandler = async (req, res, next) => {
   try {
     const { postId } = req.params;
     const post = await Post.findById(postId).populate('creator', _public);
-    if (!post) {
-      res.status(404).json({ message: 'Post not found.' });
-      return;
-    }
+    if (!post) return next(new AppError(404, 'Post not found'));
 
     res.status(200).json(post);
   } catch (error) {
-    captainsLog(5, 'getPostById Catch', error);
-    res.status(500).json({ message: 'Unable to load post.' });
+    next(new AppError(500, 'Unable to load post', error));
   }
 };
 

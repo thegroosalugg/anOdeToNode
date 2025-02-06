@@ -1,4 +1,5 @@
-import       express from 'express';
+import       express, { ErrorRequestHandler }
+                     from 'express';
 import      mongoose from 'mongoose';
 import        multer from 'multer';
 import {   Server  } from 'socket.io';
@@ -14,13 +15,14 @@ import    feedRoutes from './routes/feed';
 import   replyRoutes from './routes/reply';
 import profileRoutes from './routes/profile';
 import  socialRoutes from './routes/social';
+import   alertRoutes from './routes/alert';
 import   captainsLog from './util/captainsLog';
 import        dotenv from 'dotenv';
               dotenv.config();
 
 const    app = express();
 const server = app.listen(3000, () => {
-  captainsLog(7, 'Hudson River, 2 years ago');
+  captainsLog(0, '<<Hudson River, 2 years ago>>');
 }); // createNewServer
 
 export const io = new Server(server, {
@@ -50,20 +52,26 @@ app.use((req, res, next) => {
 
 app.use(                        authRoutes);
 app.use('/feed',    authJWT,    feedRoutes);
-app.use('/post',    authJWT,    postRoutes);
-app.use('/post',    authJWT,   replyRoutes);
+app.use('/post',    authJWT,   [postRoutes, replyRoutes]);
 app.use('/profile', authJWT, profileRoutes);
 app.use('/social',  authJWT,  socialRoutes);
+app.use('/alerts',   authJWT,   alertRoutes);
+
+app.use(((appError, req, res, next) => {
+  const { status, client, dev, where } = appError;
+    captainsLog(status, `[status: ${status}] :::${where}:::`, [client, dev]);
+    res.status(status).json(client);
+}) as ErrorRequestHandler);
 
 mongoose
   .connect(process.env.MONGO_URI!)
   .then(() => {
     io.on('connection', (socket) => {
-      captainsLog(2, 'App IO: Client connected');
+      captainsLog(200, '<App IO: <Client connected>>');
 
       socket.on('disconnect', () => {
-        captainsLog(1, 'App IO: Client disconnected');
+        captainsLog(403, '<App IO: <Client disconnected>>');
       });
     });
   })
-  .catch((error) => captainsLog(1, 'Mongoose error', error));
+  .catch((error) => captainsLog(403, '<<Mongoose error>>', error));

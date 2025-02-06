@@ -1,25 +1,30 @@
-const log = '▫▪⇝↠↮↭LOG⇁↽{ '
-const end = '▫▪⇁↽END⇁↽'
-
 const coloredText = (n: number, text: string) => {
   const lines = text.split('\n');
-  const ANSI1 = `\x1b[3${n}m`;
-  const ANSI2 = '\x1b[0m';
+  const  ANSI = (content: string) => `\x1b[3${n}m${content}\x1b[0m`;
 
-  if (lines.length === 1) {
-    return ANSI1 + log + text + end + ANSI2;
-  }
+  if (lines.length === 1) return ANSI(text);
 
-  return lines
-    .map((line, i) => {
-      if (i ===                0) return ANSI1 +  log + line + ANSI2;
-      if (i === lines.length - 1) return ANSI1 + line +  end + ANSI2;
-      return ANSI1 + line + ANSI2;
-    })
-    .join('\n');
+  const barrier = '\n' + ANSI('⇎'.repeat(40));
+  return lines.map((line) => ANSI(line)).join('\n') + barrier;
 };
 
-const captainsLog = (col: number, title: string, log: unknown = '') => {
+const errors = [TypeError, RangeError] as const;
+const nonSerializable = (value: unknown): value is Error =>
+  errors.some((err) => value instanceof err);
+
+const formatText = (value: unknown) => {
+  let content = '';
+  if (nonSerializable(value)) {
+    content = `<<${value.name}>> \n ${value.stack?.split('\n')[1].trim()}`;
+  } else if (typeof value === 'object' && value !== null) {
+    content = JSON.stringify(value, null, 1);
+  } else {
+    content = String(value);
+  }
+  return content;
+};
+
+const captainsLog = (status: number, title: string, log?: unknown[]) => {
   const time = new Date().toLocaleTimeString([], {
       hour: '2-digit',
     minute: '2-digit',
@@ -27,14 +32,18 @@ const captainsLog = (col: number, title: string, log: unknown = '') => {
     hour12: false,
   });
 
-  const content =
-    typeof log === 'object' && log !== null
-      ? JSON.stringify(log, null, 2)
-      : log;
+  const color = {
+    200: 2,       // green
+    401: 6,       // cyan
+    403: 1,       // red
+    404: 4,       // blue
+    422: 3,       // amber
+  }[status] || 5; // magenta
 
-  console.log(
-    coloredText(col, `${title.toUpperCase()} ${time} ${content}`)
-  );
+  let content = '';
+  if (log) content = log.map(item => formatText(item)).join('\n');
+
+  console.log(coloredText(color, `${title.toUpperCase()} [${time}] ${content}`));
 };
 
 export default captainsLog;

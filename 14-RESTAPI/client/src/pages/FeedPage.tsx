@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
 import useFetch from '@/hooks/useFetch';
-import { Auth } from './RootLayout';
+import { Authorized } from './RootLayout';
 import Post from '@/models/Post';
 import Modal from '@/components/modal/Modal';
 import Button from '@/components/button/Button';
@@ -18,7 +18,7 @@ const initialData: Paginated<Post, 'posts'> = {
      posts: [],
 };
 
-export default function FeedPage({ setUser }: Auth) {
+export default function FeedPage({ setUser }: Authorized) {
   const {
           data: { docCount, posts },
        setData,
@@ -43,12 +43,12 @@ export default function FeedPage({ setUser }: Auth) {
     const mountData = async () => {
       await reqHandler({ url });
       if (isInitial.current) isInitial.current = false;
-      captainsLog(-100, 270, ['FEEDPAGE'] ); // **LOGDATA
+      captainsLog([-100, 270], ['FEEDPAGE'] ); // **LOGDATA
     }
     mountData();
 
     const socket = io(BASE_URL);
-    socket.on('connect', () => captainsLog(-100, 250, ['FEEDPAGE: Socket connected']));
+    socket.on('connect', () => captainsLog([-100, 250], ['FEEDPAGE: Socket connected']));
 
     socket.on('post:update', (newPost) => {
       setData(({ docCount: prevCount, posts: prevPosts }) => {
@@ -58,7 +58,7 @@ export default function FeedPage({ setUser }: Auth) {
           : [newPost, ...prevPosts];
 
         const docCount = prevCount + 1;
-        captainsLog(-100, 240, ['FEEDPAGE ' + (isFound ? 'EDIT' : 'NEW'), newPost]);
+        captainsLog([-100, 240], ['FEEDPAGE ' + (isFound ? 'EDIT' : 'NEW'), newPost]);
         return { docCount, posts };
       });
     });
@@ -67,7 +67,7 @@ export default function FeedPage({ setUser }: Auth) {
       setData(({ docCount: prevCount, posts: prevPosts }) => {
         const    posts = prevPosts.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;
-        captainsLog(-100, 280, ['FEEDPAGE DELETED', deleted]);
+        captainsLog([-100, 280], ['FEEDPAGE DELETED', deleted]);
         return { docCount, posts };
       });
     });
@@ -90,7 +90,7 @@ export default function FeedPage({ setUser }: Auth) {
       <Button
           onClick={() => setShowModal(true)}
               hsl={[180, 80, 35]}
-            style={{ margin: '0 auto 1rem' }}
+            style={{ margin: '0 auto 0.5rem' }}
         animateEx={{ transition: { opacity: { delay: 0.8 }}}}
       >
         New Post

@@ -1,9 +1,10 @@
 import { RequestHandler } from 'express';
 import { io } from '../app';
-import User from '../models/User';
-import captainsLog from '../util/captainsLog';
+import User, { IFriend } from '../models/User';
+import AppError from '../models/Error';
 
 const _public = '-email -password';
+const  devErr = 'Do not use without AuthJWT';
 
 const getUsers: RequestHandler = async (req, res, next) => {
   try {
@@ -17,15 +18,10 @@ const getUsers: RequestHandler = async (req, res, next) => {
       .select(_public)
       .sort({ _id: -1 });
 
-    if (!users) {
-      res.status(404).json({ message: 'No users found' });
-      return;
-    }
-
+    if (!users) return next(new AppError(404, 'No users found'));
     res.status(200).json({ users, docCount });
   } catch (error) {
-    captainsLog(5, 'getUsers Catch', error);
-    res.status(500).json({ message: 'unable to load users' });
+    next(new AppError(500, 'unable to load users', error));
   }
 };
 
@@ -33,33 +29,22 @@ const getUserById: RequestHandler = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const user = await User.findById(userId).select(_public);
-    if (!user) {
-      res.status(404).json({ message: 'User not found.' });
-      return;
-    }
-
+    if (!user) return next(new AppError(404, 'User not found'));
     res.status(200).json(user);
   } catch (error) {
-    captainsLog(5, 'getUserById Catch', error);
-    res.status(500).json({ message: 'Unable to load user.' });
+    next(new AppError(500, 'unable to load user', error));
   }
 };
 
 const friendRequest: RequestHandler = async (req, res, next) => {
-  if (!req.user) {
-    res.status(401).json({ message: 'incorrect use of controller' });
-    return;
-  }
+  if (!req.user) return next(new AppError(403, 'Something went wrong', devErr));
 
   try {
     const { userId, action } = req.params;
     const peer = await User.findById(userId);
     const user = req.user;
 
-    if (!peer) {
-      res.status(404).json({ message: 'User not found.' });
-      return;
-    }
+    if (!peer) return next(new AppError(404, 'User not found'));
 
     const peerIndex = peer.friends.findIndex(
       (friend) => friend.user.toString() === user._id.toString()
@@ -70,31 +55,29 @@ const friendRequest: RequestHandler = async (req, res, next) => {
     );
 
     switch (action) {
-      case 'add':
-        peer.friends.push({ user: user._id, status: 'received' });
-        user.friends.push({ user: peer._id, status: 'sent' });
+      case 'add': // meta is created by Mongoose, but required here, therefore type asserted
+        peer.friends.push({ user: user._id, initiated: false } as IFriend);
+        user.friends.push({ user: peer._id, initiated: true  } as IFriend);
         break;
       case 'accept':
-        peer.friends[peerIndex].status = 'accepted';
-        user.friends[userIndex].status = 'accepted';
+        peer.friends[peerIndex].accepted = true;
+        user.friends[userIndex].accepted = true;
         break;
       case 'delete':
         peer.friends.splice(peerIndex, 1);
         user.friends.splice(userIndex, 1);
         break;
       default:
-        res.status(400).json({ message: 'Invalid action' });
-        return;
+        return next(new AppError(400, 'Invalid action'));
     }
 
     await peer.save();
     await user.save();
-    io.emit(`peer:${peer._id}:${user._id}:update`, user);
-    io.emit(`peer:${user._id}:${peer._id}:update`, peer);
+    io.emit(`peer:${user._id}:update`, user);
+    io.emit(`peer:${peer._id}:update`, peer);
     res.status(201).json({ message: 'success' });
   } catch (error) {
-    captainsLog(5, 'addFriend Catch', error);
-    res.status(500).json({ message: 'Request could not be completed.' });
+    next(new AppError(500, 'Request could not be completed.', error));
   }
 };
 

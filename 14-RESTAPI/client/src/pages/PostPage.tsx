@@ -3,9 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { BASE_URL, FetchError } from '@/util/fetchData';
-import { Auth } from './RootLayout';
+import { Authorized } from './RootLayout';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
-import User from '@/models/User';
 import Post from '@/models/Post';
 import Reply from '@/models/Reply';
 import AsyncAwait from '@/components/panel/AsyncAwait';
@@ -23,7 +22,7 @@ const initialData: Paginated<Reply, 'replies'> = {
    replies: [],
 };
 
-export default function PostPage({ user, setUser }: Auth & { user: User }) {
+export default function PostPage({ user, setUser }: Authorized) {
   const {
           data: post,
        setData: setPost,
@@ -58,17 +57,17 @@ export default function PostPage({ user, setUser }: Auth & { user: User }) {
     const initialData = async () => await Promise.all([fetchPost(), fetchReplies()]);
     if (isInitial.current) {
       isInitial.current = false;
-      captainsLog(-100, 30, ['POSTPAGE effect, ID:' + postId]); // **LOGDATA
+      captainsLog([-100, 185], ['POSTPAGE effect, ID:' + postId]); // **LOGDATA
       initialData();
     } else {
       fetchReplies();
     }
 
     const socket = io(BASE_URL);
-    socket.on('connect', () => captainsLog(-100, 25, ['POSTPAGE: Socket connected']));
+    socket.on('connect', () => captainsLog([-100, 25], ['POSTPAGE: Socket connected']));
 
-    socket.on(`post:${postId}:reply`, (reply) => {
-      captainsLog(-100, 20, ['POSTPAGE: NEW REPLY']);
+    socket.on(`post:${postId}:reply:new`, (reply) => {
+      captainsLog([-100, 190], ['POSTPAGE: NEW REPLY']);
       setTimeout(() => {
         setReplies(({ docCount, replies }) => {
           return { docCount: docCount + 1, replies: [reply, ...replies] };
@@ -80,13 +79,13 @@ export default function PostPage({ user, setUser }: Auth & { user: User }) {
       setReplies(({ docCount: prevCount, replies: prevReplies }) => {
         const  replies = prevReplies.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;
-        captainsLog(-100, 20, ['POSTPAGE: REPLY DELETED', deleted]);
+        captainsLog([-100, 190], ['POSTPAGE: REPLY DELETED', deleted]);
         return { docCount, replies };
       });
     });
 
     socket.on(`post:${postId}:update`, (post) => {
-      captainsLog(-100, 15, ['POSTPAGE: POST UPDATED']);
+      captainsLog([-100, 195], ['POSTPAGE: POST UPDATED']);
       setPost((prevPost) => {
         if (post) return { ...prevPost, ...post };
         return prevPost;
@@ -95,7 +94,7 @@ export default function PostPage({ user, setUser }: Auth & { user: User }) {
     });
 
     socket.on(`post:${postId}:delete`, (deleted) => {
-      captainsLog(-100, 10, ['POSTPAGE: POST DELETED']);
+      captainsLog([-100, 200], ['POSTPAGE: POST DELETED']);
       if (deleted.creator !== user._id) {
         setPost(null); // delete actions for viewers. Creator's state automatically set to null
         setError({ message: 'The post was deleted' } as FetchError); // creators redirected without msg
@@ -104,7 +103,7 @@ export default function PostPage({ user, setUser }: Auth & { user: User }) {
 
     return () => {
       socket.off('connect');
-      socket.off(`post:${postId}:reply`);
+      socket.off(`post:${postId}:reply:new`);
       socket.off(`post:${postId}:reply:delete`); // deletes a reply to post
       socket.off(`post:${postId}:update`);
       socket.off(`post:${postId}:delete`); // deletes the post (& all replies)
@@ -120,6 +119,12 @@ export default function PostPage({ user, setUser }: Auth & { user: User }) {
           closeModal(); // delete actions for creator
           navigate('/feed');
         },
+        onError: (err) => {
+          if (err.status === 401) {
+            setUser(null);
+          }
+          closeModal();
+        }
       }
     );
   }

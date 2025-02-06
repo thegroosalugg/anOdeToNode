@@ -1,5 +1,8 @@
 import { useRoutes } from 'react-router-dom';
-import {    Auth   } from './pages/RootLayout';
+import {
+            Auth,
+         Authorized
+                   } from './pages/RootLayout';
 import     AuthPage  from './pages/AuthPage';
 import   RootLayout  from './pages/RootLayout';
 import     FeedPage  from './pages/FeedPage';
@@ -24,11 +27,13 @@ const validate = (path: AppRoutes, props: Auth) => {
 
   if (!user) return <AuthPage auth={props} />;
 
+  const authorized = props as Authorized;
+
   const elements = {
-      feed: <FeedPage   {...props} />,
-      post: <PostPage   {...props} />,
-    social: <SocialPage {...props} />,
-      peer: <PeerPage   {...props} />,
+      feed: <FeedPage   {...authorized} />,
+      post: <PostPage   {...authorized} />,
+    social: <SocialPage {...authorized} />,
+      peer: <PeerPage   {...authorized} />,
   } as const;
 
   return elements[path];
@@ -36,7 +41,7 @@ const validate = (path: AppRoutes, props: Auth) => {
 
 export default function App() {
   console.clear(); // **LOGDATA
-  captainsLog(-100, -10, ['⇚⇚⇚App⇛⇛⇛']);
+  captainsLog([-100, -10], ['⇚⇚⇚App⇛⇛⇛']);
 
   const element = useRoutes([
     {    path: '/',

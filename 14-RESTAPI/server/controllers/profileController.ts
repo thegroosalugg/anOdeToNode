@@ -1,32 +1,26 @@
-import User from '../models/User';
 import { RequestHandler } from 'express';
+import AppError from '../models/Error';
 import { deleteFile } from '../util/deleteFile';
-import captainsLog from '../util/captainsLog';
+
+const devErr = 'Do not use without AuthJWT';
 
 const profilePic: RequestHandler = async (req, res, next) => {
+  const  user = req.user;
+  const image = req.file;
+  if (!user) {
+    if (image) deleteFile(image.path);
+    return next(new AppError(403, 'Something went wrong', devErr));
+  }
+  if (!image) return next(new AppError(422, { message: 'Image required' }));
+
   try {
-    const  user = await User.findById(req.user);
-    const image = req.file;
-
-    if (!user) {
-      res.status(404).json({ message: 'User not found' });
-      if (image) deleteFile(image.path);
-      return;
-    }
-
-    if (!image) {
-      res.status(422).json({ message: 'Image required' });
-      return;
-    }
-
     if (user.imgURL) deleteFile(user.imgURL);
     const imgURL = image.path
     user.imgURL  = imgURL;
     await user.save();
     res.status(201).json({ imgURL });
   } catch (error) {
-    captainsLog(5, 'profilePic Catch', error);
-    res.status(500).json({ message: 'Image upload failed' });
+    next(new AppError(500, 'Image upload failed', error));
   }
 };
 

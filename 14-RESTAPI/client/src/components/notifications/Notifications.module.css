@@ -1,0 +1,35 @@
+.notifications {
+  position: fixed;
+  top: 0.25rem;
+  right: 0.25rem;
+  height: 240px;
+  max-height: calc(100vh - 0.5rem);
+  max-width: calc(100% - 0.5rem);
+  width: 225px;
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--team-green);
+  background: var(--box-gradient);
+  color: var(--team-green);
+  z-index: 99;
+}
+
+.menu-bar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+
+  > button {
+    position: relative;
+    border: none;
+    background: none;
+    color: var(--team-green);
+    padding: 0.1rem 0.8rem;
+
+    &:nth-of-type(2) {
+      border-left: 1px solid var(--team-green);
+      border-right: 1px solid var(--team-green);
+    }
+  }
+}

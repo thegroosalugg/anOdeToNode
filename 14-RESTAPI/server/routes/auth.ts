@@ -5,9 +5,9 @@ import { authJWT } from "../middleware/auth.JWT";
 
 const router = express.Router();
 
-router.get('/user', authJWT, getUser);
-router.post('/login', postLogin);
-router.post('/signup', validateSignUp, postSignup);
-router.post('/refresh-token', refreshToken);
+router.get('/user',            authJWT,    getUser);
+router.post('/login',                    postLogin);
+router.post('/signup',  validateSignUp, postSignup);
+router.post('/refresh-token',         refreshToken);
 
 export default router;

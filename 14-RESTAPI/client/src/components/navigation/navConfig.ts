@@ -12,6 +12,6 @@ export const NAV_CONFIG = {
   '/': {
     label: 'Profile',
      icon: 'user',
-    delay: 0.4
+    delay: 0.6
   }
 } as const;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
-import { Auth } from './RootLayout';
+import { Authorized } from './RootLayout';
 import User from '@/models/User';
 import Post from '@/models/Post';
 import AsyncAwait from '@/components/panel/AsyncAwait';
@@ -15,7 +15,7 @@ const initialData: Paginated<Post, 'posts'> = {
      posts: [],
 }
 
-export default function PeerPage({ user, setUser }: Auth & { user: User }) {
+export default function PeerPage({ user, setUser }: Authorized) {
   const { data: peer, isLoading, error, reqHandler: reqPeer } = useFetch<User | null>();
   const {
           data: { posts, docCount },
@@ -52,10 +52,14 @@ export default function PeerPage({ user, setUser }: Auth & { user: User }) {
 
   return (
     <AsyncAwait {...{ isLoading, error }}>
-      {peer && <PeerProfile {...{ user, setUser, peer }} />}
-      <PagedList<Post> {...feedProps}>
-        {(post) => <PostItem {...post} />}
-      </PagedList>
+      {peer && (
+        <>
+          <PeerProfile {...{ user, setUser, peer }} />
+          <PagedList<Post> {...feedProps}>
+            {(post) => <PostItem {...post} />}
+          </PagedList>
+        </>
+      )}
     </AsyncAwait>
   );
 }

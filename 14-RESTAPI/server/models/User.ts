@@ -2,13 +2,21 @@ import { Model, model, Types, Schema } from 'mongoose';
 
 const required = true;
 
-interface IUser {
+export interface IFriend {
+       _id: Types.ObjectId;
+  accepted: boolean;
+ initiated: boolean;
+      user: Types.ObjectId;
+      meta: { read: boolean; show: boolean };
+}
+
+export interface IUser {
       name: string;
    surname: string;
      email: string;
   password: string;
     imgURL: string;
-   friends: { status: 'sent' | 'received' | 'accepted', user: Types.ObjectId }[];
+   friends: IFriend[];
 }
 
 interface IUserMethods {
@@ -26,14 +34,14 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
       imgURL: { type: String },
      friends: [
         {
-               user: { type: Schema.Types.ObjectId, ref: 'User' },
-          createdAt: { type: Date, default: Date.now },
-             status: {
-                 type: String,
-                 // enum is a type validator that restricts values to a predefined set
-                 enum: ['sent', 'received', 'accepted'],
-              // default: 'pending'
-          },
+          user: { type: Schema.Types.ObjectId, ref: 'User' },
+     createdAt: { type: Date,      default: Date.now },
+      accepted: { type: Boolean,   default: false    },
+     initiated: { type: Boolean, immutable: true     },
+          meta: {
+            read: { type: Boolean, default: false },
+            show: { type: Boolean, default: true  },
+          }
         },
       ],
     },

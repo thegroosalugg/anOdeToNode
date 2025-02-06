@@ -37,7 +37,7 @@ ul, ol {
   list-style: none;
 }
 
-span {
+span, strong, em {
   display: inline-block;
 }
 
@@ -60,5 +60,5 @@ button {
 
 ::-webkit-scrollbar-thumb {
   background: var(--team-green);
-  border-radius: 25px;
+  border-radius: 5px;
 }

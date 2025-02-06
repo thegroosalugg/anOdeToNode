@@ -1,13 +1,15 @@
 import { Model, model, Types, Schema } from 'mongoose';
 import Reply from './Reply';
+import { IUser } from './User';
 
 const required = true;
 
 export interface IPost {
+      _id: Types.ObjectId;
     title: string;
   content: string;
    imgURL: string;
-  creator: Types.ObjectId;
+  creator: Types.ObjectId | IUser;
 }
 
 interface IPostMethods {

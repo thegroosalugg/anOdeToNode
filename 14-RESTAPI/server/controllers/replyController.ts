@@ -1,11 +1,12 @@
 import { RequestHandler } from 'express';
 import { io } from '../app';
-import Post from '../models/Post';
+import Post, { IPost } from '../models/Post';
 import Reply from '../models/Reply';
+import AppError from '../models/Error';
 import { getErrors, hasErrors } from '../validation/validators';
-import captainsLog from '../util/captainsLog';
 
-const _public = '-email -password';
+const _public = '-email -password -friends';
+const  devErr = 'Do not use without AuthJWT';
 
 const getReplies: RequestHandler = async (req, res, next) => {
   const { postId: post } = req.params;
@@ -22,56 +23,52 @@ const getReplies: RequestHandler = async (req, res, next) => {
 
     res.status(200).json({ replies, docCount });
   } catch (error) {
-    captainsLog(5, 'getReplies Catch', error);
-    res.status(500).json({ message: 'Unable to load comments' });
+    next(new AppError(500, 'Unable to load comments', error));
   }
 };
 
 const postReply: RequestHandler = async (req, res, next) => {
+  const user = req.user;
+  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+
   try {
     const errors = getErrors(req);
-    if (hasErrors(errors)) {
-      res.status(422).json(errors);
-      return;
-    }
+    if (hasErrors(errors)) return next(new AppError(422, errors));
 
     const {  postId } = req.params;
     const { content } = req.body;
-    const   creator   = req.user;
 
     const post = await Post.findById(postId);
-    if (!post) {
-      res.status(404).json({ message: 'Post not found' });
-      return;
-    }
+    if (!post) return next(new AppError(404, 'Post not found'));
 
-    const reply = new Reply({ post: post._id, content, creator });
+    const reply = new Reply({ content, post: post._id, creator: user._id });
     await reply.save();
-    io.emit(`post:${postId}:reply`, reply); // emits to specfic path only
-    res.status(201).json(reply);
 
+    user.set({ email: 'hidden', friends: [] });
+    reply.creator = user
+    reply.post    = post;
+
+    io.emit(`post:${postId}:reply:new`, reply); // notify Post Page
+    io.emit(`nav:${post.creator}:reply`, { action: 'new', reply}); // alert original post user
+    res.status(201).json(reply);
   } catch (error) {
-    captainsLog(5, 'postReply Catch', error);
-    res.status(500).json({ message: "Message couldn't be posted" });
+    next(new AppError(500, "Message couldn't be posted", error));
   }
 };
 
 const deleteReply: RequestHandler = async (req, res, next) => {
   try {
     const { replyId: _id } = req.params;
-    const reply = await Reply.findOne({ _id, creator: req.user });
-
-    if (!reply) {
-      res.status(404).json({ message: 'Comment not found.' });
-      return;
-    }
+    const reply = await Reply.findOne({ _id, creator: req.user }).populate('post', 'creator');
+    if (!reply) return next(new AppError(404, 'Comment not found'));
 
     await Reply.deleteOne({ _id, creator: req.user });
-    io.emit(`post:${reply.post}:reply:delete`, reply); // emits back to PostID page
+    const post = reply.post as IPost;
+    io.emit(`post:${post._id}:reply:delete`, reply); // emits back to PostID page
+    io.emit(`nav:${post.creator}:reply`, { action: 'delete', reply }); // alert original post user
     res.status(200).json(null);
   } catch (error) {
-    captainsLog(5, 'deletePost Catch', error);
-    res.status(500).json({ message: 'Unable to delete comment.' });
+    next(new AppError(500, 'Unable to delete comment', error));
   }
 }
 
