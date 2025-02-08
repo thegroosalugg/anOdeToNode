@@ -5,6 +5,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { Auth } from '@/pages/RootLayout';
 import NavButton from './NavButton';
 import Notifications from '../notifications/Notifications';
+import ChatMenu from '../chat/menu/ChatMenu';
 import css from './NavBar.module.css';
 
 export default function NavBar({ user, setUser }: Auth) {
@@ -18,25 +19,26 @@ export default function NavBar({ user, setUser }: Auth) {
   return (
     <nav className={css['nav']}>
       <h1>
-        <span>Friendface {/* visible in portrait, display: none in landscape */}</span>
+        <span>
+          Friendface {/* visible in portrait, display: none in landscape */}
+        </span>
         <span>
           <FontAwesomeIcon icon='f' /> {/* vice versa */}
         </span>
       </h1>
       <AnimatePresence>
         {user &&
-          Array.from({ length: 4 }, (_, index) => {
-            const element =
-              index === 2 ? (
-                <Notifications key={index} {...{ user, setUser }} />
-              ) : (
-                <NavButton
-                  key={index}
-                  {...{ index, deferring, callback: (path) => navTo(path) }}
-                />
-              );
-            return element;
-          })}
+          Array.from({ length: 5 }, (_, index) =>
+            index === 2 ? (
+              <Notifications key={index} {...{ user, setUser }} />
+            ) : index === 3 ? (
+              <ChatMenu      key={index} {...{ user }} />
+            ) : (
+              <NavButton     key={index}
+                {...{ index, deferring, callback: (path) => navTo(path) }}
+              />
+            )
+          )}
       </AnimatePresence>
     </nav>
   );

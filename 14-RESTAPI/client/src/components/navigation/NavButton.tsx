@@ -14,9 +14,9 @@ interface NavProps {
 
 export default function NavButton({ index, callback, deferring, children }: NavProps) {
   const { pathname } = useLocation();
-  const  path = (['/feed', '/social', 'ALERTS',       '/'] as const)[index];
-  const  icon = ([  'rss',   'users',   'bell',    'user'] as const)[index];
-  const label =  [ 'Feed',  'Social', 'Alerts', 'Profile']          [index];
+  const  path = (['/feed', '/social', 'ALERTS',      'CHAT',       '/'] as const)[index];
+  const  icon = ([  'rss',   'users',   'bell',  'comments',    'user'] as const)[index];
+  const label =  [ 'Feed',  'Social', 'Alerts', '     Chat', 'Profile']          [index];
 
   const isActive =
     pathname === path ||
