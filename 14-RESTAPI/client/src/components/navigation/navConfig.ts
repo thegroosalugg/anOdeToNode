@@ -9,9 +9,14 @@ export const NAV_CONFIG = {
      icon: 'users',
     delay: 0.2
   },
+  '/alerts': {
+    label: 'Alerts',
+     icon: 'bell',
+    delay: 0.4
+  },
   '/': {
     label: 'Profile',
      icon: 'user',
     delay: 0.6
-  }
+  },
 } as const;

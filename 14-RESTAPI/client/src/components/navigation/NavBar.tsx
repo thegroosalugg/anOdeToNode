@@ -28,10 +28,10 @@ export default function NavBar({ user, setUser }: Auth) {
       <AnimatePresence>
         {user && (
           <>
-            <NavButton path='/feed'   navFn={navTo} deferring={deferring} />
-            <NavButton path='/social' navFn={navTo} deferring={deferring} />
+            <NavButton {...{ path: '/feed',   callback: (path) => navTo(path), deferring}} />
+            <NavButton {...{ path: '/social', callback: (path) => navTo(path), deferring}} />
             <Notifications {...{ user, setUser }} />
-            <NavButton path='/'       navFn={navTo} deferring={deferring} />
+            <NavButton {...{ path: '/',       callback: (path) => navTo(path), deferring}} />
           </>
         )}
       </AnimatePresence>

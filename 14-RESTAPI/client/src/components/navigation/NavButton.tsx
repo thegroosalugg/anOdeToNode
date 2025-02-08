@@ -7,12 +7,13 @@ import { NAV_CONFIG } from './navConfig';
 import css from './NavButton.module.css';
 
 interface NavProps {
-       path: '/feed' | '/social' | '/';
-      navFn: (path: string) => void;
+       path: '/feed' | '/social' | '/' | '/alerts';
+   callback: (path: string) => void;
   deferring: Debounce['deferring'];
+  children?: React.ReactNode;
 }
 
-export default function NavButton({ path, navFn, deferring }: NavProps) {
+export default function NavButton({ path, callback, deferring, children }: NavProps) {
   const { pathname } = useLocation();
 
   const isActive =
@@ -34,7 +35,7 @@ export default function NavButton({ path, navFn, deferring }: NavProps) {
   return (
     <motion.button
       className={classes}
-        onClick={() => navFn(path)}
+        onClick={() => callback(path)}
        disabled={deferring}
         initial={{ opacity: 0, y,    x }}
         animate={{ opacity,    y: 0, x: 0, transition: {    delay      } }}
@@ -42,6 +43,7 @@ export default function NavButton({ path, navFn, deferring }: NavProps) {
     >
       <FontAwesomeIcon icon={icon} />
       {label}
+      {children && children}
       {isActive && <motion.div layoutId='tab-indicator' className={css['active-tab']} />}
     </motion.button>
   );

@@ -1,4 +1,3 @@
-import { isMobile } from 'react-device-detect';
 import { AnimatePresence, motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -13,9 +12,9 @@ import Reply from '@/models/Reply';
 import SocialAlerts from './SocialAlerts';
 import ReplyAlerts from './ReplyAlerts';
 import AsyncAwait from '../panel/AsyncAwait';
+import NavButton from '../navigation/NavButton';
 import Counter from './Counter';
 import { captainsLog } from '@/util/captainsLog';
-import nav from '../navigation/NavButton.module.css';
 import css from './Notifications.module.css';
 
 export default function Notifications({
@@ -57,14 +56,11 @@ export default function Notifications({
 
   const alerts = inbound + outbound + newReplies;
 
-  const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;
-  const [x, y] = isLandscape ? [75, 0] : [0, 75];
   const animation = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
        exit: { opacity: 0 },
   };
-  const opacity = deferring ? 0.6 : 1;
 
   const markSocialsAsRead = useCallback(
     async (index = activeTab) =>
@@ -189,18 +185,9 @@ export default function Notifications({
           </motion.section>
         )}
       </AnimatePresence>
-      <motion.button
-        className={nav['nav-button']}
-          onClick={openMenu}
-         disabled={deferring}
-          initial={{ opacity: 0, y,    x }}
-          animate={{ opacity,    y: 0, x: 0, transition: {    delay: 0.4 } }}
-             exit={{ opacity: 0,             transition: { duration: 0.8 } }}
-      >
-        <FontAwesomeIcon icon='bell' />
-        <span>Alerts</span>
+      <NavButton {...{ path: '/alerts', callback: openMenu, deferring }}>
         <Counter count={alerts} />
-      </motion.button>
+      </NavButton>
     </>
   );
 }
