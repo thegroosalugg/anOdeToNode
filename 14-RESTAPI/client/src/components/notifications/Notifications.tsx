@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import useDebounce from '@/hooks/useDebounce';
@@ -137,7 +138,7 @@ export default function Notifications({
           setReplies((prev) => prev.filter(({ _id }) => _id !== reply._id))
         }
       }
-    })
+    });
 
     return () => {
       socket.off('connect');
@@ -146,45 +147,57 @@ export default function Notifications({
       socket.disconnect();
       document.removeEventListener('mousedown', closeMenu);
     };
-  }, [menu, activeTab, user._id, reqReplyAlerts, markSocialsAsRead, markRepliesAsRead, setUser, setReplies]);
+  }, [
+    menu,
+    activeTab,
+    user._id,
+    reqReplyAlerts,
+    markSocialsAsRead,
+    markRepliesAsRead,
+    setUser,
+    setReplies,
+  ]);
 
   const icons = ['envelope', 'paper-plane', 'reply'] as const;
 
   return (
     <>
-      <AnimatePresence>
-        {menu && (
-          <motion.section className={css['notifications']} ref={menuRef} {...animation}>
-            <section className={css['menu-bar']}>
-              {[inbound, outbound, newReplies].map((count, i) => (
-                <motion.button
-                      key={i}
-                  onClick={() => changeTab(i)}
-                  animate={{ color: activeTab === i ? '#888' : 'var(--team-green)' }}
-                >
-                  <FontAwesomeIcon icon={icons[i]} />
-                  <Counter {...{ count, scale: 0.5 }} />
-                </motion.button>
-              ))}
-            </section>
-            <AsyncAwait {...{ isLoading: isInitial.current, error }}>
-              <AnimatePresence mode='wait'>
-                {activeTab === 2 ? (
-                  <ReplyAlerts
-                    key='replies'
-                    {...{ replies, setReplies, navTo, onError }}
-                  />
-                ) : (
-                  <SocialAlerts
-                    key='friends'
-                    {...{ setUser, friends, activeTab, navTo, onError }}
-                  />
-                )}
-              </AnimatePresence>
-            </AsyncAwait>
-          </motion.section>
-        )}
-      </AnimatePresence>
+      {createPortal(
+        <AnimatePresence>
+          {menu && (
+            <motion.section className={css['notifications']} ref={menuRef} {...animation}>
+              <section className={css['menu-bar']}>
+                {[inbound, outbound, newReplies].map((count, i) => (
+                  <motion.button
+                        key={i}
+                    onClick={() => changeTab(i)}
+                    animate={{ color: activeTab === i ? '#888' : 'var(--team-green)' }}
+                  >
+                    <FontAwesomeIcon icon={icons[i]} />
+                    <Counter {...{ count, scale: 0.5 }} />
+                  </motion.button>
+                ))}
+              </section>
+              <AsyncAwait {...{ isLoading: isInitial.current, error }}>
+                <AnimatePresence mode='wait'>
+                  {activeTab === 2 ? (
+                    <ReplyAlerts
+                      key='replies'
+                      {...{ replies, setReplies, navTo, onError }}
+                    />
+                  ) : (
+                    <SocialAlerts
+                      key='friends'
+                      {...{ setUser, friends, activeTab, navTo, onError }}
+                    />
+                  )}
+                </AnimatePresence>
+              </AsyncAwait>
+            </motion.section>
+          )}
+        </AnimatePresence>,
+        document.getElementById('modal-root')!
+      )}
       <NavButton {...{ index: 2, deferring, callback: openMenu }}>
         <Counter count={alerts} />
       </NavButton>

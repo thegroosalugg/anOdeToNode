@@ -9,6 +9,7 @@
   padding: 0.25rem;
   display: flex;
   flex-direction: column;
+  font-family: "Montserrat", serif;
   border: 1px solid var(--team-green);
   background: var(--box-gradient);
   color: var(--team-green);
