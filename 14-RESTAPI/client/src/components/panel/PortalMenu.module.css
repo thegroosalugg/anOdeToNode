@@ -1,0 +1,17 @@
+.menu {
+  position: fixed;
+  top: 0.25rem;
+  right: 0.25rem;
+  height: 240px;
+  max-height: calc(100vh - 0.5rem);
+  max-width: calc(100% - 0.5rem);
+  width: 225px;
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  font-family: "Montserrat", serif;
+  border: 1px solid var(--team-green);
+  background: var(--box-gradient);
+  color: var(--team-green);
+  z-index: 99;
+}

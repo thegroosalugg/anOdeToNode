@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import useDebounce from '@/hooks/useDebounce';
@@ -10,9 +9,10 @@ import { BASE_URL, FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
 import Reply from '@/models/Reply';
+import PortalMenu from '../panel/PortalMenu';
+import AsyncAwait from '../panel/AsyncAwait';
 import SocialAlerts from './SocialAlerts';
 import ReplyAlerts from './ReplyAlerts';
-import AsyncAwait from '../panel/AsyncAwait';
 import NavButton from '../navigation/NavButton';
 import Counter from './Counter';
 import { captainsLog } from '@/util/captainsLog';
@@ -34,7 +34,6 @@ export default function Notifications({
   const [      menu,     showMenu ] = useState(false);
   const [ activeTab, setActiveTab ] = useState(0);
   const { deferring,      deferFn } = useDebounce();
-  const     menuRef = useRef<HTMLDivElement>(null);
   const   isInitial = useRef(true);
   const    navigate = useNavigate();
   const { friends } = user;
@@ -56,12 +55,6 @@ export default function Notifications({
   }, 0);
 
   const alerts = inbound + outbound + newReplies;
-
-  const animation = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-       exit: { opacity: 0 },
-  };
 
   const markSocialsAsRead = useCallback(
     async (index = activeTab) =>
@@ -92,12 +85,6 @@ export default function Notifications({
     }, 1500);
   };
 
-  const closeMenu = (event: MouseEvent) => {
-    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-      showMenu(false);
-    }
-  };
-
   const changeTab = async (index: number) => {
     setActiveTab(index);
     await handleAlerts(index);
@@ -113,8 +100,6 @@ export default function Notifications({
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', closeMenu);
-
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog([-100, 15], ['NAV: Socket connected']));
 
@@ -145,7 +130,6 @@ export default function Notifications({
       socket.off(`peer:${user._id}:update`);
       socket.off(`nav:${user._id}:reply`);
       socket.disconnect();
-      document.removeEventListener('mousedown', closeMenu);
     };
   }, [
     menu,
@@ -162,42 +146,32 @@ export default function Notifications({
 
   return (
     <>
-      {createPortal(
-        <AnimatePresence>
-          {menu && (
-            <motion.section className={css['notifications']} ref={menuRef} {...animation}>
-              <section className={css['menu-bar']}>
-                {[inbound, outbound, newReplies].map((count, i) => (
-                  <motion.button
-                        key={i}
-                    onClick={() => changeTab(i)}
-                    animate={{ color: activeTab === i ? '#888' : 'var(--team-green)' }}
-                  >
-                    <FontAwesomeIcon icon={icons[i]} />
-                    <Counter {...{ count, scale: 0.5 }} />
-                  </motion.button>
-                ))}
-              </section>
-              <AsyncAwait {...{ isLoading: isInitial.current, error }}>
-                <AnimatePresence mode='wait'>
-                  {activeTab === 2 ? (
-                    <ReplyAlerts
-                      key='replies'
-                      {...{ replies, setReplies, navTo, onError }}
-                    />
-                  ) : (
-                    <SocialAlerts
-                      key='friends'
-                      {...{ setUser, friends, activeTab, navTo, onError }}
-                    />
-                  )}
-                </AnimatePresence>
-              </AsyncAwait>
-            </motion.section>
-          )}
-        </AnimatePresence>,
-        document.getElementById('modal-root')!
-      )}
+      <PortalMenu show={menu} close={() => showMenu(false)}>
+        <section className={css['menu-bar']}>
+          {[inbound, outbound, newReplies].map((count, i) => (
+            <motion.button
+                  key={i}
+              onClick={() => changeTab(i)}
+              animate={{ color: activeTab === i ? '#888' : 'var(--team-green)' }}
+            >
+              <FontAwesomeIcon icon={icons[i]} />
+              <Counter {...{ count, scale: 0.5 }} />
+            </motion.button>
+          ))}
+        </section>
+        <AsyncAwait {...{ isLoading: isInitial.current, error }}>
+          <AnimatePresence mode='wait'>
+            {activeTab === 2 ? (
+              <ReplyAlerts key='replies' {...{ replies, setReplies, navTo, onError }} />
+            ) : (
+              <SocialAlerts
+                key='friends'
+                {...{ setUser, friends, activeTab, navTo, onError }}
+              />
+            )}
+          </AnimatePresence>
+        </AsyncAwait>
+      </PortalMenu>
       <NavButton {...{ index: 2, deferring, callback: openMenu }}>
         <Counter count={alerts} />
       </NavButton>
