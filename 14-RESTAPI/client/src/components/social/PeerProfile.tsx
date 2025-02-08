@@ -49,7 +49,7 @@ export default function PeerProfile({
         }
       );
     }, 1000);
-  }
+  };
 
   async function handleAction() {
     if (!accepted) {
