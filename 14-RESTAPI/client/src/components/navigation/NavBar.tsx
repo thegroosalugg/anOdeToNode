@@ -18,22 +18,25 @@ export default function NavBar({ user, setUser }: Auth) {
   return (
     <nav className={css['nav']}>
       <h1>
-        <span>
-          Friendface {/* visible in portrait, display: none in landscape */}
-        </span>
+        <span>Friendface {/* visible in portrait, display: none in landscape */}</span>
         <span>
           <FontAwesomeIcon icon='f' /> {/* vice versa */}
         </span>
       </h1>
       <AnimatePresence>
-        {user && (
-          <>
-            <NavButton {...{ path: '/feed',   callback: (path) => navTo(path), deferring}} />
-            <NavButton {...{ path: '/social', callback: (path) => navTo(path), deferring}} />
-            <Notifications {...{ user, setUser }} />
-            <NavButton {...{ path: '/',       callback: (path) => navTo(path), deferring}} />
-          </>
-        )}
+        {user &&
+          Array.from({ length: 4 }, (_, index) => {
+            const element =
+              index === 2 ? (
+                <Notifications key={index} {...{ user, setUser }} />
+              ) : (
+                <NavButton
+                  key={index}
+                  {...{ index, deferring, callback: (path) => navTo(path) }}
+                />
+              );
+            return element;
+          })}
       </AnimatePresence>
     </nav>
   );

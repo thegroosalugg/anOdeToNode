@@ -185,7 +185,7 @@ export default function Notifications({
           </motion.section>
         )}
       </AnimatePresence>
-      <NavButton {...{ path: '/alerts', callback: openMenu, deferring }}>
+      <NavButton {...{ index: 2, deferring, callback: openMenu }}>
         <Counter count={alerts} />
       </NavButton>
     </>
