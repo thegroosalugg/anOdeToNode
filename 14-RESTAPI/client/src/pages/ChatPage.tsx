@@ -17,7 +17,7 @@ export default function ChatPage({ user }: Authorized) {
   useEffect(() => {
     const mountData = async () => await reqHandler({ url: 'chat/all' });
     mountData();
-    captainsLog([-100, 200], ['CHAT PAGE']);
+    captainsLog([-100, 290], ['🗨️ CHAT PAGE']);
   }, [reqHandler]);
 
   return (

@@ -9,6 +9,7 @@ import PeerProfile from '@/components/social/PeerProfile';
 import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/post/PostItem';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
+import { captainsLog } from '@/util/captainsLog';
 
 const initialData: Paginated<Post, 'posts'> = {
   docCount: 0,
@@ -29,11 +30,17 @@ export default function PeerPage({ user, setUser }: Authorized) {
 
   useEffect(() => {
     const fetchPeer = async () => {
-      if (userId) await reqPeer({ url: `social/find/${userId}` });
+      if (userId) {
+        await reqPeer({ url: `social/find/${userId}` });
+        captainsLog([-100, 252], ['⚓ PEERPAGE: fetchPeer']);
+      }
     };
 
     const fetchPosts = async () => {
-      if (userId) await reqPosts({ url: `social/posts/${userId}?page=${current}` });
+      if (userId) {
+        await reqPosts({ url: `social/posts/${userId}?page=${current}` });
+        captainsLog([-100, 258], ['⚓ PEERPAGE: fetchPosts']);
+      }
     }
 
     if (userId === user._id) {

@@ -43,12 +43,12 @@ export default function FeedPage({ setUser }: Authorized) {
     const mountData = async () => {
       await reqHandler({ url });
       if (isInitial.current) isInitial.current = false;
-      captainsLog([-100, 270], ['FEEDPAGE'] ); // **LOGDATA
+      captainsLog([-1, 70], ['🗞️ FEEDPAGE mountData'] ); // **LOGDATA
     }
     mountData();
 
     const socket = io(BASE_URL);
-    socket.on('connect', () => captainsLog([-100, 250], ['FEEDPAGE: Socket connected']));
+    socket.on('connect', () => captainsLog([-100, 80], ['🗞️ FEEDPAGE: Socket connected']));
 
     socket.on('post:update', (newPost) => {
       setData(({ docCount: prevCount, posts: prevPosts }) => {
@@ -58,7 +58,7 @@ export default function FeedPage({ setUser }: Authorized) {
           : [newPost, ...prevPosts];
 
         const docCount = prevCount + 1;
-        captainsLog([-100, 240], ['FEEDPAGE ' + (isFound ? 'EDIT' : 'NEW'), newPost]);
+        captainsLog([-100, 85], ['🗞️ FEEDPAGE ' + (isFound ? 'EDIT' : 'NEW'), newPost]);
         return { docCount, posts };
       });
     });
@@ -67,7 +67,7 @@ export default function FeedPage({ setUser }: Authorized) {
       setData(({ docCount: prevCount, posts: prevPosts }) => {
         const    posts = prevPosts.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;
-        captainsLog([-100, 280], ['FEEDPAGE DELETED', deleted]);
+        captainsLog([-100, 90], ['🗞️ FEEDPAGE DELETED', deleted]);
         return { docCount, posts };
       });
     });
@@ -77,6 +77,7 @@ export default function FeedPage({ setUser }: Authorized) {
       socket.off('post:update');
       socket.off('post:delete');
       socket.disconnect();
+      captainsLog([-1, 70], ['🗞️ FEEDPAGE Disconnected'] ); // **LOGDATA
     };
   }, [reqHandler, setData, url]);
 

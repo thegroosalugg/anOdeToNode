@@ -14,14 +14,17 @@ interface NavProps {
 
 export default function NavButton({ index, callback, deferring, children }: NavProps) {
   const { pathname } = useLocation();
-  const  path = (['/feed', '/social', 'ALERTS',      'CHAT',       '/'] as const)[index];
+  const  path = (['/feed', '/social', 'ALERTS',    '/inbox',       '/'] as const)[index];
   const  icon = ([  'rss',   'users',   'bell',  'comments',    'user'] as const)[index];
   const label =  [ 'Feed',  'Social', 'Alerts', '     Chat', 'Profile']          [index];
 
-  const isActive =
-    pathname === path ||
-    (pathname.startsWith('/post') && path === '/feed') ||
-    (pathname.startsWith('/user') && path === '/social');
+  const dynamicPathPairs = [
+    ['/feed',   '/post'],
+    ['/social', '/user'],
+  ];
+
+  const isActive = pathname === path ||
+  dynamicPathPairs.some(([target, prefix]) => path === target && pathname.startsWith(prefix));
 
   const classes = `${css['nav-button']} ${
     isActive ? css['active'] : ''} ${

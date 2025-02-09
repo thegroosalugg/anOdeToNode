@@ -99,14 +99,17 @@ export default function Notifications({
   };
 
   useEffect(() => {
-    const getReplyAlerts = async () => await reqReplyAlerts({ url: 'alerts/replies' });
+    const getReplyAlerts = async () => {
+      captainsLog([-90, 204], ['🧭 NAV: getReplyAlerts']);
+      await reqReplyAlerts({ url: 'alerts/replies' });
+    }
     if (isInitial.current) getReplyAlerts();
 
     const socket = io(BASE_URL);
-    socket.on('connect', () => captainsLog([-100, 15], ['NAV: Socket connected']));
+    socket.on('connect', () => captainsLog([-100, 208], ['🧭 NAV: Socket connected']));
 
     socket.on(`peer:${user._id}:update`, async (updated) => {
-      captainsLog([-100, 15], ['NAV: UPDATE', updated]);
+      captainsLog([-100, 212], ['🧭 NAV: SOCIAL', updated]);
       if (menu && activeTab < 2) {
         await markSocialsAsRead();
       } else {
@@ -115,7 +118,7 @@ export default function Notifications({
     });
 
     socket.on(`nav:${user._id}:reply`, async ({ action, reply }) => {
-      captainsLog([-100, 12], [`NAV: ${action} REPLY`, reply]);
+      captainsLog([-100, 200], [`🧭 NAV: ${action} REPLY`, reply]);
       if (menu && activeTab === 2) {
         await markRepliesAsRead();
       } else {
@@ -132,6 +135,7 @@ export default function Notifications({
       socket.off(`peer:${user._id}:update`);
       socket.off(`nav:${user._id}:reply`);
       socket.disconnect();
+      captainsLog([-10, 204], ['🧭 NAV Disconnect']);
     };
   }, [
     menu,
