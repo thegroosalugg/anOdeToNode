@@ -16,7 +16,7 @@ const getUsers: RequestHandler = async (req, res, next) => {
       .skip((page - 1) * limit)
       .limit(limit)
       .select(_public)
-      .sort({ _id: -1 });
+      .sort({ createdAt: -1 });
 
     if (!users) return next(new AppError(404, 'No users found'));
     res.status(200).json({ users, docCount });

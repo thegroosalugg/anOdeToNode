@@ -79,7 +79,6 @@ export default function Notifications({
     isInitial.current = true;
     deferFn(async () => {
       showMenu(true);
-      await reqReplyAlerts({ url: 'alerts/replies' }); // should run first
       await handleAlerts();
       isInitial.current = false;
     }, 1500);
@@ -100,6 +99,9 @@ export default function Notifications({
   };
 
   useEffect(() => {
+    const getReplyAlerts = async () => await reqReplyAlerts({ url: 'alerts/replies' });
+    if (isInitial.current) getReplyAlerts();
+
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog([-100, 15], ['NAV: Socket connected']));
 

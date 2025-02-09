@@ -32,7 +32,7 @@ export default function NavBar({ user, setUser }: Auth) {
             index === 2 ? (
               <Notifications key={index} {...{ user, setUser }} />
             ) : index === 3 ? (
-              <ChatMenu      key={index} {...{ user }} />
+              <ChatMenu      key={index} {...{ user, setUser }} />
             ) : (
               <NavButton     key={index}
                 {...{ index, deferring, callback: (path) => navTo(path) }}

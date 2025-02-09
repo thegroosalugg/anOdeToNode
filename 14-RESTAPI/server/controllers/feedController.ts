@@ -26,7 +26,7 @@ const getPosts: RequestHandler = async (req, res, next) => {
       .skip((page - 1) * limit)
       .limit(limit)
       .populate('creator', _public)
-      .sort({ _id: -1 }); // newest first
+      .sort({ createdAt: -1 });
 
     if (!posts) return next(new AppError(404, 'Nothing posted yet'));
 

@@ -36,10 +36,10 @@ const newChat: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const mewChat = await Chat.create({ user, peer });
-    io.emit(`chat:${user._id}:new`, mewChat);
-    io.emit(`chat:${peer._id}:new`, mewChat);
-    res.status(201).json(mewChat);
+    const newChat = await Chat.create({ user, peer });
+    io.emit(`chat:${user._id}:new`, newChat);
+    io.emit(`chat:${peer._id}:new`, newChat);
+    res.status(201).json(newChat);
   } catch (error) {
     next(new AppError(500, 'Unable to start chat', error));
   }

@@ -59,7 +59,7 @@ const readReplies: RequestHandler = async (req, res, next) => {
     })
       .populate('creator', _public)
       .populate('post', 'title creator')
-      .sort({ _id: -1 });
+      .sort({ createdAt: -1 });
 
     if (read === 'true') {
       await Reply.updateMany(
