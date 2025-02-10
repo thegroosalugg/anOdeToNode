@@ -2,6 +2,7 @@
   align-self: center;
   cursor: pointer;
   font-weight: 500;
+  margin-bottom: 0.25rem;
 
   > svg {
     margin-left: 0.2rem;

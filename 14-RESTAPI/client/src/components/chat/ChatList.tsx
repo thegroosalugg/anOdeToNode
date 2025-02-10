@@ -2,6 +2,7 @@ import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
 import { useState } from 'react';
 import Chat from '@/models/Chat';
 import User from '@/models/User';
+import ProfilePic from '../profile/ProfilePic';
 import css from './ChatList.module.css';
 
 export default function ChatList({ user, chats }: { user: User; chats: Chat[] }) {
@@ -37,15 +38,29 @@ export default function ChatList({ user, chats }: { user: User; chats: Chat[] })
                        key={_id}
                    onClick={() => expand(chat)}
                      style={{ flex, cursor }}
-                   initial={{ opacity, x: x * dir(i) }}
+                   initial={{ opacity,    x: x * dir(i)    }}
                    animate={{ opacity: 1, x: 0, transition }}
-                      exit={{ opacity, x }}
+                      exit={{ opacity,    x                }}
                 transition={layout}
               >
-                <h2>
-                  {recipient.name} {recipient.surname}
-                </h2>
-                {isActive && <button onClick={collapse}>Back</button>}
+                <motion.h2 layout transition={layout}>
+                  <ProfilePic user={recipient} />
+                  <span>
+                    {recipient.name} {recipient.surname}
+                  </span>
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.button
+                        initial={{ opacity }}
+                        animate={{ opacity: 1, transition }}
+                           exit={{ opacity }}
+                        onClick={collapse}
+                      >
+                        Back
+                      </motion.button>
+                    )}
+                  </AnimatePresence>
+                </motion.h2>
               </motion.li>
             );
           })}
