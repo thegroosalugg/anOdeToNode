@@ -9,6 +9,7 @@ import User from '@/models/User';
 import Chat from '@/models/Chat';
 import PortalMenu from '@/components/panel/PortalMenu';
 import AsyncAwait from '@/components/panel/AsyncAwait';
+import ChatList from '../ChatList';
 import NavButton from '@/components/navigation/NavButton';
 import Counter from '@/components/notifications/Counter';
 import { captainsLog } from '@/util/captainsLog';
@@ -47,16 +48,7 @@ export default function ChatMenu({ user }: { user: User }) {
           <FontAwesomeIcon icon='envelope-open-text' />
         </h2>
         <AsyncAwait {...{ isLoading: isInitial.current, error }}>
-          <ul>
-            {chats.map(({ _id, user: host, peer }) => {
-              const recipient = user._id === host._id ? peer : host;
-              return (
-                <li key={_id}>
-                  {recipient.name} {recipient.surname}
-                </li>
-              );
-            })}
-          </ul>
+          <ChatList {...{ user, chats }} />
         </AsyncAwait>
       </PortalMenu>
       <NavButton {...{ index: 3, deferring, callback: openMenu }}>
