@@ -5,7 +5,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { Auth } from '@/pages/RootLayout';
 import NavButton from './NavButton';
 import Notifications from '../notifications/Notifications';
-import ChatMenu from '../chat/menu/ChatMenu';
+import ChatMenu from '../chat/ChatMenu';
 import css from './NavBar.module.css';
 
 export default function NavBar({ user, setUser }: Auth) {

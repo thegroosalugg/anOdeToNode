@@ -1,5 +1,6 @@
 import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
 import { useState } from 'react';
+import useDebounce from '@/hooks/useDebounce';
 import Chat from '@/models/Chat';
 import User from '@/models/User';
 import ProfilePic from '../profile/ProfilePic';
@@ -7,23 +8,22 @@ import css from './ChatList.module.css';
 
 export default function ChatList({ user, chats }: { user: User; chats: Chat[] }) {
   const [isActive, setIsActive] = useState<[Chat] | null>(null);
+  const { deferring, deferFn } = useDebounce();
 
   function expand(chat: Chat) {
-    if (!isActive) setIsActive([chat]);
+    if (!isActive) deferFn(() => setIsActive([chat]), 2500);
   }
 
   function collapse() {
     setIsActive(null);
   }
 
-  const     cursor = isActive ? 'auto' : 'pointer';
+  const     cursor = isActive || deferring ? 'auto' : 'pointer';
   const       flex = isActive ? 1 : 0;
   const    opacity = 0;
   const          x = 20;
   const        dir = (n: number) => n % 2 === 0 ? 1 : -1;
-  const   duration = 0.5;
-  const     layout = { layout: { duration, ease: 'linear' }           };
-  const transition = {           duration, ease: 'easeIn', delay: 0.5 };
+  const transition = { duration: 0.5, ease: 'linear' };
 
   return (
     <LayoutGroup>
@@ -37,13 +37,13 @@ export default function ChatList({ user, chats }: { user: User; chats: Chat[] })
                     layout
                        key={_id}
                    onClick={() => expand(chat)}
-                     style={{ flex, cursor }}
-                   initial={{ opacity,    x: x * dir(i)    }}
-                   animate={{ opacity: 1, x: 0, transition }}
-                      exit={{ opacity,    x                }}
-                transition={layout}
+                     style={{ cursor }}
+                   initial={{ opacity,    flex, x: x * dir(i) }}
+                   animate={{ opacity: 1, flex, x: 0          }}
+                      exit={{ opacity,    flex, x             }}
+                transition={transition}
               >
-                <motion.h2 layout transition={layout}>
+                <motion.h2 layout='position' transition={transition}>
                   <ProfilePic user={recipient} />
                   <span>
                     {recipient.name} {recipient.surname}

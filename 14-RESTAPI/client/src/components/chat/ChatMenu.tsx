@@ -9,7 +9,7 @@ import User from '@/models/User';
 import Chat from '@/models/Chat';
 import PortalMenu from '@/components/panel/PortalMenu';
 import AsyncAwait from '@/components/panel/AsyncAwait';
-import ChatList from '../ChatList';
+import ChatList from './ChatList';
 import NavButton from '@/components/navigation/NavButton';
 import Counter from '@/components/notifications/Counter';
 import { captainsLog } from '@/util/captainsLog';
