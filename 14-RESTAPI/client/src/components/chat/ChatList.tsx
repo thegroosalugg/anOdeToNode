@@ -1,12 +1,22 @@
 import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
 import { useState } from 'react';
 import useDebounce from '@/hooks/useDebounce';
+import { Auth } from '@/pages/RootLayout';
 import Chat from '@/models/Chat';
 import User from '@/models/User';
 import ProfilePic from '../profile/ProfilePic';
 import css from './ChatList.module.css';
+import Messages from './Messages';
 
-export default function ChatList({ user, chats }: { user: User; chats: Chat[] }) {
+export default function ChatList({
+     user,
+  setUser,
+    chats,
+}: {
+     user: User;
+  setUser: Auth['setUser'];
+    chats: Chat[];
+}) {
   const [isActive, setIsActive] = useState<[Chat] | null>(null);
   const { deferring, deferFn } = useDebounce();
 
@@ -61,6 +71,7 @@ export default function ChatList({ user, chats }: { user: User; chats: Chat[] })
                     )}
                   </AnimatePresence>
                 </motion.h2>
+                {isActive && <Messages {...{ chat, setUser }} />}
               </motion.li>
             );
           })}

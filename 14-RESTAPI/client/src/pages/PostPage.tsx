@@ -12,7 +12,7 @@ import PostId from '@/components/post/PostId';
 import Modal from '@/components/modal/Modal';
 import PostForm from '@/components/form/PostForm';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog';
-import ReplySubmit from '@/components/post/ReplySubmit';
+import SendMessage from '@/components/form/SendMessage';
 import ReplyItem from '@/components/post/ReplyItem';
 import PagedList from '@/components/pagination/PagedList';
 import { captainsLog } from '@/util/captainsLog';
@@ -149,7 +149,7 @@ export default function PostPage({ user, setUser }: Authorized) {
         {post && (
           <>
             <PostId {...{ post, user }} setModal={setModalState} />
-            <ReplySubmit postId={post._id} setUser={setUser} />
+            <SendMessage {...{ url: `post/reply/${post._id}`, setUser }} />
             <PagedList<Reply> {...replyProps}>
               {(reply) => <ReplyItem {...reply} userId={user._id} />}
             </PagedList>

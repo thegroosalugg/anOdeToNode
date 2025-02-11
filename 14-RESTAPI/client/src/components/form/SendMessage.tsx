@@ -1,15 +1,20 @@
-import { FC, FormEvent } from 'react';
+import { FormEvent } from 'react';
 import { motion, useAnimate, AnimatePresence } from 'motion/react';
 import { Auth } from '@/pages/RootLayout';
 import { FetchError } from '@/util/fetchData';
 import useFetch from '@/hooks/useFetch';
 import useDebounce from '@/hooks/useDebounce';
-import Reply from '@/models/Reply';
 import Loader from '../loading/Loader';
-import css from './ReplySubmit.module.css';
+import css from './SendMessage.module.css';
 
-const ReplySubmit: FC<{ postId: string, setUser: Auth['setUser'] }> = ({ postId, setUser }) => {
-  const { data, reqHandler, isLoading, error, setError } = useFetch<Reply | null>();
+export default function SendMessage({
+      url,
+  setUser,
+}: {
+      url: string;
+  setUser: Auth['setUser'];
+}) {
+  const { data, reqHandler, isLoading, error, setError } = useFetch();
   const [ scope,     animate ] = useAnimate();
   const { deferring, deferFn } = useDebounce();
 
@@ -40,10 +45,7 @@ const ReplySubmit: FC<{ postId: string, setUser: Auth['setUser'] }> = ({ postId,
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     const data = new FormData(e.currentTarget);
-    await reqHandler(
-      { url: `post/reply/${postId}`, method: 'POST', data },
-      { onSuccess, onError }
-    );
+    await reqHandler({ url, method: 'POST', data }, { onSuccess, onError });
   };
 
   return (
@@ -69,7 +71,7 @@ const ReplySubmit: FC<{ postId: string, setUser: Auth['setUser'] }> = ({ postId,
               animate={{ opacity: 1, transition: { delay: 0.2 } }}
                  exit={{ opacity: 0 }}
             >
-              {error ? error.content : 'Reply'}
+              {error ? error.content : 'Send'}
             </motion.span>
           )}
         </AnimatePresence>
@@ -77,5 +79,3 @@ const ReplySubmit: FC<{ postId: string, setUser: Auth['setUser'] }> = ({ postId,
     </motion.form>
   );
 };
-
-export default ReplySubmit;

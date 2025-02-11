@@ -6,7 +6,7 @@ import AsyncAwait from '@/components/panel/AsyncAwait';
 import ChatList from '@/components/chat/ChatList';
 import { captainsLog } from '@/util/captainsLog';
 
-export default function ChatPage({ user }: Authorized) {
+export default function ChatPage({ user, setUser }: Authorized) {
   const {
           data: chats,
        setData: setChats,
@@ -23,7 +23,7 @@ export default function ChatPage({ user }: Authorized) {
 
   return (
     <AsyncAwait {...{ isLoading, error }}>
-      <ChatList {...{ user, chats }} />
+      <ChatList {...{ user, setUser, chats }} />
     </AsyncAwait>
   );
 }

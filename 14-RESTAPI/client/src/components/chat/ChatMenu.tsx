@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { AnimatePresence, motion } from 'motion/react';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
@@ -15,7 +14,7 @@ import Counter from '@/components/notifications/Counter';
 import { captainsLog } from '@/util/captainsLog';
 import css from './ChatMenu.module.css';
 
-export default function ChatMenu({ user }: { user: User }) {
+export default function ChatMenu({ user, setUser }: { user: User, setUser: Auth['setUser'] }) {
   const { data: chats, setData: setChats, reqHandler, error } = useFetch<Chat[]>([]);
   const [menu, showMenu] = useState(false);
   const { deferring, deferFn } = useDebounce();
@@ -48,7 +47,7 @@ export default function ChatMenu({ user }: { user: User }) {
           <FontAwesomeIcon icon='envelope-open-text' />
         </h2>
         <AsyncAwait {...{ isLoading: isInitial.current, error }}>
-          <ChatList {...{ user, chats }} />
+          <ChatList {...{ user, setUser, chats }} />
         </AsyncAwait>
       </PortalMenu>
       <NavButton {...{ index: 3, deferring, callback: openMenu }}>
