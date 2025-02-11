@@ -34,7 +34,7 @@ export const LIST_CONFIG = {
         delay: 1.5,
       listCss: [replyCss.replies],
       pageCss: [],
-        chars: '◻',
+        chars: '▣',
     setBckGrd: '#ebebeb',
      fallback: 'No comments yet...',
   },
