@@ -149,7 +149,7 @@ export default function PostPage({ user, setUser }: Authorized) {
         {post && (
           <>
             <PostId {...{ post, user }} setModal={setModalState} />
-            <SendMessage {...{ url: `post/reply/${post._id}`, setUser }} />
+            <SendMessage {...{ url: `post/reply/${post._id}`, setUser, alternate: true }} />
             <PagedList<Reply> {...replyProps}>
               {(reply) => <ReplyItem {...reply} userId={user._id} />}
             </PagedList>

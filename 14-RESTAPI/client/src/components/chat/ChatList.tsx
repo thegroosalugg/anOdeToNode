@@ -5,17 +5,20 @@ import { Auth } from '@/pages/RootLayout';
 import Chat from '@/models/Chat';
 import User from '@/models/User';
 import ProfilePic from '../profile/ProfilePic';
-import css from './ChatList.module.css';
 import Messages from './Messages';
+import SendMessage from '../form/SendMessage';
+import css from './ChatList.module.css';
 
 export default function ChatList({
      user,
   setUser,
     chats,
+  compact,
 }: {
-     user: User;
-  setUser: Auth['setUser'];
-    chats: Chat[];
+      user: User;
+   setUser: Auth['setUser'];
+     chats: Chat[];
+  compact?: boolean;
 }) {
   const [isActive, setIsActive] = useState<[Chat] | null>(null);
   const { deferring, deferFn } = useDebounce();
@@ -71,7 +74,12 @@ export default function ChatList({
                     )}
                   </AnimatePresence>
                 </motion.h2>
-                {isActive && <Messages {...{ chat, setUser }} />}
+                {isActive && (
+                  <>
+                    <Messages {...{ chat, setUser }} />
+                    <SendMessage {...{ url: '', setUser, compact }} />
+                  </>
+                )}
               </motion.li>
             );
           })}

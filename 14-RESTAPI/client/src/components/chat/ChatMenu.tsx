@@ -47,7 +47,7 @@ export default function ChatMenu({ user, setUser }: { user: User, setUser: Auth[
           <FontAwesomeIcon icon='envelope-open-text' />
         </h2>
         <AsyncAwait {...{ isLoading: isInitial.current, error }}>
-          <ChatList {...{ user, setUser, chats }} />
+          <ChatList {...{ user, setUser, chats, compact: true }} />
         </AsyncAwait>
       </PortalMenu>
       <NavButton {...{ index: 3, deferring, callback: openMenu }}>

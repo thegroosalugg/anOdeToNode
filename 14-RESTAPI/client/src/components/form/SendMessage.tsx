@@ -8,15 +8,23 @@ import Loader from '../loading/Loader';
 import css from './SendMessage.module.css';
 
 export default function SendMessage({
-      url,
-  setUser,
+        url,
+    setUser,
+  alternate,
+    compact,
 }: {
-      url: string;
-  setUser: Auth['setUser'];
+         url: string;
+     setUser: Auth['setUser'];
+  alternate?: boolean;
+    compact?: boolean;
 }) {
   const { data, reqHandler, isLoading, error, setError } = useFetch();
   const [ scope,     animate ] = useAnimate();
   const { deferring, deferFn } = useDebounce();
+  const classes = `${css['send-msg']} ${
+    alternate ? css['alternate'] : ''} ${
+      compact ? css['compact']   : ''}`;
+  const rows = alternate ? 4 : 2;
 
   const onSuccess = () => {
     setError(null);
@@ -50,7 +58,7 @@ export default function SendMessage({
 
   return (
     <motion.form
-      className={css['reply-submit']}
+      className={classes}
             ref={scope}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { delay: 1.2, duration: 0.8 } }}
@@ -59,7 +67,7 @@ export default function SendMessage({
          deferFn(() => submitHandler(e), 1500);
       }}
     >
-      <textarea name='content' rows={4} />
+      <textarea name='content' rows={rows} />
       <motion.button disabled={deferring}>
         <AnimatePresence mode='wait'>
           {isLoading ? (
