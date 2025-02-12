@@ -12,7 +12,7 @@ export default function ReplyItem({
   _id,
   creator,
   content,
-  updatedAt,
+  createdAt,
   userId,
 }: Reply & { userId?: string }) {
   const [showModal, setShowModal] = useState(false);
@@ -37,7 +37,7 @@ export default function ReplyItem({
           {' '}
           {creator?.surname || 'deleted'}
         </span>
-        <time>{timeAgo(updatedAt)}</time>
+        <time>{timeAgo(createdAt)}</time>
       </h2>
       <p>{content}</p>
       {userId === creator._id && (

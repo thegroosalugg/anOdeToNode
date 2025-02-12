@@ -16,6 +16,7 @@ import   replyRoutes from './routes/reply';
 import profileRoutes from './routes/profile';
 import  socialRoutes from './routes/social';
 import    chatRoutes from './routes/chat';
+import     msgRoutes from './routes/message';
 import   alertRoutes from './routes/alert';
 import   captainsLog from './util/captainsLog';
 import        dotenv from 'dotenv';
@@ -56,7 +57,7 @@ app.use('/feed',    authJWT,    feedRoutes);
 app.use('/post',    authJWT,   [postRoutes, replyRoutes]);
 app.use('/profile', authJWT, profileRoutes);
 app.use('/social',  authJWT,  socialRoutes);
-app.use('/chat',    authJWT,    chatRoutes);
+app.use('/chat',    authJWT,   [chatRoutes,   msgRoutes]);
 app.use('/alerts',  authJWT,   alertRoutes);
 
 app.use(((appError, req, res, next) => {

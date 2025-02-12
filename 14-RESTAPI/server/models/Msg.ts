@@ -1,6 +1,6 @@
 import { Model, model, Types, Schema } from 'mongoose';
 
-interface IMsg {
+export interface IMsg {
      chat: Types.ObjectId;
    sender: Types.ObjectId;
   content: string;

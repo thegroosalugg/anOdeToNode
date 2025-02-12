@@ -5,7 +5,7 @@ const router = express.Router();
 
 // all routes prepended by /chat & JWT middleware
 router.get('/all',                 getChats);
-router.get('/find/:userId',       findChat);
+router.get('/find/:userId',        findChat);
 router.delete('/delete/:chatId', deleteChat);
 
 export default router;

@@ -1,5 +1,4 @@
 import { RequestHandler } from 'express';
-import { io } from '../app';
 import AppError from '../models/Error';
 import User from '../models/User';
 import Chat from '../models/Chat';
@@ -31,6 +30,7 @@ const findChat: RequestHandler = async (req, res, next) => {
     const chat = await Chat.findOne({
       $or: [{ user, peer }, { user: peer, peer: user }]
     }).populate('user peer', _public);
+
     if (chat) {
       res.status(200).json(chat);
       return;
@@ -40,8 +40,6 @@ const findChat: RequestHandler = async (req, res, next) => {
     // however, newChat is created for the client so it can create chat interface
     peer.set({ email: 'hidden', friends: [] });
     const newChat = new Chat({ user, peer });
-    // io.emit(`chat:${user._id}:new`, newChat);
-    // io.emit(`chat:${peer._id}:new`, newChat);
     res.status(201).json(newChat);
   } catch (error) {
     next(new AppError(500, 'Unable to start chat', error));

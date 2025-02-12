@@ -65,6 +65,7 @@ export default function ChatList({
     setIsActive(null);
   }
 
+  const background = `var(--${isMenu ? 'main' : 'box'}-gradient)`
   const     cursor = isActive || deferring ? 'auto' : 'pointer';
   const       flex = isActive ? 1 : 0;
   const    opacity = 0;
@@ -80,12 +81,13 @@ export default function ChatList({
             {(isActive ?? chats).map((chat, i) => {
               const { _id, user: host, peer } = chat;
               const recipient = user._id === host._id ? peer : host;
+              const url = `chat/new-msg/${recipient._id}`;
               return (
                 <motion.li
                       layout
                         key={_id}
                     onClick={() => expand(chat)}
-                      style={{ cursor }}
+                      style={{ cursor, background }}
                     initial={{ opacity,    flex, x: x * dir(i) }}
                     animate={{ opacity: 1, flex, x: 0          }}
                        exit={{ opacity,    flex, x             }}
@@ -112,7 +114,7 @@ export default function ChatList({
                   {isActive && (
                     <>
                       <Messages    {...{ chat, setUser }} />
-                      <SendMessage {...{ url: '', setUser, isMenu }} />
+                      <SendMessage {...{ url,  setUser, isMenu }} />
                     </>
                   )}
                 </motion.li>
