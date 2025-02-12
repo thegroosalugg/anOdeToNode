@@ -55,12 +55,7 @@ export default function PeerProfile({
     if (!accepted) {
       await friendRequest();
     } else {
-      await reqHandler(
-        { url: `chat/new/${peer._id}`, method: 'POST' },
-        {
-          onSuccess: () => navigate('/inbox'),
-        }
-      );
+      navigate('/inbox/' + peer._id);
     }
   }
 

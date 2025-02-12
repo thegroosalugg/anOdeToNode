@@ -8,23 +8,23 @@ import Loader from '../loading/Loader';
 import css from './SendMessage.module.css';
 
 export default function SendMessage({
-        url,
-    setUser,
-  alternate,
-    compact,
+      url,
+  setUser,
+   isPost,
+   isMenu,
 }: {
-         url: string;
-     setUser: Auth['setUser'];
-  alternate?: boolean;
-    compact?: boolean;
+      url: string;
+  setUser: Auth['setUser'];
+  isPost?: boolean;
+  isMenu?: boolean;
 }) {
   const { data, reqHandler, isLoading, error, setError } = useFetch();
   const [ scope,     animate ] = useAnimate();
   const { deferring, deferFn } = useDebounce();
   const classes = `${css['send-msg']} ${
-    alternate ? css['alternate'] : ''} ${
-      compact ? css['compact']   : ''}`;
-  const rows = alternate ? 4 : 2;
+    isPost ? css['isPost'] : ''} ${
+    isMenu ? css['isMenu'] : ''}`;
+  const rows = isPost ? 4 : 2;
 
   const onSuccess = () => {
     setError(null);

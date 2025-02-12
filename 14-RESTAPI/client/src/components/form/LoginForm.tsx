@@ -69,7 +69,7 @@ export default function LoginForm({ isLoading, error, setError, reqUser }: Auth)
              key={isLogin + ''}
              ref={scope}
         onSubmit={submitHandler}
-       className={`${css['login-form']} ${isLogin ? css['alternate'] : ''}`}
+       className={`${css['login-form']} ${isLogin ? css['isLogin'] : ''}`}
          initial='hidden'
          animate='visible'
             exit={{ opacity: 0, transition: { duration: 0.8 }}}

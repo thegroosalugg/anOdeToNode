@@ -29,11 +29,12 @@ const validate = (path: string, props: Auth) => {
   const authorized = props as Authorized;
 
   const elements = {
-    '/feed':         <FeedPage   {...authorized} />,
-    '/post/:postId': <PostPage   {...authorized} />,
-    '/social':       <SocialPage {...authorized} />,
-    '/user/:userId': <PeerPage   {...authorized} />,
-    '/inbox':        <ChatPage   {...authorized} />,
+    '/feed':          <FeedPage   {...authorized} />,
+    '/post/:postId':  <PostPage   {...authorized} />,
+    '/social':        <SocialPage {...authorized} />,
+    '/user/:userId':  <PeerPage   {...authorized} />,
+    '/inbox':         <ChatPage   {...authorized} />,
+    '/inbox/:userId': <ChatPage   {...authorized} />,
   };
 
   return elements[path as keyof typeof elements];
@@ -51,6 +52,7 @@ const routes = [
   createRoute('/social'),
   createRoute('/user/:userId'),
   createRoute('/inbox'),
+  createRoute('/inbox/:userId'),
   { path: '*',  element: <RootLayout children={() => <ErrorPage />} /> },
 ];
 

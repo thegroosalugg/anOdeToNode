@@ -12,7 +12,7 @@
     width: 0;
   }
 
-  &.alternate {
+  &.isLogin {
     h2 {
       color: #a16512;
       border-color: #a16512;

@@ -31,7 +31,7 @@
   }
 }
 
-.alternate {
+.isPost {
   margin: 0.25rem auto;
   border: 1px solid #000;
 
@@ -44,7 +44,7 @@
   }
 }
 
-.compact {
+.isMenu {
   > textarea {
     padding: 0.25rem;
     font-size: 0.5rem;
