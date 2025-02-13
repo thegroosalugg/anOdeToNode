@@ -50,10 +50,10 @@ export default function ChatList({
         getActiveChat()
       ]);
       if (isInitial.current) isInitial.current = false;
+      captainsLog([-100, 290], ['CHAT LIST 💬']);
     };
 
     mountData();
-    captainsLog([-100, 290], ['🗨️ CHAT LIST']);
   }, [userId, isMenu, reqActiveChat, reqChats]);
 
 
@@ -111,12 +111,14 @@ export default function ChatList({
                       )}
                     </AnimatePresence>
                   </motion.h2>
-                  {isActive && (
-                    <>
-                      <Messages    {...{ chat, setUser }} />
-                      <SendMessage {...{ url,  setUser, isMenu }} />
-                    </>
-                  )}
+                  <AnimatePresence>
+                    {isActive && (
+                      <>
+                        <Messages    {...{ chat, setUser, user }}   />
+                        <SendMessage {...{  url, setUser, isMenu }} />
+                      </>
+                    )}
+                  </AnimatePresence>
                 </motion.li>
               );
             })}

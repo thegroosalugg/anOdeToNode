@@ -1,3 +1,12 @@
 .messages {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.5rem;
+
+  > li {
+    border: 1px solid var(--team-green);
+    padding: 0.2rem;
+  }
 }

@@ -1,3 +1,4 @@
+import Msg from "./Message";
 import User from "./User";
 
 type Chat = {
@@ -5,6 +6,7 @@ type Chat = {
         user:  User;
         peer:  User;
   deletedFor: [string];
+     lastMsg:  Msg;
 };
 
 export default Chat;

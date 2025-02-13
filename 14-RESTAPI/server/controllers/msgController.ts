@@ -11,7 +11,9 @@ const devErr = 'Do not use without AuthJWT';
 
 const getMessages: RequestHandler = async (req, res, next) => {
   try {
-    res.status(200).json();
+    const { chatId } = req.params;
+    const messages = await Msg.find({ chat: chatId });
+    res.status(200).json(messages);
   } catch (error) {
     next(new AppError(500, 'Messages could not be loaded', error));
   }

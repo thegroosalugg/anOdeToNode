@@ -62,6 +62,7 @@ export default function SendMessage({
             ref={scope}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { delay: 1.2, duration: 0.8 } }}
+           exit={{ opacity: 0 }}
        onSubmit={(e) => {
          e.preventDefault();
          deferFn(() => submitHandler(e), 1500);

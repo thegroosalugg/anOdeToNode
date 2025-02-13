@@ -10,6 +10,7 @@ import ConfirmDialog from '../dialog/ConfirmDialog';
 import AsyncAwait from '../panel/AsyncAwait';
 import PagedList from '../pagination/PagedList';
 import PostItem from '../post/PostItem';
+import { captainsLog } from '@/util/captainsLog';
 import css from './UserProfile.module.css';
 
 const initialData: Paginated<Post, 'posts'> = {
@@ -42,6 +43,7 @@ export default function UserProfile({ user, setUser }: Authorized) {
     const mountData = async () => {
       await reqHandler({ url });
       if (isInitial.current) isInitial.current = false;
+      captainsLog([-100, -55], ['👤 USER PAGE mountData']); // **LOGDATA
     }
     mountData();
   }, [reqHandler, url]);
