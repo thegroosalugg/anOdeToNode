@@ -1,7 +1,8 @@
 import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
+import useInitial from '@/hooks/useInitial';
 import useFetch from '@/hooks/useFetch';
 import { Auth } from '@/pages/RootLayout';
 import Chat from '@/models/Chat';
@@ -10,7 +11,6 @@ import ProfilePic from '../profile/ProfilePic';
 import Messages from './Messages';
 import SendMessage from '../form/SendMessage';
 import AsyncAwait from '../panel/AsyncAwait';
-import { captainsLog } from '@/util/captainsLog';
 import css from './ChatList.module.css';
 
 export default function ChatList({
@@ -31,8 +31,8 @@ export default function ChatList({
   const { reqHandler: reqActiveChat } = useFetch<Chat>();
   const [isActive, setIsActive] = useState<[Chat] | null>(null);
   const { deferring,  deferFn } = useDebounce();
+  const { isInitial, mountData } = useInitial();
   const {       userId        } = useParams();
-  const       isInitial         = useRef(true);
 
   useEffect(() => {
     const getActiveChat = async () => {
@@ -44,17 +44,17 @@ export default function ChatList({
       }
     };
 
-    const mountData = async () => {
-      await Promise.all([
-        reqChats({ url: 'chat/all' }),
-        getActiveChat()
-      ]);
-      if (isInitial.current) isInitial.current = false;
-      captainsLog([-100, 290], ['CHAT LIST 💬']);
-    };
+    const initData = async () =>
+      mountData(
+        async () => await Promise.all([
+          reqChats({ url: 'chat/all' }),
+          getActiveChat()
+        ]),
+        5
+      );
 
-    mountData();
-  }, [userId, isMenu, reqActiveChat, reqChats]);
+    initData();
+  }, [userId, isMenu, mountData, reqActiveChat, reqChats]);
 
 
   function expand(chat: Chat) {
@@ -74,7 +74,7 @@ export default function ChatList({
   const transition = { duration: 0.5, ease: 'linear' };
 
   return (
-    <AsyncAwait {...{ isLoading: isInitial.current, error }}>
+    <AsyncAwait {...{ isLoading: isInitial, error }}>
       <LayoutGroup>
         <motion.ul className={css['chat-list']}>
           <AnimatePresence>

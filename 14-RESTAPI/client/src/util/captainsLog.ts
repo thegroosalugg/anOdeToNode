@@ -19,11 +19,8 @@ export const captainsLog = ([hue1, hue2]: [number, number], data: unknown[]) => 
     const type = Array.isArray(item) ? 'Array' : typeof item;
     if (typeof item === 'object' && item !== null) {
       console.groupCollapsed(`%c${type} [${time}]:`, style);
-      if (Array.isArray(item)) {
-        console.table(item);
-      } else {
-        console.dir(item);
-      }
+      if (Array.isArray(item)) console.table(item);
+      else                       console.dir(item);
       console.groupEnd();
     } else {
       console.log(`%c' ${item} [${time}]`, style);

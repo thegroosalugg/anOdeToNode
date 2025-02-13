@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
 import useFetch from '@/hooks/useFetch';
+import useInitial from '@/hooks/useInitial';
 import { Authorized } from './RootLayout';
 import Post from '@/models/Post';
 import Modal from '@/components/modal/Modal';
@@ -25,7 +26,7 @@ export default function FeedPage({ setUser }: Authorized) {
     reqHandler,
          error,
   } = useFetch(initialData);
-  const               isInitial   = useRef(true);
+  const { isInitial,  mountData } = useInitial();
   const [showModal, setShowModal] = useState(false);
   const [pages,         setPages] = useState<Pages>([1, 1]);
   const [,               current] = pages;
@@ -40,12 +41,8 @@ export default function FeedPage({ setUser }: Authorized) {
   };
 
   useEffect(() => {
-    const mountData = async () => {
-      await reqHandler({ url });
-      if (isInitial.current) isInitial.current = false;
-      captainsLog([-1, 70], ['🗞️ FEEDPAGE mountData'] ); // **LOGDATA
-    }
-    mountData();
+    const initData = async () => mountData(async () => await reqHandler({ url }), 1);
+    initData();
 
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog([-100, 80], ['🗞️ FEEDPAGE: Socket connected']));
@@ -79,7 +76,7 @@ export default function FeedPage({ setUser }: Authorized) {
       socket.disconnect();
       captainsLog([-1, 70], ['🗞️ FEEDPAGE Disconnected'] ); // **LOGDATA
     };
-  }, [reqHandler, setData, url]);
+  }, [reqHandler, mountData, setData, url]);
 
   const closeModal = () => setShowModal(false);
 
@@ -96,7 +93,7 @@ export default function FeedPage({ setUser }: Authorized) {
       >
         New Post
       </Button>
-      <AsyncAwait isLoading={isInitial.current} error={error}>
+      <AsyncAwait {...{ isLoading: isInitial, error }}>
         <PagedList<Post> {...feedProps}>
           {(post) => <PostItem {...post} />}
         </PagedList>

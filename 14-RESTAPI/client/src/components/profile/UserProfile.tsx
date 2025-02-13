@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
-import { useEffect, useRef, useState } from 'react';
+import useInitial from '@/hooks/useInitial';
 import { Authorized } from '@/pages/RootLayout';
 import Post from '@/models/Post';
 import About from './About';
@@ -10,7 +11,6 @@ import ConfirmDialog from '../dialog/ConfirmDialog';
 import AsyncAwait from '../panel/AsyncAwait';
 import PagedList from '../pagination/PagedList';
 import PostItem from '../post/PostItem';
-import { captainsLog } from '@/util/captainsLog';
 import css from './UserProfile.module.css';
 
 const initialData: Paginated<Post, 'posts'> = {
@@ -24,7 +24,7 @@ export default function UserProfile({ user, setUser }: Authorized) {
          error,
     reqHandler,
   } = useFetch(initialData);
-  const                isInitial  = useRef(true);
+  const { isInitial,  mountData } = useInitial();
   const [showModal, setShowModal] = useState(false);
   const [pages,         setPages] = useState<Pages>([1, 1]);
   const [,               current] = pages;
@@ -40,13 +40,9 @@ export default function UserProfile({ user, setUser }: Authorized) {
   };
 
   useEffect(() => {
-    const mountData = async () => {
-      await reqHandler({ url });
-      if (isInitial.current) isInitial.current = false;
-      captainsLog([-100, -55], ['👤 USER PAGE mountData']); // **LOGDATA
-    }
-    mountData();
-  }, [reqHandler, url]);
+    const initData = async () => mountData(async () => await reqHandler({ url }), 6);
+    initData();
+  }, [reqHandler, mountData, url]);
 
   const closeModal = () => setShowModal(false);
 
@@ -64,7 +60,7 @@ export default function UserProfile({ user, setUser }: Authorized) {
       </Modal>
       <section className={css['user-profile']}>
         <About {...aboutProps} />
-        <AsyncAwait isLoading={isInitial.current} error={error}>
+        <AsyncAwait {...{ isLoading: isInitial, error }}>
           <PagedList<Post> {...feedProps}>
             {(post) => <PostItem {...post} onUserPage />}
           </PagedList>

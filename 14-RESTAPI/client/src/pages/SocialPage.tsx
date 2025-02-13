@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
+import useInitial from '@/hooks/useInitial';
 import { Authorized } from './RootLayout';
 import { BASE_URL } from '@/util/fetchData';
 import { io } from 'socket.io-client';
@@ -22,7 +23,7 @@ export default function SocialPage({ user }: Authorized) {
     reqHandler,
          error,
   } = useFetch(initialData);
-  const isInitial = useRef(true);
+  const { isInitial,  mountData } = useInitial();
   const [pages, setPages] = useState<Pages>([1, 1]);
   const [,       current] = pages;
   const url = `social/users?page=${current}`;
@@ -36,13 +37,8 @@ export default function SocialPage({ user }: Authorized) {
   };
 
   useEffect(() => {
-    const mountData = async () => {
-      await reqHandler({ url });
-      if (isInitial.current) isInitial.current = false;
-      captainsLog([-80, 225], ['⚽ SOCIAL PAGE mountData']); // **LOGDATA
-    };
-
-    mountData();
+    const initData = async () => mountData(async () => await reqHandler({ url }), 2);
+    initData();
 
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog([-100, 235], ['⚽ SOCIALPAGE: Socket connected']));
@@ -60,10 +56,10 @@ export default function SocialPage({ user }: Authorized) {
       socket.disconnect();
       captainsLog([-80, 225], ['⚽ SOCIALPAGE disconnect']); // **LOGDATA
     }
-  }, [url, reqHandler, setUsers]);
+  }, [url, reqHandler, mountData, setUsers]);
 
   return (
-    <AsyncAwait isLoading={isInitial.current} error={error}>
+    <AsyncAwait {...{ isLoading: isInitial, error }}>
       <PagedList<User>
         {...commProps}
         whileHover={{ y: -2, transition: { ease: 'easeInOut' } }}

@@ -1,12 +1,12 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import useInitial from '@/hooks/useInitial';
 import useFetch from '@/hooks/useFetch';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
 import Chat from '@/models/Chat';
 import Msg from '@/models/Message';
 import AsyncAwait from '../panel/AsyncAwait';
-import { captainsLog } from '@/util/captainsLog';
 import css from './Messages.module.css';
 
 export default function Messages({
@@ -19,17 +19,15 @@ export default function Messages({
   setUser: Auth['setUser'];
 }) {
   const { data: msgs, setData: setMsgs, reqHandler, error } = useFetch<Msg[]>([]);
-  const isInitial = useRef(true);
+  const { isInitial, mountData } = useInitial();
 
   useEffect(() => {
-    const mountData = async () => {
-      await reqHandler({ url: `chat/messages/${chat._id}` });
-      if (isInitial.current) isInitial.current = false;
-      captainsLog([-100, 270], ['🗨️ MESSAGES']);
+    const initData = async () => {
+      mountData(async () => await reqHandler({ url: `chat/messages/${chat._id}` }), 4)
     };
 
-    mountData();
-  }, [chat._id, reqHandler]);
+    initData();
+  }, [chat._id, mountData, reqHandler]);
 
   const  opacity = 0;
   const duration = 0.5;
@@ -39,7 +37,7 @@ export default function Messages({
   };
 
   return (
-    <AsyncAwait {...{ isLoading: isInitial.current, error }}>
+    <AsyncAwait {...{ isLoading: isInitial, error }}>
       <motion.ul
          className={css['messages']}
            initial='hidden'
