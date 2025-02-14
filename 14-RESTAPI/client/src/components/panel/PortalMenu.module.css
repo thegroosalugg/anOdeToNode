@@ -12,6 +12,5 @@
   font-family: "Montserrat", serif;
   border: 1px solid var(--team-green);
   background: var(--box-gradient);
-  color: var(--team-green);
   z-index: 99;
 }

@@ -18,6 +18,7 @@
     font-size: 0.7rem;
     padding: 0.5rem 0.25rem 0.25rem;
     background: var(--main-gradient);
+    color: var(--team-green);
     border: 1px solid var(--team-green);
 
     .buttons {

@@ -10,6 +10,13 @@
 
   > li {
     border: 1px solid var(--team-green);
+    font-size: 0.9rem;
     padding: 0.2rem;
+  }
+}
+
+.isMenu {
+  > li {
+    font-size: 0.5rem;
   }
 }

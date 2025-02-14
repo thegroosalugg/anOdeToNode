@@ -65,35 +65,43 @@ export default function ChatList({
     setIsActive(null);
   }
 
+  const    classes = `${css['chat-list']} ${isMenu ? css['isMenu'] : ''}`;
   const background = `var(--${isMenu ? 'main' : 'box'}-gradient)`
   const     cursor = isActive || deferring ? 'auto' : 'pointer';
   const       flex = isActive ? 1 : 0;
   const    opacity = 0;
-  const          x = 20;
-  const        dir = (n: number) => n % 2 === 0 ? 1 : -1;
   const transition = { duration: 0.5, ease: 'linear' };
 
   return (
     <AsyncAwait {...{ isLoading: isInitial, error }}>
       <LayoutGroup>
-        <motion.ul className={css['chat-list']}>
+        <motion.ul
+           className={classes}
+             initial='hidden'
+             animate='visible'
+          transition={{ staggerChildren: 0.03 }}
+        >
           <AnimatePresence>
             {(isActive ?? chats).map((chat, i) => {
               const { _id, user: host, peer } = chat;
               const recipient = user._id === host._id ? peer : host;
               const url = `chat/new-msg/${recipient._id}`;
+              const   x = 20 * (i % 2 === 0 ? 1 : -1);
+
               return (
                 <motion.li
                       layout
                         key={_id}
                     onClick={() => expand(chat)}
-                      style={{ cursor, background }}
-                    initial={{ opacity,    flex, x: x * dir(i) }}
-                    animate={{ opacity: 1, flex, x: 0          }}
-                       exit={{ opacity,    flex, x             }}
-                  transition={transition}
+                      style={{ cursor,   background }}
+                       exit={{  opacity,    flex, x }}
+                   variants={{
+                      hidden: { opacity,    flex, x    },
+                     visible: { opacity: 1, flex, x: 0 },
+                   }}
+                 transition={transition}
                 >
-                  <motion.h2 layout='position' transition={transition}>
+                  <motion.h2 layout transition={transition}>
                     <ProfilePic user={recipient} />
                     <span>
                       {recipient.name} {recipient.surname}

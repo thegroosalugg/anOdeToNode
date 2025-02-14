@@ -3,6 +3,7 @@
   cursor: pointer;
   font-weight: 500;
   margin-bottom: 0.25rem;
+  color: var(--team-green);
 
   > svg {
     margin-left: 0.2rem;

@@ -31,6 +31,7 @@ export default function Messages({
     initData();
   }, [chat._id, mountData, reqHandler]);
 
+  const  classes = `${css['messages']} ${isMenu ? css['isMenu'] : ''}`;
   const  opacity = 0;
   const duration = 0.5;
   const variants = {
@@ -41,7 +42,7 @@ export default function Messages({
   return (
     <AsyncAwait {...{ isLoading: isInitial, error }}>
       <motion.ul
-         className={css['messages']}
+         className={classes}
            initial='hidden'
            animate='visible'
               exit={{ opacity }}
@@ -58,8 +59,8 @@ export default function Messages({
           const  alignSelf = isSender ? 'end' : 'start';
           const background = isSender
             ? isMenu
-            ? '#fff'
-            : 'var(--main-gradient)'
+              ? '#fff'
+              : 'var(--main-gradient)'
             : 'var(--team-green)';
 
           const color = isSender ? 'var(--team-green)' : '#fff';
