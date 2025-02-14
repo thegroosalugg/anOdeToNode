@@ -1,13 +1,17 @@
 .chat-list {
   flex: 1;
-  max-width: 600px;
   width: 100%;
+  max-width: 600px;
+  overflow-y: scroll;
   align-self: center;
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  padding: 0.1rem;
 
   > li {
+    height: 100%;
+    max-height: 400px;
     display: flex;
     flex-direction: column;
     border: 1px solid var(--team-green);
@@ -19,7 +23,7 @@
       gap: 0.25rem;
       overflow-x: auto;
       overflow-y: hidden;
-      padding: 0.25rem;
+      padding: 0.5rem;
       font-weight: 600;
 
       > span {
@@ -33,7 +37,8 @@
         background: none;
         font-weight: 700;
         padding: 0.1rem 0.2rem;
-        color: var(--team-green);
+        color: #fff;
+        background: var(--team-green);
         border: 1px solid var(--team-green);
       }
     }

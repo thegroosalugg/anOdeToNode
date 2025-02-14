@@ -29,10 +29,10 @@ export default function ChatList({
          error,
   } = useFetch<Chat[]>([]);
   const { reqHandler: reqActiveChat } = useFetch<Chat>();
-  const [isActive, setIsActive] = useState<[Chat] | null>(null);
-  const { deferring,  deferFn } = useDebounce();
-  const { isInitial, mountData } = useInitial();
-  const {       userId        } = useParams();
+  const [ isActive,     setIsActive ] = useState<[Chat] | null>(null);
+  const { deferring,        deferFn } = useDebounce();
+  const { isInitial,      mountData } = useInitial();
+  const {           userId          } = useParams();
 
   useEffect(() => {
     const getActiveChat = async () => {
@@ -114,8 +114,8 @@ export default function ChatList({
                   <AnimatePresence>
                     {isActive && (
                       <>
-                        <Messages    {...{ chat, setUser, user }}   />
-                        <SendMessage {...{  url, setUser, isMenu }} />
+                        <Messages    {...{ user, setUser, isMenu, chat }}   />
+                        <SendMessage {...{  url, setUser, isMenu       }}   />
                       </>
                     )}
                   </AnimatePresence>

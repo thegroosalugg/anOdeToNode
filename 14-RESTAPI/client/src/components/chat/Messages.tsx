@@ -13,10 +13,12 @@ export default function Messages({
      chat,
      user,
   setUser,
+   isMenu,
 }: {
      chat: Chat;
      user: User;
   setUser: Auth['setUser'];
+  isMenu?: boolean;
 }) {
   const { data: msgs, setData: setMsgs, reqHandler, error } = useFetch<Msg[]>([]);
   const { isInitial, mountData } = useInitial();
@@ -42,6 +44,7 @@ export default function Messages({
          className={css['messages']}
            initial='hidden'
            animate='visible'
+              exit={{ opacity }}
         transition={{
                  duration,
                      ease: 'easeOut',
@@ -51,8 +54,23 @@ export default function Messages({
       >
         {msgs.map((msg) => {
           const { _id, createdAt, sender, content } = msg;
+          const   isSender = user._id === sender;
+          const  alignSelf = isSender ? 'end' : 'start';
+          const background = isSender
+            ? isMenu
+            ? '#fff'
+            : 'var(--main-gradient)'
+            : 'var(--team-green)';
+
+          const color = isSender ? 'var(--team-green)' : '#fff';
+
           return (
-            <motion.li layout key={_id} variants={variants}>
+            <motion.li
+                layout
+                   key={_id}
+                 style={{ alignSelf, color, background }}
+              variants={variants}
+            >
               {content}
             </motion.li>
           );

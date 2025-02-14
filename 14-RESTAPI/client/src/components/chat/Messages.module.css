@@ -1,9 +1,12 @@
 .messages {
   flex: 1;
+  min-height: 0;
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin: 0.1rem;
 
   > li {
     border: 1px solid var(--team-green);
