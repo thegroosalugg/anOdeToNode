@@ -22,7 +22,7 @@ const initialData: Paginated<Post, 'posts'> = {
 export default function FeedPage({ setUser }: Authorized) {
   const {
           data: { docCount, posts },
-       setData,
+       setData: setPosts,
     reqHandler,
          error,
   } = useFetch(initialData);
@@ -48,7 +48,7 @@ export default function FeedPage({ setUser }: Authorized) {
     socket.on('connect', () => captainsLog([-100, 80], ['🗞️ FEEDPAGE: Socket connected']));
 
     socket.on('post:update', (newPost) => {
-      setData(({ docCount: prevCount, posts: prevPosts }) => {
+      setPosts(({ docCount: prevCount, posts: prevPosts }) => {
         const isFound = prevPosts.some(({ _id }) => _id === newPost._id);
         const   posts = isFound
           ? prevPosts.map((oldPost) => (newPost._id === oldPost._id ? newPost : oldPost))
@@ -61,7 +61,7 @@ export default function FeedPage({ setUser }: Authorized) {
     });
 
     socket.on('post:delete', (deleted) => {
-      setData(({ docCount: prevCount, posts: prevPosts }) => {
+      setPosts(({ docCount: prevCount, posts: prevPosts }) => {
         const    posts = prevPosts.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;
         captainsLog([-100, 90], ['🗞️ FEEDPAGE DELETED', deleted]);
@@ -76,7 +76,7 @@ export default function FeedPage({ setUser }: Authorized) {
       socket.disconnect();
       captainsLog([-1, 70], ['🗞️ FEEDPAGE Disconnected'] ); // **LOGDATA
     };
-  }, [reqHandler, mountData, setData, url]);
+  }, [reqHandler, mountData, setPosts, url]);
 
   const closeModal = () => setShowModal(false);
 

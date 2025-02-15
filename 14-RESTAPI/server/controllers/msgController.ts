@@ -32,6 +32,7 @@ const newMessage: RequestHandler = async (req, res, next) => {
     const peer = await User.findById(userId);
     if (!peer) return next(new AppError(404, 'User not found'));
 
+    let isNew = false;
     let chat = await Chat.findOne({
       $or: [
         { user, peer },
@@ -41,14 +42,17 @@ const newMessage: RequestHandler = async (req, res, next) => {
 
     if (!chat) {
       chat = new Chat({ user: user._id, peer: peer._id });
+      isNew = true;
     }
 
     const msg = await Msg.create({ content, sender: user._id, chat: chat._id });
     chat.lastMsg = msg;
     await chat.save();
+    peer.set({ email: 'hidden', friends: [] });
+    chat.set({ user, peer }); // in place of populate as all data is already here
 
-    // io.emit(`chat:${user._id}:new`, msg);
-    // io.emit(`chat:${peer._id}:new`, msg);
+    io.emit(`chat:${user._id}:update`, { chat, isNew, msg });
+    io.emit(`chat:${peer._id}:update`, { chat, isNew, msg });
     res.status(201).json(msg);
   } catch (error) {
     next(new AppError(500, 'Unable send message', error));

@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import useInitial from '@/hooks/useInitial';
 import useFetch from '@/hooks/useFetch';
+import { io } from 'socket.io-client';
+import { BASE_URL } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import Chat from '@/models/Chat';
 import User from '@/models/User';
@@ -11,6 +13,7 @@ import ProfilePic from '../profile/ProfilePic';
 import Messages from './Messages';
 import SendMessage from '../form/SendMessage';
 import AsyncAwait from '../panel/AsyncAwait';
+import { captainsLog } from '@/util/captainsLog';
 import css from './ChatList.module.css';
 
 export default function ChatList({
@@ -54,7 +57,27 @@ export default function ChatList({
       );
 
     initData();
-  }, [userId, isMenu, mountData, reqActiveChat, reqChats]);
+
+    const socket = io(BASE_URL);
+    socket.on('connect', () => captainsLog([-100, 290], ['CHAT LIST 💬: Socket connected']));
+
+    socket.on(`chat:${user._id}:update`, ({ chat, isNew }) => {
+      if (chat._id === isActive?.[0]._id) setIsActive([chat]);
+
+      setChats((prevChats) => {
+        captainsLog([-100, 285], [`CHAT LIST 💬: Update, isNew ${isNew}`, chat]);
+        if (isNew) return [chat, ...prevChats];
+        else       return prevChats.map((prev) => (prev._id === chat._id ? chat : prev));
+      });
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off(`chat:${user._id}:update`);
+      socket.disconnect();
+      captainsLog([-100, 290], ['CHAT LIST 💬 disconnect']); // **LOGDATA
+      };
+    }, [user._id, userId, isActive, isMenu, mountData, reqActiveChat, reqChats, setChats]);
 
 
   function expand(chat: Chat) {
@@ -122,8 +145,8 @@ export default function ChatList({
                   <AnimatePresence>
                     {isActive && (
                       <>
-                        <Messages    {...{ user, setUser, isMenu, chat }}   />
-                        <SendMessage {...{  url, setUser, isMenu       }}   />
+                        <Messages    {...{    user, isMenu, chat }} />
+                        <SendMessage {...{ setUser, isMenu, url  }} />
                       </>
                     )}
                   </AnimatePresence>
