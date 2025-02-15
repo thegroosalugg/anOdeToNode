@@ -7,6 +7,7 @@ import User from '@/models/User';
 import Chat from '@/models/Chat';
 import Msg from '@/models/Message';
 import AsyncAwait from '../panel/AsyncAwait';
+import { formatDate } from '@/util/timeStamps';
 import css from './Messages.module.css';
 
 export default function Messages({
@@ -66,13 +67,9 @@ export default function Messages({
           const color = isSender ? 'var(--team-green)' : '#fff';
 
           return (
-            <motion.li
-                layout
-                   key={_id}
-                 style={{ alignSelf, color, background }}
-              variants={variants}
-            >
-              {content}
+            <motion.li layout key={_id} variants={variants}>
+              <time style={{ alignSelf }}>{formatDate(createdAt, ['time'])}</time>
+              <p    style={{ alignSelf, color, background }}>{content}</p>
             </motion.li>
           );
         })}

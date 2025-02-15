@@ -1,4 +1,4 @@
-function formatDate(ISOstring: string, withYear?: boolean, withTime: boolean = false): string {
+function formatDate(ISOstring: string, config: Array<'year' | 'time'> = []) {
   const date = new Date(ISOstring);
 
   const options: Intl.DateTimeFormatOptions = {
@@ -7,22 +7,20 @@ function formatDate(ISOstring: string, withYear?: boolean, withTime: boolean = f
     weekday: 'short',
   };
 
-  if (withYear) {
-    options.year = 'numeric';
-  }
+  if (config.includes('year')) options.year = 'numeric';
 
-  let formattedDate = date.toLocaleDateString('en-GB', options);
+  let localeDate = date.toLocaleDateString('en-GB', options);
 
-  if (withTime) {
+  if (config.includes('time')) {
     const time = date.toLocaleTimeString('en-GB', {
         hour: '2-digit',
       minute: '2-digit',
       hour12: false
     });
-    formattedDate = `${time}, ${formattedDate}`;
+    localeDate = `${time}, ${localeDate}`;
   }
 
-  return formattedDate;
+  return localeDate;
 }
 
 function timeAgo(ISOstring: string): string {
