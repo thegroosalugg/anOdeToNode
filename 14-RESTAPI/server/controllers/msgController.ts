@@ -49,7 +49,11 @@ const newMessage: RequestHandler = async (req, res, next) => {
     chat.lastMsg = msg;
     await chat.save();
     peer.set({ email: 'hidden', friends: [] });
-    chat.set({ user, peer }); // in place of populate as all data is already here
+    if (chat.user.toString() === user._id.toString()) {
+      chat.set({ user, peer }); // Original user was requester
+    } else {
+      chat.set({ user: peer, peer: user });
+    } // in place of populate as all data is already here
 
     io.emit(`chat:${user._id}:update`, { chat, isNew, msg });
     io.emit(`chat:${peer._id}:update`, { chat, isNew, msg });

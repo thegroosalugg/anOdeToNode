@@ -13,6 +13,7 @@ import ProfilePic from '../profile/ProfilePic';
 import Messages from './Messages';
 import SendMessage from '../form/SendMessage';
 import AsyncAwait from '../panel/AsyncAwait';
+import { timeAgo } from '@/util/timeStamps';
 import { captainsLog } from '@/util/captainsLog';
 import css from './ChatList.module.css';
 
@@ -94,6 +95,11 @@ export default function ChatList({
   const       flex = isActive ? 1 : 0;
   const    opacity = 0;
   const transition = { duration: 0.5, ease: 'linear' };
+  const animations = {
+    initial: { opacity },
+    animate: { opacity: 1, transition },
+       exit: { opacity },
+  };
 
   return (
     <AsyncAwait {...{ isLoading: isInitial, error }}>
@@ -106,10 +112,11 @@ export default function ChatList({
         >
           <AnimatePresence>
             {(isActive ?? chats).map((chat, i) => {
-              const { _id, user: host, peer } = chat;
-              const recipient = user._id === host._id ? peer : host;
-              const url = `chat/new-msg/${recipient._id}`;
-              const   x = 20 * (i % 2 === 0 ? 1 : -1);
+              const { _id, user: host, peer, lastMsg } = chat;
+              const recipient =       user._id === host._id ? peer : host;
+              const    sender = lastMsg.sender === user._id ? 'Me' : recipient.name;
+              const       url = `chat/new-msg/${recipient._id}`;
+              const         x = 20 * (i % 2 === 0 ? 1 : -1);
 
               return (
                 <motion.li
@@ -129,16 +136,17 @@ export default function ChatList({
                     <span>
                       {recipient.name} {recipient.surname}
                     </span>
-                    <AnimatePresence>
-                      {isActive && (
-                        <motion.button
-                          initial={{ opacity }}
-                          animate={{ opacity: 1, transition }}
-                             exit={{ opacity }}
-                          onClick={collapse}
-                        >
+                    <AnimatePresence mode='wait'>
+                      {isActive ? (
+                        <motion.button key='btn' onClick={collapse} {...animations}>
                           Back
                         </motion.button>
+                      ) : (
+                        <motion.section key='msg' {...animations}>
+                          {sender}
+                          {timeAgo(lastMsg.createdAt)}
+                          {lastMsg.content}
+                        </motion.section>
                       )}
                     </AnimatePresence>
                   </motion.h2>
