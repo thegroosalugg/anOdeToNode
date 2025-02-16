@@ -30,6 +30,7 @@
       font-weight: 600;
       font-size: 0.9rem;
 
+      /* Recipient name */
       > span {
         text-align: center;
         text-wrap: nowrap;
@@ -37,6 +38,7 @@
         overflow: hidden;
       }
 
+      /* Back Button (Expanded) */
       > button {
         margin-left: auto;
         background: none;
@@ -47,6 +49,7 @@
         border: 1px solid var(--team-green);
       }
 
+      /* Last Message (Collapsed) */
       > section {
         max-width: 40%;
         margin-left: auto;
@@ -61,13 +64,38 @@
           overflow: hidden;
           font-size: 0.6rem;
 
+          /* time stamp */
           &:first-of-type {
             color: var(--text-grey);
           }
+
+          /* Recipient name & counter */
           &:nth-of-type(2) {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.2rem;
             font-weight: 700;
             color: var(--team-green);
+
+            > span {
+              &:first-of-type {
+                text-wrap: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+              }
+
+              /* Counter override - remove absolute positioning */
+              &:last-of-type {
+                position: static;
+                background: var(--team-green);
+
+              }
+            }
           }
+
+          /* message preview */
           &:last-of-type {
             font-size: 0.7rem;
             color: var(--dark-grey);

@@ -10,6 +10,7 @@ import { Auth } from '@/pages/RootLayout';
 import Chat from '@/models/Chat';
 import User from '@/models/User';
 import ProfilePic from '../profile/ProfilePic';
+import Counter from '../notifications/Counter';
 import Messages from './Messages';
 import SendMessage from '../form/SendMessage';
 import AsyncAwait from '../panel/AsyncAwait';
@@ -112,7 +113,7 @@ export default function ChatList({
         >
           <AnimatePresence>
             {(isActive ?? chats).map((chat, i) => {
-              const { _id, host, guest, lastMsg } = chat;
+              const { _id, host, guest, lastMsg, alerts } = chat;
               const recipient =        user._id === host._id ? guest : host;
               const    sender = lastMsg?.sender === user._id ?  'Me' : recipient.name;
               const       url = `chat/new-msg/${recipient._id}`;
@@ -144,7 +145,10 @@ export default function ChatList({
                       ) : (
                         <motion.section layout key={lastMsg.updatedAt} {...animations}>
                           <span>{timeAgo(lastMsg.updatedAt)}</span>
-                          <span>{sender}</span>
+                          <span>
+                            <span>{sender}</span>
+                            <Counter count={alerts?.[user._id]} />
+                          </span>
                           <span>{lastMsg.content}</span>
                         </motion.section>
                       )}

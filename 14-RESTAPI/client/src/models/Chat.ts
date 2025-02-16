@@ -7,6 +7,7 @@ type Chat = {
        guest:  User;
   deletedFor: [string];
      lastMsg:  Msg;
+      alerts:  Record<string, number>;
 };
 
 export default Chat;

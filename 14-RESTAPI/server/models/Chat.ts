@@ -5,6 +5,7 @@ interface IChat {
         host: Types.ObjectId;
        guest: Types.ObjectId;
   deletedFor: Types.ObjectId[];
+      alerts: Map<string, number>;
      lastMsg: IMsg;
 }
 
@@ -21,6 +22,7 @@ export const chatSchema = new Schema<IChat, ChatModel, IChatMethods>(
           host:  user,
          guest:  user,
     deletedFor: [user],
+        alerts: { type: Map, of: Number, default: new Map() },
        lastMsg: msgSchema,
   },
   { timestamps: true }
