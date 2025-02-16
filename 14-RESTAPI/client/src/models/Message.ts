@@ -4,6 +4,7 @@ type Msg = {
      sender: string;
     content: string;
   createdAt: string;
+  updatedAt: string;
 };
 
 export default Msg;

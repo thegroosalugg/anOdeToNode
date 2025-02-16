@@ -131,25 +131,25 @@ export default function ChatList({
                    }}
                  transition={transition}
                 >
-                  <motion.h2 layout transition={transition}>
-                    <ProfilePic user={recipient} />
-                    <span>
+                  <h2>
+                    <ProfilePic layout transition={transition} user={recipient} />
+                    <motion.span layout transition={transition}>
                       {recipient.name} {recipient.surname}
-                    </span>
+                    </motion.span>
                     <AnimatePresence mode='wait'>
                       {isActive ? (
-                        <motion.button key='btn' onClick={collapse} {...animations}>
+                        <motion.button layout key='btn' onClick={collapse} {...animations}>
                           Back
                         </motion.button>
                       ) : (
-                        <motion.section key='msg' {...animations}>
-                          {sender}
-                          {timeAgo(lastMsg.createdAt)}
-                          {lastMsg.content}
+                        <motion.section layout key={lastMsg.updatedAt} {...animations}>
+                          <span>{timeAgo(lastMsg.updatedAt)}</span>
+                          <span>{sender}</span>
+                          <span>{lastMsg.content}</span>
                         </motion.section>
                       )}
                     </AnimatePresence>
-                  </motion.h2>
+                  </h2>
                   <AnimatePresence>
                     {isActive && (
                       <>

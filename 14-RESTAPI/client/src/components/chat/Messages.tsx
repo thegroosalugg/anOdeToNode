@@ -77,6 +77,7 @@ export default function Messages({
           const   isSender = user._id === sender;
           const     isLast = i === msgs.length - 1;
           const alignItems = isSender ?               'end' : 'start';
+          const     margin = isSender ?        '0 0 0 1rem' : '0 1rem 0 0';
           const      color = isSender ? 'var(--team-green)' :  '#fff';
           const background = isSender
             ? isMenu
@@ -89,7 +90,7 @@ export default function Messages({
                 layout
                    key={_id}
               variants={variants}
-                 style={{ alignItems }}
+                 style={{ alignItems, margin }}
               onAnimationComplete={scrollTo}
             >
               <time>{formatDate(createdAt, ['time'])}</time>
