@@ -157,7 +157,7 @@ export default function ChatList({
                   <AnimatePresence>
                     {isActive && (
                       <>
-                        <Messages    {...{    user, isMenu, chat }} />
+                        <Messages    {...{    user, isMenu, chat, setChats }} />
                         <SendMessage {...{ setUser, isMenu, url  }} />
                       </>
                     )}

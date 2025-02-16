@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { useEffect, useRef } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import useInitial from '@/hooks/useInitial';
 import useFetch from '@/hooks/useFetch';
 import { BASE_URL } from '@/util/fetchData';
@@ -13,22 +13,46 @@ import { captainsLog } from '@/util/captainsLog';
 import css from './Messages.module.css';
 
 export default function Messages({
-     chat,
-     user,
-   isMenu,
+      chat,
+  setChats,
+      user,
+    isMenu,
 }: {
-     chat: Chat;
-     user: User;
-  isMenu?: boolean;
+      chat: Chat;
+  setChats: Dispatch<SetStateAction<Chat[]>>;
+      user: User;
+   isMenu?: boolean;
 }) {
   const { data: msgs, setData: setMsgs, reqHandler, error } = useFetch<Msg[]>([]);
+  const { reqHandler: reqChat  } = useFetch<Chat>();
   const { isInitial, mountData } = useInitial();
   const msgRef = useRef<HTMLParagraphElement>(null);
   const scrollTo = () => msgRef.current?.scrollIntoView({ behavior: 'smooth' });
 
   useEffect(() => {
+    const markAlertsAsRead = async () => {
+      if (chat.alerts[user._id] > 0) {
+        await reqChat(
+          { url: `alerts/chat/${chat._id}` },
+          {
+            onSuccess: (chat) =>
+              setChats((prevChats) =>
+                prevChats.map((prev) => (prev._id === chat._id ? chat : prev))
+              ),
+          }
+        );
+      }
+    };
+
     const initData = async () => {
-      mountData(async () => await reqHandler({ url: `chat/messages/${chat._id}` }), 4)
+      mountData(
+        async () =>
+          await Promise.all([
+            reqHandler({ url: `chat/messages/${chat._id}` }),
+            markAlertsAsRead(),
+          ]),
+        4
+      );
     };
 
     initData();
@@ -48,7 +72,7 @@ export default function Messages({
       socket.disconnect();
       captainsLog([-100, 270], ['🗨️ MESSAGES disconnect']); // **LOGDATA
       };
-  }, [user._id, chat._id, mountData, reqHandler, setMsgs]);
+  }, [user._id, chat._id, chat.alerts, reqChat, setChats, mountData, reqHandler, setMsgs]);
 
   const  classes = `${css['messages']} ${isMenu ? css['isMenu'] : ''}`;
   const  opacity = 0;

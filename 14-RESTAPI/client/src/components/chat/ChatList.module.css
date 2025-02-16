@@ -80,17 +80,18 @@
             color: var(--team-green);
 
             > span {
-              &:first-of-type {
-                text-wrap: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-              }
-
               /* Counter override - remove absolute positioning */
               &:last-of-type {
                 position: static;
                 background: var(--team-green);
+              }
 
+              /* first loads last and overwrites last background incase only 1 child span */
+              &:first-of-type {
+                background: none;
+                text-wrap: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
               }
             }
           }
