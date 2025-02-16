@@ -3,8 +3,8 @@ import User from "./User";
 
 type Chat = {
          _id:  string;
-        user:  User;
-        peer:  User;
+        host:  User;
+       guest:  User;
   deletedFor: [string];
      lastMsg:  Msg;
 };

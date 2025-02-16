@@ -12,7 +12,7 @@ const devErr = 'Do not use without AuthJWT';
 const getMessages: RequestHandler = async (req, res, next) => {
   try {
     const { chatId } = req.params;
-    const messages = await Msg.find({ chat: chatId });
+    const  messages  = await Msg.find({ chat: chatId });
     res.status(200).json(messages);
   } catch (error) {
     next(new AppError(500, 'Messages could not be loaded', error));
@@ -33,15 +33,15 @@ const newMessage: RequestHandler = async (req, res, next) => {
     if (!peer) return next(new AppError(404, 'User not found'));
 
     let isNew = false;
-    let chat = await Chat.findOne({
+    let  chat = await Chat.findOne({
       $or: [
-        { user, peer },
-        { user: peer, peer: user },
+        { host: user, guest: peer },
+        { host: peer, guest: user },
       ],
     });
 
     if (!chat) {
-      chat = new Chat({ user: user._id, peer: peer._id });
+       chat = new Chat({ host: user._id, guest: peer._id });
       isNew = true;
     }
 
@@ -49,11 +49,9 @@ const newMessage: RequestHandler = async (req, res, next) => {
     chat.lastMsg = msg;
     await chat.save();
     peer.set({ email: 'hidden', friends: [] });
-    if (chat.user.toString() === user._id.toString()) {
-      chat.set({ user, peer }); // Original user was requester
-    } else {
-      chat.set({ user: peer, peer: user });
-    } // in place of populate as all data is already here
+    const [host, guest] =
+      chat.host.toString() === user._id.toString() ? [user, peer] : [peer, user];
+    chat.set({ host, guest });
 
     io.emit(`chat:${user._id}:update`, { chat, isNew, msg });
     io.emit(`chat:${peer._id}:update`, { chat, isNew, msg });

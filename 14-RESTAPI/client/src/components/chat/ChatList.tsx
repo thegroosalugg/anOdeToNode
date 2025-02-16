@@ -112,9 +112,9 @@ export default function ChatList({
         >
           <AnimatePresence>
             {(isActive ?? chats).map((chat, i) => {
-              const { _id, user: host, peer, lastMsg } = chat;
-              const recipient =       user._id === host._id ? peer : host;
-              const    sender = lastMsg.sender === user._id ? 'Me' : recipient.name;
+              const { _id, host, guest, lastMsg } = chat;
+              const recipient =        user._id === host._id ? guest : host;
+              const    sender = lastMsg?.sender === user._id ?  'Me' : recipient.name;
               const       url = `chat/new-msg/${recipient._id}`;
               const         x = 20 * (i % 2 === 0 ? 1 : -1);
 
