@@ -93,7 +93,7 @@ export default function ChatList({
                         <motion.section layout key={lastMsg.updatedAt} {...animations}>
                           <span>{timeAgo(lastMsg.updatedAt)}</span>
                           <span>
-                            <span>{sender}</span>
+                            <span>{'🗨️' + sender}</span>
                             <Counter count={alerts?.[user._id]} />
                           </span>
                           <span>{lastMsg.content}</span>

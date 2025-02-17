@@ -30,8 +30,8 @@ export default function Messages({
   const scrollTo = () => msgRef.current?.scrollIntoView({ behavior: 'smooth' });
 
   useEffect(() => {
-    const markAlertsAsRead = async () => {
-      if (chat.alerts[user._id] > 0) {
+    const markAlertsAsRead = async (condition: boolean = chat.alerts[user._id] > 0) => {
+      if (condition) {
         await reqChat(
           { url: `alerts/chat/${chat._id}` },
           {
@@ -60,11 +60,11 @@ export default function Messages({
     const socket = io(BASE_URL);
     socket.on('connect', () => captainsLog([-100, 270], ['🗨️ MESSAGES: Socket connected']));
 
-    socket.on(`chat:${user._id}:update`, ({ msg }) => setMsgs((prevMsgs) => {
-        captainsLog([-100, 265], ['🗨️ MESSAGES: New Msg', msg]);
-        return [...prevMsgs, msg];
-      })
-    );
+    socket.on(`chat:${user._id}:update`, async ({ msg }) => {
+      captainsLog([-100, 265], ['🗨️ MESSAGES: New Msg', msg]);
+      setMsgs((prevMsgs) => [...prevMsgs, msg]);
+      await markAlertsAsRead(true);
+    });
 
     return () => {
       socket.off('connect');
