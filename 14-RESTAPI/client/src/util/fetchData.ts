@@ -3,7 +3,7 @@ import refreshToken from './refreshToken';
 export interface Fetch {
       url: string;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-    data?: FormData | { [k: string]: FormDataEntryValue };
+    data?: FormData | { [k: string]: FormDataEntryValue | boolean | number };
 }
 
 export type FetchError = {

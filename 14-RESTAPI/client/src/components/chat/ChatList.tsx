@@ -1,5 +1,6 @@
 import { AnimatePresence, HTMLMotionProps, LayoutGroup, motion } from 'motion/react';
 import { Dispatch, ReactNode, SetStateAction, useState } from 'react';
+import useFetch from '@/hooks/useFetch';
 import { FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import Chat from '@/models/Chat';
@@ -58,13 +59,14 @@ export default function ChatList({
        chats: Chat[];
     setChats: Dispatch<SetStateAction<Chat[]>>;
        error: FetchError | null;
-    isActive: [Chat] | null;
+    isActive: [Chat]     | null;
    isInitial: boolean;
    deferring: boolean;
       expand: (chat: Chat) => void;
     collapse: () => void;
      isMenu?: boolean;
 }) {
+  const { reqHandler } = useFetch<Chat[]>([]);
   const [isDeleting,   setIsDeleting] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState<Record<string, boolean>>({});
 
@@ -80,8 +82,27 @@ export default function ChatList({
     }
   }
 
-  function deleteHandler() {
-    setIsDeleting(true);
+  async function deleteHandler() {
+    if (isDeleting) {
+      const data = Object.fromEntries(
+        Object.entries(toBeDeleted).filter(([_, value]) => value === true)
+      );
+
+      await reqHandler(
+        { url: 'chat/delete', method: 'DELETE', data },
+        {
+          onSuccess: (deleted) => {
+            setChats((prevChats) =>
+              prevChats.filter(
+                (chat) => !deleted.some((deletedChat) => deletedChat._id === chat._id)
+              )
+            );
+          },
+        }
+      );
+    } else {
+      setIsDeleting(true);
+    }
   }
 
   function cancelDelete() {
