@@ -19,7 +19,6 @@
     display: flex;
     flex-direction: column;
     border: 1px solid var(--team-green);
-    background: var(--box-gradient);
 
     > h2 {
       display: flex;
@@ -41,12 +40,7 @@
       /* Back Button (Expanded) */
       > button {
         margin-left: auto;
-        background: none;
         font-weight: 700;
-        padding: 0.1rem 0.2rem;
-        color: #fff;
-        background: var(--team-green);
-        border: 1px solid var(--team-green);
       }
 
       /* Last Message (Collapsed) */
@@ -86,7 +80,7 @@
                 background: var(--team-green);
               }
 
-              /* first loads last and overwrites last background incase only 1 child span */
+              /* first-of-type loads last & overwrites background when only 1 child span */
               &:first-of-type {
                 background: none;
                 text-wrap: nowrap;
@@ -112,6 +106,18 @@
     > h2 {
       min-height: 0;
       font-size: 0.7rem;
+    }
+  }
+}
+
+.delete-buttons {
+  > button {
+    color: #000;
+    border: 1px solid #000;
+    font-weight: 500;
+
+    &:first-of-type {
+      width: 125px;
     }
   }
 }

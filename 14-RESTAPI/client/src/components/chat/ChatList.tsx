@@ -1,8 +1,10 @@
 import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import Chat from '@/models/Chat';
 import User from '@/models/User';
+import Button from '../button/Button';
 import ProfilePic from '../profile/ProfilePic';
 import Counter from '../notifications/Counter';
 import Messages from './Messages';
@@ -10,12 +12,11 @@ import SendMessage from '../form/SendMessage';
 import AsyncAwait from '../panel/AsyncAwait';
 import { timeAgo } from '@/util/timeStamps';
 import css from './ChatList.module.css';
-import { FetchError } from '@/util/fetchData';
 
 export default function ChatList({
-       user,
+       user, // from parent * 2
     setUser,
-      chats,
+      chats, // from hook   * 8
    setChats,
       error,
    isActive,
@@ -23,7 +24,7 @@ export default function ChatList({
   deferring,
      expand,
    collapse,
-     isMenu,
+     isMenu, // optional extra
 }: {
         user: User;
      setUser: Auth['setUser'];
@@ -37,8 +38,10 @@ export default function ChatList({
     collapse: () => void;
      isMenu?: boolean;
 }) {
+  const [isDeleting,   setIsDeleting] = useState(false);
+  const [toBeDeleted, setToBeDeleted] = useState<Record<string, boolean>>({});
+
   const    classes = `${css['chat-list']} ${isMenu ? css['isMenu'] : ''}`;
-  const background = `var(--${isMenu ? 'main' : 'box'}-gradient)`
   const     cursor = isActive || deferring ? 'auto' : 'pointer';
   const       flex = isActive ? 1 : 0;
   const    opacity = 0;
@@ -49,6 +52,23 @@ export default function ChatList({
        exit: { opacity },
   };
 
+  function clickHandler(chat: Chat) {
+    if (isDeleting) {
+      setToBeDeleted((state) => ({ ...state, [chat._id]: !state[chat._id] }));
+    } else {
+      expand(chat);
+    }
+  }
+
+  function deleteHandler() {
+    setIsDeleting(true);
+  }
+
+  function cancelDelete() {
+    setIsDeleting(false);
+    setToBeDeleted({});
+  }
+
   return (
     <AsyncAwait {...{ isLoading: isInitial, error }}>
       <LayoutGroup>
@@ -58,24 +78,47 @@ export default function ChatList({
              animate='visible'
           transition={{ staggerChildren: 0.03 }}
         >
+          {!isMenu && (
+            <section className={css['delete-buttons']}>
+              <Button
+                      hsl={isDeleting ? [10, 54, 51] : [0, 0, 81]}
+                  onClick={deleteHandler}
+                animateEx={{
+                        color: isDeleting ?      '#fff' : '#000',
+                  borderColor: isDeleting ? '#00000000' : '#000',
+                }}
+              >
+                {isDeleting ? 'Delete' : 'Select'} Chats
+              </Button>
+              <AnimatePresence>
+                {isDeleting && (
+                  <Button hsl={[0, 0, 81]} exit={{ opacity }} onClick={cancelDelete}>
+                    Cancel
+                  </Button>
+                )}
+              </AnimatePresence>
+            </section>
+          )}
           <AnimatePresence>
             {(isActive ?? chats).map((chat, i) => {
               const { _id, host, guest, lastMsg, alerts } = chat;
-              const recipient =        user._id === host._id ? guest : host;
-              const    sender = lastMsg?.sender === user._id ?  'Me' : recipient.name;
-              const       url = `chat/new-msg/${recipient._id}`;
-              const         x = 20 * (i % 2 === 0 ? 1 : -1);
-
+              const  recipient =        user._id === host._id ? guest : host;
+              const     sender = lastMsg?.sender === user._id ?  'Me' : recipient.name;
+              const        url = `chat/new-msg/${recipient._id}`;
+              const          x = 20 * (i % 2 === 0 ? 1 : -1);
+              const background = toBeDeleted[chat._id]
+                ? 'linear-gradient(to right, #c65740, #ce4429)'
+                : `var(--${isMenu ? 'main' : 'box'}-gradient)`;
               return (
                 <motion.li
                       layout
                         key={_id}
-                    onClick={() => expand(chat)}
-                      style={{ cursor,   background }}
+                    onClick={() => clickHandler(chat)}
+                      style={{ cursor }}
                        exit={{  opacity,    flex, x }}
                    variants={{
-                      hidden: { opacity,    flex, x    },
-                     visible: { opacity: 1, flex, x: 0 },
+                      hidden: { opacity,    flex, x },
+                     visible: { opacity: 1, flex, x: 0, background },
                    }}
                  transition={transition}
                 >
@@ -86,15 +129,21 @@ export default function ChatList({
                     </motion.span>
                     <AnimatePresence mode='wait'>
                       {isActive ? (
-                        <motion.button layout key='btn' onClick={collapse} {...animations}>
+                        <Button
+                           layout
+                              key='btn'
+                              hsl={[180, 80, 35]}
+                             exit={{ opacity }}
+                          onClick={collapse}
+                        >
                           Back
-                        </motion.button>
+                        </Button>
                       ) : (
                         <motion.section layout key={lastMsg.updatedAt} {...animations}>
                           <span>{timeAgo(lastMsg.updatedAt)}</span>
                           <span>
                             <span>{'🗨️' + sender}</span>
-                            <Counter count={alerts?.[user._id]} />
+                            <Counter count={alerts[user._id]} />
                           </span>
                           <span>{lastMsg.content}</span>
                         </motion.section>

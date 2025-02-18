@@ -93,7 +93,7 @@ export default function Messages({
                  duration,
                      ease: 'easeOut',
             delayChildren: 0.5,
-          staggerChildren: 0.1,
+          staggerChildren: msgs.length < 20 ? 0.1 : 0,
         }}
       >
         {msgs.map((msg, i) => {
