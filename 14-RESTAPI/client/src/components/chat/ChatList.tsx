@@ -1,5 +1,5 @@
-import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { AnimatePresence, HTMLMotionProps, LayoutGroup, motion } from 'motion/react';
+import { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 import { FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import Chat from '@/models/Chat';
@@ -12,6 +12,33 @@ import SendMessage from '../form/SendMessage';
 import AsyncAwait from '../panel/AsyncAwait';
 import { timeAgo } from '@/util/timeStamps';
 import css from './ChatList.module.css';
+
+const    opacity = 0;
+const transition = { duration: 0.5, ease: 'linear' };
+const animations = {
+  initial: { opacity },
+  animate: { opacity: 1, transition },
+     exit: { opacity },
+};
+
+const Span = ({
+  isMarked,
+     color,
+  children,
+  ...props
+}: {
+  isMarked: boolean;
+     color: string;
+  children: ReactNode;
+} & HTMLMotionProps<'span'>) => (
+  <motion.span
+       animate={{ color: isMarked ? '#fff' : color }}
+    transition={transition}
+    {...props}
+  >
+    {children}
+  </motion.span>
+);
 
 export default function ChatList({
        user, // from parent * 2
@@ -44,13 +71,6 @@ export default function ChatList({
   const    classes = `${css['chat-list']} ${isMenu ? css['isMenu'] : ''}`;
   const     cursor = isActive || deferring ? 'auto' : 'pointer';
   const       flex = isActive ? 1 : 0;
-  const    opacity = 0;
-  const transition = { duration: 0.5, ease: 'linear' };
-  const animations = {
-    initial: { opacity },
-    animate: { opacity: 1, transition },
-       exit: { opacity },
-  };
 
   function clickHandler(chat: Chat) {
     if (isDeleting) {
@@ -102,13 +122,16 @@ export default function ChatList({
           <AnimatePresence>
             {(isActive ?? chats).map((chat, i) => {
               const { _id, host, guest, lastMsg, alerts } = chat;
-              const  recipient =        user._id === host._id ? guest : host;
-              const     sender = lastMsg?.sender === user._id ?  'Me' : recipient.name;
-              const        url = `chat/new-msg/${recipient._id}`;
-              const          x = 20 * (i % 2 === 0 ? 1 : -1);
-              const background = toBeDeleted[chat._id]
+              const   recipient =        user._id === host._id ? guest : host;
+              const      sender = lastMsg?.sender === user._id ?  'Me' : recipient.name;
+              const         url = `chat/new-msg/${recipient._id}`;
+              const    isMarked = toBeDeleted[chat._id];
+              const           x = 20 * (i % 2 === 0 ? 1 : -1);
+              const borderColor = isMarked ? '#ffffff00' : 'var(--team-green)';
+              const  background = isMarked
                 ? 'linear-gradient(to right, #c65740, #ce4429)'
                 : `var(--${isMenu ? 'main' : 'box'}-gradient)`;
+
               return (
                 <motion.li
                       layout
@@ -118,15 +141,20 @@ export default function ChatList({
                        exit={{  opacity,    flex, x }}
                    variants={{
                       hidden: { opacity,    flex, x },
-                     visible: { opacity: 1, flex, x: 0, background },
+                     visible: { opacity: 1, flex, x: 0, background, borderColor },
                    }}
                  transition={transition}
                 >
                   <h2>
-                    <ProfilePic layout transition={transition} user={recipient} />
-                    <motion.span layout transition={transition}>
+                    <ProfilePic
+                          layout
+                         animate={{ borderColor }}
+                      transition={transition}
+                            user={recipient}
+                    />
+                    <Span layout {...{ color: '#000', isMarked }}>
                       {recipient.name} {recipient.surname}
-                    </motion.span>
+                    </Span>
                     <AnimatePresence mode='wait'>
                       {isActive ? (
                         <Button
@@ -140,12 +168,18 @@ export default function ChatList({
                         </Button>
                       ) : (
                         <motion.section layout key={lastMsg.updatedAt} {...animations}>
-                          <span>{timeAgo(lastMsg.updatedAt)}</span>
+                          <Span {...{ color: 'var(--text-grey)', isMarked }}>
+                            {timeAgo(lastMsg.updatedAt)}
+                          </Span>
                           <span>
-                            <span>{'🗨️' + sender}</span>
+                            <Span {...{ color: 'var(--team-green)', isMarked }}>
+                              {'🗨️' + sender}
+                            </Span>
                             <Counter count={alerts[user._id]} />
                           </span>
-                          <span>{lastMsg.content}</span>
+                          <Span {...{ color: 'var(--dark-grey)', isMarked }}>
+                            {lastMsg.content}
+                          </Span>
                         </motion.section>
                       )}
                     </AnimatePresence>

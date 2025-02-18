@@ -118,6 +118,7 @@
 
     &:first-of-type {
       width: 125px;
+      margin-right: 0.1rem;
     }
   }
 }
