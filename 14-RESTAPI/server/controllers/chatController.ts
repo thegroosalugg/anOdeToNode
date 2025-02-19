@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import { io } from '../app';
 import AppError from '../models/Error';
 import User from '../models/User';
 import Chat from '../models/Chat';
@@ -14,6 +15,7 @@ const getChats: RequestHandler = async (req, res, next) => {
   try {
     const chats = await Chat.find({
       $or: [{ host: user }, { guest: user }],
+      [`deletedFor.${user._id}`]: { $ne: true },
     }).populate('host guest', _public);
 
     res.status(200).json(chats);
@@ -89,6 +91,7 @@ const deleteChat: RequestHandler = async (req, res, next) => {
       );
     }
 
+    io.emit(`chat:${user._id}:delete`, chats); // emited so nav can listen
     res.status(200).json(chats);
   } catch (error) {
     next(new AppError(500, 'Unable to delete chats', error));

@@ -70,9 +70,9 @@ export default function ChatList({
   const [isDeleting,   setIsDeleting] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState<Record<string, boolean>>({});
 
-  const    classes = `${css['chat-list']} ${isMenu ? css['isMenu'] : ''}`;
-  const     cursor = isActive || deferring ? 'auto' : 'pointer';
-  const       flex = isActive ? 1 : 0;
+  const classes = `${css['chat-list']} ${isMenu ? css['isMenu'] : ''}`;
+  const  cursor = isActive || deferring ? 'auto' : 'pointer';
+  const    flex = isActive ? 1 : 0;
 
   function clickHandler(chat: Chat) {
     if (isDeleting) {
@@ -87,19 +87,7 @@ export default function ChatList({
       const data = Object.fromEntries(
         Object.entries(toBeDeleted).filter(([_, value]) => value === true)
       );
-
-      await reqHandler(
-        { url: 'chat/delete', method: 'DELETE', data },
-        {
-          onSuccess: (deleted) => {
-            setChats((prevChats) =>
-              prevChats.filter(
-                (chat) => !deleted.some((deletedChat) => deletedChat._id === chat._id)
-              )
-            );
-          },
-        }
-      );
+      await reqHandler({ url: 'chat/delete', method: 'DELETE', data });
     } else {
       setIsDeleting(true);
     }

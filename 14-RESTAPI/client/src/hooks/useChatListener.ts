@@ -60,6 +60,15 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
       });
     });
 
+    socket.on(`chat:${user._id}:delete`, (deleted: Chat[]) => {
+      captainsLog([-100, 285], [`CHAT 💬: Deleted`, deleted]);
+      setChats((prevChats) =>
+        prevChats.filter(
+          (chat) => !deleted.some((deletedChat) => deletedChat._id === chat._id)
+        )
+      );
+    });
+
     socket.on(`chat:${user._id}:alerts`, (chat) => {
       captainsLog([-100, 285], [`CHAT 💬: Alerts`, chat]);
       if (chat._id === activeId) setIsActive([chat]);
@@ -72,6 +81,7 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
     return () => {
       socket.off('connect');
       socket.off(`chat:${user._id}:update`);
+      socket.off(`chat:${user._id}:delete`);
       socket.off(`chat:${user._id}:alerts`);
       socket.disconnect();
       captainsLog([-100, 290], ['CHAT 💬 disconnect']); // **LOGDATA

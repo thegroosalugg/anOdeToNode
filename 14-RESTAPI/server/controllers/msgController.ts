@@ -48,6 +48,7 @@ const newMessage: RequestHandler = async (req, res, next) => {
     const msg = await Msg.create({ content, sender: user._id, chat: chat._id });
     chat.lastMsg = msg;
     const peerId = peer._id.toString(); // count alerts for other person
+    chat.set('deletedFor', {});
     chat.alerts.set(peerId, (chat.alerts.get(peerId) || 0) + 1); // create dynamic key
     await chat.save();
     peer.set({ email: 'hidden', friends: [] });
