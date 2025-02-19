@@ -63,7 +63,7 @@ const deleteChat: RequestHandler = async (req, res, next) => {
     const  data = req.body;
     const   ids = Object.keys(data).filter(id => data[id]);
     const chats = await Chat.find({ _id: { $in: ids } });
-    if (chats.length === 0) return next(new AppError(404, 'No chats to delete'));
+    if (chats.length === 0) return next(new AppError(404, 'No chats selected'));
     const userId = user._id.toString();
 
     const toDelete: Types.ObjectId[] = [];
