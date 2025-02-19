@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useDebounce from '@/hooks/useDebounce';
 import useChatListener from '@/hooks/useChatListener';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
@@ -12,10 +11,10 @@ import Counter from '@/components/notifications/Counter';
 import css from './ChatMenu.module.css';
 
 export default function ChatMenu({ user, setUser }: { user: User, setUser: Auth['setUser'] }) {
-  const  navigate = useNavigate();
-  const chatProps = useChatListener(user, true);
-  const [menu,       showMenu] = useState(false);
-  const { deferring, deferFn } = useDebounce();
+  const [menu, showMenu] = useState(false);
+  const     navigate     = useNavigate();
+  const    chatProps     = useChatListener(user, true);
+  const { alerts, deferring, deferFn } = chatProps;
 
   const openMenu = async () => {
     deferFn(async () => showMenu(true), 1500);
@@ -36,7 +35,7 @@ export default function ChatMenu({ user, setUser }: { user: User, setUser: Auth[
         <ChatList {...{ ...chatProps, user, setUser, isMenu: true }} />
       </PortalMenu>
       <NavButton {...{ index: 3, deferring, callback: openMenu }}>
-        <Counter count={chatProps.alerts} />
+        <Counter count={alerts} />
       </NavButton>
     </>
   );

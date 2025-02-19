@@ -46,9 +46,7 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
 
     const socket = io(BASE_URL);
 
-    socket.on('connect', () =>
-      captainsLog([-100, 290], ['CHAT 💬: Socket connected'])
-    );
+    socket.on('connect', () => captainsLog([-100, 290], ['CHAT 💬: Socket connected']));
 
     socket.on(`chat:${user._id}:update`, ({ chat, isNew }) => {
       captainsLog([-100, 285], [`CHAT 💬: Update, isNew ${isNew}`, chat]);
@@ -114,6 +112,7 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
      isActive,
     isInitial,
     deferring,
+      deferFn,
        expand,
      collapse,
   };

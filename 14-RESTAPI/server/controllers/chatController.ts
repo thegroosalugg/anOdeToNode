@@ -64,12 +64,13 @@ const deleteChat: RequestHandler = async (req, res, next) => {
     const   ids = Object.keys(data).filter(id => data[id]);
     const chats = await Chat.find({ _id: { $in: ids } });
     if (chats.length === 0) return next(new AppError(404, 'No chats to delete'));
+    const userId = user._id.toString();
 
     const toDelete: Types.ObjectId[] = [];
     const toUpdate: Types.ObjectId[] = [];
 
     chats.forEach((chat) => {
-      chat.deletedFor.set(user._id.toString(), true);
+      chat.deletedFor.set(userId, true);
       if (
         chat.deletedFor.get(chat.host.toString()) &&
         chat.deletedFor.get(chat.guest.toString())
@@ -87,7 +88,7 @@ const deleteChat: RequestHandler = async (req, res, next) => {
     if (toUpdate.length > 0) {
       await Chat.updateMany(
         { _id: { $in: toUpdate } },
-        { $set: { 'deletedFor': { [user._id.toString()]: true } } }
+        { $set: { 'deletedFor': { [userId]: true } } }
       );
     }
 
