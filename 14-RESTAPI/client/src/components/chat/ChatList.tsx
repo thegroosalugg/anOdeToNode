@@ -64,7 +64,7 @@ export default function ChatList({
     isActive: [Chat]     | null;
    isInitial: boolean;
    deferring: boolean;
-      expand: (chat: Chat) => void;
+      expand: (chat: Chat, path: string) => void;
     collapse: () => void;
      isMenu?: boolean;
 }) {
@@ -79,11 +79,11 @@ export default function ChatList({
   const  cursor = isActive || deferring ? 'auto' : 'pointer';
   const    flex = isActive ? 1 : 0;
 
-  function setDeletedOrActive(chat: Chat) {
+  function setDeletedOrActive(chat: Chat, path: string) {
     if (isDeleting) {
       setToBeDeleted((state) => ({ ...state, [chat._id]: !state[chat._id] }));
     } else {
-      expand(chat);
+      expand(chat, path);
     }
   }
 
@@ -157,6 +157,7 @@ export default function ChatList({
                 const   recipient = user._id === host._id ? guest : host;
                 const      sender = lastMsg?.sender === user._id ? 'Me' : recipient.name;
                 const         url = `chat/new-msg/${recipient._id}`;
+                const        path = `/inbox/${recipient._id}`;
                 const    isMarked = toBeDeleted[chat._id];
                 const           x = 20 * (i % 2 === 0 ? 1 : -1);
                 const borderColor = isMarked ? '#ffffff00' : 'var(--team-green)';
@@ -168,7 +169,7 @@ export default function ChatList({
                   <motion.li
                       layout
                          key={_id}
-                     onClick={() => setDeletedOrActive(chat)}
+                     onClick={() => setDeletedOrActive(chat, path)}
                        style={{ cursor }}
                         exit={{  opacity,    flex, x }}
                     variants={{

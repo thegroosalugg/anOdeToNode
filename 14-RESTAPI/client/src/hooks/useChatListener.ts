@@ -94,12 +94,17 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
          setChats,
   ]);
 
-  function expand(chat: Chat) {
-    if (!isActive) deferFn(() => setIsActive([chat]), 2500);
+  function expand(chat: Chat, path: string) {
+    if (!isActive)
+      deferFn(() => {
+        setIsActive([chat]);
+        if (!isMenu) window.history.replaceState(null, '', path);
+      }, 2500);
   }
 
   function collapse() {
     setIsActive(null);
+    if (!isMenu) window.history.replaceState(null, '', '/inbox');
   }
 
   return {
