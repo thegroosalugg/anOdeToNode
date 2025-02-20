@@ -6,7 +6,6 @@ import Chat from '../models/Chat';
 import Msg from '../models/Msg';
 import { getErrors, hasErrors } from '../validation/validators';
 
-const _public = '-email -password -friends';
 const devErr = 'Do not use without AuthJWT';
 
 const getMessages: RequestHandler = async (req, res, next) => {
@@ -34,8 +33,8 @@ const newMessage: RequestHandler = async (req, res, next) => {
     const peerId = peer._id.toString();
     // peerId is only for when a string is needed. In other instances peer._id will stay
 
-    let isNew          = false;
-    let isNewOrRevived = false;
+    let isNew;
+    let isNewForPeer;
     let chat = await Chat.findOne({
       $or: [
         { host: user, guest: peer },
@@ -44,12 +43,16 @@ const newMessage: RequestHandler = async (req, res, next) => {
     });
 
     if (!chat) {
-      chat = new Chat({ host: user._id, guest: peer._id });
-      isNew          = true;
-      isNewOrRevived = true;
-    } else if (chat.deletedFor.get(peerId)) {
-      isNewOrRevived = true;
-   }
+       chat = new Chat({ host: user._id, guest: peer._id });
+      isNew = isNewForPeer = true;
+    } else {
+      const userDeleted = chat.deletedFor.get(user._id.toString());
+      const peerDeleted = chat.deletedFor.get(peerId);
+      if (userDeleted || peerDeleted) {
+               isNew = userDeleted;
+        isNewForPeer = peerDeleted;
+      }
+    }
 
     const msg = await Msg.create({ content, sender: user._id, chat: chat._id });
     chat.lastMsg = msg;
@@ -63,7 +66,7 @@ const newMessage: RequestHandler = async (req, res, next) => {
     chat.set({ host, guest });
 
     io.emit(`chat:${user._id}:update`, { chat, msg, isNew });
-    io.emit(`chat:${peer._id}:update`, { chat, msg, isNew: isNewOrRevived });
+    io.emit(`chat:${peer._id}:update`, { chat, msg, isNew: isNewForPeer });
     res.status(201).json(msg);
   } catch (error) {
     next(new AppError(500, 'Unable send message', error));
