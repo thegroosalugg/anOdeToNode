@@ -130,7 +130,7 @@ export default function ChatList({
                animate='visible'
             transition={{ staggerChildren: 0.03 }}
           >
-            {!isMenu && (
+            {!isMenu && !isActive?.[0].temp && (
               <section className={css['delete-buttons']}>
                 <Button
                   hsl={isDeleting || isActive ? [10, 54, 51] : [0, 0, 81]}
