@@ -1,8 +1,8 @@
 import { AnimatePresence, HTMLMotionProps, LayoutGroup, motion } from 'motion/react';
-import { Dispatch, ReactNode, SetStateAction, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
-import { FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
+import { ChatListener } from '@/hooks/useChatListener';
 import Chat from '@/models/Chat';
 import User from '@/models/User';
 import Modal from '../modal/Modal';
@@ -46,8 +46,10 @@ const Span = ({
 export default function ChatList({
        user, // from parent * 2
     setUser,
-      chats, // from hook   * 8
+      chats, // from hook   * 10
    setChats,
+   msgState,
+    setMsgs,
       error,
    isActive,
   isInitial,
@@ -58,16 +60,7 @@ export default function ChatList({
 }: {
         user: User;
      setUser: Auth['setUser'];
-       chats: Chat[];
-    setChats: Dispatch<SetStateAction<Chat[]>>;
-       error: FetchError | null;
-    isActive: [Chat]     | null;
-   isInitial: boolean;
-   deferring: boolean;
-      expand: (chat: Chat, path: string) => void;
-    collapse: () => void;
-     isMenu?: boolean;
-}) {
+} & ChatListener) {
   const { reqHandler } = useFetch<Chat[]>([]);
   const [isDeleting,   setIsDeleting] = useState(false);
   const [showModal,     setShowModal] = useState(false);
@@ -221,7 +214,16 @@ export default function ChatList({
                     <AnimatePresence>
                       {isActive && (
                         <>
-                          <Messages    {...{    user, isMenu, chat, setChats }} />
+                          <Messages
+                            {...{
+                                  user,
+                                isMenu,
+                                  chat,
+                              setChats,
+                                  msgs: msgState[chat._id] || [],
+                               setMsgs,
+                            }}
+                          />
                           <SendMessage {...{ setUser, isMenu, url }} />
                         </>
                       )}

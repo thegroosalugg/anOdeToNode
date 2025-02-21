@@ -1,9 +1,8 @@
 import { motion } from 'motion/react';
-import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import useInitial from '@/hooks/useInitial';
 import useFetch from '@/hooks/useFetch';
-import { BASE_URL } from '@/util/fetchData';
-import { io } from 'socket.io-client';
+import { ChatListener } from '@/hooks/useChatListener';
 import User from '@/models/User';
 import Chat from '@/models/Chat';
 import Msg from '@/models/Message';
@@ -15,15 +14,16 @@ import css from './Messages.module.css';
 export default function Messages({
       chat,
   setChats,
+      msgs,
+   setMsgs,
       user,
     isMenu,
 }: {
-      chat: Chat;
-  setChats: Dispatch<SetStateAction<Chat[]>>;
-      user: User;
-   isMenu?: boolean;
-}) {
-  const { data: msgs, setData: setMsgs, reqHandler, error } = useFetch<Msg[]>([]);
+  user: User;
+  chat: Chat;
+  msgs: Msg[];
+} & Pick<ChatListener, 'setMsgs' | 'setChats' | 'isMenu'>) {
+  const { reqHandler, error } = useFetch<Msg[]>([]);
   const { reqHandler: reqChat  } = useFetch<Chat>();
   const { isInitial, mountData } = useInitial();
   const msgRef = useRef<HTMLParagraphElement>(null);
@@ -31,48 +31,37 @@ export default function Messages({
 
   useEffect(() => {
     const markAlertsAsRead = async (condition: boolean = chat.alerts[user._id] > 0) => {
-      if (condition) {
-        await reqChat(
-          { url: `alerts/chat/${chat._id}` },
-          {
-            onSuccess: (chat) =>
-              setChats((prevChats) =>
-                prevChats.map((prev) => (prev._id === chat._id ? chat : prev))
-              ),
-          }
-        );
-      }
-    };
-
-    const initData = async () => {
-      mountData(
-        async () =>
-          await Promise.all([
-            reqHandler({ url: `chat/messages/${chat._id}` }),
-            markAlertsAsRead(),
-          ]),
-        4
+      if (!condition) return;
+      await reqChat(
+        { url: `alerts/chat/${chat._id}` },
+        {
+          onSuccess: (chat) =>
+            setChats((prevChats) =>
+              prevChats.map((prev) => (prev._id === chat._id ? chat : prev))
+            ),
+        }
       );
     };
 
+    const getMessages = async () => {
+      if (msgs.length > 0) return;
+      await reqHandler(
+        { url: `chat/messages/${chat._id}` },
+        { onSuccess: (msgs) => setMsgs((state) => ({ ...state, [chat._id]: msgs })) }
+      );
+    };
+
+    const initData = async () => {
+      mountData(async () => {
+        await Promise.all([
+          getMessages(),
+          markAlertsAsRead(),
+        ]);
+      }, 4);
+    };
+
     initData();
-
-    const socket = io(BASE_URL);
-    socket.on('connect', () => captainsLog([-100, 270], ['🗨️ MESSAGES: Socket connected']));
-
-    socket.on(`chat:${user._id}:update`, async ({ msg }) => {
-      captainsLog([-100, 265], ['🗨️ MESSAGES: New Msg', msg]);
-      setMsgs((prevMsgs) => [...prevMsgs, msg]);
-      await markAlertsAsRead(true);
-    });
-
-    return () => {
-      socket.off('connect');
-      socket.off(`chat:${user._id}:update`);
-      socket.disconnect();
-      captainsLog([-100, 270], ['🗨️ MESSAGES disconnect']); // **LOGDATA
-      };
-  }, [user._id, chat._id, chat.alerts, reqChat, setChats, mountData, reqHandler, setMsgs]);
+  }, [user._id, chat._id, chat.alerts, msgs.length, reqChat, setChats, mountData, reqHandler, setMsgs]);
 
   const  classes = `${css['messages']} ${isMenu ? css['isMenu'] : ''}`;
   const  opacity = 0;
@@ -83,7 +72,7 @@ export default function Messages({
   };
 
   return (
-    <AsyncAwait {...{ isLoading: isInitial, error }}>
+    <AsyncAwait {...{ isLoading: isInitial && msgs.length < 1, error }}>
       <motion.ul
          className={classes}
            initial='hidden'

@@ -32,7 +32,7 @@ export default function ChatMenu({ user, setUser }: { user: User, setUser: Auth[
           Go to Inbox
           <FontAwesomeIcon icon='envelope-open-text' />
         </h2>
-        <ChatList {...{ ...chatProps, user, setUser, isMenu: true }} />
+        <ChatList {...{ ...chatProps, user, setUser }} />
       </PortalMenu>
       <NavButton {...{ index: 3, deferring, callback: openMenu }}>
         <Counter count={alerts} />

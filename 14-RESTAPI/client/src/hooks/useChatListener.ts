@@ -1,13 +1,30 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useFetch from './useFetch';
 import useInitial from './useInitial';
 import useDebounce from './useDebounce';
 import { io } from 'socket.io-client';
-import { BASE_URL } from '@/util/fetchData';
+import { BASE_URL, FetchError } from '@/util/fetchData';
 import User from '@/models/User';
 import Chat from '@/models/Chat';
+import Msg from '@/models/Message';
 import { captainsLog } from '@/util/captainsLog';
+
+type MsgState = Record<string, Msg[]>;
+
+export type ChatListener = {
+    chats: Chat[];
+ setChats: Dispatch<SetStateAction<Chat[]>>;
+ msgState: MsgState;
+  setMsgs: Dispatch<SetStateAction<MsgState>>;
+    error: FetchError | null;
+ isActive: [Chat]     | null;
+isInitial: boolean;
+deferring: boolean;
+   expand: (chat: Chat, path: string) => void;
+ collapse: () => void;
+  isMenu?: boolean;
+};
 
 export default function useChatListener(user: User, isMenu: boolean = false) {
   const {
@@ -18,6 +35,7 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
   } = useFetch<Chat[]>([]);
   const { reqHandler: reqActiveChat } = useFetch<Chat>();
   const [isActive,       setIsActive] = useState<[Chat] | null>(null);
+  const [msgState,           setMsgs] = useState<Record<string, Msg[]>>({});
   const [alerts,           setAlerts] = useState(0);
   const { deferring,        deferFn } = useDebounce();
   const { isInitial,      mountData } = useInitial();
@@ -48,7 +66,7 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
 
     socket.on('connect', () => captainsLog([-100, 290], ['CHAT 💬: Socket connected']));
 
-    socket.on(`chat:${user._id}:update`, ({ chat, isNew }) => {
+    socket.on(`chat:${user._id}:update`, ({ chat, isNew, msg }) => {
       captainsLog([-100, 285], [`CHAT 💬: Update, isNew ${isNew}`, chat]);
       if (chat._id === activeId) setIsActive([chat]);
 
@@ -56,6 +74,7 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
         if (isNew) return [chat, ...prevChats];
         else       return prevChats.map((prev) => (prev._id === chat._id ? chat : prev));
       });
+      setMsgs((state) => ({ ...state, [chat._id]: [...(state[chat._id] || []), msg] }));
     });
 
     socket.on(`chat:${user._id}:delete`, (deleted: Chat[]) => {
@@ -111,7 +130,10 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
        alerts,
         chats,
      setChats,
+     msgState,
+      setMsgs,
         error,
+       isMenu,
      isActive,
     isInitial,
     deferring,
