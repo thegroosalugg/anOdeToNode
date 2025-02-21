@@ -110,6 +110,7 @@ export default function ChatList({
     await reqHandler({ url: 'chat/delete', method: 'DELETE', data });
     if (wasMarked) setToBeDeleted({});
     closeModal();
+    setIsDeleting(false);
   }
 
   function cancelDelete() {

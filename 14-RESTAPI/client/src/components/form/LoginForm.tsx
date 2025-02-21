@@ -101,7 +101,7 @@ export default function LoginForm({ isLoading, error, setError, reqUser }: Auth)
         disabled={deferring}
         whileTap={{ scale: deferring ? 1 : 0.9 }}
       >
-        {isLoading ? <Loader small /> : label}
+        {isLoading ? <Loader size='small' /> : label}
       </Button>
     </motion.form>
   );

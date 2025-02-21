@@ -18,7 +18,7 @@ export default function SendMessage({
   isPost?: boolean;
   isMenu?: boolean;
 }) {
-  const { data, reqHandler, isLoading, error, setError } = useFetch();
+  const { reqHandler, isLoading, error, setError } = useFetch();
   const [ scope,     animate ] = useAnimate();
   const { deferring, deferFn } = useDebounce();
   const classes = `${css['send-msg']} ${
@@ -36,7 +36,7 @@ export default function SendMessage({
     );
     animate(
       'button',
-      { background: [null, '#12a1a1', '#12a1a1', '#949494'] },
+      { background: [null, '#12a1a1', '#12a1a1', isPost ? '#949494' : '#287a91'] },
       { duration: 2, times: [0, 0.1, 0.85, 1] }
     );
     setTimeout(() => scope.current.reset(), 800);
@@ -72,10 +72,9 @@ export default function SendMessage({
       <motion.button disabled={deferring}>
         <AnimatePresence mode='wait'>
           {isLoading ? (
-            <Loader small key='loader' />
+            <Loader key='loader' size={isMenu ? 'xs' : 'small'} />
           ) : (
             <motion.span
-                  key={data + ''}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1, transition: { delay: 0.2 } }}
                  exit={{ opacity: 0 }}
