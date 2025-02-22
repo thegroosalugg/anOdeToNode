@@ -8,39 +8,30 @@ import Chat from '@/models/Chat';
 import Msg from '@/models/Message';
 import AsyncAwait from '../panel/AsyncAwait';
 import { formatDate } from '@/util/timeStamps';
-import { captainsLog } from '@/util/captainsLog';
 import css from './Messages.module.css';
 
 export default function Messages({
-      chat,
-  setChats,
-      msgs,
-   setMsgs,
-      user,
-    isMenu,
+         chat,
+     setChats,
+         msgs,
+      setMsgs,
+  clearAlerts,
+         user,
+       isMenu,
 }: {
   user: User;
   chat: Chat;
   msgs: Msg[];
-} & Pick<ChatListener, 'setMsgs' | 'setChats' | 'isMenu'>) {
+} & Pick<ChatListener, 'setMsgs' | 'setChats' | 'isMenu' | 'clearAlerts'>) {
   const { reqHandler, error } = useFetch<Msg[]>([]);
-  const { reqHandler: reqChat  } = useFetch<Chat>();
   const { isInitial, mountData } = useInitial();
   const msgRef = useRef<HTMLParagraphElement>(null);
   const scrollTo = () => msgRef.current?.scrollIntoView({ behavior: 'smooth' });
 
   useEffect(() => {
-    const markAlertsAsRead = async (condition: boolean = chat.alerts[user._id] > 0) => {
-      if (!condition) return;
-      await reqChat(
-        { url: `alerts/chat/${chat._id}` },
-        {
-          onSuccess: (chat) =>
-            setChats((prevChats) =>
-              prevChats.map((prev) => (prev._id === chat._id ? chat : prev))
-            ),
-        }
-      );
+    const markAlertsAsRead = async () => {
+      if (chat.alerts[user._id] <= 0) return;
+      clearAlerts(chat._id);
     };
 
     const getMessages = async () => {
@@ -60,8 +51,24 @@ export default function Messages({
       }, 4);
     };
 
-    initData();
-  }, [user._id, chat._id, chat.alerts, msgs.length, reqChat, setChats, mountData, reqHandler, setMsgs]);
+    if (isInitial) {
+      initData();
+    } else {
+      markAlertsAsRead();
+    }
+    
+  }, [
+    user._id,
+    chat._id,
+    chat.alerts,
+    msgs.length,
+    isInitial,
+    clearAlerts,
+    setChats,
+    mountData,
+    reqHandler,
+    setMsgs,
+  ]);
 
   const  classes = `${css['messages']} ${isMenu ? css['isMenu'] : ''}`;
   const  opacity = 0;

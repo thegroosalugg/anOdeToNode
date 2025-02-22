@@ -13,7 +13,7 @@ import css from './ChatMenu.module.css';
 export default function ChatMenu({ user, setUser }: { user: User, setUser: Auth['setUser'] }) {
   const [menu, showMenu] = useState(false);
   const     navigate     = useNavigate();
-  const    chatProps     = useChatListener(user, true);
+  const    chatProps     = useChatListener(user, { isMenu: true, show: menu });
   const { alerts, deferring, deferFn } = chatProps;
 
   const openMenu = async () => {

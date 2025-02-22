@@ -44,19 +44,20 @@ const Span = ({
 );
 
 export default function ChatList({
-       user, // from parent * 2
-    setUser,
-      chats, // from hook   * 10
-   setChats,
-   msgState,
-    setMsgs,
-      error,
-   isActive,
-  isInitial,
-  deferring,
-     expand,
-   collapse,
-     isMenu, // optional extra
+         user, // from parent * 2
+      setUser,
+        chats, // from hook   * 12
+     setChats,
+        error,
+     msgState,
+      setMsgs,
+     isActive,
+    isInitial,
+    deferring,
+  clearAlerts,
+       expand,
+     collapse,
+       isMenu, // optional extra
 }: {
         user: User;
      setUser: Auth['setUser'];
@@ -216,12 +217,13 @@ export default function ChatList({
                         <>
                           <Messages
                             {...{
-                                  user,
-                                isMenu,
-                                  chat,
-                              setChats,
-                                  msgs: msgState[chat._id] || [],
-                               setMsgs,
+                                     user,
+                                   isMenu,
+                                     chat,
+                                 setChats,
+                                     msgs: msgState[chat._id] || [],
+                                  setMsgs,
+                              clearAlerts,
                             }}
                           />
                           <SendMessage {...{ setUser, isMenu, url }} />

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useFetch from './useFetch';
 import useInitial from './useInitial';
@@ -13,27 +13,31 @@ import { captainsLog } from '@/util/captainsLog';
 type MsgState = Record<string, Msg[]>;
 
 export type ChatListener = {
-    chats: Chat[];
- setChats: Dispatch<SetStateAction<Chat[]>>;
- msgState: MsgState;
-  setMsgs: Dispatch<SetStateAction<MsgState>>;
-    error: FetchError | null;
- isActive: [Chat]     | null;
-isInitial: boolean;
-deferring: boolean;
-   expand: (chat: Chat, path: string) => void;
- collapse: () => void;
-  isMenu?: boolean;
+      chats: Chat[];
+   setChats: Dispatch<SetStateAction<Chat[]>>;
+   msgState: MsgState;
+    setMsgs: Dispatch<SetStateAction<MsgState>>;
+      error: FetchError | null;
+   isActive: [Chat]     | null;
+  isInitial: boolean;
+  deferring: boolean;
+clearAlerts: (id: string) => Promise<void>;
+     expand: (chat: Chat, path: string) => void;
+   collapse: () => void;
+    isMenu?: boolean;
 };
 
-export default function useChatListener(user: User, isMenu: boolean = false) {
+export default function useChatListener(
+  user: User,
+  { isMenu, show }: { isMenu?: boolean; show?: boolean } = {}
+) {
   const {
           data: chats,
        setData: setChats,
     reqHandler: reqChats,
          error,
   } = useFetch<Chat[]>([]);
-  const { reqHandler: reqActiveChat } = useFetch<Chat>();
+  const { reqHandler:       reqChat } = useFetch<Chat>();
   const [isActive,       setIsActive] = useState<[Chat] | null>(null);
   const [msgState,           setMsgs] = useState<Record<string, Msg[]>>({});
   const [alerts,           setAlerts] = useState(0);
@@ -43,10 +47,23 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
   const          activeId             = isActive?.[0]._id;
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
 
+  const updateChats = useCallback(
+    (chat: Chat) => {
+      setChats((prevChats) =>
+        prevChats.map((prev) => (prev._id === chat._id ? chat : prev))
+      );
+    },
+    [setChats]
+  );
+
+  const clearAlerts = useCallback(async (id: string) => {
+    await reqChat({ url: `alerts/chat/${id}` });
+  }, [reqChat]);
+
   useEffect(() => {
     const getActiveChat = async () => {
       if (userId && !isMenu) {
-        await reqActiveChat(
+        await reqChat(
           { url: `chat/find/${userId}` },
           { onSuccess: (chat) => setIsActive([chat]) }
         );
@@ -54,10 +71,12 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
     };
 
     const initData = async () =>
-      mountData(
-        async () => await Promise.all([reqChats({ url: 'chat/all' }), getActiveChat()]),
-        5
-      );
+      mountData(async () => {
+        await Promise.all([
+          reqChats({ url: 'chat/all' }),
+          getActiveChat()
+        ]);
+      }, 5);
 
     initData();
     setAlerts(count);
@@ -66,14 +85,18 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
 
     socket.on('connect', () => captainsLog([-100, 290], ['CHAT 💬: Socket connected']));
 
-    socket.on(`chat:${user._id}:update`, ({ chat, isNew, msg }) => {
+    socket.on(`chat:${user._id}:update`, async ({ chat, isNew, msg }) => {
       captainsLog([-100, 285], [`CHAT 💬: Update, isNew ${isNew}`, chat]);
-      if (chat._id === activeId) setIsActive([chat]);
 
-      setChats((prevChats) => {
-        if (isNew) return [chat, ...prevChats];
-        else       return prevChats.map((prev) => (prev._id === chat._id ? chat : prev));
-      });
+      const isVisible = chat._id === activeId && (!isMenu || (isMenu && show));
+      if (isNew) {
+        setChats(prevChats => [chat, ...prevChats]);
+      } else if (isVisible) {
+        await clearAlerts(chat._id); // states updated by alerts socket
+      } else {
+        updateChats(chat);
+      }
+
       setMsgs((state) => ({ ...state, [chat._id]: [...(state[chat._id] || []), msg] }));
     });
 
@@ -87,10 +110,7 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
     socket.on(`chat:${user._id}:alerts`, (chat) => {
       captainsLog([-100, 285], [`CHAT 💬: Alerts`, chat]);
       if (chat._id === activeId) setIsActive([chat]);
-
-      setChats((prevChats) =>
-        prevChats.map((prev) => (prev._id === chat._id ? chat : prev))
-      );
+      updateChats(chat);
     });
 
     return () => {
@@ -102,15 +122,18 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
       captainsLog([-100, 290], ['CHAT 💬 disconnect']); // **LOGDATA
     };
   }, [
-         user._id,
-           userId,
-            count,
-         activeId,
-           isMenu,
-        mountData,
-    reqActiveChat,
-         reqChats,
-         setChats,
+    user._id,
+    userId,
+    count,
+    activeId,
+    isMenu,
+    show,
+    mountData,
+    reqChat,
+    reqChats,
+    setChats,
+    updateChats,
+    clearAlerts,
   ]);
 
   function expand(chat: Chat, path: string) {
@@ -127,18 +150,19 @@ export default function useChatListener(user: User, isMenu: boolean = false) {
   }
 
   return {
-       alerts,
-        chats,
-     setChats,
-     msgState,
-      setMsgs,
-        error,
-       isMenu,
-     isActive,
+    alerts,
+    clearAlerts,
+    chats,
+    setChats,
+    error,
+    msgState,
+    setMsgs,
+    isMenu,
+    isActive,
     isInitial,
     deferring,
-      deferFn,
-       expand,
-     collapse,
+    deferFn,
+    expand,
+    collapse,
   };
 }
