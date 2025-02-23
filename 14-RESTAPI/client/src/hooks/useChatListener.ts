@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useFetch from './useFetch';
+import useSocket from './useSocket';
 import useInitial from './useInitial';
 import useDebounce from './useDebounce';
-import { io, Socket } from 'socket.io-client';
-import { BASE_URL, FetchError } from '@/util/fetchData';
+import { FetchError } from '@/util/fetchData';
 import User from '@/models/User';
 import Chat from '@/models/Chat';
 import Msg from '@/models/Message';
@@ -45,7 +45,7 @@ export default function useChatListener(
   const { isInitial,      mountData } = useInitial();
   const {          userId           } = useParams();
   const          activeId             = isActive?.[0]._id;
-  const socketRef = useRef<Socket | null>(null);
+  const            socket             = useSocket('CHAT');
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
 
   const updateChats = useCallback(
@@ -60,18 +60,6 @@ export default function useChatListener(
   const clearAlerts = useCallback(async (id: string) => {
     await reqChat({ url: `alerts/chat/${id}` });
   }, [reqChat]);
-
-  useEffect(() => {
-    socketRef.current = io(BASE_URL);
-
-    return () => {
-      // Only cleanup on full unmount
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
-    };
-  }, []);
 
   useEffect(() => {
     const getActiveChat = async () => {
@@ -94,9 +82,7 @@ export default function useChatListener(
     initData();
     setAlerts(count);
 
-    const socket = socketRef.current;
     if (!socket) return;
-
     socket.on('connect', () => captainsLog([-100, 290], ['CHAT 💬: Socket connected']));
 
     socket.on(`chat:${user._id}:update`, async ({ chat, isNew, msg }) => {
@@ -132,9 +118,9 @@ export default function useChatListener(
       socket.off(`chat:${user._id}:update`);
       socket.off(`chat:${user._id}:delete`);
       socket.off(`chat:${user._id}:alerts`);
-      captainsLog([-100, 290], ['CHAT 💬 disconnect']); // **LOGDATA
     };
   }, [
+    socket,
     user._id,
     userId,
     count,
