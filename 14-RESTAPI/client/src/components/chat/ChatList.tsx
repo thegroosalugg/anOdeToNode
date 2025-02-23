@@ -1,5 +1,5 @@
 import { AnimatePresence, HTMLMotionProps, LayoutGroup, motion } from 'motion/react';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useRef, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
 import { Auth } from '@/pages/RootLayout';
 import { ChatListener } from '@/hooks/useChatListener';
@@ -66,6 +66,7 @@ export default function ChatList({
   const [isDeleting,   setIsDeleting] = useState(false);
   const [showModal,     setShowModal] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState<Record<string, boolean>>({});
+  const  hasLoaded = useRef<Record<string, boolean>>({});
   const  wasMarked = Object.keys(toBeDeleted).some((key) => toBeDeleted[key]);
   const closeModal = () => setShowModal(false);
 
@@ -221,7 +222,8 @@ export default function ChatList({
                                    isMenu,
                                      chat,
                                  setChats,
-                                     msgs: msgState[chat._id] || [],
+                                hasLoaded,
+                                 msgState,
                                   setMsgs,
                               clearAlerts,
                             }}

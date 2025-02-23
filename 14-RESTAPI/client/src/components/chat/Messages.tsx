@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { useEffect, useRef } from 'react';
+import { MutableRefObject, useEffect, useRef } from 'react';
 import useInitial from '@/hooks/useInitial';
 import useFetch from '@/hooks/useFetch';
 import { ChatListener } from '@/hooks/useChatListener';
@@ -13,16 +13,18 @@ import css from './Messages.module.css';
 export default function Messages({
          chat,
      setChats,
-         msgs,
+     msgState,
       setMsgs,
+    hasLoaded,
   clearAlerts,
          user,
        isMenu,
 }: {
   user: User;
   chat: Chat;
-  msgs: Msg[];
-} & Pick<ChatListener, 'setMsgs' | 'setChats' | 'isMenu' | 'clearAlerts'>) {
+  hasLoaded: MutableRefObject<Record<string, boolean>>;
+} & Pick<ChatListener, 'msgState' | 'setMsgs' | 'setChats' | 'isMenu' | 'clearAlerts'>) {
+  const msgs = msgState[chat._id] || [];
   const { reqHandler, error } = useFetch<Msg[]>([]);
   const { isInitial, mountData } = useInitial();
   const msgRef = useRef<HTMLParagraphElement>(null);
@@ -35,11 +37,12 @@ export default function Messages({
     };
 
     const getMessages = async () => {
-      if (msgs.length > 0) return;
+      if (hasLoaded.current[chat._id]) return;
       await reqHandler(
         { url: `chat/messages/${chat._id}` },
         { onSuccess: (msgs) => setMsgs((state) => ({ ...state, [chat._id]: msgs })) }
       );
+      hasLoaded.current[chat._id] = true;
     };
 
     const initData = async () => {
@@ -56,13 +59,14 @@ export default function Messages({
     } else {
       markAlertsAsRead();
     }
-    
+
   }, [
     user._id,
     chat._id,
     chat.alerts,
     msgs.length,
     isInitial,
+    hasLoaded,
     clearAlerts,
     setChats,
     mountData,
