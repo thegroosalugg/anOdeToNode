@@ -49,7 +49,7 @@ export default function RootLayout({
     mountData();
   }, [reqUser, setUser, pathname]);
 
-  captainsLog([-95, 45], ['🫚 ROOT CYCLE: user', user]); // **LOGDATA
+  captainsLog([-95, 45], ['🫚 ROOT CYCLE']); // **LOGDATA
 
   return (
     <>

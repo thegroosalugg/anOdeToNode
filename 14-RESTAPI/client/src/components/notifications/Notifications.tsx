@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
+import useSocket from '@/hooks/useSocket';
 import useInitial from '@/hooks/useInitial';
 import useDebounce from '@/hooks/useDebounce';
-import { io } from 'socket.io-client';
-import { BASE_URL, FetchError } from '@/util/fetchData';
+import { FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
 import Reply from '@/models/Reply';
@@ -32,11 +32,13 @@ export default function Notifications({
        setData: setReplies,
     reqHandler: reqReplyAlerts,
   } = useFetch<Reply[]>([]);
-  const [      menu,     showMenu ] = useState(false);
-  const [ activeTab, setActiveTab ] = useState(0);
-  const { deferring,      deferFn } = useDebounce();
+  const [menu,                  showMenu] = useState(false);
+  const [activeTab,         setActiveTab] = useState(0);
+  const { deferring,            deferFn } = useDebounce();
   const { isInitial, mountData, setInit } = useInitial();
-  const    navigate = useNavigate();
+  const              socketRef            = useSocket('ALERTS');
+  const               navigate            = useNavigate();
+
   const { friends } = user;
 
   const [inbound, outbound] = friends.reduce(
@@ -104,7 +106,8 @@ export default function Notifications({
       mountData(async () => await reqReplyAlerts({ url: 'alerts/replies' }), 3);
     initData();
 
-    const socket = io(BASE_URL);
+    const socket = socketRef.current;
+    if (!socket) return;
     socket.on('connect', () => captainsLog([-100, 208], ['🧭 NAV: Socket connected']));
 
     socket.on(`peer:${user._id}:update`, async (updated) => {
@@ -133,10 +136,9 @@ export default function Notifications({
       socket.off('connect');
       socket.off(`peer:${user._id}:update`);
       socket.off(`nav:${user._id}:reply`);
-      socket.disconnect();
-      captainsLog([-10, 204], ['🧭 NAV Disconnect']);
     };
   }, [
+    socketRef,
     menu,
     activeTab,
     user._id,

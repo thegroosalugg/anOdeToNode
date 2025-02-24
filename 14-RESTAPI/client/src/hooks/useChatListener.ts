@@ -45,7 +45,7 @@ export default function useChatListener(
   const { isInitial,      mountData } = useInitial();
   const {          userId           } = useParams();
   const          activeId             = isActive?.[0]._id;
-  const            socket             = useSocket('CHAT');
+  const         socketRef             = useSocket('CHAT');
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
 
   const updateChats = useCallback(
@@ -82,6 +82,7 @@ export default function useChatListener(
     initData();
     setAlerts(count);
 
+    const socket = socketRef.current;
     if (!socket) return;
     socket.on('connect', () => captainsLog([-100, 290], ['CHAT 💬: Socket connected']));
 
@@ -120,7 +121,7 @@ export default function useChatListener(
       socket.off(`chat:${user._id}:alerts`);
     };
   }, [
-    socket,
+    socketRef,
     user._id,
     userId,
     count,

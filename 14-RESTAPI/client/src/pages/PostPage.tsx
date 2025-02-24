@@ -1,8 +1,8 @@
 import useFetch from '@/hooks/useFetch';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { io } from 'socket.io-client';
-import { BASE_URL, FetchError } from '@/util/fetchData';
+import useSocket from '@/hooks/useSocket';
+import { FetchError } from '@/util/fetchData';
 import { Authorized } from './RootLayout';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
 import Post from '@/models/Post';
@@ -41,6 +41,7 @@ export default function PostPage({ user, setUser }: Authorized) {
   const [,                 current] = pages;
   const   navigate = useNavigate();
   const { postId } = useParams();
+  const  socketRef = useSocket('POST');
   const  isInitial = useRef(true);
   const closeModal = () => setModalState('');
   const replyProps = { type: 'reply' as const, items: replies, docCount, pages, setPages };
@@ -68,7 +69,8 @@ export default function PostPage({ user, setUser }: Authorized) {
       fetchReplies();
     }
 
-    const socket = io(BASE_URL);
+    const socket = socketRef.current;
+    if (!socket) return;
     socket.on('connect', () => captainsLog([-100, 164], ['📬 POSTPAGE: Socket connected']));
 
     socket.on(`post:${postId}:reply:new`, (reply) => {
@@ -112,10 +114,8 @@ export default function PostPage({ user, setUser }: Authorized) {
       socket.off(`post:${postId}:reply:delete`); // deletes a reply to post
       socket.off(`post:${postId}:update`);
       socket.off(`post:${postId}:delete`); // deletes the post (& all replies)
-      socket.disconnect();
-      captainsLog([-1, 160], ['📬 POSTPAGE disconnect']); // **LOGDATA
     };
-  }, [user._id, postId, current, setError, setPost, reqPost, reqReplies, setReplies]);
+  }, [socketRef, user._id, postId, current, setError, setPost, reqPost, reqReplies, setReplies]);
 
   async function deletePost() {
     await reqPost(

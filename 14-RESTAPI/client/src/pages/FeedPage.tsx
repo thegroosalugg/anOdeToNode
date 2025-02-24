@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
-import { BASE_URL } from '@/util/fetchData';
 import useFetch from '@/hooks/useFetch';
+import useSocket from '@/hooks/useSocket';
 import useInitial from '@/hooks/useInitial';
 import { Authorized } from './RootLayout';
 import Post from '@/models/Post';
@@ -26,6 +25,7 @@ export default function FeedPage({ setUser }: Authorized) {
     reqHandler,
          error,
   } = useFetch(initialData);
+  const         socketRef         = useSocket('FEED');
   const { isInitial,  mountData } = useInitial();
   const [showModal, setShowModal] = useState(false);
   const [pages,         setPages] = useState<Pages>([1, 1]);
@@ -44,7 +44,8 @@ export default function FeedPage({ setUser }: Authorized) {
     const initData = async () => mountData(async () => await reqHandler({ url }), 1);
     initData();
 
-    const socket = io(BASE_URL);
+    const socket = socketRef.current;
+    if (!socket) return;
     socket.on('connect', () => captainsLog([-100, 80], ['🗞️ FEEDPAGE: Socket connected']));
 
     socket.on('post:update', (newPost) => {
@@ -73,10 +74,8 @@ export default function FeedPage({ setUser }: Authorized) {
       socket.off('connect');
       socket.off('post:update');
       socket.off('post:delete');
-      socket.disconnect();
-      captainsLog([-1, 70], ['🗞️ FEEDPAGE Disconnected'] ); // **LOGDATA
     };
-  }, [reqHandler, mountData, setPosts, url]);
+  }, [socketRef, reqHandler, mountData, setPosts, url]);
 
   const closeModal = () => setShowModal(false);
 
