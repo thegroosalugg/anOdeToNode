@@ -84,10 +84,11 @@ export default function useChatListener(
 
     const socket = socketRef.current;
     if (!socket) return;
-    socket.on('connect', () => captainsLog([-100, 290], ['CHAT 💬: Socket connected']));
+    const location = isMenu ? 'MENU' : 'PAGE';
+    socket.on('connect', () => captainsLog([-100, 290], [`CHAT ${location} 💬: Socket connected`]));
 
     socket.on(`chat:${user._id}:update`, async ({ chat, isNew, msg }) => {
-      captainsLog([-100, 285], [`CHAT 💬: Update, isNew ${isNew ?? false}`, chat]);
+      captainsLog([-100, 285], [`CHAT ${location} 💬: Update, isNew ${isNew ?? false}`, chat]);
 
       const isVisible = chat._id === activeId && (!isMenu || (isMenu && show));
       if (isNew) {
@@ -102,14 +103,14 @@ export default function useChatListener(
     });
 
     socket.on(`chat:${user._id}:delete`, (deleted: Chat[]) => {
-      captainsLog([-100, 285], [`CHAT 💬: Deleted`, deleted]);
+      captainsLog([-100, 285], [`CHAT ${location} 💬: Deleted`, deleted]);
       const isDeleted = (id?: string) => deleted.some((chat) => chat._id === id);
       if (isDeleted(activeId)) setIsActive(null);
       setChats((prevChats) => prevChats.filter((chat) => !isDeleted(chat._id)));
     });
 
     socket.on(`chat:${user._id}:alerts`, (chat) => {
-      captainsLog([-100, 285], [`CHAT 💬: Alerts`, chat]);
+      captainsLog([-100, 285], [`CHAT ${location} 💬: Alerts`, chat]);
       if (chat._id === activeId) setIsActive([chat]);
       updateChats(chat);
     });
