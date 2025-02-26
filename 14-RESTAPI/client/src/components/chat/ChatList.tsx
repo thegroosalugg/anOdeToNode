@@ -1,5 +1,6 @@
 import { AnimatePresence, HTMLMotionProps, LayoutGroup, motion } from 'motion/react';
 import { ReactNode, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import { Auth } from '@/pages/RootLayout';
 import { ChatListener } from '@/hooks/useChatListener';
@@ -68,6 +69,7 @@ export default function ChatList({
   const [toBeDeleted, setToBeDeleted] = useState<Record<string, boolean>>({});
   const  hasLoaded = useRef<Record<string, boolean>>({});
   const  wasMarked = Object.keys(toBeDeleted).some((key) => toBeDeleted[key]);
+  const   navigate = useNavigate();
   const closeModal = () => setShowModal(false);
 
   const classes = `${css['chat-list']} ${isMenu ? css['isMenu'] : ''}`;
@@ -111,6 +113,11 @@ export default function ChatList({
   function cancelDelete() {
     setIsDeleting(false);
     setToBeDeleted({});
+  }
+
+  function navTo(path: string) {
+    if (!isActive) return;
+    navigate('/user/' + path);
   }
 
   return (
@@ -159,7 +166,7 @@ export default function ChatList({
                   const      sender = lastMsg?.sender === user._id ? 'Me' : recipient.name;
                   const         url = `chat/new-msg/${recipient._id}`;
                   const        path = `/inbox/${recipient._id}`;
-                  const    isMarked = toBeDeleted[chat._id];
+                  const    isMarked = toBeDeleted[_id];
                   const           x = 20 * (i % 2 === 0 ? 1 : -1);
                   const borderColor = isMarked ? '#ffffff00' : 'var(--team-green)';
                   const  background = isMarked
@@ -186,7 +193,11 @@ export default function ChatList({
                                 user={recipient}
                           transition={transition}
                         />
-                        <Span layout {...{ color: '#000', isMarked }}>
+                        <Span
+                          layout
+                          {...{ color: '#000', isMarked }}
+                          onClick={() => navTo(recipient._id)}
+                        >
                           {recipient.name} {recipient.surname}
                         </Span>
                         <AnimatePresence mode='wait'>

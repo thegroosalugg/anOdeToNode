@@ -35,6 +35,7 @@
         text-wrap: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
+        cursor: pointer;
       }
 
       /* Back Button (Expanded) */
