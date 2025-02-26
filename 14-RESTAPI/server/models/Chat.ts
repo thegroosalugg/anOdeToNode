@@ -1,5 +1,5 @@
 import { Model, model, Types, Schema } from 'mongoose';
-import { IMsg, msgSchema } from './Msg';
+import Msg, { IMsg, msgSchema } from './Msg';
 
 interface IChat {
         host: Types.ObjectId;
@@ -29,5 +29,10 @@ export const chatSchema = new Schema<IChat, ChatModel, IChatMethods>(
   },
   { timestamps: true }
 );
+
+chatSchema.pre('deleteMany', { document: false, query: true }, async function() {
+  const chats = this.getFilter()._id.$in;
+  await Msg.deleteMany({ chat: { $in: chats } });
+});
 
 export default model<IChat, ChatModel>('Chat', chatSchema);
