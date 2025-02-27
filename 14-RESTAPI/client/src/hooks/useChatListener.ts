@@ -45,6 +45,7 @@ export default function useChatListener(
   const { isInitial,      mountData } = useInitial();
   const {          userId           } = useParams();
   const          activeId             = isActive?.[0]._id;
+  const            isTemp             = isActive?.[0].temp;
   const         socketRef             = useSocket('CHAT');
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
 
@@ -99,7 +100,10 @@ export default function useChatListener(
         updateChats(chat);
       }
 
-      setMsgs((state) => ({ ...state, [chat._id]: [...(state[chat._id] || []), msg] }));
+      setMsgs((state) => {
+        const chatId = isTemp && !isMenu ? activeId : chat._id;
+        return { ...state, [chatId]: [...(state[chatId] || []), msg] };
+      });
     });
 
     socket.on(`chat:${user._id}:delete`, (deleted: Chat[]) => {
@@ -127,6 +131,7 @@ export default function useChatListener(
     userId,
     count,
     activeId,
+    isTemp,
     isMenu,
     show,
     mountData,
