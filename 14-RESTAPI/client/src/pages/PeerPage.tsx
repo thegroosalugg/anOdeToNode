@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import { Authorized } from './RootLayout';
 import User from '@/models/User';
@@ -21,9 +21,11 @@ export default function PeerPage({ user, setUser }: Authorized) {
   const {
           data: { posts, docCount },
     reqHandler: reqPosts,
-  } = useFetch(initialData);  const { userId } = useParams();
+  } = useFetch(initialData);
   const [pages, setPages] = useState<Pages>([1, 1]);
   const [,       current] = pages;
+  const {  userId  } = useParams();
+  const { pathname } = useLocation();
   const  navigate = useNavigate();
   const isInitial = useRef(true);
   const feedProps = { type: 'feed' as const, items: posts, docCount, pages, setPages };
@@ -52,10 +54,10 @@ export default function PeerPage({ user, setUser }: Authorized) {
     if (isInitial.current) {
       isInitial.current = false;
       initialData();
-    } else {
+    } else if (pathname.startsWith('/user')) {
       fetchPosts();
     }
-  }, [userId, user?._id, current, reqPeer, reqPosts, navigate]);
+  }, [userId, user?._id, current, pathname, reqPeer, reqPosts, navigate]);
 
   return (
     <AsyncAwait {...{ isLoading, error }}>
