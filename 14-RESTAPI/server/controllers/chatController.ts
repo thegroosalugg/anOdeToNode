@@ -88,7 +88,14 @@ const deleteChat: RequestHandler = async (req, res, next) => {
     if (toUpdate.length > 0) {
       await Chat.updateMany(
         { _id: { $in: toUpdate } },
-        { $set: { 'deletedFor': { [userId]: true } } }
+        // { $set: { 'deletedFor': { [userId]: true } } }, // overwrites entire deletedFor obj
+        {
+          $set: {
+            [`deletedFor.${userId}`]: true, // does not overwrite other keys
+            [`alerts.${userId}`]: 0,
+          },
+        },
+        { userId } // pass data to pre middleware
       );
     }
 

@@ -110,6 +110,10 @@ export default function useChatListener(
       const isDeleted = (id?: string) => deleted.some((chat) => chat._id === id);
       if (isDeleted(activeId)) setIsActive(null);
       setChats((prevChats) => prevChats.filter((chat) => !isDeleted(chat._id)));
+      setMsgs((state) => { // remove prev fetched client msgs when chat deleted
+        const updated = deleted.reduce((acc, { _id }) => ({ ...acc, [_id]: [] }), {});
+        return { ...state, ...updated };
+      });
     });
 
     socket.on(`chat:${user._id}:alerts`, (chat) => {

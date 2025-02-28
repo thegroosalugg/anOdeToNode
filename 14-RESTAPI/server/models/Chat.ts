@@ -30,7 +30,17 @@ export const chatSchema = new Schema<IChat, ChatModel, IChatMethods>(
   { timestamps: true }
 );
 
-chatSchema.pre('deleteMany', { document: false, query: true }, async function() {
+chatSchema.pre('updateMany', { document: false, query: true }, async function () {
+  const  chats = this.getFilter()._id.$in;
+  const userId = this.getOptions().userId; // Access userId from options
+
+  await Msg.updateMany(
+    { chat: { $in: chats } },
+    { $set: { [`deletedFor.${userId}`]: true } }
+  );
+});
+
+chatSchema.pre('deleteMany', { document: false, query: true }, async function () {
   const chats = this.getFilter()._id.$in;
   await Msg.deleteMany({ chat: { $in: chats } });
 });

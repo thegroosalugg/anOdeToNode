@@ -9,9 +9,15 @@ import { getErrors, hasErrors } from '../validation/validators';
 const devErr = 'Do not use without AuthJWT';
 
 const getMessages: RequestHandler = async (req, res, next) => {
+  const user = req.user;
+  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+
   try {
     const { chatId } = req.params;
-    const  messages  = await Msg.find({ chat: chatId });
+    const   messages = await Msg.find({
+      chat: chatId,
+      [`deletedFor.${user._id}`]: { $ne: true },
+    });
     res.status(200).json(messages);
   } catch (error) {
     next(new AppError(500, 'Messages could not be loaded', error));

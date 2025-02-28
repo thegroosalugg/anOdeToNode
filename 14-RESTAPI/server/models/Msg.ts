@@ -1,9 +1,10 @@
 import { Model, model, Types, Schema } from 'mongoose';
 
 export interface IMsg {
-     chat: Types.ObjectId;
-   sender: Types.ObjectId;
-  content: string;
+        chat: Types.ObjectId;
+      sender: Types.ObjectId;
+     content: string;
+  deletedFor: Map<string, boolean>;
 }
 
 interface IMsgMethods {
@@ -14,9 +15,10 @@ type MsgModel = Model<IMsg, {}, IMsgMethods>;
 
 export const msgSchema = new Schema<IMsg>(
   {
-       chat: { type: Schema.Types.ObjectId, ref: 'Chat' },
-     sender: { type: Schema.Types.ObjectId, ref: 'User' },
-    content: { type: String, required: true },
+          chat: { type: Schema.Types.ObjectId, ref: 'Chat' },
+        sender: { type: Schema.Types.ObjectId, ref: 'User' },
+       content: { type: String, required: true             },
+    deletedFor: { type: Map, of: Boolean, default: {}      },
   },
   { timestamps: true }
 );
