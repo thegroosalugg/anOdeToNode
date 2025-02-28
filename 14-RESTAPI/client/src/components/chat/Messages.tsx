@@ -31,8 +31,10 @@ export default function Messages({
   const scrollTo = () => msgRef.current?.scrollIntoView({ behavior: 'smooth' });
 
   useEffect(() => {
+    if (chat.isTemp) return;
+
     const markAlertsAsRead = async () => {
-      if (chat.alerts[user._id] <= 0 || chat.isTemp) return;
+      if (chat.alerts[user._id] <= 0) return;
       clearAlerts(chat._id);
     };
 
@@ -83,8 +85,10 @@ export default function Messages({
     visible: { opacity: 1, transition: { duration } }
   };
 
+  const isLoading = isInitial && msgs.length < 1 && !chat.isTemp;
+
   return (
-    <AsyncAwait {...{ isLoading: isInitial && msgs.length < 1, error }}>
+    <AsyncAwait {...{ isLoading, error }}>
       <motion.ul
          className={classes}
            initial='hidden'
