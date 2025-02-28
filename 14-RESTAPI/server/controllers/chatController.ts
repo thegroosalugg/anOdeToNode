@@ -48,7 +48,7 @@ const findChat: RequestHandler = async (req, res, next) => {
     // chat creation is handled by MSG schema when first message is sent
     // however, newChat is created for the client so it can create chat interface
     peer.set({ email: 'hidden', friends: [] });
-    const newChat = new Chat({ host: user, guest: peer, temp: true });
+    const newChat = new Chat({ host: user, guest: peer, isTemp: true });
     res.status(201).json(newChat);
   } catch (error) {
     next(new AppError(500, 'Unable to start chat', error));

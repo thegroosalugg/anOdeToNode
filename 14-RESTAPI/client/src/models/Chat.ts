@@ -6,7 +6,7 @@ type Chat = {
         host:  User;
        guest:  User;
      lastMsg:  Msg;
-        temp:  boolean;
+      isTemp:  boolean;
       alerts:  Record<string,  number>;
   deletedFor:  Record<string, boolean>;
 };

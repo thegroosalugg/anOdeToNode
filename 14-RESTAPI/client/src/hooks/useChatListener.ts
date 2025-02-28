@@ -18,7 +18,7 @@ export type ChatListener = {
    msgState: MsgState;
     setMsgs: Dispatch<SetStateAction<MsgState>>;
       error: FetchError | null;
-   isActive: [Chat]     | null;
+   isActive: Chat       | null;
   isInitial: boolean;
   deferring: boolean;
 clearAlerts: (id: string) => Promise<void>;
@@ -38,14 +38,13 @@ export default function useChatListener(
          error,
   } = useFetch<Chat[]>([]);
   const { reqHandler:       reqChat } = useFetch<Chat>();
-  const [isActive,       setIsActive] = useState<[Chat] | null>(null);
+  const [isActive,       setIsActive] = useState<Chat | null>(null);
   const [msgState,           setMsgs] = useState<Record<string, Msg[]>>({});
   const [alerts,           setAlerts] = useState(0);
   const { deferring,        deferFn } = useDebounce();
   const { isInitial,      mountData } = useInitial();
   const {          userId           } = useParams();
-  const          activeId             = isActive?.[0]._id;
-  const            isTemp             = isActive?.[0].temp;
+  const { _id: activeId,     isTemp } = isActive ?? {};
   const         socketRef             = useSocket('CHAT');
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
 
@@ -67,7 +66,7 @@ export default function useChatListener(
       if (userId && !isMenu) {
         await reqChat(
           { url: `chat/find/${userId}` },
-          { onSuccess: (chat) => setIsActive([chat]) }
+          { onSuccess: (chat) => setIsActive(chat) }
         );
       }
     };
@@ -115,7 +114,7 @@ export default function useChatListener(
 
     socket.on(`chat:${user._id}:alerts`, (chat) => {
       captainsLog([-100, 285], [`CHAT ${location} 💬: Alerts`, chat]);
-      if (chat._id === activeId) setIsActive([chat]);
+      if (chat._id === activeId) setIsActive(chat);
       updateChats(chat);
     });
 
@@ -145,7 +144,7 @@ export default function useChatListener(
   function expand(chat: Chat, path: string) {
     if (!isActive)
       deferFn(() => {
-        setIsActive([chat]);
+        setIsActive(chat);
         if (!isMenu) window.history.replaceState(null, '', path);
       }, 2500);
   }

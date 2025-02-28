@@ -99,7 +99,7 @@ export default function ChatList({
     if (wasMarked) {
       data = Object.fromEntries(Object.entries(toBeDeleted).filter(([_, v]) => v));
     } else if (isActive) {
-      data = { [isActive[0]?._id]: true };
+      data = { [isActive._id]: true };
     }
 
     if (!data) return;
@@ -133,7 +133,7 @@ export default function ChatList({
                animate='visible'
             transition={{ staggerChildren: 0.03 }}
           >
-            {!isMenu && !isActive?.[0].temp && (
+            {!isMenu && !isActive?.isTemp && (
               <section className={css['delete-buttons']}>
                 <Button
                   hsl={isDeleting || isActive ? [10, 54, 51] : [0, 0, 81]}
@@ -160,7 +160,7 @@ export default function ChatList({
                   You haven't started any chats
                 </motion.p>
               ) : (
-                (isActive ?? chats).map((chat, i) => {
+                (isActive ? [isActive] : chats).map((chat, i) => {
                   const { _id, host, guest, lastMsg, alerts } = chat;
                   const   recipient = user._id === host._id ? guest : host;
                   const      sender = lastMsg?.sender === user._id ? 'Me' : recipient.name;

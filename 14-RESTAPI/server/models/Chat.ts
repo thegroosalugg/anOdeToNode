@@ -7,7 +7,7 @@ interface IChat {
   deletedFor: Map<string, boolean>;
       alerts: Map<string,  number>;
      lastMsg: IMsg;
-        temp: boolean;
+      isTemp: boolean;
 }
 
 interface IChatMethods {
@@ -24,7 +24,7 @@ export const chatSchema = new Schema<IChat, ChatModel, IChatMethods>(
          guest:  user,
     deletedFor: { type: Map, of: Boolean, default: {}    },
         alerts: { type: Map, of: Number,  default: {}    },
-          temp: { type: Boolean,          default: false },
+        isTemp: { type: Boolean,          default: false },
        lastMsg: msgSchema,
   },
   { timestamps: true }

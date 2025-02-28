@@ -32,7 +32,7 @@ export default function Messages({
 
   useEffect(() => {
     const markAlertsAsRead = async () => {
-      if (chat.alerts[user._id] <= 0 || chat.temp) return;
+      if (chat.alerts[user._id] <= 0 || chat.isTemp) return;
       clearAlerts(chat._id);
     };
 
@@ -64,7 +64,7 @@ export default function Messages({
     user._id,
     chat._id,
     chat.alerts,
-    chat.temp,
+    chat.isTemp,
     msgs.length,
     isInitial,
     hasLoaded,
