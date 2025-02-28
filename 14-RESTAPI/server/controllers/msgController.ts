@@ -58,14 +58,15 @@ const newMessage: RequestHandler = async (req, res, next) => {
 
     const msg = await Msg.create({ content, sender: user._id, chat: chat._id });
     chat.lastMsg = msg;
-    chat.set('deletedFor', {});
+    chat.set('deletedFor', {}); // revive chat
     // count alerts for other person
     chat.alerts.set(peerStrId, (chat.alerts.get(peerStrId) || 0) + 1); // create dynamic key
     await chat.save();
-    peer.set({ email: 'hidden', friends: [] });
+    peer.set({ email: 'hidden', friends: [] }); // sensor data
+    // reset host/guest to full objects for client
     const [host, guest] =
       chat.host.toString() === userStrId ? [user, peer] : [peer, user];
-    chat.set({ host, guest });
+    chat.set({ host, guest }); // populate not needed, as data already fetched
 
     io.emit(`chat:${user._id}:update`, { chat, msg, isNew });
     io.emit(`chat:${peer._id}:update`, { chat, msg, isNew: isNewForPeer });

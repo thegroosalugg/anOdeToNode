@@ -20,12 +20,12 @@ const useFetch = <T>(initialData: T = null as T, loading = false) => {
       try {
         const response: T = await fetchData(params);
         setData(response);
-        captainsLog([260, -100], ['☑️ TRY', response]); // **LOGDATA
+        captainsLog([260, -100], [`☑️ TRY ${params.url}`, response]); // **LOGDATA
         if (onSuccess) onSuccess(response);
         return response;
       } catch (err) {
         const fetchErr = err as FetchError;
-        captainsLog([359, -85], ['❌ CATCH', fetchErr]); // **LOGDATA
+        captainsLog([359, -85], [`❌ CATCH ${params.url}`, fetchErr]); // **LOGDATA
         setError(fetchErr);
         if (onError) onError(fetchErr); // i.e. setData of other states
       } finally {
