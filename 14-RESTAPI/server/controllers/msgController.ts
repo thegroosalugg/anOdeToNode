@@ -30,12 +30,12 @@ const newMessage: RequestHandler = async (req, res, next) => {
     const { userId  } = req.params;
     const peer = await User.findById(userId);
     if (!peer) return next(new AppError(404, 'User not found'));
-    const peerId = peer._id.toString();
-    // peerId is only for when a string is needed. In other instances peer._id will stay
+    const userStrId = user._id.toString();
+    const peerStrId = peer._id.toString();
+    // above are only for when a string is needed. In other instances (us/pe)er._id will stay
 
-    let isNew;
-    let isNewForPeer;
-    let chat = await Chat.findOne({
+    let isNew = false, isNewForPeer = false;
+    let  chat = await Chat.findOne({
       $or: [
         { host: user, guest: peer },
         { host: peer, guest: user },
@@ -46,23 +46,19 @@ const newMessage: RequestHandler = async (req, res, next) => {
        chat = new Chat({ host: user._id, guest: peer._id });
       isNew = isNewForPeer = true;
     } else {
-      const userDeleted = chat.deletedFor.get(user._id.toString());
-      const peerDeleted = chat.deletedFor.get(peerId);
-      if (userDeleted || peerDeleted) {
-               isNew = userDeleted;
-        isNewForPeer = peerDeleted;
-      }
+      isNew        = chat.deletedFor.get(userStrId) ?? false;
+      isNewForPeer = chat.deletedFor.get(peerStrId) ?? false;
     }
 
     const msg = await Msg.create({ content, sender: user._id, chat: chat._id });
     chat.lastMsg = msg;
     chat.set('deletedFor', {});
     // count alerts for other person
-    chat.alerts.set(peerId, (chat.alerts.get(peerId) || 0) + 1); // create dynamic key
+    chat.alerts.set(peerStrId, (chat.alerts.get(peerStrId) || 0) + 1); // create dynamic key
     await chat.save();
     peer.set({ email: 'hidden', friends: [] });
     const [host, guest] =
-      chat.host.toString() === user._id.toString() ? [user, peer] : [peer, user];
+      chat.host.toString() === userStrId ? [user, peer] : [peer, user];
     chat.set({ host, guest });
 
     io.emit(`chat:${user._id}:update`, { chat, msg, isNew });

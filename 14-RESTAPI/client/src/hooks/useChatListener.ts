@@ -89,12 +89,12 @@ export default function useChatListener(
     socket.on('connect', () => captainsLog([-100, 290], [`CHAT ${location} 💬: Socket connected`]));
 
     socket.on(`chat:${user._id}:update`, async ({ chat, isNew, msg }) => {
-      captainsLog([-100, 285], [`CHAT ${location} 💬: Update, isNew ${isNew ?? false}`, chat]);
+      captainsLog([-100, 285], [`CHAT ${location} 💬: Update, isNew ${isNew}`, chat]);
 
       const isVisible = chat._id === activeId && (!isMenu || (isMenu && show));
       if (isNew) {
         setChats(prevChats => [chat, ...prevChats]);
-      } else if (isVisible) {
+      } else if (isVisible || isTemp) {
         await clearAlerts(chat._id); // states updated by alerts socket
       } else {
         updateChats(chat);
