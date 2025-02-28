@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { io } from 'socket.io-client';
-import { BASE_URL } from '@/util/fetchData';
+import { useEffect, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
+import useSocket from '@/hooks/useSocket';
+import useInitial from '@/hooks/useInitial';
 import { Authorized } from './RootLayout';
 import Post from '@/models/Post';
 import Modal from '@/components/modal/Modal';
@@ -21,11 +21,12 @@ const initialData: Paginated<Post, 'posts'> = {
 export default function FeedPage({ setUser }: Authorized) {
   const {
           data: { docCount, posts },
-       setData,
+       setData: setPosts,
     reqHandler,
          error,
   } = useFetch(initialData);
-  const               isInitial   = useRef(true);
+  const         socketRef         = useSocket('FEED');
+  const { isInitial,  mountData } = useInitial();
   const [showModal, setShowModal] = useState(false);
   const [pages,         setPages] = useState<Pages>([1, 1]);
   const [,               current] = pages;
@@ -40,34 +41,31 @@ export default function FeedPage({ setUser }: Authorized) {
   };
 
   useEffect(() => {
-    const mountData = async () => {
-      await reqHandler({ url });
-      if (isInitial.current) isInitial.current = false;
-      captainsLog([-100, 270], ['FEEDPAGE'] ); // **LOGDATA
-    }
-    mountData();
+    const initData = async () => mountData(async () => await reqHandler({ url }), 1);
+    initData();
 
-    const socket = io(BASE_URL);
-    socket.on('connect', () => captainsLog([-100, 250], ['FEEDPAGE: Socket connected']));
+    const socket = socketRef.current;
+    if (!socket) return;
+    socket.on('connect', () => captainsLog([-100, 80], ['🗞️ FEEDPAGE: Socket connected']));
 
     socket.on('post:update', (newPost) => {
-      setData(({ docCount: prevCount, posts: prevPosts }) => {
+      setPosts(({ docCount: prevCount, posts: prevPosts }) => {
         const isFound = prevPosts.some(({ _id }) => _id === newPost._id);
         const   posts = isFound
           ? prevPosts.map((oldPost) => (newPost._id === oldPost._id ? newPost : oldPost))
           : [newPost, ...prevPosts];
 
         const docCount = prevCount + 1;
-        captainsLog([-100, 240], ['FEEDPAGE ' + (isFound ? 'EDIT' : 'NEW'), newPost]);
+        captainsLog([-100, 85], ['🗞️ FEEDPAGE ' + (isFound ? 'EDIT' : 'NEW'), newPost]);
         return { docCount, posts };
       });
     });
 
     socket.on('post:delete', (deleted) => {
-      setData(({ docCount: prevCount, posts: prevPosts }) => {
+      setPosts(({ docCount: prevCount, posts: prevPosts }) => {
         const    posts = prevPosts.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;
-        captainsLog([-100, 280], ['FEEDPAGE DELETED', deleted]);
+        captainsLog([-100, 90], ['🗞️ FEEDPAGE DELETED', deleted]);
         return { docCount, posts };
       });
     });
@@ -76,9 +74,8 @@ export default function FeedPage({ setUser }: Authorized) {
       socket.off('connect');
       socket.off('post:update');
       socket.off('post:delete');
-      socket.disconnect();
     };
-  }, [reqHandler, setData, url]);
+  }, [socketRef, reqHandler, mountData, setPosts, url]);
 
   const closeModal = () => setShowModal(false);
 
@@ -95,7 +92,7 @@ export default function FeedPage({ setUser }: Authorized) {
       >
         New Post
       </Button>
-      <AsyncAwait isLoading={isInitial.current} error={error}>
+      <AsyncAwait {...{ isLoading: isInitial, error }}>
         <PagedList<Post> {...feedProps}>
           {(post) => <PostItem {...post} />}
         </PagedList>

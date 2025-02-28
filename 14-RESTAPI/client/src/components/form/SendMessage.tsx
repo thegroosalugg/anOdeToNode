@@ -1,17 +1,30 @@
-import { FC, FormEvent } from 'react';
+import { FormEvent } from 'react';
 import { motion, useAnimate, AnimatePresence } from 'motion/react';
 import { Auth } from '@/pages/RootLayout';
 import { FetchError } from '@/util/fetchData';
 import useFetch from '@/hooks/useFetch';
 import useDebounce from '@/hooks/useDebounce';
-import Reply from '@/models/Reply';
 import Loader from '../loading/Loader';
-import css from './ReplySubmit.module.css';
+import css from './SendMessage.module.css';
 
-const ReplySubmit: FC<{ postId: string, setUser: Auth['setUser'] }> = ({ postId, setUser }) => {
-  const { data, reqHandler, isLoading, error, setError } = useFetch<Reply | null>();
+export default function SendMessage({
+      url,
+  setUser,
+   isPost,
+   isMenu,
+}: {
+      url: string;
+  setUser: Auth['setUser'];
+  isPost?: boolean;
+  isMenu?: boolean;
+}) {
+  const { reqHandler, isLoading, error, setError } = useFetch();
   const [ scope,     animate ] = useAnimate();
   const { deferring, deferFn } = useDebounce();
+  const classes = `${css['send-msg']} ${
+    isPost ? css['isPost'] : ''} ${
+    isMenu ? css['isMenu'] : ''}`;
+  const rows = isPost ? 4 : 2;
 
   const onSuccess = () => {
     setError(null);
@@ -23,7 +36,7 @@ const ReplySubmit: FC<{ postId: string, setUser: Auth['setUser'] }> = ({ postId,
     );
     animate(
       'button',
-      { background: [null, '#12a1a1', '#12a1a1', '#949494'] },
+      { background: [null, '#12a1a1', '#12a1a1', isPost ? '#949494' : '#287a91'] },
       { duration: 2, times: [0, 0.1, 0.85, 1] }
     );
     setTimeout(() => scope.current.reset(), 800);
@@ -40,36 +53,33 @@ const ReplySubmit: FC<{ postId: string, setUser: Auth['setUser'] }> = ({ postId,
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     const data = new FormData(e.currentTarget);
-    await reqHandler(
-      { url: `post/reply/${postId}`, method: 'POST', data },
-      { onSuccess, onError }
-    );
+    await reqHandler({ url, method: 'POST', data }, { onSuccess, onError });
   };
 
   return (
     <motion.form
-      className={css['reply-submit']}
+      className={classes}
             ref={scope}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { delay: 1.2, duration: 0.8 } }}
+           exit={{ opacity: 0 }}
        onSubmit={(e) => {
          e.preventDefault();
          deferFn(() => submitHandler(e), 1500);
       }}
     >
-      <textarea name='content' rows={4} />
+      <textarea name='content' rows={rows} />
       <motion.button disabled={deferring}>
         <AnimatePresence mode='wait'>
           {isLoading ? (
-            <Loader small key='loader' />
+            <Loader key='loader' size={isMenu ? 'xs' : 'small'} />
           ) : (
             <motion.span
-                  key={data + ''}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1, transition: { delay: 0.2 } }}
                  exit={{ opacity: 0 }}
             >
-              {error ? error.content : 'Reply'}
+              {error ? error.content : 'Send'}
             </motion.span>
           )}
         </AnimatePresence>
@@ -77,5 +87,3 @@ const ReplySubmit: FC<{ postId: string, setUser: Auth['setUser'] }> = ({ postId,
     </motion.form>
   );
 };
-
-export default ReplySubmit;

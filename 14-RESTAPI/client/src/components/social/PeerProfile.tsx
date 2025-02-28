@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'motion/react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import { getPeerConfig } from './peerProfileConfig';
 import { Auth } from '@/pages/RootLayout';
@@ -11,7 +12,6 @@ import ConfirmDialog from '../dialog/ConfirmDialog';
 import ProfilePic from '../profile/ProfilePic';
 import Button from '../button/Button';
 import Loader from '../loading/Loader';
-import { captainsLog } from '@/util/captainsLog';
 import css from './PeerProfile.module.css';
 
 export default function PeerProfile({
@@ -26,6 +26,7 @@ export default function PeerProfile({
   const { isLoading, reqHandler } = useFetch();
   const { deferring,    deferFn } = useDebounce();
   const [showModal, setShowModal] = useState(false);
+  const         navigate          = useNavigate();
   const {   _id, name, surname  } = peer;
 
   const  connection = user.friends.find((friend) => getId(friend.user) === _id);
@@ -48,13 +49,13 @@ export default function PeerProfile({
         }
       );
     }, 1000);
-  }
+  };
 
   async function handleAction() {
     if (!accepted) {
       await friendRequest();
     } else {
-      captainsLog([150, -90], ['MESSAGE FUNCTION']);
+      navigate('/inbox/' + peer._id);
     }
   }
 
@@ -96,7 +97,7 @@ export default function PeerProfile({
             disabled={deferring}
           >
             {isLoading ? (
-              <Loader small />
+              <Loader size='small' />
             ) : (
               <span>
                 {text}

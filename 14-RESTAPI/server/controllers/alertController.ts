@@ -1,7 +1,9 @@
 import { RequestHandler } from 'express';
+import { io } from '../app';
 import AppError from '../models/Error';
 import Post from '../models/Post';
 import Reply from '../models/Reply';
+import Chat from '../models/Chat';
 
 const _public = '-email -password -friends';
 const  devErr = 'Do not use without AuthJWT';
@@ -59,7 +61,7 @@ const readReplies: RequestHandler = async (req, res, next) => {
     })
       .populate('creator', _public)
       .populate('post', 'title creator')
-      .sort({ _id: -1 });
+      .sort({ createdAt: -1 });
 
     if (read === 'true') {
       await Reply.updateMany(
@@ -88,4 +90,25 @@ const clearReplies: RequestHandler = async (req, res, next) => {
   }
 };
 
-export { readSocials, clearSocials, readReplies, clearReplies };
+const clearMsgs: RequestHandler = async (req, res, next) => {
+  const user = req.user;
+  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+
+  try {
+    const { chatId } = req.params;
+    const chat = await Chat.findById(chatId).populate('host guest', _public);
+    if (!chat) return next(new AppError(404, 'Chat not found'));
+
+    const userId = user._id.toString();
+    chat.alerts.set(userId, 0);
+    await chat.save();
+
+    io.emit(`chat:${user._id}:alerts`, chat);
+    res.status(200).json(chat);
+  } catch (error) {
+    next(new AppError(500, 'Unable to reset alerts', error));
+  }
+};
+
+
+export { readSocials, clearSocials, readReplies, clearReplies, clearMsgs };

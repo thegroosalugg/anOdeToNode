@@ -20,9 +20,10 @@ export type Paginated< T = null, K extends string = 'data' > = {
   [key in K]: T[];
 };
 
-const Ellipsis = ({ chars }: { chars: string }) => (
+const Ellipsis = ({ chars, color }: { chars: string, color: string }) => (
   <motion.span
         layout
+         style={{        color         }}
        initial={{ opacity: 0, scale: 0 }}
        animate={{ opacity: 1, scale: 1 }}
     transition={{     duration: 0.3    }}
@@ -73,7 +74,7 @@ export default function Pagination({
           return (
             <Fragment key={page}>
               {last > 5 && page === last && pages[3] !== last - 1 && (
-                <Ellipsis chars={chars} />
+                <Ellipsis {...{ chars, color }} />
               )}
               <motion.button
                     layout
@@ -89,7 +90,7 @@ export default function Pagination({
                 {page}
               </motion.button>
               {last > 5 && page === 1 && pages[1] !== 2 && (
-                <Ellipsis chars={chars} />
+                <Ellipsis {...{ chars, color }} />
               )}
             </Fragment>
           );

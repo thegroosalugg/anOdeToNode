@@ -5,6 +5,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { Auth } from '@/pages/RootLayout';
 import NavButton from './NavButton';
 import Notifications from '../notifications/Notifications';
+import ChatMenu from '../chat/ChatMenu';
 import css from './NavBar.module.css';
 
 export default function NavBar({ user, setUser }: Auth) {
@@ -26,14 +27,18 @@ export default function NavBar({ user, setUser }: Auth) {
         </span>
       </h1>
       <AnimatePresence>
-        {user && (
-          <>
-            <NavButton path='/feed'   navFn={navTo} deferring={deferring} />
-            <NavButton path='/social' navFn={navTo} deferring={deferring} />
-            <Notifications {...{ user, setUser }} />
-            <NavButton path='/'       navFn={navTo} deferring={deferring} />
-          </>
-        )}
+        {user &&
+          Array.from({ length: 5 }, (_, index) =>
+            index === 2 ? (
+              <Notifications key={index} {...{ user, setUser }} />
+            ) : index === 3 ? (
+              <ChatMenu      key={index} {...{ user, setUser }} />
+            ) : (
+              <NavButton     key={index}
+                {...{ index, deferring, callback: (path) => navTo(path) }}
+              />
+            )
+          )}
       </AnimatePresence>
     </nav>
   );

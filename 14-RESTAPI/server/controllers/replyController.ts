@@ -19,7 +19,7 @@ const getReplies: RequestHandler = async (req, res, next) => {
       .skip((page - 1) * limit)
       .limit(limit)
       .populate('creator', _public)
-      .sort({ _id: -1 });
+      .sort({ createdAt: -1 });
 
     res.status(200).json({ replies, docCount });
   } catch (error) {
@@ -49,7 +49,9 @@ const postReply: RequestHandler = async (req, res, next) => {
     reply.post    = post;
 
     io.emit(`post:${postId}:reply:new`, reply); // notify Post Page
-    io.emit(`nav:${post.creator}:reply`, { action: 'new', reply}); // alert original post user
+    if (user._id.toString() !== post.creator.toString()) {
+      io.emit(`nav:${post.creator}:reply`, { action: 'new', reply}); // alert original post user
+    }
     res.status(201).json(reply);
   } catch (error) {
     next(new AppError(500, "Message couldn't be posted", error));

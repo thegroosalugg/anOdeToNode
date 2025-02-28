@@ -1,0 +1,132 @@
+.chat-list {
+  flex: 1;
+  width: 100%;
+  max-width: 600px;
+  overflow-y: scroll;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.1rem;
+
+  &::-webkit-scrollbar {
+    height: 0;
+  }
+
+  > li {
+    height: 100%;
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--team-green);
+
+    > h2 {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem;
+      min-height: 2rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+
+      /* Recipient name */
+      > span {
+        text-align: center;
+        text-wrap: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        cursor: pointer;
+      }
+
+      /* Back Button (Expanded) */
+      > button {
+        margin-left: auto;
+        font-weight: 700;
+      }
+
+      /* Last Message (Collapsed) */
+      > section {
+        max-width: 40%;
+        margin-left: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+
+        > span {
+          max-width: 100%;
+          text-wrap: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          font-size: 0.6rem;
+
+          /* time stamp */
+          &:first-of-type {
+            color: var(--text-grey);
+          }
+
+          /* Recipient name & counter */
+          &:nth-of-type(2) {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            gap: 0.2rem;
+            font-weight: 700;
+            color: var(--team-green);
+
+            > span {
+              /* Counter override - remove absolute positioning */
+              &:last-of-type {
+                position: static;
+                background: var(--team-green);
+              }
+
+              /* first-of-type loads last & overwrites background when only 1 child span */
+              &:first-of-type {
+                background: none;
+                text-wrap: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+              }
+            }
+          }
+
+          /* message preview */
+          &:last-of-type {
+            font-size: 0.7rem;
+            color: var(--dark-grey);
+          }
+        }
+      }
+    }
+  }
+}
+
+.isMenu {
+  > li {
+    > h2 {
+      min-height: 0;
+      font-size: 0.7rem;
+    }
+  }
+}
+
+.delete-buttons {
+  > button {
+    color: #000;
+    border: 1px solid #000;
+    font-weight: 500;
+
+    &:first-of-type {
+      width: 125px;
+      margin-right: 0.1rem;
+    }
+  }
+}
+
+.fallback {
+  padding: 0.25rem;
+  margin: 1rem auto;
+  font-size: 0.9rem;
+  text-align: center;
+}

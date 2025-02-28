@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
+import useInitial from '@/hooks/useInitial';
+import useSocket from '@/hooks/useSocket';
 import { Authorized } from './RootLayout';
-import { BASE_URL } from '@/util/fetchData';
-import { io } from 'socket.io-client';
 import User from '@/models/User';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
 import AsyncAwait from '@/components/panel/AsyncAwait';
@@ -22,9 +22,10 @@ export default function SocialPage({ user }: Authorized) {
     reqHandler,
          error,
   } = useFetch(initialData);
-  const isInitial = useRef(true);
-  const [pages, setPages] = useState<Pages>([1, 1]);
-  const [,       current] = pages;
+  const         socketRef         = useSocket('SOCIAL');
+  const { isInitial,  mountData } = useInitial();
+  const [pages,         setPages] = useState<Pages>([1, 1]);
+  const [,               current] = pages;
   const url = `social/users?page=${current}`;
 
   const commProps = {
@@ -36,20 +37,16 @@ export default function SocialPage({ user }: Authorized) {
   };
 
   useEffect(() => {
-    const mountData = async () => {
-      await reqHandler({ url });
-      if (isInitial.current) isInitial.current = false;
-      captainsLog([-100, 80], ['SOCIAL PAGE']); // **LOGDATA
-    };
+    const initData = async () => mountData(async () => await reqHandler({ url }), 2);
+    initData();
 
-    mountData();
-
-    const socket = io(BASE_URL);
-    socket.on('connect', () => captainsLog([-100, 80], ['SOCIAL PAGE: Socket connected']));
+    const socket = socketRef.current;
+    if (!socket) return;
+    socket.on('connect', () => captainsLog([-100, 235], ['⚽ SOCIALPAGE: Socket connected']));
 
     socket.on('user:new', (newUser) => {
       setUsers(({ docCount, users }) => {
-        captainsLog([-100, 80], ['SOCIAL PAGE NEW USER', newUser]); // **LOGDATA
+        captainsLog([-100, 230], ['⚽ SOCIALPAGE NEW USER', newUser]); // **LOGDATA
         return { docCount: docCount + 1, users: [newUser, ...users] };
       });
     });
@@ -57,12 +54,11 @@ export default function SocialPage({ user }: Authorized) {
     return () => {
       socket.off('connect');
       socket.off('user:new');
-      socket.disconnect();
     }
-  }, [url, reqHandler, setUsers]);
+  }, [socketRef, url, reqHandler, mountData, setUsers]);
 
   return (
-    <AsyncAwait isLoading={isInitial.current} error={error}>
+    <AsyncAwait {...{ isLoading: isInitial, error }}>
       <PagedList<User>
         {...commProps}
         whileHover={{ y: -2, transition: { ease: 'easeInOut' } }}

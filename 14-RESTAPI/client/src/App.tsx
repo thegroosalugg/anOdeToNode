@@ -9,6 +9,7 @@ import     FeedPage  from './pages/FeedPage';
 import     PostPage  from './pages/PostPage';
 import   SocialPage  from './pages/SocialPage';
 import     PeerPage  from './pages/PeerPage';
+import     ChatPage  from './pages/ChatPage';
 import    ErrorPage  from './pages/ErrorPage';
 
 import {  library  } from '@fortawesome/fontawesome-svg-core';
@@ -20,9 +21,7 @@ import { captainsLog } from './util/captainsLog';
 
 library.add(fab, fas, far);
 
-type AppRoutes = 'feed' | 'post' | 'social' | 'peer';
-
-const validate = (path: AppRoutes, props: Auth) => {
+const validate = (path: string, props: Auth) => {
   const { user } = props;
 
   if (!user) return <AuthPage auth={props} />;
@@ -30,45 +29,37 @@ const validate = (path: AppRoutes, props: Auth) => {
   const authorized = props as Authorized;
 
   const elements = {
-      feed: <FeedPage   {...authorized} />,
-      post: <PostPage   {...authorized} />,
-    social: <SocialPage {...authorized} />,
-      peer: <PeerPage   {...authorized} />,
-  } as const;
+    '/feed':          <FeedPage   {...authorized} />,
+    '/post/:postId':  <PostPage   {...authorized} />,
+    '/social':        <SocialPage {...authorized} />,
+    '/user/:userId':  <PeerPage   {...authorized} />,
+    '/inbox':         <ChatPage   {...authorized} />,
+    '/inbox/:userId': <ChatPage   {...authorized} />,
+  };
 
-  return elements[path];
+  return elements[path as keyof typeof elements];
 };
+
+const createRoute = (path: string) => ({
+     path,
+  element: <RootLayout children={(props) => validate(path, props)} />,
+});
+
+const routes = [
+  { path: '/',  element: <RootLayout children={(props) => <AuthPage auth={props} />} /> },
+  createRoute('/feed'),
+  createRoute('/post/:postId'),
+  createRoute('/social'),
+  createRoute('/user/:userId'),
+  createRoute('/inbox'),
+  createRoute('/inbox/:userId'),
+  { path: '*',  element: <RootLayout children={() => <ErrorPage />} /> },
+];
 
 export default function App() {
   console.clear(); // **LOGDATA
   captainsLog([-100, -10], ['⇚⇚⇚App⇛⇛⇛']);
 
-  const element = useRoutes([
-    {    path: '/',
-      element: <RootLayout children={(props) => <AuthPage auth={props} />} />,
-    },
-    {
-         path: '/feed',
-      element: <RootLayout children={(props) => validate('feed',   props)} />,
-    },
-    {
-         path: '/post/:postId',
-      element: <RootLayout children={(props) => validate('post',   props)} />,
-    },
-    {
-         path: '/social',
-      element: <RootLayout children={(props) => validate('social', props)} />,
-    },
-    {
-         path: '/user/:userId',
-      element: <RootLayout children={(props) => validate('peer',   props)} />,
-    },
-    {    path: '*',
-      element: <RootLayout children={() => <ErrorPage />} />,
-    },
-  ]);
-
-  if (!element) return null;
-
-  return element;
+  const  element = useRoutes(routes);
+  return element || null;
 }

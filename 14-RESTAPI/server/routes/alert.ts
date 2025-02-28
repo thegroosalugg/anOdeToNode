@@ -1,5 +1,5 @@
 import Express from 'express';
-import { readSocials, clearSocials, readReplies, clearReplies } from '../controllers/alertController';
+import { readSocials, clearSocials, readReplies, clearReplies, clearMsgs } from '../controllers/alertController';
 
 const router = Express.Router();
 
@@ -8,5 +8,6 @@ router.get('/social',                readSocials);
 router.get('/social/hide/:alertId', clearSocials);
 router.get('/replies',               readReplies);
 router.get('/reply/hide/:replyId',  clearReplies);
+router.get('/chat/:chatId',            clearMsgs);
 
 export default router;

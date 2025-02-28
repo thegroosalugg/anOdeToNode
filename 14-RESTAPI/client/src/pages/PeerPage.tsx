@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import { Authorized } from './RootLayout';
 import User from '@/models/User';
@@ -9,6 +9,7 @@ import PeerProfile from '@/components/social/PeerProfile';
 import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/post/PostItem';
 import { Pages, Paginated } from '@/components/pagination/Pagination';
+import { captainsLog } from '@/util/captainsLog';
 
 const initialData: Paginated<Post, 'posts'> = {
   docCount: 0,
@@ -20,20 +21,28 @@ export default function PeerPage({ user, setUser }: Authorized) {
   const {
           data: { posts, docCount },
     reqHandler: reqPosts,
-  } = useFetch(initialData);  const { userId } = useParams();
+  } = useFetch(initialData);
   const [pages, setPages] = useState<Pages>([1, 1]);
   const [,       current] = pages;
+  const {  userId  } = useParams();
+  const { pathname } = useLocation();
   const  navigate = useNavigate();
   const isInitial = useRef(true);
   const feedProps = { type: 'feed' as const, items: posts, docCount, pages, setPages };
 
   useEffect(() => {
     const fetchPeer = async () => {
-      if (userId) await reqPeer({ url: `social/find/${userId}` });
+      if (userId) {
+        await reqPeer({ url: `social/find/${userId}` });
+        captainsLog([-100, 252], ['⚓ PEERPAGE: fetchPeer']);
+      }
     };
 
     const fetchPosts = async () => {
-      if (userId) await reqPosts({ url: `social/posts/${userId}?page=${current}` });
+      if (userId) {
+        await reqPosts({ url: `social/posts/${userId}?page=${current}` });
+        captainsLog([-100, 258], ['⚓ PEERPAGE: fetchPosts']);
+      }
     }
 
     if (userId === user._id) {
@@ -45,10 +54,10 @@ export default function PeerPage({ user, setUser }: Authorized) {
     if (isInitial.current) {
       isInitial.current = false;
       initialData();
-    } else {
+    } else if (pathname.startsWith('/user')) {
       fetchPosts();
     }
-  }, [userId, user?._id, current, reqPeer, reqPosts, navigate]);
+  }, [userId, user?._id, current, pathname, reqPeer, reqPosts, navigate]);
 
   return (
     <AsyncAwait {...{ isLoading, error }}>
