@@ -1,4 +1,4 @@
-.profile {
+.profile-header {
   padding: 0.5rem;
   background: var(--box-gradient);
   border: 1px solid var(--dark-grey);
@@ -26,7 +26,7 @@
   > section {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 1rem;
 
     .user-photo {

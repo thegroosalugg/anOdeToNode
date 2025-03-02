@@ -7,15 +7,16 @@ import ImagePicker from '../form/ImagePicker';
 import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import ErrorPopUp from '../error/ErrorPopUp';
+import UserInfo from './UserInfo';
 import { formatDate } from '@/util/timeStamps';
-import css from './About.module.css';
+import css from './ProfileHeader.module.css';
 
-export default function About({ user, setUser }: Pick<Authorized, 'user' | 'setUser'>) {
+export default function ProfileHeader({ user, setUser }: Pick<Authorized, 'user' | 'setUser'>) {
   const { name, surname, imgURL, createdAt } = user;
-  const [ showModal,     setShowModal ] = useState(false);
-  const [ displayPic,   setDisplayPic ] = useState(imgURL);
-  const [ scope,              animate ] = useAnimate();
-  const { reqHandler, error, setError } = useFetch<{ imgURL: string}>();
+  const [showModal,            setShowModal] = useState(false);
+  const [displayPic,          setDisplayPic] = useState(imgURL);
+  const [scope,                     animate] = useAnimate();
+  const { reqHandler,   error,    setError } = useFetch<{ imgURL: string}>();
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -70,8 +71,8 @@ export default function About({ user, setUser }: Pick<Authorized, 'user' | 'setU
           )}
         </form>
       </Modal>
-      <motion.section
-         className={css['profile']}
+      <motion.header
+         className={css['profile-header']}
            initial={{   opacity: 0  }}
            animate={{   opacity: 1  }}
               exit={{   opacity: 0  }}
@@ -97,8 +98,9 @@ export default function About({ user, setUser }: Pick<Authorized, 'user' | 'setU
               <p>Upload an image</p>
             )}
           </div>
+          <UserInfo {...{ user }} />
         </section>
-      </motion.section>
+      </motion.header>
     </>
   );
 }

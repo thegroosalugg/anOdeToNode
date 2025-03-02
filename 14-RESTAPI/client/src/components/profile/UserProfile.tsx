@@ -3,7 +3,7 @@ import useFetch from '@/hooks/useFetch';
 import useInitial from '@/hooks/useInitial';
 import { Authorized } from '@/pages/RootLayout';
 import Post from '@/models/Post';
-import About from './About';
+import ProfileHeader from './ProfileHeader';
 import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import { Pages, Paginated } from '../pagination/Pagination';
@@ -30,8 +30,8 @@ export default function UserProfile({ user, setUser }: Authorized) {
   const [,               current] = pages;
   const                      url  = `profile/posts?page=${current}`;
 
-  const aboutProps = { user, setUser }
-  const  feedProps = {
+  const headerProps = { user, setUser }
+  const   feedProps = {
           type: 'profile' as const,
          items: posts,
          pages,
@@ -59,7 +59,7 @@ export default function UserProfile({ user, setUser }: Authorized) {
         <ConfirmDialog onConfirm={logout} onCancel={closeModal} />
       </Modal>
       <section className={css['user-profile']}>
-        <About {...aboutProps} />
+        <ProfileHeader {...headerProps} />
         <AsyncAwait {...{ isLoading: isInitial, error }}>
           <PagedList<Post> {...feedProps}>
             {(post) => <PostItem {...post} onUserPage />}

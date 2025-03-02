@@ -1,0 +1,23 @@
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.info-field {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+
+  > span {
+    color: var(--dark-grey);
+
+    &:first-of-type {
+      text-transform: capitalize;
+
+      > svg {
+        width: 20px;
+        margin-right: 0.2rem;
+      }
+    }
+  }
+}
