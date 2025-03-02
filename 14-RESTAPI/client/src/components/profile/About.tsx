@@ -7,10 +7,11 @@ import ImagePicker from '../form/ImagePicker';
 import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import ErrorPopUp from '../error/ErrorPopUp';
+import { formatDate } from '@/util/timeStamps';
 import css from './About.module.css';
 
 export default function About({ user, setUser }: Pick<Authorized, 'user' | 'setUser'>) {
-  const { name,    surname,    imgURL } = user;
+  const { name, surname, imgURL, createdAt } = user;
   const [ showModal,     setShowModal ] = useState(false);
   const [ displayPic,   setDisplayPic ] = useState(imgURL);
   const [ scope,              animate ] = useAnimate();
@@ -70,28 +71,33 @@ export default function About({ user, setUser }: Pick<Authorized, 'user' | 'setU
         </form>
       </Modal>
       <motion.section
-         className={css['about']}
+         className={css['profile']}
            initial={{   opacity: 0  }}
            animate={{   opacity: 1  }}
               exit={{   opacity: 0  }}
         transition={{ duration: 0.5 }}
       >
         <h1>
-          {name} {surname}
+          <span>
+            {name} {surname}
+          </span>
+          <span>Joined on {formatDate(createdAt, ['year'])}</span>
         </h1>
-        <div onClick={() => setShowModal(true)}>
-        {displayPic ? (
-            <motion.img
-                  key={displayPic}
-                  src={BASE_URL + displayPic}
-                  alt={name}
-              animate={{ opacity: [0, 1] }}
-              onError={(e) => ((e.target as HTMLImageElement).src = '/notFound.png')}
-            />
-          ) : (
-            <p>Upload an image</p>
-          )}
-        </div>
+        <section>
+          <div className={css['user-photo']} onClick={() => setShowModal(true)}>
+            {displayPic ? (
+              <motion.img
+                    key={displayPic}
+                    src={BASE_URL + displayPic}
+                    alt={name}
+                animate={{ opacity: [0, 1] }}
+                onError={(e) => ((e.target as HTMLImageElement).src = '/notFound.png')}
+              />
+            ) : (
+              <p>Upload an image</p>
+            )}
+          </div>
+        </section>
       </motion.section>
     </>
   );

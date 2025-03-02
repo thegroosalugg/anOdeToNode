@@ -1,8 +1,4 @@
-.about {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+.profile {
   padding: 0.5rem;
   background: var(--box-gradient);
   border: 1px solid var(--dark-grey);
@@ -10,31 +6,53 @@
   overflow-x: scroll;
 
   > h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--dark-grey);
-    align-self: start;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.2rem;
+
+    > span {
+      &:first-of-type {
+        font-weight: 700;
+        color: var(--dark-grey);
+      }
+
+      &:last-of-type {
+        font-size: 0.8rem;
+        color: var(--text-grey);
+      }
+    }
   }
 
-  > div {
-    width: 75.5px;
-    height: 75.5px;
-    aspect-ratio: 1/1;
+  > section {
     display: flex;
     align-items: center;
-    text-align: center;
-    font-size: 0.7rem;
-    background: #e9e9e9;
-    border-radius: 5px;
-    cursor: pointer;
+    justify-content: space-between;
+    gap: 1rem;
 
-    > img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border: 1px solid var(--dark-grey);
+    .user-photo {
+      width: 100px;
+      height: 100px;
+      aspect-ratio: 1/1;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      font-size: 0.7rem;
+      background: #e0e0e0;
       border-radius: 5px;
-      background: var(--dark-grey);
+      cursor: pointer;
+
+      > p {
+        margin: 0.5rem;
+      }
+
+      > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border: 1px solid var(--dark-grey);
+        border-radius: 5px;
+        background: var(--dark-grey);
+      }
     }
   }
 
