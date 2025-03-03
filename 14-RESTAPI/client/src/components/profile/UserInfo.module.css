@@ -8,32 +8,43 @@
 .info-field {
   display: grid;
   grid-template-columns: 85px minmax(100px, 1fr) auto;
-
-  > span {
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    text-transform: capitalize;
     color: var(--dark-grey);
-
-    &:first-of-type {
-      display: flex;
-      align-items: center;
-      gap: 0.2rem;
-      text-transform: capitalize;
-      > svg { width: 20px; }
+    > svg {
+      width: 20px;
     }
+  }
 
-    &:last-of-type {
-      overflow-x: scroll;
-      overflow-y: hidden;
-      text-wrap: nowrap;
-      padding: 0.25rem 0;
-      border-left: 0.5rem solid transparent;
-      border-right: 0.5rem solid transparent;
+  input {
+    border: none;
+    width: 100%;
+
+    &::placeholder {
       color: #fff;
-      background: var(--text-grey);
-
-      &::-webkit-scrollbar-thumb {
-        background: #fff;
-      }
     }
+  }
+
+  p {
+    height: 28px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    text-wrap: nowrap;
+    padding: 0.25rem 0;
+    border-left: 0.5rem solid transparent;
+    border-right: 0.5rem solid transparent;
+
+    &::-webkit-scrollbar-thumb {
+      background: #fff;
+    }
+  }
+
+  p, input {
+    color: #fff;
+    background: var(--text-grey);
   }
 
   > button {

@@ -1,5 +1,7 @@
-import User from '@/models/User';
+import { useState } from 'react';
+import { motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import User from '@/models/User';
 import Button from '../button/Button';
 import css from './UserInfo.module.css';
 
@@ -11,27 +13,38 @@ const icons = {
 } as const;
 
 function InfoField({ id, text }: { id: keyof typeof icons; text: string }) {
+  const [isEditing, setIsEditing] = useState(false);
+
   return (
-    <p className={css['info-field']}>
-      <span>
+    <div className={css['info-field']}>
+      <h2>
         <FontAwesomeIcon icon={icons[id]} />
         {id}
-      </span>
-      <span>{text}</span>
-      <Button hsl={[0, 0, 100]}>
+      </h2>
+      <motion.p
+            key={isEditing + ''}
+        animate={{ opacity: [0, 1], transition: { duration: 1, ease: 'easeInOut' } }}
+      >
+        {isEditing ? (
+          <input {...{ id, name: id }} placeholder='type here' autoComplete='off' />
+        ) : (
+          <span>{text}</span>
+        )}
+      </motion.p>
+      <Button hsl={[0, 0, 100]} onClick={() => setIsEditing(!isEditing)}>
         Add
       </Button>
-    </p>
+    </div>
   );
 }
 
 export default function UserInfo({ user }: { user: User }) {
   return (
     <section className={css['user-info']}>
-      <InfoField {...{ id: 'bio',   text: 'text' }} />
       <InfoField {...{ id: 'home',  text: 'text' }} />
       <InfoField {...{ id: 'work',  text: 'text' }} />
       <InfoField {...{ id: 'study', text: 'text' }} />
+      <InfoField {...{ id: 'bio',   text: 'text' }} />
     </section>
   );
 }
