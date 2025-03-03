@@ -47,8 +47,12 @@
     background: var(--text-grey);
   }
 
-  > button {
-    color: #000;
-    font-weight: 500;
+  .buttons {
+
+    > button {
+      color: #000;
+      font-weight: 500;
+      width: 30px;
+    }
   }
 }
