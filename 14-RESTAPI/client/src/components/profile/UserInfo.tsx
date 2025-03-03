@@ -1,5 +1,6 @@
 import User from '@/models/User';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Button from '../button/Button';
 import css from './UserInfo.module.css';
 
 const icons = {
@@ -17,6 +18,9 @@ function InfoField({ id, text }: { id: keyof typeof icons; text: string }) {
         {id}
       </span>
       <span>{text}</span>
+      <Button hsl={[0, 0, 100]}>
+        Add
+      </Button>
     </p>
   );
 }
