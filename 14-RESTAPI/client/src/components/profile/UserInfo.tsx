@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, useAnimate } from 'motion/react';
+import { AnimatePresence, motion, useAnimate } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useDebounce from '@/hooks/useDebounce';
 import User from '@/models/User';
@@ -17,14 +17,19 @@ function InfoField({ id, text }: { id: keyof typeof icons; text: string }) {
   const [isEditing, setIsEditing] = useState(false);
   const [scope,          animate] = useAnimate();
   const { deferring,    deferFn } = useDebounce();
-  const width = isEditing ? 30 : 60;
+  const      width = isEditing ? 30 : 60;
+  const       ease = [0.65, 0, 0.35, 1] as const;
+  const   duration = 0.4;
+  const transition = { duration, ease };
+  const    slideIn = { initial: { y: -30 }, animate: { y: 0, transition } };
+  const   slideOut = { y: 30, transition };
 
-  const animation = () =>
-    animate('p, section', { opacity: [null, 0, 1] }, { duration: 0.8, ease: 'easeInOut' });
+  const animateBtns = () =>
+    animate('section', { opacity: [null, 0, 1] }, { ease, duration: 0.8 });
 
   const editAction = (callback: () => void) => {
     deferFn(() => {
-      animation();
+      animateBtns();
       setTimeout(() => callback(), 400);
     }, 1000)
   }
@@ -51,13 +56,24 @@ function InfoField({ id, text }: { id: keyof typeof icons; text: string }) {
         <FontAwesomeIcon icon={icons[id]} />
         {id}
       </h2>
-      <motion.p>
-        {isEditing ? (
-          <input {...{ id, name: id }} placeholder='type here' autoComplete='off' />
-        ) : (
-          <span>{text}</span>
-        )}
-      </motion.p>
+      <p>
+        <AnimatePresence mode='wait' initial={false}>
+          {isEditing ? (
+            <motion.input
+              key='a'
+              {...{ id, name: id }}
+               placeholder='type here'
+              autoComplete='off'
+              {...slideIn}
+              exit={slideOut}
+            />
+          ) : (
+            <motion.span key='b' {...slideIn} exit={slideOut}>
+              {text}
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </p>
       <motion.section className={css['buttons']}>
         <Button
               hsl={[0, 0, 100]}
