@@ -46,7 +46,7 @@ export default function ProfileHeader({ user, setUser }: Pick<Authorized, 'user'
     };
 
     await reqHandler(
-      { url: 'profile/pic', method: 'POST', data },
+      { url: 'profile/set-pic', method: 'POST', data },
       { onError, onSuccess }
     );
   }

@@ -10,6 +10,13 @@ export interface IFriend {
       meta: { read: boolean; show: boolean };
 }
 
+export interface IProfile {
+   home: string;
+   work: string;
+  study: string;
+    bio: string;
+}
+
 export interface IUser {
       name: string;
    surname: string;
@@ -17,6 +24,7 @@ export interface IUser {
   password: string;
     imgURL: string;
    friends: IFriend[];
+     about: IProfile;
 }
 
 interface IUserMethods {
@@ -44,6 +52,12 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
           }
         },
       ],
+       about: {
+          home: { type: String },
+          work: { type: String },
+         study: { type: String },
+           bio: { type: String },
+       },
     },
   { timestamps: true }
 );

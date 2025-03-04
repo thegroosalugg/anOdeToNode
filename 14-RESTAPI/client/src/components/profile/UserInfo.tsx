@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AnimatePresence, motion, useAnimate } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useFetch from '@/hooks/useFetch';
 import useDebounce from '@/hooks/useDebounce';
 import User from '@/models/User';
 import Button from '../button/Button';
@@ -13,16 +14,24 @@ const icons = {
   study: 'book',
 } as const;
 
-function InfoField({ id, text }: { id: keyof typeof icons; text: string }) {
+function InfoField({ id, user }: { id: keyof typeof icons; user: User }) {
+  const { reqHandler,     error } = useFetch<string>();
   const [isEditing, setIsEditing] = useState(false);
+  const [value,         setValue] = useState('');
+  const [text,           setText] = useState(user.about?.[id]);
   const [scope,          animate] = useAnimate();
   const { deferring,    deferFn } = useDebounce();
+  const   fallback =  `Add ${id}`;
   const      width = isEditing ? 30 : 60;
   const       ease = [0.65, 0, 0.35, 1] as const;
   const   duration = 0.4;
   const transition = { duration, ease };
-  const    slideIn = { initial: { y: -30 }, animate: { y: 0, transition } };
-  const   slideOut = { y: 30, transition };
+  const slideInOut = {
+      initial: { y: -30 },
+      animate: { y:   0 },
+         exit: { y:  30 },
+    transition
+  };
 
   const animateBtns = () =>
     animate('section', { opacity: [null, 0, 1] }, { ease, duration: 0.8 });
@@ -35,10 +44,15 @@ function InfoField({ id, text }: { id: keyof typeof icons; text: string }) {
   }
 
   function saveOrEdit() {
-    editAction(() => {
+    editAction(async () => {
       if (isEditing) {
-        console.log('saved');
+        const data = { [id]: value };
+        await reqHandler(
+          { url: 'profile/info', method: 'POST', data },
+          { onSuccess: (res) => setText(res) }
+        );
         setIsEditing(false);
+        setValue('');
       } else {
         setIsEditing(true);
       }
@@ -48,7 +62,6 @@ function InfoField({ id, text }: { id: keyof typeof icons; text: string }) {
   function cancel() {
     editAction(() => setIsEditing(false));
   }
-
 
   return (
     <div className={css['info-field']} ref={scope}>
@@ -60,16 +73,17 @@ function InfoField({ id, text }: { id: keyof typeof icons; text: string }) {
         <AnimatePresence mode='wait' initial={false}>
           {isEditing ? (
             <motion.input
-              key='a'
-              {...{ id, name: id }}
+                       key='a'
+                      name={id}
+              defaultValue={value}
                placeholder='type here'
               autoComplete='off'
-              {...slideIn}
-              exit={slideOut}
+                  onChange={(e) => setValue(e.currentTarget.value)}
+              {...slideInOut}
             />
           ) : (
-            <motion.span key='b' {...slideIn} exit={slideOut}>
-              {text}
+            <motion.span key='b' {...slideInOut}>
+              {text || fallback}
             </motion.span>
           )}
         </AnimatePresence>
@@ -96,10 +110,10 @@ function InfoField({ id, text }: { id: keyof typeof icons; text: string }) {
 export default function UserInfo({ user }: { user: User }) {
   return (
     <section className={css['user-info']}>
-      <InfoField {...{ id: 'home',  text: 'text' }} />
-      <InfoField {...{ id: 'work',  text: 'text' }} />
-      <InfoField {...{ id: 'study', text: 'text' }} />
-      <InfoField {...{ id: 'bio',   text: 'text' }} />
+      <InfoField {...{ id: 'home',  user }} />
+      <InfoField {...{ id: 'work',  user }} />
+      <InfoField {...{ id: 'study', user }} />
+      <InfoField {...{ id: 'bio',   user }} />
     </section>
   );
 }
