@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Debounce } from '@/hooks/useDebounce';
 import { isMobile } from 'react-device-detect';
@@ -14,6 +15,8 @@ interface NavProps {
 
 export default function NavButton({ index, callback, deferring, children }: NavProps) {
   const { pathname } = useLocation();
+  const [delay, setDelay] = useState(0.2 * index);
+
   const  path = (['/feed', '/social', 'ALERTS',    '/inbox',       '/'] as const)[index];
   const  icon = ([  'rss',   'users',   'bell',  'comments',    'user'] as const)[index];
   const label =  [ 'Feed',  'Social', 'Alerts', '     Chat', 'Profile']          [index];
@@ -23,18 +26,17 @@ export default function NavButton({ index, callback, deferring, children }: NavP
     ['/social', '/user'],
   ];
 
-  const isActive = pathname === path ||
-  dynamicPathPairs.some(([target, prefix]) => path === target && pathname.startsWith(prefix));
+  const isActive =
+    pathname === path ||
+    dynamicPathPairs.some(
+      ([target, prefix]) => path === target && pathname.startsWith(prefix)
+    );
 
-  const classes = `${css['nav-button']} ${
-    isActive ? css['active'] : ''} ${
-    isMobile ? css['mobile'] : ''
-  }`;
+  const classes = `${css['nav-button']} ${isActive ? css['active'] : ''}`;
 
   const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;
-  const [x, y] = isLandscape ? [75, 0] : [0, 75];
-  const opacity = deferring ? 0.6 : 1;
-  const   delay = deferring ? 0   : 0.2 * index;
+  const      [x, y] = isLandscape ? [75, 0] : [0, 75];
+  const     opacity =   deferring ?     0.6 : 1;
 
   return (
     <motion.button
@@ -44,6 +46,8 @@ export default function NavButton({ index, callback, deferring, children }: NavP
         initial={{ opacity: 0, y,    x }}
         animate={{ opacity,    y: 0, x: 0, transition: {     delay     } }}
            exit={{ opacity: 0,             transition: { duration: 0.8 } }}
+     whileHover={{ opacity: 0.6 }}
+     onAnimationComplete={() => setDelay(0)}
     >
       <FontAwesomeIcon icon={icon} />
       {label}
