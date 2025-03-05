@@ -1,5 +1,7 @@
 import { RequestHandler } from 'express';
 import AppError from '../models/Error';
+import { IProfile } from '../models/User';
+import { getErrors, hasErrors } from '../validation/validators';
 import { deleteFile } from '../util/deleteFile';
 
 const devErr = 'Do not use without AuthJWT';
@@ -29,17 +31,15 @@ const updateInfo: RequestHandler = async (req, res, next) => {
   if (!user) return next(new AppError(403, 'Something went wrong', devErr));
 
   try {
-    const fields = ['home', 'work', 'study', 'bio'] as const;
-    const [key] = Object.keys(req.body) as [typeof fields[number]];
+    const errors = getErrors(req);
+    if (hasErrors(errors)) return next(new AppError(422, errors));
 
-    if (fields.includes(key)) {
-      const data = req.body[key];
-      user.about[key] = data;
-      await user.save();
-      res.status(201).json(data);
-    } else {
-      next(new AppError(422, 'Invalid profile field'));
-    }
+    const [key] = Object.keys(req.body); // extract key name. Can be 1/4 keys
+    const  data = req.body[key];
+
+    user.about[key as keyof IProfile] = data; // validated by express validator middleware
+    await user.save();
+    res.status(201).json(data);
   } catch (error) {
     next(new AppError(500, 'Unable to update user info', error));
   }
