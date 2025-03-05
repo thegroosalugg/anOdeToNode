@@ -44,7 +44,7 @@
 
   p, input {
     color: #fff;
-    background: var(--text-grey);
+    background: transparent;
   }
 
   .buttons {

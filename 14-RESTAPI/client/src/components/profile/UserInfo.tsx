@@ -15,13 +15,14 @@ const icons = {
 } as const;
 
 function InfoField({ id, user }: { id: keyof typeof icons; user: User }) {
-  const { reqHandler,     error } = useFetch<string>();
-  const [isEditing, setIsEditing] = useState(false);
-  const [value,         setValue] = useState('');
-  const [text,           setText] = useState(user.about?.[id]);
-  const [scope,          animate] = useAnimate();
-  const { deferring,    deferFn } = useDebounce();
-  const   fallback =  `Add ${id}`;
+  const { reqHandler, error, setError } = useFetch<string>();
+  const [isEditing,       setIsEditing] = useState(false);
+  const [value,               setValue] = useState('');
+  const [text,                 setText] = useState(user.about?.[id]);
+  const [scope,                animate] = useAnimate();
+  const { deferring,          deferFn } = useDebounce();
+  const   fallback = `Add ${id}`;
+  const background = `var(--${error ? 'error-red' : isEditing ? 'team-green' : 'text-grey'})`;
   const      width = isEditing ? 30 : 60;
   const       ease = [0.65, 0, 0.35, 1] as const;
   const   duration = 0.4;
@@ -39,9 +40,12 @@ function InfoField({ id, user }: { id: keyof typeof icons; user: User }) {
   const editAction = (callback: () => void) => {
     deferFn(() => {
       animateBtns();
-      setTimeout(() => callback(), 400);
-    }, 1000)
-  }
+      setTimeout(() => {
+        callback();
+        setError(null);
+      }, 400);
+    }, 1000);
+  };
 
   function saveOrEdit() {
     editAction(async () => {
@@ -49,10 +53,14 @@ function InfoField({ id, user }: { id: keyof typeof icons; user: User }) {
         const data = { [id]: value };
         await reqHandler(
           { url: 'profile/info', method: 'POST', data },
-          { onSuccess: (res) => setText(res) }
+          {
+            onSuccess: (res) => {
+              setText(res);
+              setValue('');
+            },
+          }
         );
         setIsEditing(false);
-        setValue('');
       } else {
         setIsEditing(true);
       }
@@ -69,7 +77,7 @@ function InfoField({ id, user }: { id: keyof typeof icons; user: User }) {
         <FontAwesomeIcon icon={icons[id]} />
         {id}
       </h2>
-      <p>
+      <motion.p animate={{ background }}>
         <AnimatePresence mode='wait' initial={false}>
           {isEditing ? (
             <motion.input
@@ -83,11 +91,11 @@ function InfoField({ id, user }: { id: keyof typeof icons; user: User }) {
             />
           ) : (
             <motion.span key='b' {...slideInOut}>
-              {text || fallback}
+              {error?.message || text || fallback}
             </motion.span>
           )}
         </AnimatePresence>
-      </p>
+      </motion.p>
       <motion.section className={css['buttons']}>
         <Button
               hsl={[0, 0, 100]}
@@ -95,7 +103,7 @@ function InfoField({ id, user }: { id: keyof typeof icons; user: User }) {
             style={{ width }}
          disabled={deferring}
         >
-          {isEditing ? <FontAwesomeIcon icon='check' /> : 'Add'}
+          {isEditing ? <FontAwesomeIcon icon='check' /> : text ? 'Edit' : 'Add'}
         </Button>
         {isEditing && (
           <Button hsl={[0, 0, 100]} onClick={cancel} disabled={deferring}>
