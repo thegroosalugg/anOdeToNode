@@ -14,11 +14,16 @@ export const hasErrors = (obj: Object) => Object.keys(obj).length > 0;
 export const validateField = (field: string, [min, max]: [number, number]) =>
   body(field)
     .trim()
+    .customSanitizer(
+      (value) =>
+        value
+          .replace(/<|>/g, '') // escapes only dangerous values
+          .replace(/\s+/g, ' ') // collapse multiple whitespaces
+    )
     .isLength({ min })
-    .withMessage(`requires at least ${min} characters`)
+    .withMessage(`requires at least ${min} character${min > 1 ? 's' : ''}`)
     .isLength({ max })
-    .withMessage(`should not exceed ${max} characters`)
-    .customSanitizer((value) => value.replace(/<|>/g, '')); // escapes only dangerous values
+    .withMessage(`should not exceed ${max} characters`);
 
 export const validateEmail = check('email')
   .isEmail()
@@ -33,6 +38,8 @@ export const validateEmail = check('email')
   });
 
 export const validatePassword = body('password')
+  .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]+$/)
+  .withMessage('must contain 1 letter, 1 number & no invalid chars')
   .isLength({ min: 6 })
   .withMessage('requires at least 6 characters')
   .custom((password, { req }) => {
@@ -43,7 +50,7 @@ export const validatePassword = body('password')
   });
 
   export const validateSignUp = [
-    validateField('name', [2, 15]),
+    validateField('name',    [2, 15]),
     validateField('surname', [2, 15]),
     validateEmail,
     validatePassword,

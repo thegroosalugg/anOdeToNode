@@ -11,10 +11,10 @@ export interface IFriend {
 }
 
 export interface IProfile {
-   home: string;
-   work: string;
-  study: string;
-    bio: string;
+   home?: string;
+   work?: string;
+  study?: string;
+    bio?: string;
 }
 
 export interface IUser {

@@ -26,12 +26,12 @@ export default function PostId({
   const   variants = { hidden, visible };
   const   navigate = useNavigate();
 
-  const htnlRef = useRef<HTMLParagraphElement | null>(null);
+  const htmlRef = useRef<HTMLParagraphElement | null>(null);
   const [height, setHeight] = useState<number | 'auto'>('auto');
 
   useEffect(() => {
-    if (htnlRef.current) {
-      setHeight(htnlRef.current.offsetHeight + 16); // 16 for padding
+    if (htmlRef.current) {
+      setHeight(htmlRef.current.offsetHeight + 16); // 16 for padding
     }
   }, [content]);
 
@@ -79,7 +79,7 @@ export default function PostId({
       <AnimatePresence mode='wait'>
         <motion.p
                key={content}
-               ref={htnlRef}
+               ref={htmlRef}
           variants={variants}
              style={{ height, maxHeight: 200 }}
            animate={{
