@@ -7,14 +7,16 @@ import ImagePicker from '../form/ImagePicker';
 import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import ErrorPopUp from '../error/ErrorPopUp';
-import css from './About.module.css';
+import UserInfo from './UserInfo';
+import { formatDate } from '@/util/timeStamps';
+import css from './ProfileHeader.module.css';
 
-export default function About({ user, setUser }: Pick<Authorized, 'user' | 'setUser'>) {
-  const { name,    surname,    imgURL } = user;
-  const [ showModal,     setShowModal ] = useState(false);
-  const [ displayPic,   setDisplayPic ] = useState(imgURL);
-  const [ scope,              animate ] = useAnimate();
-  const { reqHandler, error, setError } = useFetch<{ imgURL: string}>();
+export default function ProfileHeader({ user, setUser }: Pick<Authorized, 'user' | 'setUser'>) {
+  const { name, surname, imgURL, createdAt } = user;
+  const [showModal,            setShowModal] = useState(false);
+  const [displayPic,          setDisplayPic] = useState(imgURL);
+  const [scope,                     animate] = useAnimate();
+  const { reqHandler,   error,    setError } = useFetch<{ imgURL: string}>();
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -44,7 +46,7 @@ export default function About({ user, setUser }: Pick<Authorized, 'user' | 'setU
     };
 
     await reqHandler(
-      { url: 'profile/pic', method: 'POST', data },
+      { url: 'profile/set-pic', method: 'POST', data },
       { onError, onSuccess }
     );
   }
@@ -69,30 +71,36 @@ export default function About({ user, setUser }: Pick<Authorized, 'user' | 'setU
           )}
         </form>
       </Modal>
-      <motion.section
-         className={css['about']}
+      <motion.header
+         className={css['profile-header']}
            initial={{   opacity: 0  }}
            animate={{   opacity: 1  }}
               exit={{   opacity: 0  }}
         transition={{ duration: 0.5 }}
       >
         <h1>
-          {name} {surname}
+          <span>
+            {name} {surname}
+          </span>
+          <span>Joined on {formatDate(createdAt, ['year'])}</span>
         </h1>
-        <div onClick={() => setShowModal(true)}>
-        {displayPic ? (
-            <motion.img
-                  key={displayPic}
-                  src={BASE_URL + displayPic}
-                  alt={name}
-              animate={{ opacity: [0, 1] }}
-              onError={(e) => ((e.target as HTMLImageElement).src = '/notFound.png')}
-            />
-          ) : (
-            <p>Upload an image</p>
-          )}
-        </div>
-      </motion.section>
+        <section>
+          <div className={css['user-photo']} onClick={() => setShowModal(true)}>
+            {displayPic ? (
+              <motion.img
+                    key={displayPic}
+                    src={BASE_URL + displayPic}
+                    alt={name}
+                animate={{ opacity: [0, 1] }}
+                onError={(e) => ((e.target as HTMLImageElement).src = '/notFound.png')}
+              />
+            ) : (
+              <p>Upload an image</p>
+            )}
+          </div>
+          <UserInfo {...{ user }} />
+        </section>
+      </motion.header>
     </>
   );
 }

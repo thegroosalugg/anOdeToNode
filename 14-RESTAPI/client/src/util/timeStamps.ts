@@ -1,11 +1,16 @@
-function formatDate(ISOstring: string, config: Array<'year' | 'time'> = []) {
+function formatDate(
+  ISOstring: string,
+     config: Array<'day' | 'weekday' | 'year' | 'time'> = []
+) {
   const date = new Date(ISOstring);
+  const options: Intl.DateTimeFormatOptions = { month: 'short' };
 
-  const options: Intl.DateTimeFormatOptions = {
-        day: 'numeric',
-      month: 'short',
-    weekday: 'short',
-  };
+  if (config.includes('weekday')) {
+    options.weekday = 'short';
+    options.day     = 'numeric'; // Ensures weekday always comes with a day
+  } else if (config.includes('day')) {
+    options.day     = 'numeric';
+  }
 
   if (config.includes('year')) options.year = 'numeric';
 
@@ -15,7 +20,7 @@ function formatDate(ISOstring: string, config: Array<'year' | 'time'> = []) {
     const time = date.toLocaleTimeString('en-GB', {
         hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hour12: false,
     });
     localeDate = `${time}, ${localeDate}`;
   }

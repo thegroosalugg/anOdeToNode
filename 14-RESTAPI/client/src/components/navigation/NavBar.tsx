@@ -1,6 +1,6 @@
-import { AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import { Auth } from '@/pages/RootLayout';
 import NavButton from './NavButton';
@@ -10,14 +10,18 @@ import css from './NavBar.module.css';
 
 export default function NavBar({ user, setUser }: Auth) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { deferring, deferFn } = useDebounce();
+  const background = `linear-gradient(to right, ${
+    pathname === '/' ? '#434343, #757575' : '#12a1a1, #379d9d'
+  })`;
 
   function navTo(path: string) {
     deferFn(() => navigate(path), 1200);
   }
 
   return (
-    <nav className={css['nav']}>
+    <motion.nav className={css['nav']} animate={{ background, transition: { duration: 0.5 } }}>
       <h1>
         <span>
           Friendface {/* visible in portrait, display: none in landscape */}
@@ -40,6 +44,6 @@ export default function NavBar({ user, setUser }: Auth) {
             )
           )}
       </AnimatePresence>
-    </nav>
+    </motion.nav>
   );
 }
