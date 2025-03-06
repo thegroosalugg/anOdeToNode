@@ -122,7 +122,7 @@ export default function Messages({
                  style={{ alignItems, margin }}
               onAnimationComplete={scrollTo}
             >
-              <time>{formatDate(createdAt, ['time'])}</time>
+              <time>{formatDate(createdAt, ['weekday', 'time'])}</time>
               <p ref={isLast ? msgRef : null} style={{ color, background }}>
                 {content}
               </p>
