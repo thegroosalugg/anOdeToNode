@@ -13,7 +13,7 @@ const setPhoto: RequestHandler = async (req, res, next) => {
     if (image) deleteFile(image.path);
     return next(new AppError(403, 'Something went wrong', devErr));
   }
-  if (!image) return next(new AppError(422, { message: 'Image required' }));
+  if (!image) return next(new AppError(422, 'Image required'));
 
   try {
     if (user.imgURL) deleteFile(user.imgURL);

@@ -12,7 +12,23 @@ import ConfirmDialog from '../dialog/ConfirmDialog';
 import ProfilePic from '../profile/ProfilePic';
 import Button from '../button/Button';
 import Loader from '../loading/Loader';
+import { formatDate } from '@/util/timeStamps';
 import css from './PeerProfile.module.css';
+
+const prefixes = ['Lives in',  'Works at', 'Studied at', ''            ];
+const    icons = [   'house', 'briefcase',       'book', 'comment-dots'] as const;
+
+const InfoTag = ({ text, i }: { text?: string, i: number }) => {
+  if (!text) return null;
+  return (
+    text && (
+      <p className={css['info-tag']}>
+        <FontAwesomeIcon icon={icons[i]} />
+        {' '}{prefixes[i]} {text}
+      </p>
+    )
+  );
+};
 
 export default function PeerProfile({
      user,
@@ -27,7 +43,8 @@ export default function PeerProfile({
   const { deferring,    deferFn } = useDebounce();
   const [showModal, setShowModal] = useState(false);
   const         navigate          = useNavigate();
-  const {   _id, name, surname  } = peer;
+  const { _id, name, surname, createdAt, about } = peer;
+  const {    bio,    home,    study,    work   } = about ?? {};
 
   const  connection = user.friends.find((friend) => getId(friend.user) === _id);
   const { accepted, initiated } = connection ?? {};
@@ -116,6 +133,13 @@ export default function PeerProfile({
               )}
             </Button>
           )}
+        </div>
+        <div className={css['user-info']}>
+          <h2>Joined on {formatDate(createdAt, ['year'])}</h2>
+          <InfoTag {...{ text: home,  i: 0 }} />
+          <InfoTag {...{ text: work,  i: 1 }} />
+          <InfoTag {...{ text: study, i: 2 }} />
+          <InfoTag {...{ text: bio,   i: 3 }} />
         </div>
       </motion.section>
     </>

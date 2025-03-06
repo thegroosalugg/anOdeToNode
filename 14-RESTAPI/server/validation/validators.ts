@@ -75,7 +75,7 @@ export const validateUserInfo = body().custom((body, { req }) => {
   const sanitized = value.trim().replace(/\s+/g, ' ').replace(/<|>/g, '');
   const     isBio = key === 'bio';
 
-  if (sanitized.length > 50 || (isBio && sanitized.length > 100)) {
+  if ((!isBio && sanitized.length > 50) || (isBio && sanitized.length > 100)) {
     throw new Error(`should not exceed ${isBio ? 100 : 50} characters`);
   }
 
