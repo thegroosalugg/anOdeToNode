@@ -14,8 +14,7 @@
   }
 
   > li {
-    height: 100%;
-    max-height: 400px;
+    max-height: 360px;
     display: flex;
     flex-direction: column;
     border: 1px solid var(--team-green);
@@ -26,8 +25,6 @@
       gap: 0.25rem;
       padding: 0.25rem;
       min-height: 2rem;
-      font-weight: 600;
-      font-size: 0.9rem;
 
       /* Recipient name */
       > span {
@@ -36,6 +33,8 @@
         text-overflow: ellipsis;
         overflow: hidden;
         cursor: pointer;
+        font-weight: 600;
+        font-size: 1.2rem;
       }
 
       /* Back Button (Expanded) */
@@ -57,7 +56,7 @@
           text-wrap: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
-          font-size: 0.6rem;
+          font-size: 0.9rem;
 
           /* time stamp */
           &:first-of-type {
@@ -93,20 +92,10 @@
 
           /* message preview */
           &:last-of-type {
-            font-size: 0.7rem;
             color: var(--dark-grey);
           }
         }
       }
-    }
-  }
-}
-
-.isMenu {
-  > li {
-    > h2 {
-      min-height: 0;
-      font-size: 0.7rem;
     }
   }
 }
@@ -127,6 +116,5 @@
 .fallback {
   padding: 0.25rem;
   margin: 1rem auto;
-  font-size: 0.9rem;
   text-align: center;
 }

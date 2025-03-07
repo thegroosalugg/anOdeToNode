@@ -72,7 +72,6 @@ export default function ChatList({
   const   navigate = useNavigate();
   const closeModal = () => setShowModal(false);
 
-  const classes = `${css['chat-list']} ${isMenu ? css['isMenu'] : ''}`;
   const  cursor = isActive || deferring ? 'auto' : 'pointer';
   const    flex = isActive ? 1 : 0;
 
@@ -128,7 +127,7 @@ export default function ChatList({
       <AsyncAwait {...{ isLoading: isInitial, error }}>
         <LayoutGroup>
           <motion.ul
-             className={classes}
+             className={css['chat-list']}
                initial='hidden'
                animate='visible'
             transition={{ staggerChildren: 0.03 }}
@@ -244,7 +243,7 @@ export default function ChatList({
                                 clearAlerts,
                               }}
                             />
-                            <SendMessage {...{ setUser, isMenu, url }} />
+                            <SendMessage {...{ setUser, url }} />
                           </>
                         )}
                       </AnimatePresence>

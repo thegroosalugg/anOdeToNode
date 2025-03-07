@@ -12,7 +12,7 @@
     padding: 0.5rem 0.5rem 0;
 
     span {
-      line-height: 1.5;
+      line-height: 1.8;
       text-transform: capitalize;
       text-wrap: nowrap;
       overflow-x: scroll;
@@ -37,7 +37,7 @@
   > time {
     display: block;
     padding: 0 0.7rem 0.5rem;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: var(--text-grey);
     text-align: right;
     text-wrap: nowrap;
@@ -58,7 +58,6 @@
     /* max-height: 300px; */ /* motion configured */
     overflow-y: scroll;
     padding: 0.5rem;
-    font-size: 0.8rem;
     font-weight: 300;
     text-align: center;
     color: var(--text-grey);

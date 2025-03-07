@@ -4,7 +4,7 @@ import css from './Loader.module.css';
 export default function Loader({
       size,
   ...props
-}: { size?: 'small' | 'xs' } & HTMLMotionProps<'div'>) {
+}: { size?: 'small' } & HTMLMotionProps<'div'>) {
   const classes = `${css['loader']} ${size ? css[size] : ''}`;
 
   return (
