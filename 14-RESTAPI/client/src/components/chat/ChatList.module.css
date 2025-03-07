@@ -14,7 +14,7 @@
   }
 
   > li {
-    max-height: 360px;
+    max-height: 540px;
     display: flex;
     flex-direction: column;
     border: 1px solid var(--team-green);
@@ -98,6 +98,14 @@
       }
     }
   }
+}
+
+.isMobile { > li { max-height: calc(100vh - 136px); } }
+.isMenu   { > li { max-height: 360px;               } }
+
+@media screen and (pointer: coarse) and (orientation: landscape) {
+  .isMobile { > li { max-height: calc(100vh - 68px); } }
+  .isMenu   { > li { max-height: 100%;               } }
 }
 
 .delete-buttons {
