@@ -15,8 +15,7 @@
     display: flex;
     align-items: center;
     gap: 0.25em;
-    font-size: 0.7rem;
-    padding: 0.55rem 0.25rem 0.2rem;
+    padding: 1rem 0.25rem 0.25rem;
     background: var(--main-gradient);
     color: var(--team-green);
     border: 1px solid var(--dark-grey);
@@ -29,7 +28,6 @@
 
       > p {
         margin-left: 0.5rem;
-        font-size: 0.7rem;
         text-wrap: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -47,6 +45,5 @@
 .fallback {
   padding: 0.25rem;
   margin: auto;
-  font-size: 0.9rem;
   text-align: center;
 }

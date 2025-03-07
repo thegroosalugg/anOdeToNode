@@ -12,7 +12,7 @@
   position: absolute;
   top: 0.05rem;
   right: 0.25rem;
-  font-size: 0.5rem;
+  font-size: 0.9rem;
   color: var(--text-grey);
 }
 
@@ -24,16 +24,16 @@
 
 .alert-text {
   display: flex;
-  align-items: center;
+  align-items: start;
   text-align: center;
-  gap: 0.2em;
+  gap: 0.25em;
   width: 100%;
 
   > img {
-    align-self: start;
+    width: 30px;
   }
 
   > span {
-    padding-top: 0.1rem;
+    margin-top: 0.25rem;
   }
 }
