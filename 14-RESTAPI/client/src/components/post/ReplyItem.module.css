@@ -34,7 +34,7 @@ ul.replies {
 
       time {
         margin-left: auto;
-        font-size: 0.8rem;
+        font-size: var(--text-small);
         color: var(--text-grey);
       }
     }
@@ -51,7 +51,7 @@ ul.replies {
       display: block;
       margin: 0.5rem -0.25rem -0.25rem auto;
       border-radius: 5px;
-      font-size: 0.7rem
+      font-size: var(--text-small);
     }
   }
 }

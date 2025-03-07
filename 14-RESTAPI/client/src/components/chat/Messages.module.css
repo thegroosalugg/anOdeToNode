@@ -13,7 +13,7 @@
     flex-direction: column;
 
     > time {
-      font-size: 0.9rem;
+      font-size: var(--text-small);
       color: var(--text-grey);
     }
 
