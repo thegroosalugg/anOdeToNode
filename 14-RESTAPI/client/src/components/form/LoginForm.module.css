@@ -30,7 +30,7 @@
 
   input {
     width: 100%;
-    font-size: 0.9rem;
+    font-size: var(--text-small);
     height: 1.2rem;
   }
 
@@ -54,7 +54,7 @@
   }
 
   .form-link {
-    font-size: 0.7rem;
+    font-size: var(--text-small);
     font-weight: 900;
     margin-top: 0.2rem;
     margin-bottom: -0.8rem;

@@ -2,10 +2,10 @@
   position: fixed;
   top: 0.25rem;
   right: 0.25rem;
-  height: 240px;
+  height: 400px;
   max-height: calc(100vh - 0.5rem);
   max-width: calc(100% - 0.5rem);
-  width: 225px;
+  width: 300px;
   padding: 0.25rem;
   display: flex;
   flex-direction: column;

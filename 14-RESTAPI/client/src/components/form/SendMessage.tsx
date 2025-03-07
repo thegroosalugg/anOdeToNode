@@ -11,19 +11,15 @@ export default function SendMessage({
       url,
   setUser,
    isPost,
-   isMenu,
 }: {
       url: string;
   setUser: Auth['setUser'];
   isPost?: boolean;
-  isMenu?: boolean;
 }) {
   const { reqHandler, isLoading, error, setError } = useFetch();
   const [ scope,     animate ] = useAnimate();
   const { deferring, deferFn } = useDebounce();
-  const classes = `${css['send-msg']} ${
-    isPost ? css['isPost'] : ''} ${
-    isMenu ? css['isMenu'] : ''}`;
+  const classes = `${css['send-msg']} ${isPost ? css['isPost'] : ''}`;
   const rows = isPost ? 4 : 2;
 
   const onSuccess = () => {
@@ -72,7 +68,7 @@ export default function SendMessage({
       <motion.button disabled={deferring}>
         <AnimatePresence mode='wait'>
           {isLoading ? (
-            <Loader key='loader' size={isMenu ? 'xs' : 'small'} />
+            <Loader key='loader' size='small' />
           ) : (
             <motion.span
               initial={{ opacity: 0 }}

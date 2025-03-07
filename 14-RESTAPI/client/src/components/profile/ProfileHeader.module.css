@@ -18,7 +18,7 @@
       }
 
       &:last-of-type {
-        font-size: 0.9rem;
+        font-size: var(--text-small);
         color: var(--text-grey);
       }
     }
@@ -37,7 +37,7 @@
       display: flex;
       align-items: center;
       text-align: center;
-      font-size: 0.7rem;
+      font-size: var(--text-small);
       background: #e0e0e0;
       border-radius: 5px;
       cursor: pointer;

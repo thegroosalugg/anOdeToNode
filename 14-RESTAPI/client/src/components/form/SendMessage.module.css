@@ -16,7 +16,6 @@
     resize: none;
     border-bottom: 1px solid var(--team-green);
     padding: 0.5rem;
-    font-size: 0.8rem;
     text-align: justify;
     background: var(--box-gradient);
   }
@@ -24,7 +23,7 @@
   > button {
     color: #fff;
     background: #287a91;
-    font-size: 0.8rem;
+    font-size: var(--text-small);
     padding: 0.2rem 0.4rem;
     font-family: "Oswald", sans-serif;
     font-weight: 900;
@@ -42,17 +41,5 @@
 
   > button {
     background: #949494;
-  }
-}
-
-.isMenu {
-  > textarea {
-    padding: 0.25rem;
-    font-size: 0.5rem;
-  }
-
-  > button {
-    padding: 0.125rem 0.25rem;
-    font-size: 0.5rem;
   }
 }

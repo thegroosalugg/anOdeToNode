@@ -162,8 +162,8 @@ export default function Notifications({
               onClick={() => changeTab(i)}
               animate={{ color: activeTab === i ? '#888' : 'var(--team-green)' }}
             >
-              <FontAwesomeIcon icon={icons[i]} />
-              <Counter {...{ count, scale: 0.5 }} />
+              <FontAwesomeIcon icon={icons[i]} size='xl' />
+              <Counter {...{ count, pos: [15, 2, 0] }} />
             </motion.button>
           ))}
         </section>

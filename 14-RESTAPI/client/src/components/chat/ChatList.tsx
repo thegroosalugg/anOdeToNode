@@ -1,3 +1,4 @@
+import { isMobile } from 'react-device-detect';
 import { AnimatePresence, HTMLMotionProps, LayoutGroup, motion } from 'motion/react';
 import { ReactNode, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -72,9 +73,13 @@ export default function ChatList({
   const   navigate = useNavigate();
   const closeModal = () => setShowModal(false);
 
-  const classes = `${css['chat-list']} ${isMenu ? css['isMenu'] : ''}`;
-  const  cursor = isActive || deferring ? 'auto' : 'pointer';
   const    flex = isActive ? 1 : 0;
+  const  cursor = isActive || deferring ? 'auto' : 'pointer';
+  const classes = `${css['chat-list']} ${
+    isMobile ? css['isMobile'] : ''} ${
+      isMenu ? css['isMenu'] : ''
+  }`;
+
 
   function setDeletedOrActive(chat: Chat, path: string) {
     if (isDeleting) {
@@ -244,7 +249,7 @@ export default function ChatList({
                                 clearAlerts,
                               }}
                             />
-                            <SendMessage {...{ setUser, isMenu, url }} />
+                            <SendMessage {...{ setUser, url }} />
                           </>
                         )}
                       </AnimatePresence>

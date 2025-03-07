@@ -1,7 +1,7 @@
 .error-pop-up {
   position: absolute;
   padding: 0.1rem 0.2rem;
-  font-size: 0.7rem;
+  font-size: 80%;
   text-wrap: nowrap;
   overflow-x: scroll;
   max-width: 95%;

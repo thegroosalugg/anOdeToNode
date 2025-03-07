@@ -77,7 +77,6 @@ export default function Messages({
     setMsgs,
   ]);
 
-  const  classes = `${css['messages']} ${isMenu ? css['isMenu'] : ''}`;
   const  opacity = 0;
   const duration = 0.5;
   const variants = {
@@ -90,7 +89,7 @@ export default function Messages({
   return (
     <AsyncAwait {...{ isLoading, error }}>
       <motion.ul
-         className={classes}
+         className={css['messages']}
            initial='hidden'
            animate='visible'
               exit={{ opacity }}
