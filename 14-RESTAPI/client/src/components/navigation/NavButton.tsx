@@ -49,7 +49,7 @@ export default function NavButton({ index, callback, deferring, children }: NavP
      whileHover={{ opacity: 0.6 }}
      onAnimationComplete={() => setDelay(0)}
     >
-      <FontAwesomeIcon icon={icon} />
+      <FontAwesomeIcon icon={icon} size='xl' />
       {label}
       {children && children}
       {isActive && <motion.div layoutId='tab-indicator' className={css['active-tab']} />}
