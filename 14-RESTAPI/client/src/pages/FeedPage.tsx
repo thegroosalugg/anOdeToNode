@@ -3,13 +3,13 @@ import usePagination from '@/hooks/usePagination';
 import useSocket from '@/hooks/useSocket';
 import { Authorized } from './RootLayout';
 import Post from '@/models/Post';
+import Logger from '@/models/Logger';
 import Modal from '@/components/modal/Modal';
 import Button from '@/components/button/Button';
 import PostForm from '@/components/form/PostForm';
 import AsyncAwait from '@/components/panel/AsyncAwait';
 import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/post/PostItem';
-import { captainsLog } from '@/util/captainsLog';
 
 export default function FeedPage({ setUser }: Authorized) {
   const {
@@ -22,10 +22,9 @@ export default function FeedPage({ setUser }: Authorized) {
   useEffect(() => {
     const socket = socketRef.current;
     if (!socket) return;
-    
-    const col = 80;
-    const log = 'SOCKET 🗞️FEEDPAGE';
-    socket.on('connect', () => captainsLog(col, [`${log} [connected]`]));
+
+    const logger = new Logger('feed');
+    socket.on('connect', () => logger.connect());
 
     socket.on('post:update', (newPost) => {
       setData(({ docCount: prevCount, items: prevPosts }) => {
@@ -35,13 +34,13 @@ export default function FeedPage({ setUser }: Authorized) {
           : [newPost, ...prevPosts];
 
         const docCount = prevCount + 1;
-        captainsLog(col, [`${log} :update, action: ${isFound ? 'Edit' : 'New'})`, newPost]);
+        logger.event(`update, action: ${isFound ? 'Edit' : 'New'})`, newPost);
         return { docCount, items };
       });
     });
 
     socket.on('post:delete', (deleted) => {
-      captainsLog(col, [`${log} :delete`, deleted]);
+      logger.event('delete', deleted);
       setData(({ docCount: prevCount, items: prevPosts }) => {
         const    items = prevPosts.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;

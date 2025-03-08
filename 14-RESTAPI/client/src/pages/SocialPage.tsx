@@ -3,10 +3,10 @@ import usePagination from '@/hooks/usePagination';
 import useSocket from '@/hooks/useSocket';
 import { Authorized } from './RootLayout';
 import User from '@/models/User';
+import Logger from '@/models/Logger';
 import AsyncAwait from '@/components/panel/AsyncAwait';
 import PagedList from '@/components/pagination/PagedList';
 import PeerItem from '@/components/social/PeerItem';
-import { captainsLog } from '@/util/captainsLog';
 
 
 export default function SocialPage({ user }: Authorized) {
@@ -20,15 +20,15 @@ export default function SocialPage({ user }: Authorized) {
     const socket = socketRef.current;
     if (!socket) return;
 
-    const col = 110;
-    const log = 'SOCKET ⚽SOCIALPAGE';
-    socket.on('connect', () => captainsLog(col, [`${log} [connected]`]));
+    const logger = new Logger('social');
+    socket.on('connect', () => logger.connect());
 
     socket.on('user:new', (newUser) => {
-      setData(({ docCount, items }) => {
-        captainsLog(col, [`${log} :user:new`, newUser]); // **LOGDATA
-        return { docCount: docCount + 1, items: [newUser, ...items] };
-      });
+      logger.event('user:new', newUser);
+      setData(({ docCount, items }) => ({
+        docCount: docCount + 1,
+           items: [newUser, ...items],
+      }));
     });
 
     return () => {

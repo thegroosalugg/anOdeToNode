@@ -7,6 +7,7 @@ import { FetchError } from '@/util/fetchData';
 import { Authorized } from './RootLayout';
 import Post from '@/models/Post';
 import Reply from '@/models/Reply';
+import Logger from '@/models/Logger';
 import AsyncAwait from '@/components/panel/AsyncAwait';
 import PostId from '@/components/post/PostId';
 import Modal from '@/components/modal/Modal';
@@ -15,7 +16,6 @@ import ConfirmDialog from '@/components/dialog/ConfirmDialog';
 import SendMessage from '@/components/form/SendMessage';
 import ReplyItem from '@/components/post/ReplyItem';
 import PagedList from '@/components/pagination/PagedList';
-import { captainsLog } from '@/util/captainsLog';
 
 
 export default function PostPage({ user, setUser }: Authorized) {
@@ -51,12 +51,11 @@ export default function PostPage({ user, setUser }: Authorized) {
 
     fetchPost();
 
-    const col = 324;
-    const log = 'SOCKET: 📬POSTPAGE';
-    socket.on('connect', () => captainsLog(col, [`${log} [connected]`]));
+    const logger = new Logger('post');
+    socket.on('connect', () => logger.connect());
 
     socket.on(`post:${postId}:reply:new`, (reply) => {
-      captainsLog(col, [`${log} :reply:new`, reply]);
+      logger.event('reply:new', reply);
       setTimeout(() => {
         setReplies(({ docCount, items }) => {
           return { docCount: docCount + 1, items: [reply, ...items] };
@@ -65,7 +64,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     });
 
     socket.on(`post:${postId}:reply:delete`, (deleted) => {
-      captainsLog(col, [`${log} :reply:delete`, deleted]);
+      logger.event('reply:delete', deleted);
       setReplies(({ docCount: prevCount, items: prevReplies }) => {
         const    items = prevReplies.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;
@@ -74,7 +73,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     });
 
     socket.on(`post:${postId}:update`, (post) => {
-      captainsLog(col, [`${log} :post:update`, post]);
+      logger.event('post:update', post);
       setPost((prevPost) => {
         if (post) return { ...prevPost, ...post };
         return prevPost;
@@ -83,7 +82,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     });
 
     socket.on(`post:${postId}:delete`, (deleted) => {
-      captainsLog(col, [`${log} :post:delete`, deleted]);
+      logger.event('post:delete', deleted);
       if (deleted.creator !== user._id) {
         setPost(null); // delete actions for viewers. Creator's state automatically set to null
         setError({ message: 'The post was deleted' } as FetchError); // creators redirected without msg

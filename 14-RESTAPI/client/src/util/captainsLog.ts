@@ -1,4 +1,10 @@
-const getHSL = (hue: number) => `hsl(${hue % 360}, 50%, 50%)`;
+const getHSL = (hue: number) => {
+  const isGrey = hue < 0;
+  const h = isGrey ? 0 : hue % 360;
+  const s = isGrey ? 0 : 50;
+  const l = isGrey ? Math.min(Math.abs(hue), 100) : 50;
+  return `hsl(${h}, ${s}%, ${l}%);`;
+};
 
 export const captainsLog = (hue: number, data: unknown[]) => {
   const style = `color: white; background: ${getHSL(hue)}; font-weight: bold;`;

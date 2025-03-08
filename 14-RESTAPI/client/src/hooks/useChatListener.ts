@@ -7,7 +7,7 @@ import { FetchError } from '@/util/fetchData';
 import User from '@/models/User';
 import Chat from '@/models/Chat';
 import Msg from '@/models/Message';
-import { captainsLog } from '@/util/captainsLog';
+import Logger from '@/models/Logger';
 
 type MsgState = Record<string, Msg[]>;
 
@@ -82,12 +82,11 @@ export default function useChatListener(
     initData();
     setAlerts(count);
 
-    const log = `SOCKET: CHAT${isMenu ? '-MENU💬' : ' 🗨️PAGE'}`;
-    const col = isMenu ? 200 : 170;
-    socket.on('connect', () => captainsLog(col, [`${log} [connected]`]));
+    const logger = new Logger(isMenu ? 'menu' : 'chat');
+    socket.on('connect', () => logger.connect());
 
     socket.on(`chat:${user._id}:update`, async ({ chat, isNew, msg }) => {
-      captainsLog(col, [`${log} :update, isNew? ${isNew}`, chat]);
+      logger.event(`update, ChatIsNew? ${isNew}`, chat);
 
       const isSender  = user._id === msg.sender;
       const isVisible = chat._id === activeId && (!isMenu || (isMenu && show));
@@ -107,7 +106,7 @@ export default function useChatListener(
     });
 
     socket.on(`chat:${user._id}:delete`, (deleted: Chat[]) => {
-      captainsLog(col, [`${log} :delete`, deleted]);
+      logger.event('delete', deleted);
       const isDeleted = (id?: string) => deleted.some((chat) => chat._id === id);
       if (isDeleted(activeId)) setIsActive(null);
       setChats((prevChats) => prevChats.filter((chat) => !isDeleted(chat._id)));
@@ -118,7 +117,7 @@ export default function useChatListener(
     });
 
     socket.on(`chat:${user._id}:alerts`, (chat) => {
-      captainsLog(col, [`${log} :alerts`, chat]);
+      logger.event('alerts', chat);
       if (chat._id === activeId) setIsActive(chat);
       updateChats(chat);
     });

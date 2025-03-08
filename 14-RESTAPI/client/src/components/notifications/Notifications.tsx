@@ -9,13 +9,13 @@ import { FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
 import Reply from '@/models/Reply';
+import Logger from '@/models/Logger';
 import PortalMenu from '../panel/PortalMenu';
 import AsyncAwait from '../panel/AsyncAwait';
 import SocialAlerts from './SocialAlerts';
 import ReplyAlerts from './ReplyAlerts';
 import NavButton from '../navigation/NavButton';
 import Counter from './Counter';
-import { captainsLog } from '@/util/captainsLog';
 import css from './Notifications.module.css';
 
 export default function Notifications({
@@ -113,12 +113,11 @@ export default function Notifications({
 
     initData();
 
-    const log = 'SOCKET: 🧭NAV';
-    const col = 30;
-    socket.on('connect', () => captainsLog(col, [`${log} [connected]`]));
+    const logger = new Logger('nav');
+    socket.on('connect', () => logger.connect());
 
     socket.on(`peer:${user._id}:update`, async (updated) => {
-      captainsLog(col, [`${log} :update`, updated]);
+      logger.event('update', updated);
       if (menu && activeTab < 2) {
         await markSocialsAsRead();
       } else {
@@ -127,7 +126,7 @@ export default function Notifications({
     });
 
     socket.on(`nav:${user._id}:reply`, async ({ action, reply }) => {
-      captainsLog(col, [`${log} :reply, action: ${action}`, reply]);
+      logger.event(`reply, action: ${action}`, reply);
       if (menu && activeTab === 2) {
         await markRepliesAsRead();
       } else {
