@@ -5,7 +5,6 @@ import NavBar from '@/components/navigation/NavBar';
 import useFetch, { ReqConfig } from '@/hooks/useFetch';
 import { Fetch, FetchError } from '@/util/fetchData';
 import User from '@/models/User';
-import { captainsLog } from '@/util/captainsLog';
 
 type  isUser =       User | null;
 type isError = FetchError | null;
@@ -40,16 +39,11 @@ export default function RootLayout({
   const props = { user, setUser, reqUser, isLoading, error, setError };
 
   useEffect(() => {
-    const mountData = async () => {
+    const mountData = async () =>
       await reqUser({ url: 'user' }, { onError: () => setUser(null) });
-      captainsLog([-1, 55], ['🫚 ROOT Mount Data']); // **LOGDATA
-    };
-
 
     mountData();
   }, [reqUser, setUser, pathname]);
-
-  captainsLog([-95, 45], ['🫚 ROOT CYCLE']); // **LOGDATA
 
   return (
     <>

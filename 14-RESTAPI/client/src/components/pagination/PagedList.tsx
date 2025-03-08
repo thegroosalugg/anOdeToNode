@@ -1,32 +1,31 @@
 import { motion, AnimatePresence, HTMLMotionProps } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useDebounce from '@/hooks/useDebounce';
-import Pagination, { PageHook, Paginated } from './Pagination';
+import { Paginated } from '@/hooks/usePagination';
 import { LIST_CONFIG } from './pagedListConfig';
+import Pagination from './Pagination';
 import css from './PagedList.module.css';
 
-export type PagedConfig = 'reply' | 'profile' | 'feed' | 'users';
+export type PagedConfig = 'feed' | 'profile' |'reply' | 'users';
 
-interface PagedList<T> extends Paginated<T, 'items'>, PageHook {
-      type: PagedConfig;
-  children: (item: T) => React.ReactNode;
+interface PagedList<T> extends Paginated<T> {
+  config: PagedConfig;
+children: (item: T) => React.ReactNode;
 }
 
 export default function PagedList<T>({
-     items,
-      type,
-     pages,
-  setPages,
-  docCount,
-  children,
-  ...props
+      config,
+        data: { docCount, items },
+     current,
+   direction,
+  changePage,
+   deferring,
+    children,
+     ...props
   // merge MotionProps while excluding any that conflict with PagedList's own prop types
 }: PagedList<T & { _id: string }> & Omit<HTMLMotionProps<'li'>, keyof PagedList<T>>) {
-  const { limit, setColor, listCss, navTo, delay, fallback } = LIST_CONFIG[type];
-  const { deferring, deferFn } = useDebounce();
+  const { limit, setColor, listCss, navTo, delay, fallback } = LIST_CONFIG[config];
   const      navigate = useNavigate();
-  const     direction = pages[0] < pages[1] ? 1 : -1;
   const             x = direction * 50;
   const    background = limit > items.length ? setColor : '#00000000';
   const      position = deferring ? 'sticky' : 'relative';
@@ -102,7 +101,7 @@ export default function PagedList<T>({
         </AnimatePresence>
       </motion.ul>
       {docCount >= limit && (
-        <Pagination {...{ type, pages, setPages, docCount, deferring, deferFn }} />
+        <Pagination {...{ config, current, changePage, docCount, deferring }} />
       )}
     </>
   );

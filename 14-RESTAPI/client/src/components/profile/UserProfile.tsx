@@ -1,49 +1,23 @@
-import { useEffect, useState } from 'react';
-import useFetch from '@/hooks/useFetch';
-import useInitial from '@/hooks/useInitial';
+import { useState } from 'react';
+import usePagination from '@/hooks/usePagination';
 import { Authorized } from '@/pages/RootLayout';
 import Post from '@/models/Post';
 import ProfileHeader from './ProfileHeader';
 import Modal from '../modal/Modal';
 import Button from '../button/Button';
-import { Pages, Paginated } from '../pagination/Pagination';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import AsyncAwait from '../panel/AsyncAwait';
 import PagedList from '../pagination/PagedList';
 import PostItem from '../post/PostItem';
 import css from './UserProfile.module.css';
 
-const initialData: Paginated<Post, 'posts'> = {
-  docCount: 0,
-     posts: [],
-};
 
 export default function UserProfile({ user, setUser }: Authorized) {
   const {
-          data: { docCount, posts },
-         error,
-    reqHandler,
-  } = useFetch(initialData);
-  const { isInitial,  mountData } = useInitial();
+    fetcher: { isLoading, error },
+     ...rest
+  } = usePagination<Post>('profile/posts');
   const [showModal, setShowModal] = useState(false);
-  const [pages,         setPages] = useState<Pages>([1, 1]);
-  const [,               current] = pages;
-  const                      url  = `profile/posts?page=${current}`;
-
-  const headerProps = { user, setUser }
-  const   feedProps = {
-          type: 'profile' as const,
-         items: posts,
-         pages,
-      setPages,
-      docCount,
-  };
-
-  useEffect(() => {
-    const initData = async () => mountData(async () => await reqHandler({ url }), 6);
-    initData();
-  }, [reqHandler, mountData, url]);
-
   const closeModal = () => setShowModal(false);
 
   function logout() {
@@ -59,9 +33,9 @@ export default function UserProfile({ user, setUser }: Authorized) {
         <ConfirmDialog onConfirm={logout} onCancel={closeModal} />
       </Modal>
       <section className={css['user-profile']}>
-        <ProfileHeader {...headerProps} />
-        <AsyncAwait {...{ isLoading: isInitial, error }}>
-          <PagedList<Post> {...feedProps}>
+        <ProfileHeader {...{ user, setUser }} />
+        <AsyncAwait {...{ isLoading, error }}>
+          <PagedList<Post> {...{ ...rest, config: 'profile' }}>
             {(post) => <PostItem {...post} onUserPage />}
           </PagedList>
         </AsyncAwait>

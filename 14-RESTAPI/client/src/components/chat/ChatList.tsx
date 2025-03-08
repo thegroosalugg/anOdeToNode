@@ -48,8 +48,7 @@ const Span = ({
 export default function ChatList({
          user, // from parent * 2
       setUser,
-        chats, // from hook   * 12
-     setChats,
+        chats, // from hook   * 11
         error,
      msgState,
       setMsgs,
@@ -242,7 +241,6 @@ export default function ChatList({
                                        user,
                                      isMenu,
                                        chat,
-                                   setChats,
                                   hasLoaded,
                                    msgState,
                                     setMsgs,

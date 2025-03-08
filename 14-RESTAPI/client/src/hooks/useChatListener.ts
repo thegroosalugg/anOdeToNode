@@ -14,7 +14,6 @@ type MsgState = Record<string, Msg[]>;
 
 export type ChatListener = {
       chats: Chat[];
-   setChats: Dispatch<SetStateAction<Chat[]>>;
    msgState: MsgState;
     setMsgs: Dispatch<SetStateAction<MsgState>>;
       error: FetchError | null;
@@ -73,11 +72,8 @@ export default function useChatListener(
 
     const initData = async () =>
       mountData(async () => {
-        await Promise.all([
-          reqChats({ url: 'chat/all' }),
-          getActiveChat()
-        ]);
-      }, 5);
+        await Promise.all([reqChats({ url: 'chat/all' }), getActiveChat()]);
+      });
 
     initData();
     setAlerts(count);
@@ -85,10 +81,10 @@ export default function useChatListener(
     const socket = socketRef.current;
     if (!socket) return;
     const location = isMenu ? 'MENU' : 'PAGE';
-    socket.on('connect', () => captainsLog([-100, 290], [`CHAT ${location} 💬: Socket connected`]));
+    socket.on('connect', () => captainsLog(290, [`CHAT ${location} 💬: Socket connected`]));
 
     socket.on(`chat:${user._id}:update`, async ({ chat, isNew, msg }) => {
-      captainsLog([-100, 285], [`CHAT ${location} 💬: Update, isNew ${isNew}`, chat]);
+      captainsLog(285, [`CHAT ${location} 💬: Update, isNew ${isNew}`, chat]);
 
       const isSender  = user._id === msg.sender;
       const isVisible = chat._id === activeId && (!isMenu || (isMenu && show));
@@ -108,7 +104,7 @@ export default function useChatListener(
     });
 
     socket.on(`chat:${user._id}:delete`, (deleted: Chat[]) => {
-      captainsLog([-100, 285], [`CHAT ${location} 💬: Deleted`, deleted]);
+      captainsLog(285, [`CHAT ${location} 💬: Deleted`, deleted]);
       const isDeleted = (id?: string) => deleted.some((chat) => chat._id === id);
       if (isDeleted(activeId)) setIsActive(null);
       setChats((prevChats) => prevChats.filter((chat) => !isDeleted(chat._id)));
@@ -119,7 +115,7 @@ export default function useChatListener(
     });
 
     socket.on(`chat:${user._id}:alerts`, (chat) => {
-      captainsLog([-100, 285], [`CHAT ${location} 💬: Alerts`, chat]);
+      captainsLog(285, [`CHAT ${location} 💬: Alerts`, chat]);
       if (chat._id === activeId) setIsActive(chat);
       updateChats(chat);
     });
@@ -164,7 +160,6 @@ export default function useChatListener(
     alerts,
     clearAlerts,
     chats,
-    setChats,
     error,
     msgState,
     setMsgs,

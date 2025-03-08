@@ -22,15 +22,15 @@ const getPosts: RequestHandler = async (req, res, next) => {
     }
 
     const docCount = await Post.find(query).countDocuments();
-    const    posts = await Post.find(query)
+    const    items = await Post.find(query)
       .skip((page - 1) * limit)
       .limit(limit)
       .populate('creator', _public)
       .sort({ createdAt: -1 });
 
-    if (!posts) return next(new AppError(404, 'Nothing posted yet'));
+    if (!items) return next(new AppError(404, 'Nothing posted yet'));
 
-    res.status(200).json({ posts, docCount });
+    res.status(200).json({ items, docCount });
   } catch (error) {
     next(new AppError(500, 'Unable to load posts', error));
   }

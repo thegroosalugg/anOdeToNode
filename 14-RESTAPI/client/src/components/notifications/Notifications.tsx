@@ -103,15 +103,15 @@ export default function Notifications({
 
   useEffect(() => {
     const initData = async () =>
-      mountData(async () => await reqReplyAlerts({ url: 'alerts/replies' }), 3);
+      mountData(async () => await reqReplyAlerts({ url: 'alerts/replies' }));
     initData();
 
     const socket = socketRef.current;
     if (!socket) return;
-    socket.on('connect', () => captainsLog([-100, 208], ['🧭 NAV: Socket connected']));
+    socket.on('connect', () => captainsLog(208, ['🧭 NAV: Socket connected']));
 
     socket.on(`peer:${user._id}:update`, async (updated) => {
-      captainsLog([-100, 212], ['🧭 NAV: SOCIAL', updated]);
+      captainsLog(212, ['🧭 NAV: SOCIAL', updated]);
       if (menu && activeTab < 2) {
         await markSocialsAsRead();
       } else {
@@ -120,7 +120,7 @@ export default function Notifications({
     });
 
     socket.on(`nav:${user._id}:reply`, async ({ action, reply }) => {
-      captainsLog([-100, 200], [`🧭 NAV: ${action} REPLY`, reply]);
+      captainsLog(200, [`🧭 NAV: ${action} REPLY`, reply]);
       if (menu && activeTab === 2) {
         await markRepliesAsRead();
       } else {

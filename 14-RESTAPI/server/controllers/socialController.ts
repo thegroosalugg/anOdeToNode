@@ -12,14 +12,14 @@ const getUsers: RequestHandler = async (req, res, next) => {
     const    limit = 15;
     const    page  = +(req.query.page || 1);
     const docCount = await User.find(query).countDocuments();
-    const    users = await User.find(query)
+    const    items = await User.find(query)
       .skip((page - 1) * limit)
       .limit(limit)
       .select(_public)
       .sort({ createdAt: -1 });
 
-    if (!users) return next(new AppError(404, 'No users found'));
-    res.status(200).json({ users, docCount });
+    if (!items) return next(new AppError(404, 'No users found'));
+    res.status(200).json({ items, docCount });
   } catch (error) {
     next(new AppError(500, 'unable to load users', error));
   }

@@ -1,10 +1,10 @@
 import useFetch from '@/hooks/useFetch';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import usePagination from '@/hooks/usePagination';
 import useSocket from '@/hooks/useSocket';
 import { FetchError } from '@/util/fetchData';
 import { Authorized } from './RootLayout';
-import { Pages, Paginated } from '@/components/pagination/Pagination';
 import Post from '@/models/Post';
 import Reply from '@/models/Reply';
 import AsyncAwait from '@/components/panel/AsyncAwait';
@@ -17,10 +17,6 @@ import ReplyItem from '@/components/post/ReplyItem';
 import PagedList from '@/components/pagination/PagedList';
 import { captainsLog } from '@/util/captainsLog';
 
-const initialData: Paginated<Reply, 'replies'> = {
-  docCount: 0,
-   replies: [],
-};
 
 export default function PostPage({ user, setUser }: Authorized) {
   const {
@@ -31,68 +27,51 @@ export default function PostPage({ user, setUser }: Authorized) {
          error,
       setError,
   } = useFetch<Post | null>();
-  const {
-          data: { docCount, replies },
-       setData: setReplies,
-    reqHandler: reqReplies,
-  } = useFetch(initialData);
-  const [modalState, setModalState] = useState('');
-  const [pages,           setPages] = useState<Pages>([1, 1]);
-  const [,                 current] = pages;
-  const   navigate = useNavigate();
   const { postId } = useParams();
-  const  socketRef = useSocket('POST');
-  const  isInitial = useRef(true);
-  const closeModal = () => setModalState('');
-  const replyProps = { type: 'reply' as const, items: replies, docCount, pages, setPages };
+  const {
+    fetcher: { setData: setReplies },
+     ...rest
+  } = usePagination<Reply>(`post/replies/${postId}`, !!postId);
+  const [modalState, setModalState] = useState('');
+  const   navigate  = useNavigate();
+  const   socketRef = useSocket('POST');
+  const   isInitial = useRef(true);
+  const  closeModal = () => setModalState('');
 
   useEffect(() => {
     const fetchPost = async () => {
-      if (postId) {
-        await reqPost({ url: `feed/find/${postId}` });
-        captainsLog([-100, 160], ['📬 POSTPAGE fetchPost']); // **LOGDATA
-      }
+      if (postId) await reqPost({ url: `feed/find/${postId}` });
     }
 
-    const fetchReplies = async () => {
-      if (postId) {
-        await reqReplies({ url: `post/replies/${postId}?page=${current}` });
-        captainsLog([-100, 170], ['📬 POSTPAGE fetchReplies']); // **LOGDATA
-      }
-    }
-
-    const initialData = async () => await Promise.all([fetchPost(), fetchReplies()]);
     if (isInitial.current) {
+      fetchPost();
       isInitial.current = false;
-      initialData();
-    } else {
-      fetchReplies();
     }
 
     const socket = socketRef.current;
     if (!socket) return;
-    socket.on('connect', () => captainsLog([-100, 164], ['📬 POSTPAGE: Socket connected']));
+    socket.on('connect', () => captainsLog(164, ['📬 POSTPAGE: Socket connected']));
 
     socket.on(`post:${postId}:reply:new`, (reply) => {
-      captainsLog([-100, 168], ['📬 POSTPAGE: NEW REPLY']);
+      captainsLog(168, ['📬 POSTPAGE: NEW REPLY', reply]);
       setTimeout(() => {
-        setReplies(({ docCount, replies }) => {
-          return { docCount: docCount + 1, replies: [reply, ...replies] };
+        setReplies(({ docCount, items }) => {
+          return { docCount: docCount + 1, items: [reply, ...items] };
         });
       }, 1200); // delay for other animations to act first
     });
 
     socket.on(`post:${postId}:reply:delete`, (deleted) => {
-      setReplies(({ docCount: prevCount, replies: prevReplies }) => {
-        const  replies = prevReplies.filter(({ _id }) => _id !== deleted._id);
+      setReplies(({ docCount: prevCount, items: prevReplies }) => {
+        const    items = prevReplies.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;
-        captainsLog([-100, 172], ['📬 POSTPAGE: REPLY DELETED', deleted]);
-        return { docCount, replies };
+        captainsLog(172, ['📬 POSTPAGE: REPLY DELETED', deleted]);
+        return { docCount, items };
       });
     });
 
     socket.on(`post:${postId}:update`, (post) => {
-      captainsLog([-100, 176], ['📬 POSTPAGE: POST UPDATED']);
+      captainsLog(176, ['📬 POSTPAGE: POST UPDATED', post]);
       setPost((prevPost) => {
         if (post) return { ...prevPost, ...post };
         return prevPost;
@@ -101,7 +80,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     });
 
     socket.on(`post:${postId}:delete`, (deleted) => {
-      captainsLog([-100, 180], ['POSTPAGE: POST DELETED']);
+      captainsLog(180, ['POSTPAGE: POST DELETED', deleted]);
       if (deleted.creator !== user._id) {
         setPost(null); // delete actions for viewers. Creator's state automatically set to null
         setError({ message: 'The post was deleted' } as FetchError); // creators redirected without msg
@@ -115,7 +94,7 @@ export default function PostPage({ user, setUser }: Authorized) {
       socket.off(`post:${postId}:update`);
       socket.off(`post:${postId}:delete`); // deletes the post (& all replies)
     };
-  }, [socketRef, user._id, postId, current, setError, setPost, reqPost, reqReplies, setReplies]);
+  }, [socketRef, user._id, postId, setError, setPost, reqPost, setReplies]);
 
   async function deletePost() {
     await reqPost(
@@ -150,7 +129,7 @@ export default function PostPage({ user, setUser }: Authorized) {
           <>
             <PostId {...{ post, user }} setModal={setModalState} />
             <SendMessage {...{ url: `post/reply/${post._id}`, setUser, isPost: true }} />
-            <PagedList<Reply> {...replyProps}>
+            <PagedList<Reply> {...{ ...rest, config: 'reply' }}>
               {(reply) => <ReplyItem {...reply} userId={user._id} />}
             </PagedList>
           </>

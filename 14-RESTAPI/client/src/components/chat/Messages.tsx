@@ -12,7 +12,6 @@ import css from './Messages.module.css';
 
 export default function Messages({
          chat,
-     setChats,
      msgState,
       setMsgs,
     hasLoaded,
@@ -20,10 +19,10 @@ export default function Messages({
          user,
        isMenu,
 }: {
-  user: User;
-  chat: Chat;
+       user: User;
+       chat: Chat;
   hasLoaded: MutableRefObject<Record<string, boolean>>;
-} & Pick<ChatListener, 'msgState' | 'setMsgs' | 'setChats' | 'isMenu' | 'clearAlerts'>) {
+} & Pick<ChatListener, 'msgState' | 'setMsgs' | 'isMenu' | 'clearAlerts'>) {
   const msgs = msgState[chat._id] || [];
   const { reqHandler, error } = useFetch<Msg[]>([]);
   const { isInitial, mountData } = useInitial();
@@ -47,13 +46,10 @@ export default function Messages({
       hasLoaded.current[chat._id] = true;
     };
 
-    const initData = async () => {
+    const initData = () => {
       mountData(async () => {
-        await Promise.all([
-          getMessages(),
-          markAlertsAsRead(),
-        ]);
-      }, 4);
+        await Promise.all([getMessages(), markAlertsAsRead()]);
+      });
     };
 
     if (isInitial) {
@@ -61,17 +57,14 @@ export default function Messages({
     } else {
       markAlertsAsRead();
     }
-
   }, [
     user._id,
     chat._id,
     chat.alerts,
     chat.isTemp,
-    msgs.length,
     isInitial,
     hasLoaded,
     clearAlerts,
-    setChats,
     mountData,
     reqHandler,
     setMsgs,

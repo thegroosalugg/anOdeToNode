@@ -1,12 +1,6 @@
-const getHSL = (hue: number) => {
-  const isGrey = hue < 0;
-  const h = isGrey ? 0 : hue % 360;
-  const s = isGrey ? 0 : 50;
-  const l = isGrey ? Math.min(Math.abs(hue), 100) : 50;
-  return `hsl(${h}, ${s}%, ${l}%);`;
-};
+const getHSL = (hue: number) => `hsl(${hue % 360}, 50%, 50%)`;
 
-export const captainsLog = ([hue1, hue2]: [number, number], data: unknown[]) => {
+export const captainsLog = (hue: number, data: unknown[]) => {
   const stack = new Error().stack?.split("\n")[2].match(/\/([^/]+)\.tsx?/i)?.[1] || 'Unknown';
   const  time = new Date().toLocaleTimeString([], {
       hour: '2-digit',
@@ -14,7 +8,8 @@ export const captainsLog = ([hue1, hue2]: [number, number], data: unknown[]) => 
     second: '2-digit',
     hour12: false,
   });
-  const style = `color: ${getHSL(hue1)}; background: ${getHSL(hue2)}; font-weight: bold;`;
+  
+  const style = `color: white; background: ${getHSL(hue)}; font-weight: bold;`;
 
   data.forEach((item) => {
     const type = Array.isArray(item) ? 'Array' : typeof item;
