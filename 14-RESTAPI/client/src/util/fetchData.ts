@@ -1,3 +1,4 @@
+import { captainsLog } from './captainsLog';
 import refreshToken from './refreshToken';
 
 export interface Fetch {
@@ -37,6 +38,9 @@ const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
       resData  = await response.json();
     }
   }
+
+  const [col, icon] = response.ok ? [268, '☑️'] : [360, '❌'];
+  captainsLog(col, [`${icon}${method}:${response.status}\n[${url}]`, resData]);
 
   if (!response.ok) {
     throw { ...resData, status: response.status } as FetchError;

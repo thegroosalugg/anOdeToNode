@@ -22,7 +22,10 @@ export default function FeedPage({ setUser }: Authorized) {
   useEffect(() => {
     const socket = socketRef.current;
     if (!socket) return;
-    socket.on('connect', () => captainsLog(80, ['🗞️ FEEDPAGE: Socket connected']));
+    
+    const col = 80;
+    const log = 'SOCKET 🗞️FEEDPAGE';
+    socket.on('connect', () => captainsLog(col, [`${log} [connected]`]));
 
     socket.on('post:update', (newPost) => {
       setData(({ docCount: prevCount, items: prevPosts }) => {
@@ -32,16 +35,16 @@ export default function FeedPage({ setUser }: Authorized) {
           : [newPost, ...prevPosts];
 
         const docCount = prevCount + 1;
-        captainsLog(85, ['🗞️ FEEDPAGE ' + (isFound ? 'EDIT' : 'NEW'), newPost]);
+        captainsLog(col, [`${log} :update, action: ${isFound ? 'Edit' : 'New'})`, newPost]);
         return { docCount, items };
       });
     });
 
     socket.on('post:delete', (deleted) => {
+      captainsLog(col, [`${log} :delete`, deleted]);
       setData(({ docCount: prevCount, items: prevPosts }) => {
         const    items = prevPosts.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;
-        captainsLog(90, ['🗞️ FEEDPAGE DELETED', deleted]);
         return { docCount, items };
       });
     });

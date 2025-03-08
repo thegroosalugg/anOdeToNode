@@ -13,19 +13,17 @@ const useFetch = <T>(initialData: T = null as T, loading = false) => {
   const [    error,     setError] = useState<FetchError | null>(null);
 
   const reqHandler = useCallback(
-    async (params: Fetch, config?: ReqConfig<T>): Promise<T | void> => {
+    async (params: Fetch, config: ReqConfig<T> = {}): Promise<T | void> => {
       if (params.method) console.clear(); // **LOGDATA
-      const { onSuccess, onError } = config || {};
+      const { onSuccess, onError } = config;
       setIsLoading(true);
       try {
         const response: T = await fetchData(params);
         setData(response);
-        captainsLog(260, [`☑️ TRY ${params.url}`, response]); // **LOGDATA
         if (onSuccess) onSuccess(response);
         return response;
       } catch (err) {
         const fetchErr = err as FetchError;
-        captainsLog(359, [`❌ CATCH ${params.url}`, fetchErr]); // **LOGDATA
         setError(fetchErr);
         if (onError) onError(fetchErr); // i.e. setData of other states
       } finally {

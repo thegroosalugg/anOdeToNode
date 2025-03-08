@@ -11,7 +11,6 @@ import PagedList from '../pagination/PagedList';
 import PostItem from '../post/PostItem';
 import css from './UserProfile.module.css';
 
-
 export default function UserProfile({ user, setUser }: Authorized) {
   const {
     fetcher: { isLoading, error },

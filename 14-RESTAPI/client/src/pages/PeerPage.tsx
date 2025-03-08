@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import usePagination from '@/hooks/usePagination';
 import { Authorized } from './RootLayout';

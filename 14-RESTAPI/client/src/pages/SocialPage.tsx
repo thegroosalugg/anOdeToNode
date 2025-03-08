@@ -19,11 +19,14 @@ export default function SocialPage({ user }: Authorized) {
   useEffect(() => {
     const socket = socketRef.current;
     if (!socket) return;
-    socket.on('connect', () => captainsLog(235, ['⚽ SOCIALPAGE: Socket connected']));
+
+    const col = 110;
+    const log = 'SOCKET ⚽SOCIALPAGE';
+    socket.on('connect', () => captainsLog(col, [`${log} [connected]`]));
 
     socket.on('user:new', (newUser) => {
       setData(({ docCount, items }) => {
-        captainsLog(230, ['⚽ SOCIALPAGE NEW USER', newUser]); // **LOGDATA
+        captainsLog(col, [`${log} :user:new`, newUser]); // **LOGDATA
         return { docCount: docCount + 1, items: [newUser, ...items] };
       });
     });

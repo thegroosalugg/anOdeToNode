@@ -35,7 +35,7 @@ export default function Notifications({
   const [activeTab,         setActiveTab] = useState(0);
   const { deferring,            deferFn } = useDebounce();
   const              isInitial            = useRef(true);
-  const              socketRef            = useSocket('ALERTS');
+  const              socketRef            = useSocket('NAV');
   const               navigate            = useNavigate();
 
   const { friends } = user;
@@ -101,6 +101,9 @@ export default function Notifications({
   };
 
   useEffect(() => {
+    const socket = socketRef.current;
+    if (!socket) return;
+
     const initData = async () => {
       if (isInitial.current) {
         await reqReplyAlerts({ url: 'alerts/replies' });
@@ -110,12 +113,12 @@ export default function Notifications({
 
     initData();
 
-    const socket = socketRef.current;
-    if (!socket) return;
-    socket.on('connect', () => captainsLog(208, ['🧭 NAV: Socket connected']));
+    const log = 'SOCKET: 🧭NAV';
+    const col = 30;
+    socket.on('connect', () => captainsLog(col, [`${log} [connected]`]));
 
     socket.on(`peer:${user._id}:update`, async (updated) => {
-      captainsLog(212, ['🧭 NAV: SOCIAL', updated]);
+      captainsLog(col, [`${log} :update`, updated]);
       if (menu && activeTab < 2) {
         await markSocialsAsRead();
       } else {
@@ -124,7 +127,7 @@ export default function Notifications({
     });
 
     socket.on(`nav:${user._id}:reply`, async ({ action, reply }) => {
-      captainsLog(200, [`🧭 NAV: ${action} REPLY`, reply]);
+      captainsLog(col, [`${log} :reply, action: ${action}`, reply]);
       if (menu && activeTab === 2) {
         await markRepliesAsRead();
       } else {

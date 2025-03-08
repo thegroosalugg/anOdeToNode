@@ -39,6 +39,9 @@ export default function PostPage({ user, setUser }: Authorized) {
   const  closeModal = () => setModalState('');
 
   useEffect(() => {
+    const socket = socketRef.current;
+    if (!socket) return;
+
     const fetchPost = async () => {
       if (postId && isInitial.current) {
         await reqPost({ url: `feed/find/${postId}` });
@@ -48,12 +51,12 @@ export default function PostPage({ user, setUser }: Authorized) {
 
     fetchPost();
 
-    const socket = socketRef.current;
-    if (!socket) return;
-    socket.on('connect', () => captainsLog(164, ['📬 POSTPAGE: Socket connected']));
+    const col = 324;
+    const log = 'SOCKET: 📬POSTPAGE';
+    socket.on('connect', () => captainsLog(col, [`${log} [connected]`]));
 
     socket.on(`post:${postId}:reply:new`, (reply) => {
-      captainsLog(168, ['📬 POSTPAGE: NEW REPLY', reply]);
+      captainsLog(col, [`${log} :reply:new`, reply]);
       setTimeout(() => {
         setReplies(({ docCount, items }) => {
           return { docCount: docCount + 1, items: [reply, ...items] };
@@ -62,16 +65,16 @@ export default function PostPage({ user, setUser }: Authorized) {
     });
 
     socket.on(`post:${postId}:reply:delete`, (deleted) => {
+      captainsLog(col, [`${log} :reply:delete`, deleted]);
       setReplies(({ docCount: prevCount, items: prevReplies }) => {
         const    items = prevReplies.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;
-        captainsLog(172, ['📬 POSTPAGE: REPLY DELETED', deleted]);
         return { docCount, items };
       });
     });
 
     socket.on(`post:${postId}:update`, (post) => {
-      captainsLog(176, ['📬 POSTPAGE: POST UPDATED', post]);
+      captainsLog(col, [`${log} :post:update`, post]);
       setPost((prevPost) => {
         if (post) return { ...prevPost, ...post };
         return prevPost;
@@ -80,7 +83,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     });
 
     socket.on(`post:${postId}:delete`, (deleted) => {
-      captainsLog(180, ['POSTPAGE: POST DELETED', deleted]);
+      captainsLog(col, [`${log} :post:delete`, deleted]);
       if (deleted.creator !== user._id) {
         setPost(null); // delete actions for viewers. Creator's state automatically set to null
         setError({ message: 'The post was deleted' } as FetchError); // creators redirected without msg
