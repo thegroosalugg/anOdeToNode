@@ -1,10 +1,9 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import useSocket from '@/hooks/useSocket';
-import useInitial from '@/hooks/useInitial';
 import useDebounce from '@/hooks/useDebounce';
 import { FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
@@ -35,7 +34,7 @@ export default function Notifications({
   const [menu,                  showMenu] = useState(false);
   const [activeTab,         setActiveTab] = useState(0);
   const { deferring,            deferFn } = useDebounce();
-  const { isInitial, mountData, setInit } = useInitial();
+  const              isInitial            = useRef(true);
   const              socketRef            = useSocket('ALERTS');
   const               navigate            = useNavigate();
 
@@ -79,11 +78,11 @@ export default function Notifications({
   };
 
   const openMenu = async () => {
-    setInit(true);
+    isInitial.current = true;
     deferFn(async () => {
       showMenu(true);
       await handleAlerts();
-      setInit(false);
+      isInitial.current = false;
     }, 1500);
   };
 
@@ -102,8 +101,13 @@ export default function Notifications({
   };
 
   useEffect(() => {
-    const initData = async () =>
-      mountData(async () => await reqReplyAlerts({ url: 'alerts/replies' }));
+    const initData = async () => {
+      if (isInitial.current) {
+        await reqReplyAlerts({ url: 'alerts/replies' });
+        isInitial.current = false;
+      }
+    };
+
     initData();
 
     const socket = socketRef.current;
@@ -142,7 +146,6 @@ export default function Notifications({
     menu,
     activeTab,
     user._id,
-    mountData,
     reqReplyAlerts,
     markSocialsAsRead,
     markRepliesAsRead,
@@ -167,7 +170,7 @@ export default function Notifications({
             </motion.button>
           ))}
         </section>
-        <AsyncAwait {...{ isLoading: isInitial, error }}>
+        <AsyncAwait {...{ isLoading: isInitial.current, error }}>
           <AnimatePresence mode='wait'>
             {activeTab === 2 ? (
               <ReplyAlerts key='replies' {...{ replies, setReplies, navTo, onError }} />

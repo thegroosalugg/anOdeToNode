@@ -40,13 +40,13 @@ export default function PostPage({ user, setUser }: Authorized) {
 
   useEffect(() => {
     const fetchPost = async () => {
-      if (postId) await reqPost({ url: `feed/find/${postId}` });
+      if (postId && isInitial.current) {
+        await reqPost({ url: `feed/find/${postId}` });
+        isInitial.current = false;
+      }
     }
 
-    if (isInitial.current) {
-      fetchPost();
-      isInitial.current = false;
-    }
+    fetchPost();
 
     const socket = socketRef.current;
     if (!socket) return;

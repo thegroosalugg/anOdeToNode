@@ -1,8 +1,7 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useFetch from './useFetch';
 import useSocket from './useSocket';
-import useInitial from './useInitial';
 import useDebounce from './useDebounce';
 import { FetchError } from '@/util/fetchData';
 import User from '@/models/User';
@@ -36,15 +35,15 @@ export default function useChatListener(
     reqHandler: reqChats,
          error,
   } = useFetch<Chat[]>([]);
-  const { reqHandler:       reqChat } = useFetch<Chat>();
-  const [isActive,       setIsActive] = useState<Chat | null>(null);
-  const [msgState,           setMsgs] = useState<Record<string, Msg[]>>({});
-  const [alerts,           setAlerts] = useState(0);
-  const { deferring,        deferFn } = useDebounce();
-  const { isInitial,      mountData } = useInitial();
-  const {          userId           } = useParams();
-  const { _id: activeId,     isTemp } = isActive ?? {};
-  const         socketRef             = useSocket('CHAT');
+  const {  reqHandler: reqChat  } = useFetch<Chat>();
+  const [isActive,   setIsActive] = useState<Chat | null>(null);
+  const [msgState,       setMsgs] = useState<Record<string, Msg[]>>({});
+  const [alerts,       setAlerts] = useState(0);
+  const { deferring,    deferFn } = useDebounce();
+  const {        userId         } = useParams();
+  const { _id: activeId, isTemp } = isActive ?? {};
+  const         isInitial         = useRef(true);
+  const         socketRef         = useSocket('CHAT');
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
 
   const updateChats = useCallback(
@@ -70,10 +69,12 @@ export default function useChatListener(
       }
     };
 
-    const initData = async () =>
-      mountData(async () => {
+    const initData = async () => {
+      if (isInitial.current) {
         await Promise.all([reqChats({ url: 'chat/all' }), getActiveChat()]);
-      });
+        isInitial.current = false;
+      }
+    };
 
     initData();
     setAlerts(count);
@@ -135,7 +136,6 @@ export default function useChatListener(
     isTemp,
     isMenu,
     show,
-    mountData,
     reqChat,
     reqChats,
     setChats,
@@ -165,7 +165,7 @@ export default function useChatListener(
     setMsgs,
     isMenu,
     isActive,
-    isInitial,
+    isInitial: isInitial.current,
     deferring,
     deferFn,
     expand,
