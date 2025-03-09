@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import useSocket from '@/hooks/useSocket';
 import usePagination from '@/hooks/usePagination';
@@ -14,16 +14,19 @@ import PostItem from '@/components/post/PostItem';
 
 export default function PeerPage({ user, setUser }: Authorized) {
   const { data: peer, isLoading, error, reqHandler } = useFetch<User | null>();
-  const {      userId      } = useParams();
+  const { userId } = useParams();
   const {
     fetcher: { setData },
    ...rest
   } = usePagination<Post>(`social/posts/${userId}`, !!userId);
-  const  navigate = useNavigate();
-  const isInitial = useRef(true);
-  const socketRef = useSocket('PEER');
+  const   navigate   = useNavigate();
+  const  isInitial   = useRef(true);
+  const  socketRef   = useSocket('PEER');
+  const { pathname } = useLocation();
 
   useEffect(() => {
+    if (!pathname.startsWith('/user')) return; // cancel effects on dismount (AnimatePresense)
+
     if (userId === user._id) {
       navigate('/');
       return;
@@ -41,8 +44,10 @@ export default function PeerPage({ user, setUser }: Authorized) {
       isInitial.current = false;
     }
 
+    if (!peer?._id) return;
+
     const logger = new Logger('feed');
-    socket.on('connect', () => logger.connect());
+    if (socket.connected) logger.connect();
 
     socket.on(`post:${peer?._id}:update`, ({ post, isNew }) => {
       logger.event(`update, action: ${isNew ? 'New' : 'Edit'}`, post);
@@ -66,11 +71,13 @@ export default function PeerPage({ user, setUser }: Authorized) {
     });
 
     return () => {
-      socket.off('connect');
-      socket.off(`post:${peer?._id}:update`);
-      socket.off(`post:${peer?._id}:delete`);
+      if (socket.connected) {
+        socket.off(`post:${peer?._id}:update`);
+        socket.off(`post:${peer?._id}:delete`);
+        logger.disconnect();
+      }
     }
-  }, [socketRef, userId, user?._id, peer?._id, setData, reqHandler, navigate]);
+  }, [pathname, socketRef, userId, user?._id, peer?._id, setData, reqHandler, navigate]);
 
   return (
     <AsyncAwait {...{ isLoading, error }}>

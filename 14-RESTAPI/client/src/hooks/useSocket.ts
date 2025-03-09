@@ -13,7 +13,7 @@ export default function useSocket(msg: string) {
       if (socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current = null;
-        captainsLog(360, [`SOCKET: ${msg} [disconnect]`]); // **LOGDATA
+        captainsLog(360, [`SOCKET: ${msg} [socket off]`]); // **LOGDATA
       }
     };
   }, [msg]);

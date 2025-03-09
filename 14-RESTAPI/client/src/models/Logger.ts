@@ -21,11 +21,20 @@ export default class Logger {
      this.prefix = `SOCKET: ${config.emoji}${key.toUpperCase()}`;
   }
 
-  connect() {
-    captainsLog(this.color, [`${this.prefix} [connected]`]);
+  private connection(off?: 'off') {
+    const [color, msg] = off ? [20, 'disconnect'] : [this.color, 'connected'];
+    captainsLog(color, [`${this.prefix} [${msg}]`]);
   }
 
-  event(message: string, data?: unknown) {
+  connect() {
+    this.connection();
+  }
+
+  disconnect() {
+    this.connection('off');
+  }
+
+  event(message: string, data: unknown) {
     captainsLog(this.color, [`${this.prefix} :${message}`, data]);
   }
 }
