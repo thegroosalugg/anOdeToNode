@@ -43,7 +43,7 @@ export default function useChatListener(
   const {        userId         } = useParams();
   const { _id: activeId, isTemp } = isActive ?? {};
   const         isInitial         = useRef(true);
-  const         socketRef         = useSocket('CHAT');
+  const         socketRef         = useSocket(isMenu ? 'menu' : 'chat');
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
 
   const updateChats = useCallback(
@@ -127,6 +127,7 @@ export default function useChatListener(
       socket.off(`chat:${user._id}:update`);
       socket.off(`chat:${user._id}:delete`);
       socket.off(`chat:${user._id}:alerts`);
+      logger.off();
     };
   }, [
     socketRef,

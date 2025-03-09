@@ -1,22 +1,23 @@
 import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { BASE_URL } from '@/util/fetchData';
-import { captainsLog } from '@/util/captainsLog';
+import Logger, { LogConfig } from '@/models/Logger';
 
-export default function useSocket(msg: string) {
+export default function useSocket(config: LogConfig) {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
     socketRef.current = io(BASE_URL);
+    const logger = new Logger(config);
 
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current = null;
-        captainsLog(360, [`SOCKET: ${msg} [socket off]`]); // **LOGDATA
+        logger.disconnect();
       }
     };
-  }, [msg]);
+  }, [config]);
 
   return socketRef;
 }

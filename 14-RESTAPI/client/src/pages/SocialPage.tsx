@@ -14,7 +14,7 @@ export default function SocialPage({ user }: Authorized) {
     fetcher: { setData, isLoading, error },
      ...rest
   } = usePagination<User>('social/users');
-  const socketRef = useSocket('SOCIAL');
+  const socketRef = useSocket('social');
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -34,6 +34,7 @@ export default function SocialPage({ user }: Authorized) {
     return () => {
       socket.off('connect');
       socket.off('user:new');
+      logger.off();
     }
   }, [socketRef, setData]);
 

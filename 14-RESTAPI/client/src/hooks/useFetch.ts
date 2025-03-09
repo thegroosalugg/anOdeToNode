@@ -1,4 +1,3 @@
-import { captainsLog } from '@/util/captainsLog';
 import fetchData, { Fetch, FetchError } from '@/util/fetchData';
 import { useState, useCallback } from 'react';
 

@@ -34,13 +34,13 @@ export default function PostPage({ user, setUser }: Authorized) {
   } = usePagination<Reply>(`post/replies/${postId}`, !!postId);
   const [modalState, setModalState] = useState('');
   const   navigate  = useNavigate();
-  const   socketRef = useSocket('POST');
+  const   socketRef = useSocket('post');
   const   isInitial = useRef(true);
   const  closeModal = () => setModalState('');
 
   useEffect(() => {
     const socket = socketRef.current;
-    if (!socket) return;
+    if (!socket || !postId) return;
 
     const fetchPost = async () => {
       if (postId && isInitial.current) {
@@ -95,6 +95,7 @@ export default function PostPage({ user, setUser }: Authorized) {
       socket.off(`post:${postId}:reply:delete`); // deletes a reply to post
       socket.off(`post:${postId}:update`);
       socket.off(`post:${postId}:delete`); // deletes the post (& all replies)
+      logger.off();
     };
   }, [socketRef, user._id, postId, setError, setPost, reqPost, setReplies]);
 

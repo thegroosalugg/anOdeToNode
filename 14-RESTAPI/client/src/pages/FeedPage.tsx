@@ -16,7 +16,7 @@ export default function FeedPage({ setUser }: Authorized) {
     fetcher: { setData, isLoading, error },
      ...rest
   } = usePagination<Post>('feed/posts');
-  const        socketRef          = useSocket('FEED');
+  const        socketRef          = useSocket('feed');
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -51,6 +51,7 @@ export default function FeedPage({ setUser }: Authorized) {
       socket.off('connect');
       socket.off('post:update');
       socket.off('post:delete');
+      logger.off();
     };
   }, [socketRef, setData]);
 

@@ -35,7 +35,7 @@ export default function Notifications({
   const [activeTab,         setActiveTab] = useState(0);
   const { deferring,            deferFn } = useDebounce();
   const              isInitial            = useRef(true);
-  const              socketRef            = useSocket('NAV');
+  const              socketRef            = useSocket('alerts');
   const               navigate            = useNavigate();
 
   const { friends } = user;
@@ -113,7 +113,7 @@ export default function Notifications({
 
     initData();
 
-    const logger = new Logger('nav');
+    const logger = new Logger('alerts');
     socket.on('connect', () => logger.connect());
 
     socket.on(`peer:${user._id}:update`, async (updated) => {
@@ -142,6 +142,7 @@ export default function Notifications({
       socket.off('connect');
       socket.off(`peer:${user._id}:update`);
       socket.off(`nav:${user._id}:reply`);
+      logger.off();
     };
   }, [
     socketRef,

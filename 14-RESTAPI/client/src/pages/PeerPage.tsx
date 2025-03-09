@@ -21,7 +21,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
   } = usePagination<Post>(`social/posts/${userId}`, !!userId);
   const   navigate   = useNavigate();
   const  isInitial   = useRef(true);
-  const  socketRef   = useSocket('PEER');
+  const  socketRef   = useSocket('user');
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
 
     if (!peer?._id) return;
 
-    const logger = new Logger('feed');
+    const logger = new Logger('user');
     if (socket.connected) logger.connect();
 
     socket.on(`post:${peer?._id}:update`, ({ post, isNew }) => {
@@ -74,7 +74,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
       if (socket.connected) {
         socket.off(`post:${peer?._id}:update`);
         socket.off(`post:${peer?._id}:delete`);
-        logger.disconnect();
+        logger.off();
       }
     }
   }, [pathname, socketRef, userId, user?._id, peer?._id, setData, reqHandler, navigate]);
