@@ -19,9 +19,9 @@ export default function PeerPage({ user, setUser }: Authorized) {
     fetcher: { setData },
    ...rest
   } = usePagination<Post>(`social/posts/${userId}`, !!userId);
-  const       navigate       = useNavigate();
-  const      isInitial       = useRef(true);
-  const      socketRef       = useSocket('PEER');
+  const  navigate = useNavigate();
+  const isInitial = useRef(true);
+  const socketRef = useSocket('PEER');
 
   useEffect(() => {
     if (userId === user._id) {
@@ -44,15 +44,14 @@ export default function PeerPage({ user, setUser }: Authorized) {
     const logger = new Logger('feed');
     socket.on('connect', () => logger.connect());
 
-    socket.on(`post:${peer?._id}:update`, (newPost) => {
+    socket.on(`post:${peer?._id}:update`, ({ post, isNew }) => {
+      logger.event(`update, action: ${isNew ? 'New' : 'Edit'}`, post);
       setData(({ docCount: prevCount, items: prevPosts }) => {
-        const isFound = prevPosts.some(({ _id }) => _id === newPost._id);
-        const   items = isFound
-          ? prevPosts.map((oldPost) => (newPost._id === oldPost._id ? newPost : oldPost))
-          : [newPost, ...prevPosts];
+        const items = isNew
+          ? [post, ...prevPosts]
+          : prevPosts.map((prev) => (post._id === prev._id ? post : prev));
 
-        const docCount = prevCount + 1;
-        logger.event(`update, action: ${isFound ? 'Edit' : 'New'})`, newPost);
+        const docCount = prevCount + (isNew ? 1 : 0);
         return { docCount, items };
       });
     });

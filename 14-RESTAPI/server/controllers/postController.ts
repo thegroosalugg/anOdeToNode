@@ -28,8 +28,9 @@ const newPost: RequestHandler = async (req, res, next) => {
     user.set({ email: 'hidden', friends: [] });
     post.creator = user;
 
-    io.emit('post:update', post); // emits to main feed page
-    io.emit(`post:${user._id}:update`, post); // emits to post creator's page
+    const data = { post, isNew: true };
+    io.emit('post:update', data); // emits to main feed page
+    io.emit(`post:${user._id}:update`, data); // emits to post creator's page
     res.status(201).json(post);
   } catch (error) {
     next(new AppError(500, 'Unable to submit your post', error));
@@ -63,9 +64,10 @@ const editPost: RequestHandler = async (req, res, next) => {
 
     await post.save();
     await post.populate('creator', '-email -password');
-    io.emit('post:update', post); // emits to main feed page
-    io.emit(`post:${postId}:update`, post); // emits to post Id page
-    io.emit(`post:${user._id}:update`, post); // emits to post creator's page
+    const data = { post, isNew: false };
+    io.emit('post:update', data); // emits to main feed page
+    io.emit(`post:${user._id}:update`, data); // emits to post creator's page
+    io.emit(`post:${postId}:update`, post); // emits to post Id page, isNew not required here
     res.status(200).json(post);
   } catch (error) {
     next(new AppError(500, 'Unable to update your post', error));
