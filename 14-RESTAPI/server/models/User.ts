@@ -28,7 +28,7 @@ export interface IUser {
 }
 
 interface IUserMethods {
-  // TBC
+  isFriend: (userId: string | Types.ObjectId) => boolean;
 }
 
 type UserModel = Model<IUser, {}, IUserMethods>;
@@ -61,5 +61,10 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
     },
   { timestamps: true }
 );
+
+userSchema.methods.isFriend = function (peerId: string | Types.ObjectId) {
+  if (!Types.ObjectId.isValid(peerId)) return false;
+  return this.friends.some(({ user, accepted }) => user.equals(peerId) && accepted);
+};
 
 export default model<IUser, UserModel>('User', userSchema);

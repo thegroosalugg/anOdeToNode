@@ -37,12 +37,12 @@ const getUserById: RequestHandler = async (req, res, next) => {
 };
 
 const friendRequest: RequestHandler = async (req, res, next) => {
-  if (!req.user) return next(new AppError(403, 'Something went wrong', devErr));
+  const user = req.user;
+  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
 
   try {
     const { userId, action } = req.params;
     const peer = await User.findById(userId);
-    const user = req.user;
 
     if (!peer) return next(new AppError(404, 'User not found'));
 

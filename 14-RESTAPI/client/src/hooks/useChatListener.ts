@@ -36,7 +36,10 @@ export default function useChatListener(
     reqHandler: reqChats,
          error,
   } = useFetch<Chat[]>([]);
-  const {      reqHandler: reqChat      } = useFetch<Chat>();
+  const {
+    reqHandler: reqChat,
+         error: findChatErr
+  } = useFetch<Chat>();
   const [isActive,           setIsActive] = useState<Chat | null>(null);
   const [msgState,               setMsgs] = useState<Record<string, Msg[]>>({});
   const [alerts,               setAlerts] = useState(0);
@@ -176,7 +179,7 @@ export default function useChatListener(
     alerts,
     clearAlerts,
     chats,
-    error,
+    error: error || findChatErr, // findChatErr is mostly null. Only on initial find chat render
     msgState,
     setMsgs,
     isMenu,
