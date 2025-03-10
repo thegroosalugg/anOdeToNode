@@ -51,7 +51,6 @@ export default function FeedPage({ setUser }: Authorized) {
       socket.off('connect');
       socket.off('post:update');
       socket.off('post:delete');
-      logger.off();
     };
   }, [socketRef, setData]);
 

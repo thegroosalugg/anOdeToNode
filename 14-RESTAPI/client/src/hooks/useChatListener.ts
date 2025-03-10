@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import useFetch from './useFetch';
 import useSocket from './useSocket';
 import useDebounce from './useDebounce';
+import useDepedencyTracker from './useDepedencyTracker';
 import { FetchError } from '@/util/fetchData';
 import User from '@/models/User';
 import Chat from '@/models/Chat';
@@ -35,15 +36,16 @@ export default function useChatListener(
     reqHandler: reqChats,
          error,
   } = useFetch<Chat[]>([]);
-  const {  reqHandler: reqChat  } = useFetch<Chat>();
-  const [isActive,   setIsActive] = useState<Chat | null>(null);
-  const [msgState,       setMsgs] = useState<Record<string, Msg[]>>({});
-  const [alerts,       setAlerts] = useState(0);
-  const { deferring,    deferFn } = useDebounce();
-  const {        userId         } = useParams();
-  const { _id: activeId, isTemp } = isActive ?? {};
-  const         isInitial         = useRef(true);
-  const         socketRef         = useSocket(isMenu ? 'menu' : 'chat');
+  const {      reqHandler: reqChat      } = useFetch<Chat>();
+  const [isActive,           setIsActive] = useState<Chat | null>(null);
+  const [msgState,               setMsgs] = useState<Record<string, Msg[]>>({});
+  const [alerts,               setAlerts] = useState(0);
+  const { deferring,            deferFn } = useDebounce();
+  const {            userId             } = useParams();
+  const { _id: activeId, isTemp = false } = isActive ?? {};
+  const              config               = isMenu ? 'menu' : 'chat';
+  const             isInitial             = useRef(true);
+  const             socketRef             = useSocket(config);
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
 
   const updateChats = useCallback(
@@ -58,6 +60,18 @@ export default function useChatListener(
   const clearAlerts = useCallback(async (id: string) => {
     await reqChat({ url: `alerts/chat/${id}` });
   }, [reqChat]);
+
+  useDepedencyTracker(config, {
+       config,
+    socketRef,
+      reqUser: user._id,
+       userId,
+        count,
+     activeId,
+       isTemp,
+       isMenu,
+         show,
+  });
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -82,7 +96,7 @@ export default function useChatListener(
     initData();
     setAlerts(count);
 
-    const logger = new Logger(isMenu ? 'menu' : 'chat');
+    const logger = new Logger(config);
     socket.on('connect', () => logger.connect());
 
     socket.on(`chat:${user._id}:update`, async ({ chat, isNew, msg }) => {
@@ -127,9 +141,9 @@ export default function useChatListener(
       socket.off(`chat:${user._id}:update`);
       socket.off(`chat:${user._id}:delete`);
       socket.off(`chat:${user._id}:alerts`);
-      logger.off();
     };
   }, [
+    config,
     socketRef,
     user._id,
     userId,

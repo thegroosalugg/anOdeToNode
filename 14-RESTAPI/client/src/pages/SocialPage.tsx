@@ -34,7 +34,6 @@ export default function SocialPage({ user }: Authorized) {
     return () => {
       socket.off('connect');
       socket.off('user:new');
-      logger.off();
     }
   }, [socketRef, setData]);
 

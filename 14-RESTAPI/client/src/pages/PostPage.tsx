@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import usePagination from '@/hooks/usePagination';
 import useSocket from '@/hooks/useSocket';
+import useDepedencyTracker from '@/hooks/useDepedencyTracker';
 import { FetchError } from '@/util/fetchData';
 import { Authorized } from './RootLayout';
 import Post from '@/models/Post';
@@ -37,6 +38,8 @@ export default function PostPage({ user, setUser }: Authorized) {
   const   socketRef = useSocket('post');
   const   isInitial = useRef(true);
   const  closeModal = () => setModalState('');
+
+  useDepedencyTracker('post', { socketRef, reqUser: user._id, postId });
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -95,7 +98,6 @@ export default function PostPage({ user, setUser }: Authorized) {
       socket.off(`post:${postId}:reply:delete`); // deletes a reply to post
       socket.off(`post:${postId}:update`);
       socket.off(`post:${postId}:delete`); // deletes the post (& all replies)
-      logger.off();
     };
   }, [socketRef, user._id, postId, setError, setPost, reqPost, setReplies]);
 

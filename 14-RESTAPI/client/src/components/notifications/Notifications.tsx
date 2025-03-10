@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import useSocket from '@/hooks/useSocket';
 import useDebounce from '@/hooks/useDebounce';
+import useDepedencyTracker from '@/hooks/useDepedencyTracker';
 import { FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
@@ -37,10 +38,8 @@ export default function Notifications({
   const              isInitial            = useRef(true);
   const              socketRef            = useSocket('alerts');
   const               navigate            = useNavigate();
-
-  const { friends } = user;
-
-  const [inbound, outbound] = friends.reduce(
+  const {             friends           } = user;
+  const [inbound,               outbound] = friends.reduce(
     ([inTotal, outTotal], { initiated, accepted, meta }) => {
       if (!meta.read) {
         if (           !initiated)  inTotal += 1;
@@ -100,6 +99,8 @@ export default function Notifications({
     if (err.status === 401) setUser(null);
   };
 
+  useDepedencyTracker('alerts', { socketRef, menu, activeTab, reqUser: user._id });
+
   useEffect(() => {
     const socket = socketRef.current;
     if (!socket) return;
@@ -142,7 +143,6 @@ export default function Notifications({
       socket.off('connect');
       socket.off(`peer:${user._id}:update`);
       socket.off(`nav:${user._id}:reply`);
-      logger.off();
     };
   }, [
     socketRef,

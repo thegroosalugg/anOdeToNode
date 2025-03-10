@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import useSocket from '@/hooks/useSocket';
 import usePagination from '@/hooks/usePagination';
+import useDepedencyTracker from '@/hooks/useDepedencyTracker';
 import { Authorized } from './RootLayout';
 import User from '@/models/User';
 import Post from '@/models/Post';
@@ -21,8 +22,16 @@ export default function PeerPage({ user, setUser }: Authorized) {
   } = usePagination<Post>(`social/posts/${userId}`, !!userId);
   const   navigate   = useNavigate();
   const  isInitial   = useRef(true);
-  const  socketRef   = useSocket('user');
+  const  socketRef   = useSocket('peer');
   const { pathname } = useLocation();
+
+  useDepedencyTracker('peer', {
+     pathname,
+    socketRef,
+       userId,
+      reqUser: user._id,
+         peer: peer?._id,
+  });
 
   useEffect(() => {
     if (!pathname.startsWith('/user')) return; // cancel effects on dismount (AnimatePresense)
@@ -46,7 +55,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
 
     if (!peer?._id) return;
 
-    const logger = new Logger('user');
+    const logger = new Logger('peer');
     if (socket.connected) logger.connect();
 
     socket.on(`post:${peer?._id}:update`, ({ post, isNew }) => {
@@ -74,10 +83,9 @@ export default function PeerPage({ user, setUser }: Authorized) {
       if (socket.connected) {
         socket.off(`post:${peer?._id}:update`);
         socket.off(`post:${peer?._id}:delete`);
-        logger.off();
       }
     }
-  }, [pathname, socketRef, userId, user?._id, peer?._id, setData, reqHandler, navigate]);
+  }, [pathname, socketRef, userId, user._id, peer?._id, setData, reqHandler, navigate]);
 
   return (
     <AsyncAwait {...{ isLoading, error }}>
