@@ -50,8 +50,8 @@ export default function PostId({
           {creator?.name    || 'Account'}
           {' '}
           {creator?.surname || 'deleted'}
-          <ProfilePic user={creator} />
         </span>
+        <ProfilePic user={creator} />
       </motion.h1>
       <motion.time variants={variants}>
         {timeAgo(updatedAt)}
