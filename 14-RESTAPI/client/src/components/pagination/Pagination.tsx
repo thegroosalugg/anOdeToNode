@@ -1,24 +1,9 @@
+import { Fragment } from 'react';
 import { motion, LayoutGroup } from 'motion/react';
-import { Dispatch, Fragment, SetStateAction } from 'react';
-import type { Debounce } from '@/hooks/useDebounce';
-import type { PagedConfig } from './PagedList';
+import { Paginated } from '@/hooks/usePagination';
 import { LIST_CONFIG } from './pagedListConfig';
+import { PagedConfig } from './PagedList';
 import css from './Pagination.module.css';
-
-export type Pages = [previous: number, current: number];
-
-export type PageHook = {
-     pages: Pages;
-  setPages: Dispatch<SetStateAction<Pages>>;
-}
-// T: generic type (string/num/Model etc.)
-// K: declares a dynamic key. Extends: declares key type. Named 'data' if undeclared
-export type Paginated< T = null, K extends string = 'data' > = {
-  docCount: number;
-} & {
-  // combines fixed & dynamic Type. Dynamic types must be declared solo
-  [key in K]: T[];
-};
 
 const Ellipsis = ({ chars, color }: { chars: string, color: string }) => (
   <motion.span
@@ -33,14 +18,13 @@ const Ellipsis = ({ chars, color }: { chars: string, color: string }) => (
 );
 
 export default function Pagination({
-      type,
-  docCount,
-     pages: [, current],
-  setPages: setIsActive,
- deferring,
-   deferFn,
-}: Omit<Paginated, 'data'> & { type: PagedConfig } & Debounce & PageHook) {
-  const { limit, pageCss, delay } = LIST_CONFIG[type];
+       config,
+     docCount,
+      current,
+   changePage,
+    deferring,
+}: Omit<Paginated, 'data' | 'direction'> & { config: PagedConfig, docCount: number }) {
+  const { limit, pageCss, delay } = LIST_CONFIG[config];
   const     last = Math.ceil(docCount / limit);
   const   middle = last < 5 ? 3 : Math.min(Math.max(current, 3), last - 2);
   const    pages: number[] = [];
@@ -51,11 +35,7 @@ export default function Pagination({
   if (last >= 4) pages.push(middle + 1);
   if (last >= 5) pages.push(last);
 
-  const changePage = (page: number) => {
-    deferFn(() => setIsActive([current, page]), 1200);
-  }
-
-  const { chars, setColor, setBckGrd } = LIST_CONFIG[type];
+  const { chars, setColor, setBckGrd } = LIST_CONFIG[config];
   const  filter = `brightness(${deferring ? 0.9 : 1})`
   const classes = [css['pagination'], ...pageCss].filter(Boolean).join(' ');
 

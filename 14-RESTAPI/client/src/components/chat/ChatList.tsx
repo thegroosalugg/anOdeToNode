@@ -1,6 +1,6 @@
 import { isMobile } from 'react-device-detect';
 import { AnimatePresence, HTMLMotionProps, LayoutGroup, motion } from 'motion/react';
-import { ReactNode, useRef, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import { Auth } from '@/pages/RootLayout';
@@ -49,9 +49,9 @@ export default function ChatList({
          user, // from parent * 2
       setUser,
         chats, // from hook   * 12
-     setChats,
         error,
      msgState,
+    loadState,
       setMsgs,
      isActive,
     isInitial,
@@ -68,7 +68,6 @@ export default function ChatList({
   const [isDeleting,   setIsDeleting] = useState(false);
   const [showModal,     setShowModal] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState<Record<string, boolean>>({});
-  const  hasLoaded = useRef<Record<string, boolean>>({});
   const  wasMarked = Object.keys(toBeDeleted).some((key) => toBeDeleted[key]);
   const   navigate = useNavigate();
   const closeModal = () => setShowModal(false);
@@ -242,8 +241,7 @@ export default function ChatList({
                                        user,
                                      isMenu,
                                        chat,
-                                   setChats,
-                                  hasLoaded,
+                                  loadState,
                                    msgState,
                                     setMsgs,
                                 clearAlerts,

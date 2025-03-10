@@ -36,6 +36,11 @@ const newMessage: RequestHandler = async (req, res, next) => {
     const { userId  } = req.params;
     const peer = await User.findById(userId);
     if (!peer) return next(new AppError(404, 'User not found'));
+
+    if (!user.isFriend(userId)) { // send msgs only to those on friends list
+      return next(new AppError(403, "User is not on your friend's list"));
+    }
+
     const userStrId = user._id.toString();
     const peerStrId = peer._id.toString();
     // above are only for when a string is needed. In other instances (us/pe)er._id will stay

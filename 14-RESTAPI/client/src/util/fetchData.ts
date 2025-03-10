@@ -1,3 +1,4 @@
+import Logger from '@/models/Logger';
 import refreshToken from './refreshToken';
 
 export interface Fetch {
@@ -37,6 +38,10 @@ const fetchData = async ({ url, method = 'GET', data }: Fetch) => {
       resData  = await response.json();
     }
   }
+
+  const config = Logger.getKeyFromUrl(url);
+  const logger = new Logger(config);
+  logger.res(response, resData, { method, url });
 
   if (!response.ok) {
     throw { ...resData, status: response.status } as FetchError;

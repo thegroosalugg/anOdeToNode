@@ -1,12 +1,14 @@
 import useFetch from '@/hooks/useFetch';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import usePagination from '@/hooks/usePagination';
 import useSocket from '@/hooks/useSocket';
+import useDepedencyTracker from '@/hooks/useDepedencyTracker';
 import { FetchError } from '@/util/fetchData';
 import { Authorized } from './RootLayout';
-import { Pages, Paginated } from '@/components/pagination/Pagination';
 import Post from '@/models/Post';
 import Reply from '@/models/Reply';
+import Logger from '@/models/Logger';
 import AsyncAwait from '@/components/panel/AsyncAwait';
 import PostId from '@/components/post/PostId';
 import Modal from '@/components/modal/Modal';
@@ -15,12 +17,7 @@ import ConfirmDialog from '@/components/dialog/ConfirmDialog';
 import SendMessage from '@/components/form/SendMessage';
 import ReplyItem from '@/components/post/ReplyItem';
 import PagedList from '@/components/pagination/PagedList';
-import { captainsLog } from '@/util/captainsLog';
 
-const initialData: Paginated<Reply, 'replies'> = {
-  docCount: 0,
-   replies: [],
-};
 
 export default function PostPage({ user, setUser }: Authorized) {
   const {
@@ -31,68 +28,55 @@ export default function PostPage({ user, setUser }: Authorized) {
          error,
       setError,
   } = useFetch<Post | null>();
-  const {
-          data: { docCount, replies },
-       setData: setReplies,
-    reqHandler: reqReplies,
-  } = useFetch(initialData);
-  const [modalState, setModalState] = useState('');
-  const [pages,           setPages] = useState<Pages>([1, 1]);
-  const [,                 current] = pages;
-  const   navigate = useNavigate();
   const { postId } = useParams();
-  const  socketRef = useSocket('POST');
-  const  isInitial = useRef(true);
-  const closeModal = () => setModalState('');
-  const replyProps = { type: 'reply' as const, items: replies, docCount, pages, setPages };
+  const {
+    fetcher: { setData: setReplies },
+     ...rest
+  } = usePagination<Reply>(`post/replies/${postId}`, !!postId);
+  const [modalState, setModalState] = useState('');
+  const   navigate  = useNavigate();
+  const   socketRef = useSocket('post');
+  const   isInitial = useRef(true);
+  const  closeModal = () => setModalState('');
+
+  useDepedencyTracker('post', { socketRef, reqUser: user._id, postId });
 
   useEffect(() => {
-    const fetchPost = async () => {
-      if (postId) {
-        await reqPost({ url: `feed/find/${postId}` });
-        captainsLog([-100, 160], ['📬 POSTPAGE fetchPost']); // **LOGDATA
-      }
-    }
-
-    const fetchReplies = async () => {
-      if (postId) {
-        await reqReplies({ url: `post/replies/${postId}?page=${current}` });
-        captainsLog([-100, 170], ['📬 POSTPAGE fetchReplies']); // **LOGDATA
-      }
-    }
-
-    const initialData = async () => await Promise.all([fetchPost(), fetchReplies()]);
-    if (isInitial.current) {
-      isInitial.current = false;
-      initialData();
-    } else {
-      fetchReplies();
-    }
-
     const socket = socketRef.current;
-    if (!socket) return;
-    socket.on('connect', () => captainsLog([-100, 164], ['📬 POSTPAGE: Socket connected']));
+    if (!socket || !postId) return;
+
+    const fetchPost = async () => {
+      if (postId && isInitial.current) {
+        await reqPost({ url: `feed/find/${postId}` });
+        isInitial.current = false;
+      }
+    }
+
+    fetchPost();
+
+    const logger = new Logger('post');
+    socket.on('connect', () => logger.connect());
 
     socket.on(`post:${postId}:reply:new`, (reply) => {
-      captainsLog([-100, 168], ['📬 POSTPAGE: NEW REPLY']);
+      logger.event('reply:new', reply);
       setTimeout(() => {
-        setReplies(({ docCount, replies }) => {
-          return { docCount: docCount + 1, replies: [reply, ...replies] };
+        setReplies(({ docCount, items }) => {
+          return { docCount: docCount + 1, items: [reply, ...items] };
         });
       }, 1200); // delay for other animations to act first
     });
 
     socket.on(`post:${postId}:reply:delete`, (deleted) => {
-      setReplies(({ docCount: prevCount, replies: prevReplies }) => {
-        const  replies = prevReplies.filter(({ _id }) => _id !== deleted._id);
+      logger.event('reply:delete', deleted);
+      setReplies(({ docCount: prevCount, items: prevReplies }) => {
+        const    items = prevReplies.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;
-        captainsLog([-100, 172], ['📬 POSTPAGE: REPLY DELETED', deleted]);
-        return { docCount, replies };
+        return { docCount, items };
       });
     });
 
     socket.on(`post:${postId}:update`, (post) => {
-      captainsLog([-100, 176], ['📬 POSTPAGE: POST UPDATED']);
+      logger.event('post:update', post);
       setPost((prevPost) => {
         if (post) return { ...prevPost, ...post };
         return prevPost;
@@ -101,7 +85,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     });
 
     socket.on(`post:${postId}:delete`, (deleted) => {
-      captainsLog([-100, 180], ['POSTPAGE: POST DELETED']);
+      logger.event('post:delete', deleted);
       if (deleted.creator !== user._id) {
         setPost(null); // delete actions for viewers. Creator's state automatically set to null
         setError({ message: 'The post was deleted' } as FetchError); // creators redirected without msg
@@ -115,7 +99,7 @@ export default function PostPage({ user, setUser }: Authorized) {
       socket.off(`post:${postId}:update`);
       socket.off(`post:${postId}:delete`); // deletes the post (& all replies)
     };
-  }, [socketRef, user._id, postId, current, setError, setPost, reqPost, reqReplies, setReplies]);
+  }, [socketRef, user._id, postId, setError, setPost, reqPost, setReplies]);
 
   async function deletePost() {
     await reqPost(
@@ -150,7 +134,7 @@ export default function PostPage({ user, setUser }: Authorized) {
           <>
             <PostId {...{ post, user }} setModal={setModalState} />
             <SendMessage {...{ url: `post/reply/${post._id}`, setUser, isPost: true }} />
-            <PagedList<Reply> {...replyProps}>
+            <PagedList<Reply> {...{ ...rest, config: 'reply' }}>
               {(reply) => <ReplyItem {...reply} userId={user._id} />}
             </PagedList>
           </>

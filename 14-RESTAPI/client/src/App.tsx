@@ -58,7 +58,7 @@ const routes = [
 
 export default function App() {
   console.clear(); // **LOGDATA
-  captainsLog([-100, -10], ['⇚⇚⇚App⇛⇛⇛']);
+  captainsLog(-1, ['⇚⇚⇚App⇛⇛⇛']);
 
   const  element = useRoutes(routes);
   return element || null;

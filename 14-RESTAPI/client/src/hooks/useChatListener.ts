@@ -1,21 +1,22 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { Dispatch, MutableRefObject, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useFetch from './useFetch';
 import useSocket from './useSocket';
-import useInitial from './useInitial';
 import useDebounce from './useDebounce';
+import useDepedencyTracker from './useDepedencyTracker';
 import { FetchError } from '@/util/fetchData';
 import User from '@/models/User';
 import Chat from '@/models/Chat';
 import Msg from '@/models/Message';
-import { captainsLog } from '@/util/captainsLog';
+import Logger from '@/models/Logger';
 
-type MsgState = Record<string, Msg[]>;
+type  MsgState = Record<string, Msg[]>;
+type LoadState = Record<string, boolean>;
 
 export type ChatListener = {
       chats: Chat[];
-   setChats: Dispatch<SetStateAction<Chat[]>>;
    msgState: MsgState;
+  loadState: MutableRefObject<LoadState>;
     setMsgs: Dispatch<SetStateAction<MsgState>>;
       error: FetchError | null;
    isActive: Chat       | null;
@@ -37,15 +38,20 @@ export default function useChatListener(
     reqHandler: reqChats,
          error,
   } = useFetch<Chat[]>([]);
-  const { reqHandler:       reqChat } = useFetch<Chat>();
-  const [isActive,       setIsActive] = useState<Chat | null>(null);
-  const [msgState,           setMsgs] = useState<Record<string, Msg[]>>({});
-  const [alerts,           setAlerts] = useState(0);
-  const { deferring,        deferFn } = useDebounce();
-  const { isInitial,      mountData } = useInitial();
-  const {          userId           } = useParams();
-  const { _id: activeId,     isTemp } = isActive ?? {};
-  const         socketRef             = useSocket('CHAT');
+  const {
+    reqHandler: reqChat,
+         error: findChatErr
+  } = useFetch<Chat>();
+  const [isActive,           setIsActive] = useState<Chat | null>(null);
+  const [msgState,               setMsgs] = useState<MsgState>({});
+  const [alerts,               setAlerts] = useState(0);
+  const { deferring,            deferFn } = useDebounce();
+  const {            userId             } = useParams();
+  const { _id: activeId, isTemp = false } = isActive ?? {};
+  const              config               = isMenu ? 'menu' : 'chat';
+  const             isInitial             = useRef(true);
+  const             loadState             = useRef<LoadState>({});
+  const             socketRef             = useSocket(config);
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
 
   const updateChats = useCallback(
@@ -61,7 +67,22 @@ export default function useChatListener(
     await reqChat({ url: `alerts/chat/${id}` });
   }, [reqChat]);
 
+  useDepedencyTracker(config, {
+       config,
+    socketRef,
+      reqUser: user._id,
+       userId,
+        count,
+     activeId,
+       isTemp,
+       isMenu,
+         show,
+  });
+
   useEffect(() => {
+    const socket = socketRef.current;
+    if (!socket) return;
+
     const getActiveChat = async () => {
       if (userId && !isMenu) {
         await reqChat(
@@ -71,24 +92,21 @@ export default function useChatListener(
       }
     };
 
-    const initData = async () =>
-      mountData(async () => {
-        await Promise.all([
-          reqChats({ url: 'chat/all' }),
-          getActiveChat()
-        ]);
-      }, 5);
+    const initData = async () => {
+      if (isInitial.current) {
+        await Promise.all([reqChats({ url: 'chat/all' }), getActiveChat()]);
+        isInitial.current = false;
+      }
+    };
 
     initData();
     setAlerts(count);
 
-    const socket = socketRef.current;
-    if (!socket) return;
-    const location = isMenu ? 'MENU' : 'PAGE';
-    socket.on('connect', () => captainsLog([-100, 290], [`CHAT ${location} 💬: Socket connected`]));
+    const logger = new Logger(config);
+    socket.on('connect', () => logger.connect());
 
     socket.on(`chat:${user._id}:update`, async ({ chat, isNew, msg }) => {
-      captainsLog([-100, 285], [`CHAT ${location} 💬: Update, isNew ${isNew}`, chat]);
+      logger.event(`update, ChatIsNew? ${isNew}`, chat);
 
       const isSender  = user._id === msg.sender;
       const isVisible = chat._id === activeId && (!isMenu || (isMenu && show));
@@ -108,7 +126,7 @@ export default function useChatListener(
     });
 
     socket.on(`chat:${user._id}:delete`, (deleted: Chat[]) => {
-      captainsLog([-100, 285], [`CHAT ${location} 💬: Deleted`, deleted]);
+      logger.event('delete', deleted);
       const isDeleted = (id?: string) => deleted.some((chat) => chat._id === id);
       if (isDeleted(activeId)) setIsActive(null);
       setChats((prevChats) => prevChats.filter((chat) => !isDeleted(chat._id)));
@@ -119,7 +137,7 @@ export default function useChatListener(
     });
 
     socket.on(`chat:${user._id}:alerts`, (chat) => {
-      captainsLog([-100, 285], [`CHAT ${location} 💬: Alerts`, chat]);
+      logger.event('alerts', chat);
       if (chat._id === activeId) setIsActive(chat);
       updateChats(chat);
     });
@@ -131,6 +149,7 @@ export default function useChatListener(
       socket.off(`chat:${user._id}:alerts`);
     };
   }, [
+    config,
     socketRef,
     user._id,
     userId,
@@ -139,7 +158,6 @@ export default function useChatListener(
     isTemp,
     isMenu,
     show,
-    mountData,
     reqChat,
     reqChats,
     setChats,
@@ -164,13 +182,13 @@ export default function useChatListener(
     alerts,
     clearAlerts,
     chats,
-    setChats,
-    error,
+    error: error || findChatErr, // findChatErr is mostly null. Only on initial find chat render
     msgState,
+    loadState,
     setMsgs,
     isMenu,
     isActive,
-    isInitial,
+    isInitial: isInitial.current,
     deferring,
     deferFn,
     expand,

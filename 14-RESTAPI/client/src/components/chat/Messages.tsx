@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
-import { MutableRefObject, useEffect, useRef } from 'react';
-import useInitial from '@/hooks/useInitial';
+import { useEffect, useRef } from 'react';
 import useFetch from '@/hooks/useFetch';
+import useDepedencyTracker from '@/hooks/useDepedencyTracker';
 import { ChatListener } from '@/hooks/useChatListener';
 import User from '@/models/User';
 import Chat from '@/models/Chat';
@@ -12,23 +12,31 @@ import css from './Messages.module.css';
 
 export default function Messages({
          chat,
-     setChats,
      msgState,
+    loadState,
       setMsgs,
-    hasLoaded,
   clearAlerts,
          user,
        isMenu,
 }: {
   user: User;
   chat: Chat;
-  hasLoaded: MutableRefObject<Record<string, boolean>>;
-} & Pick<ChatListener, 'msgState' | 'setMsgs' | 'setChats' | 'isMenu' | 'clearAlerts'>) {
-  const msgs = msgState[chat._id] || [];
+} & Pick<ChatListener, 'msgState' | 'loadState' | 'setMsgs' | 'isMenu' | 'clearAlerts'>) {
+  const      msgs = msgState[chat._id] || [];
+  const hasLoaded = loadState.current[chat._id];
   const { reqHandler, error } = useFetch<Msg[]>([]);
-  const { isInitial, mountData } = useInitial();
-  const msgRef = useRef<HTMLParagraphElement>(null);
-  const scrollTo = () => msgRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const isInitial = useRef(true);
+  const    msgRef = useRef<HTMLParagraphElement>(null);
+  const  scrollTo = () => msgRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+  useDepedencyTracker('chat', {
+       reqUser: user._id,
+        chatId: chat._id,
+    chatAlerts: chat.alerts,
+    chatIsTemp: chat.isTemp,
+     loadState,
+     hasLoaded,
+  });
 
   useEffect(() => {
     if (chat.isTemp) return;
@@ -39,40 +47,33 @@ export default function Messages({
     };
 
     const getMessages = async () => {
-      if (hasLoaded.current[chat._id]) return;
+      if (hasLoaded) return;
       await reqHandler(
         { url: `chat/messages/${chat._id}` },
-        { onSuccess: (msgs) => setMsgs((state) => ({ ...state, [chat._id]: msgs })) }
+        {
+          onSuccess: (msgs) => {
+            setMsgs((state) => ({ ...state, [chat._id]: msgs }));
+            loadState.current[chat._id] = true;
+          },
+        }
       );
-      hasLoaded.current[chat._id] = true;
     };
 
     const initData = async () => {
-      mountData(async () => {
-        await Promise.all([
-          getMessages(),
-          markAlertsAsRead(),
-        ]);
-      }, 4);
+      await Promise.all([getMessages(), markAlertsAsRead()]);
+      isInitial.current = false;
     };
 
-    if (isInitial) {
-      initData();
-    } else {
-      markAlertsAsRead();
-    }
-
+    if (isInitial.current) initData();
+    else           markAlertsAsRead();
   }, [
     user._id,
     chat._id,
     chat.alerts,
     chat.isTemp,
-    msgs.length,
-    isInitial,
+    loadState,
     hasLoaded,
     clearAlerts,
-    setChats,
-    mountData,
     reqHandler,
     setMsgs,
   ]);
@@ -81,10 +82,10 @@ export default function Messages({
   const duration = 0.5;
   const variants = {
      hidden: { opacity },
-    visible: { opacity: 1, transition: { duration } }
+    visible: { opacity: 1, transition: { duration } },
   };
 
-  const isLoading = isInitial && msgs.length < 1 && !chat.isTemp;
+  const isLoading = isInitial.current && msgs.length < 1 && !chat.isTemp;
 
   return (
     <AsyncAwait {...{ isLoading, error }}>

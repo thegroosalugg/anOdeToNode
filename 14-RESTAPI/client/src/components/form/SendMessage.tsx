@@ -75,7 +75,8 @@ export default function SendMessage({
               animate={{ opacity: 1, transition: { delay: 0.2 } }}
                  exit={{ opacity: 0 }}
             >
-              {error ? error.content : 'Send'}
+              {/* content = 422 form errors, message = all other errors */}
+              {error?.content ?? error?.message ?? 'Send'}
             </motion.span>
           )}
         </AnimatePresence>

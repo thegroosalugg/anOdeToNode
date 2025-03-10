@@ -15,13 +15,13 @@ const getReplies: RequestHandler = async (req, res, next) => {
 
   try {
     const docCount = await Reply.find({ post }).countDocuments();
-    const  replies = await Reply.find({ post })
+    const    items = await Reply.find({ post })
       .skip((page - 1) * limit)
       .limit(limit)
       .populate('creator', _public)
       .sort({ createdAt: -1 });
 
-    res.status(200).json({ replies, docCount });
+    res.status(200).json({ items, docCount });
   } catch (error) {
     next(new AppError(500, 'Unable to load comments', error));
   }

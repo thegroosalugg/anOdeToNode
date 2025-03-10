@@ -1,22 +1,22 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '@/hooks/useFetch';
 import useSocket from '@/hooks/useSocket';
-import useInitial from '@/hooks/useInitial';
 import useDebounce from '@/hooks/useDebounce';
+import useDepedencyTracker from '@/hooks/useDepedencyTracker';
 import { FetchError } from '@/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
 import Reply from '@/models/Reply';
+import Logger from '@/models/Logger';
 import PortalMenu from '../panel/PortalMenu';
 import AsyncAwait from '../panel/AsyncAwait';
 import SocialAlerts from './SocialAlerts';
 import ReplyAlerts from './ReplyAlerts';
 import NavButton from '../navigation/NavButton';
 import Counter from './Counter';
-import { captainsLog } from '@/util/captainsLog';
 import css from './Notifications.module.css';
 
 export default function Notifications({
@@ -35,13 +35,11 @@ export default function Notifications({
   const [menu,                  showMenu] = useState(false);
   const [activeTab,         setActiveTab] = useState(0);
   const { deferring,            deferFn } = useDebounce();
-  const { isInitial, mountData, setInit } = useInitial();
-  const              socketRef            = useSocket('ALERTS');
+  const              isInitial            = useRef(true);
+  const              socketRef            = useSocket('alerts');
   const               navigate            = useNavigate();
-
-  const { friends } = user;
-
-  const [inbound, outbound] = friends.reduce(
+  const {             friends           } = user;
+  const [inbound,               outbound] = friends.reduce(
     ([inTotal, outTotal], { initiated, accepted, meta }) => {
       if (!meta.read) {
         if (           !initiated)  inTotal += 1;
@@ -79,11 +77,11 @@ export default function Notifications({
   };
 
   const openMenu = async () => {
-    setInit(true);
+    isInitial.current = true;
     deferFn(async () => {
       showMenu(true);
       await handleAlerts();
-      setInit(false);
+      isInitial.current = false;
     }, 1500);
   };
 
@@ -101,17 +99,26 @@ export default function Notifications({
     if (err.status === 401) setUser(null);
   };
 
-  useEffect(() => {
-    const initData = async () =>
-      mountData(async () => await reqReplyAlerts({ url: 'alerts/replies' }), 3);
-    initData();
+  useDepedencyTracker('alerts', { socketRef, menu, activeTab, reqUser: user._id });
 
+  useEffect(() => {
     const socket = socketRef.current;
     if (!socket) return;
-    socket.on('connect', () => captainsLog([-100, 208], ['🧭 NAV: Socket connected']));
+
+    const initData = async () => {
+      if (isInitial.current) {
+        await reqReplyAlerts({ url: 'alerts/replies' });
+        isInitial.current = false;
+      }
+    };
+
+    initData();
+
+    const logger = new Logger('alerts');
+    socket.on('connect', () => logger.connect());
 
     socket.on(`peer:${user._id}:update`, async (updated) => {
-      captainsLog([-100, 212], ['🧭 NAV: SOCIAL', updated]);
+      logger.event('update', updated);
       if (menu && activeTab < 2) {
         await markSocialsAsRead();
       } else {
@@ -120,7 +127,7 @@ export default function Notifications({
     });
 
     socket.on(`nav:${user._id}:reply`, async ({ action, reply }) => {
-      captainsLog([-100, 200], [`🧭 NAV: ${action} REPLY`, reply]);
+      logger.event(`reply, action: ${action}`, reply);
       if (menu && activeTab === 2) {
         await markRepliesAsRead();
       } else {
@@ -142,7 +149,6 @@ export default function Notifications({
     menu,
     activeTab,
     user._id,
-    mountData,
     reqReplyAlerts,
     markSocialsAsRead,
     markRepliesAsRead,
@@ -167,7 +173,7 @@ export default function Notifications({
             </motion.button>
           ))}
         </section>
-        <AsyncAwait {...{ isLoading: isInitial, error }}>
+        <AsyncAwait {...{ isLoading: isInitial.current, error }}>
           <AnimatePresence mode='wait'>
             {activeTab === 2 ? (
               <ReplyAlerts key='replies' {...{ replies, setReplies, navTo, onError }} />

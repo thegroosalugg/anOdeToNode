@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
+import { Types } from 'mongoose';
 import { io } from '../app';
-import AppError from '../models/Error';
 import User from '../models/User';
 import Chat from '../models/Chat';
-import { Types } from 'mongoose';
+import AppError from '../models/Error';
 
 const _public = '-email -password -friends';
 const  devErr = 'Do not use without AuthJWT';
@@ -39,6 +39,10 @@ const findChat: RequestHandler = async (req, res, next) => {
         { host: peer, guest: user },
       ],
     }).populate('host guest', _public);
+
+    if (!user.isFriend(userId) && !chat) { // prevent users creating new chats via URL
+      return next(new AppError(403, "User is not on your friend's list"));
+    }
 
     if (chat) {
       res.status(200).json(chat);
