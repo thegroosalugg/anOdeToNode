@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
+import { Dispatch, MutableRefObject, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useFetch from './useFetch';
 import useSocket from './useSocket';
@@ -10,11 +10,13 @@ import Chat from '@/models/Chat';
 import Msg from '@/models/Message';
 import Logger from '@/models/Logger';
 
-type MsgState = Record<string, Msg[]>;
+type  MsgState = Record<string, Msg[]>;
+type LoadState = Record<string, boolean>;
 
 export type ChatListener = {
       chats: Chat[];
    msgState: MsgState;
+  loadState: MutableRefObject<LoadState>;
     setMsgs: Dispatch<SetStateAction<MsgState>>;
       error: FetchError | null;
    isActive: Chat       | null;
@@ -41,13 +43,14 @@ export default function useChatListener(
          error: findChatErr
   } = useFetch<Chat>();
   const [isActive,           setIsActive] = useState<Chat | null>(null);
-  const [msgState,               setMsgs] = useState<Record<string, Msg[]>>({});
+  const [msgState,               setMsgs] = useState<MsgState>({});
   const [alerts,               setAlerts] = useState(0);
   const { deferring,            deferFn } = useDebounce();
   const {            userId             } = useParams();
   const { _id: activeId, isTemp = false } = isActive ?? {};
   const              config               = isMenu ? 'menu' : 'chat';
   const             isInitial             = useRef(true);
+  const             loadState             = useRef<LoadState>({});
   const             socketRef             = useSocket(config);
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
 
@@ -181,6 +184,7 @@ export default function useChatListener(
     chats,
     error: error || findChatErr, // findChatErr is mostly null. Only on initial find chat render
     msgState,
+    loadState,
     setMsgs,
     isMenu,
     isActive,
