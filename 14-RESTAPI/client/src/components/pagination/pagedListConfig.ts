@@ -15,7 +15,7 @@ export const LIST_CONFIG = {
      fallback: 'No posts yet.',     // when list is empty
   },
 
-  profile: {
+  userPosts: {
         limit: 6,
      setColor: 'var(--dark-grey)',
         navTo: 'post',

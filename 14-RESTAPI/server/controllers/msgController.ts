@@ -6,11 +6,9 @@ import Chat from '../models/Chat';
 import Msg from '../models/Msg';
 import { getErrors, hasErrors } from '../validation/validators';
 
-const devErr = 'Do not use without AuthJWT';
-
 const getMessages: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const { chatId } = req.params;
@@ -26,7 +24,7 @@ const getMessages: RequestHandler = async (req, res, next) => {
 
 const newMessage: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const errors = getErrors(req);

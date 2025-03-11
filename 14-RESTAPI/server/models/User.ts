@@ -1,13 +1,18 @@
 import { Model, model, Types, Schema } from 'mongoose';
 
+// centralised filter for search queries
+export const _public = '-email -password -friends -about';
+
 const required = true;
 
 export interface IFriend {
-       _id: Types.ObjectId;
-  accepted: boolean;
- initiated: boolean;
-      user: Types.ObjectId;
-      meta: { read: boolean; show: boolean };
+         _id: Types.ObjectId;
+   createdAt: Date;
+  acceptedAt: Date;
+    accepted: boolean;
+   initiated: boolean;
+        user: Types.ObjectId;
+        meta: { read: boolean; show: boolean };
 }
 
 export interface IProfile {
@@ -42,15 +47,16 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
       imgURL: { type: String },
      friends: [
         {
-          user: { type: Schema.Types.ObjectId, ref: 'User' },
-     createdAt: { type: Date,      default: Date.now },
-      accepted: { type: Boolean,   default: false    },
-     initiated: { type: Boolean, immutable: true     },
-          meta: {
-            read: { type: Boolean, default: false },
-            show: { type: Boolean, default: true  },
-          }
-        },
+           user: { type: Schema.Types.ObjectId, ref: 'User' },
+      createdAt: { type: Date,      default: Date.now },
+     acceptedAt: { type: Date },
+       accepted: { type: Boolean,   default: false    },
+      initiated: { type: Boolean, immutable: true     },
+           meta: {
+             read: { type: Boolean, default: false },
+             show: { type: Boolean, default: true  },
+           }
+         },
       ],
        about: {
           home: { type: String },

@@ -2,8 +2,7 @@ import { RequestHandler } from 'express';
 import { Types } from 'mongoose';
 import Post from '../models/Post';
 import AppError from '../models/Error';
-
-const _public = '-email -password';
+import { _public } from '../models/User';
 
 // default route for all posts is /feed/posts. Accessed by /profile & /social too
 const getPosts: RequestHandler = async (req, res, next) => {

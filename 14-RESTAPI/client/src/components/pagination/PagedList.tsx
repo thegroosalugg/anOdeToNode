@@ -6,11 +6,11 @@ import { LIST_CONFIG } from './pagedListConfig';
 import Pagination from './Pagination';
 import css from './PagedList.module.css';
 
-export type PagedConfig = 'feed' | 'profile' |'reply' | 'users';
+export type PagedConfig = 'feed' | 'userPosts' |'reply' | 'users';
 
 interface PagedList<T> extends Paginated<T> {
-  config: PagedConfig;
-children: (item: T) => React.ReactNode;
+    config: PagedConfig;
+  children: (item: T) => React.ReactNode;
 }
 
 export default function PagedList<T>({

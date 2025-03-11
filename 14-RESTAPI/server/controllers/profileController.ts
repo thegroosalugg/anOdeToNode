@@ -4,14 +4,12 @@ import { IProfile } from '../models/User';
 import { getErrors, hasErrors } from '../validation/validators';
 import { deleteFile } from '../util/deleteFile';
 
-const devErr = 'Do not use without AuthJWT';
-
 const setPhoto: RequestHandler = async (req, res, next) => {
   const  user = req.user;
   const image = req.file;
   if (!user) {
     if (image) deleteFile(image.path);
-    return next(new AppError(403, 'Something went wrong', devErr));
+    return next(AppError.devErr());
   }
   if (!image) return next(new AppError(422, 'Image required'));
 
@@ -28,7 +26,7 @@ const setPhoto: RequestHandler = async (req, res, next) => {
 
 const updateInfo: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const errors = getErrors(req);

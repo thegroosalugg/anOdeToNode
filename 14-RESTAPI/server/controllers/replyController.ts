@@ -4,9 +4,7 @@ import Post, { IPost } from '../models/Post';
 import Reply from '../models/Reply';
 import AppError from '../models/Error';
 import { getErrors, hasErrors } from '../validation/validators';
-
-const _public = '-email -password -friends';
-const  devErr = 'Do not use without AuthJWT';
+import { _public } from '../models/User';
 
 const getReplies: RequestHandler = async (req, res, next) => {
   const { postId: post } = req.params;
@@ -29,7 +27,7 @@ const getReplies: RequestHandler = async (req, res, next) => {
 
 const postReply: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const errors = getErrors(req);

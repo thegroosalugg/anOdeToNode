@@ -34,7 +34,7 @@ export default function UserProfile({ user, setUser }: Authorized) {
       <section className={css['user-profile']}>
         <ProfileHeader {...{ user, setUser }} />
         <AsyncAwait {...{ isLoading, error }}>
-          <PagedList<Post> {...{ ...rest, config: 'profile' }}>
+          <PagedList<Post> {...{ ...rest, config: 'userPosts' }}>
             {(post) => <PostItem {...post} onUserPage />}
           </PagedList>
         </AsyncAwait>

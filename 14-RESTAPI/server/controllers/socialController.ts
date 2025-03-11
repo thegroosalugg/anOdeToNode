@@ -1,10 +1,7 @@
 import { RequestHandler } from 'express';
 import { io } from '../app';
-import User, { IFriend } from '../models/User';
+import User, { _public, IFriend } from '../models/User';
 import AppError from '../models/Error';
-
-const _public = '-email -password';
-const  devErr = 'Do not use without AuthJWT';
 
 const getUsers: RequestHandler = async (req, res, next) => {
   try {
@@ -27,8 +24,8 @@ const getUsers: RequestHandler = async (req, res, next) => {
 
 const getUserById: RequestHandler = async (req, res, next) => {
   try {
-    const { userId } = req.params;
-    const user = await User.findById(userId).select(_public);
+    const { userId } = req.params; // .'friends' & .'about' required on this page
+    const user = await User.findById(userId).select('-email -password');
     if (!user) return next(new AppError(404, 'User not found'));
     res.status(200).json(user);
   } catch (error) {
@@ -38,7 +35,7 @@ const getUserById: RequestHandler = async (req, res, next) => {
 
 const friendRequest: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const { userId, action } = req.params;
@@ -60,8 +57,11 @@ const friendRequest: RequestHandler = async (req, res, next) => {
         user.friends.push({ user: peer._id, initiated: true  } as IFriend);
         break;
       case 'accept':
-        peer.friends[peerIndex].accepted = true;
-        user.friends[userIndex].accepted = true;
+        const date = new Date();
+        peer.friends[peerIndex].accepted   = true;
+        user.friends[userIndex].accepted   = true;
+        peer.friends[peerIndex].acceptedAt = date;
+        user.friends[userIndex].acceptedAt = date;
         break;
       case 'delete':
         peer.friends.splice(peerIndex, 1);
