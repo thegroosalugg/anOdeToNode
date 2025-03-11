@@ -18,15 +18,26 @@ export type Paginated<T = null> = {
    deferring: Debounce['deferring'];
 };
 
+export function usePages() {
+  const { deferring, deferFn } = useDebounce();
+  const [pages,      setPages] = useState<Pages>([1, 1]);
+  const [previous,    current] = pages;
+  const direction: Direction   = previous < current ? 1 : -1;
+
+  const changePage = (page: number) => {
+    deferFn(() => setPages([current, page]), 1200);
+  };
+
+  return { current, direction, changePage, deferring };
+}
+
 export default function usePagination<T>(baseURL: string, shouldFetch = true) {
   const initState: InitState<T>       = { docCount: 0, items: [] };
   const { data, reqHandler, ...rest } = useFetch(initState);
-  const            isInitial          = useRef(true);
-  const { deferring,        deferFn } = useDebounce();
-  const [pages,             setPages] = useState<Pages>([1, 1]);
-  const [previous,           current] = pages;
-  const direction: Direction          = previous < current ? 1 : -1;
-  const              url              = baseURL + `?page=${current}`;
+  const   isInitial = useRef(true);
+  const  pagedProps = usePages();
+  const { current } = pagedProps;
+  const     url     = baseURL + `?page=${current}`;
 
   useEffect(() => {
     const initData = async () => {
@@ -39,16 +50,5 @@ export default function usePagination<T>(baseURL: string, shouldFetch = true) {
     initData();
   }, [reqHandler, url, shouldFetch]);
 
-  const changePage = (page: number) => {
-    deferFn(() => setPages([current, page]), 1200);
-  };
-
-  return {
-       fetcher: { ...rest, isLoading: isInitial.current },
-          data,
-       current,
-     direction,
-    changePage,
-     deferring,
-  };
+  return { ...pagedProps, fetcher: { ...rest, isLoading: isInitial.current }, data };
 }

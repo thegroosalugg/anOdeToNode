@@ -80,7 +80,7 @@ export default function PagedList<T>({
                 onClick={() => clickHandler(item._id)}
                   style={{ cursor }}
                 initial={{ opacity,    x }}
-                animate={{ opacity: 1, x:  0, transition: { duration, delay: i * 0.05 } }}
+                animate={{ opacity: 1, x:  0, transition: { duration, delay: i * 0.03 } }}
                    exit={{ opacity,    x: -x, transition: { duration } }}
                 {...props}
               >

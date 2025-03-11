@@ -1,9 +1,8 @@
-import PeerItem from '../social/PeerItem';
+import { useState } from 'react';
+import { usePages } from '@/hooks/usePagination';
 import Friend from '@/models/Friend';
 import PagedList from '../pagination/PagedList';
-import { Direction, Pages } from '@/hooks/usePagination';
-import { useState } from 'react';
-import useDebounce from '@/hooks/useDebounce';
+import PeerItem from '../social/PeerItem';
 
 function paginate<T>(arr: T[], page: number, limit: number): T[] {
   const start = (page - 1) * limit;
@@ -11,23 +10,19 @@ function paginate<T>(arr: T[], page: number, limit: number): T[] {
 };
 
 export default function FriendsList({ friends }: { friends: Friend[] }) {
-  const { deferring, deferFn } = useDebounce();
-  const [pages,      setPages] = useState<Pages>([1, 1]);
-  const [previous,    current] = pages;
-  const direction: Direction   = previous < current ? 1 : -1;
+  const { deferring, current, direction, changePage: setPage } = usePages();
   const friendsList = friends
     .filter(({ accepted }) => accepted)
     .map((item) => ({ ...item, _id: item.user._id }));
   // connection ID isnt needed in List, however user ID is needed in its place for navTo Fn
 
-  const limit = 10;
+  const limit = 10; // must match pagedListConfig.ts
   const [pagedData, setPagedData] = useState(paginate(friendsList, current, limit));
 
+  // hook function renamed & redefined with extra step setPagedData
   const changePage = (page: number) => {
-    deferFn(() => {
-      setPages([current, page]);
-      setPagedData(paginate(friendsList, page, limit));
-    }, 1200);
+    if (!deferring) setPagedData(paginate(friendsList, page, limit));
+    setPage(page);// hook function sets deferring
   };
 
   const props = {
