@@ -24,5 +24,8 @@
     text-align: center;
     color: #fff;
     padding: 0.5rem;
+    /* ignore grid placement when the UL is a grid */
+    place-self: center;
+    grid-column: 1 / -1;
   }
 }

@@ -1,12 +1,13 @@
 import User from './User';
 
 type Friend = {
-        _id: string;
-   accepted: boolean;
-  initiated: boolean;
-       user: User;
-  createdAt: string;
-       meta: { read: boolean; show: boolean };
+         _id: string;
+   createdAt: string;
+  acceptedAt: string;
+    accepted: boolean;
+   initiated: boolean;
+        user: User;
+        meta: { read: boolean; show: boolean };
 };
 
 export default Friend;

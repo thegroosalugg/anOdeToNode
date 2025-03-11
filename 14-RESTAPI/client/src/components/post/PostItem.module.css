@@ -56,14 +56,13 @@ ul.feed {
   }
 }
 
-ul.on-user-page {
-  border-top-color: var(--dark-grey);
-  border-bottom-color: var(--dark-grey);
-  border-radius: 5px;
+ul.isCreator {
+  border-top-color: var(--text-grey);
+  border-bottom-color: var(--text-grey);
   padding: 0.25rem;
 
   &::-webkit-scrollbar-thumb {
-    background: var(--dark-grey);
+    background: var(--text-grey);
   }
 
   li {
@@ -72,12 +71,12 @@ ul.on-user-page {
   }
 }
 
-section.on-user-pagination {
+section.isCreator-pagination {
   gap: 0;
   margin: 0 auto;
 
   > span {
-    color: var(--dark-grey);
+    color: var(--text-grey);
     margin: 0 0.1rem;
   }
 

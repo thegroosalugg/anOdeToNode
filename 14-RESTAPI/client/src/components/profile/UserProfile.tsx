@@ -7,6 +7,7 @@ import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import AsyncAwait from '../panel/AsyncAwait';
+import FriendsList from './FriendsList';
 import PagedList from '../pagination/PagedList';
 import PostItem from '../post/PostItem';
 import css from './UserProfile.module.css';
@@ -33,9 +34,10 @@ export default function UserProfile({ user, setUser }: Authorized) {
       </Modal>
       <section className={css['user-profile']}>
         <ProfileHeader {...{ user, setUser }} />
+        <FriendsList friends={user.friends} />
         <AsyncAwait {...{ isLoading, error }}>
           <PagedList<Post> {...{ ...rest, config: 'userPosts' }}>
-            {(post) => <PostItem {...post} onUserPage />}
+            {(post) => <PostItem {...post} isCreator />}
           </PagedList>
         </AsyncAwait>
         <Button

@@ -6,7 +6,7 @@ import { LIST_CONFIG } from './pagedListConfig';
 import Pagination from './Pagination';
 import css from './PagedList.module.css';
 
-export type PagedConfig = 'feed' | 'userPosts' |'reply' | 'users';
+export type PagedConfig = 'feed' | 'userPosts' |'reply' | 'users' | 'friends';
 
 interface PagedList<T> extends Paginated<T> {
     config: PagedConfig;
@@ -80,7 +80,7 @@ export default function PagedList<T>({
                 onClick={() => clickHandler(item._id)}
                   style={{ cursor }}
                 initial={{ opacity,    x }}
-                animate={{ opacity: 1, x:  0, transition: { duration, delay: i * 0.1 } }}
+                animate={{ opacity: 1, x:  0, transition: { duration, delay: i * 0.05 } }}
                    exit={{ opacity,    x: -x, transition: { duration } }}
                 {...props}
               >

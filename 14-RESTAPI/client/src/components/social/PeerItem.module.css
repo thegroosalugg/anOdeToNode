@@ -1,9 +1,13 @@
 /* element.class increases specificity to override defaults */
-ul.community {
+ul.user-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   align-items: start; /* not required, however will overwrite Default's center alignement */
   align-content: start; /* forces rows to stack at top */
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
 
   > li {
     padding: 0;
@@ -25,7 +29,21 @@ ul.community {
       width: 100%;
       border: none;
       border-radius: 0;
-      background: var(--box-gradient);
     }
   }
+}
+
+ul.friends-list {
+  > li {
+    border-color: var(--text-grey);
+    > h2 {
+      &::-webkit-scrollbar-thumb {
+        background: var(--text-grey);
+      }
+    }
+  }
+}
+
+section.friends-pagination {
+  margin: 0 auto 0.5rem;
 }

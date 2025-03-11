@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import useDebounce, { Debounce } from './useDebounce';
 import useFetch from './useFetch';
 
-type     Pages = [previous: number, current: number];
-type Direction = 1 | -1;
+export type     Pages = [previous: number, current: number];
+export type Direction = 1 | -1;
 
 export type InitState<T> = {
   docCount: number;
