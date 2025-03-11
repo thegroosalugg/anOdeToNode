@@ -6,7 +6,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { getPeerConfig } from './peerProfileConfig';
 import { Auth } from '@/pages/RootLayout';
 import useFetch from '@/hooks/useFetch';
-import User, { getId } from '@/models/User';
+import User from '@/models/User';
 import Modal from '../modal/Modal';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import ProfilePic from '../profile/ProfilePic';
@@ -46,7 +46,7 @@ export default function PeerProfile({
   const { _id, name, surname, createdAt, about } = peer;
   const {    bio,    home,    study,    work   } = about ?? {};
 
-  const  connection = user.friends.find((friend) => getId(friend.user) === _id);
+  const  connection = user.friends.find((friend) => friend.user._id === _id);
   const { accepted, initiated } = connection ?? {};
   const       color = connection ?     '#ffffff' : 'var(--team-green)';
   const borderColor = connection ? 'transparent' : 'var(--team-green)';

@@ -55,7 +55,9 @@ export default function Notifications({
     return total;
   }, 0);
 
-  const alerts = inbound + outbound + newReplies;
+  const  count = inbound + outbound + newReplies;
+  const alerts = [inbound, outbound, newReplies];
+  const  icons = ['envelope', 'paper-plane', 'reply'] as const;
 
   const markSocialsAsRead = useCallback(
     async (index = activeTab) =>
@@ -72,16 +74,19 @@ export default function Notifications({
   );
 
   const handleAlerts = async (index = activeTab) => {
-    if (index < 2) await markSocialsAsRead(index);
-    else           await markRepliesAsRead();
+    if (alerts[index] > 0) {
+      if (index < 2) {
+        await markSocialsAsRead(index);
+      } else {
+        await markRepliesAsRead();
+      }
+    }
   };
 
   const openMenu = async () => {
-    isInitial.current = true;
     deferFn(async () => {
       showMenu(true);
       await handleAlerts();
-      isInitial.current = false;
     }, 1500);
   };
 
@@ -99,7 +104,13 @@ export default function Notifications({
     if (err.status === 401) setUser(null);
   };
 
-  useDepedencyTracker('alerts', { socketRef, menu, activeTab, reqUser: user._id });
+  useDepedencyTracker('alerts', {
+    isInitial: isInitial.current,
+    socketRef,
+         menu,
+    activeTab,
+      reqUser: user._id,
+  });
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -118,7 +129,7 @@ export default function Notifications({
     socket.on('connect', () => logger.connect());
 
     socket.on(`peer:${user._id}:update`, async (updated) => {
-      logger.event('update', updated);
+      logger.event('peer:update', updated);
       if (menu && activeTab < 2) {
         await markSocialsAsRead();
       } else {
@@ -156,13 +167,11 @@ export default function Notifications({
     setReplies,
   ]);
 
-  const icons = ['envelope', 'paper-plane', 'reply'] as const;
-
   return (
     <>
       <PortalMenu show={menu} close={() => showMenu(false)}>
         <section className={css['menu-bar']}>
-          {[inbound, outbound, newReplies].map((count, i) => (
+          {alerts.map((count, i) => (
             <motion.button
                   key={i}
               onClick={() => changeTab(i)}
@@ -187,7 +196,7 @@ export default function Notifications({
         </AsyncAwait>
       </PortalMenu>
       <NavButton {...{ index: 2, deferring, callback: openMenu }}>
-        <Counter count={alerts} />
+        <Counter {...{count}} />
       </NavButton>
     </>
   );

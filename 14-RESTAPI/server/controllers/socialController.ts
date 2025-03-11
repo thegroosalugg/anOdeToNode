@@ -73,6 +73,8 @@ const friendRequest: RequestHandler = async (req, res, next) => {
 
     await peer.save();
     await user.save();
+    await peer.populate('friends.user', _public);
+    await user.populate('friends.user', _public);
     io.emit(`peer:${user._id}:update`, user);
     io.emit(`peer:${peer._id}:update`, peer);
     res.status(201).json({ message: 'success' });
