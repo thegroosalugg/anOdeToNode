@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import useDebounce, { Debounce } from './useDebounce';
 import useFetch from './useFetch';
 
-export type     Pages = [previous: number, current: number];
-export type Direction = 1 | -1;
+type Direction = -1 | 1;
 
 export type InitState<T> = {
   docCount: number;
@@ -19,13 +18,15 @@ export type Paginated<T = null> = {
 };
 
 export function usePages() {
-  const { deferring, deferFn } = useDebounce();
-  const [pages,      setPages] = useState<Pages>([1, 1]);
-  const [previous,    current] = pages;
-  const direction: Direction   = previous < current ? 1 : -1;
+  const { deferring,    deferFn } = useDebounce();
+  const [current,        setPage] = useState(1);
+  const [direction, setDirection] = useState<Direction>(1)
 
   const changePage = (page: number) => {
-    deferFn(() => setPages([current, page]), 1200);
+    deferFn(() => {
+      setPage(page);
+      setDirection(page > current ? 1 : -1);
+    }, 1200);
   };
 
   return { current, direction, changePage, deferring };

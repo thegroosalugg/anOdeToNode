@@ -26,7 +26,6 @@ export default function PagedList<T>({
 }: PagedList<T & { _id: string }> & Omit<HTMLMotionProps<'li'>, keyof PagedList<T>>) {
   const { limit, setColor, listCss, navTo, delay, fallback } = LIST_CONFIG[config];
   const      navigate = useNavigate();
-  const             x = direction * 50;
   const    background = limit > items.length ? setColor : '#00000000';
   const      position = deferring ? 'sticky' : 'relative';
   const        cursor = deferring ?   'wait' : '';
@@ -36,6 +35,18 @@ export default function PagedList<T>({
   const       listRef = useRef<HTMLUListElement |   null>(null);
   const        height = useRef<number           | 'auto'>('auto');
   const shouldRecount = docCount < limit && items.length < limit;
+
+  const ULvariants = {
+     enter: { opacity },
+    center: { opacity: 1, background },
+      exit: { opacity },
+  };
+
+  const variants = {
+     enter: (direction: number) => ({ opacity, x: direction > 0 ? 50 : -50 }),
+    center: { opacity: 1, x: 0 },
+      exit: (direction: number) => ({ opacity, x: direction < 0 ? 50 : -50 }),
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -47,41 +58,35 @@ export default function PagedList<T>({
   }, [shouldRecount]);
 
   function clickHandler(_id: string) {
-    if (!deferring) {
-      if (navTo) {
-        navigate(`/${navTo}/${_id}`);
-      } // may add else other callbacks later
-    }
+    if (!deferring && navTo) navigate(`/${navTo}/${_id}`);
   }
 
   return (
     <>
       <motion.ul
-              ref={listRef}
-        className={classes}
-            style={{ position, height: height.current }}
-          initial={{ opacity }}
-          animate={{
-            background,
-               opacity: 1,
-            transition: {
-                duration: 1,
-                    ease: 'easeInOut',
-                 opacity: { delay, duration: 1 }
-              }
-            }}
+               ref={listRef}
+         className={classes}
+             style={{ position, height: height.current }}
+          variants={ULvariants}
+           initial='enter'
+           animate='center'
+              exit='exit'
+        transition={{ duration: 1, ease: 'easeInOut', opacity: { delay, duration: 1 } }}
       >
-        <AnimatePresence mode='popLayout'>
+        <AnimatePresence mode='popLayout' custom={direction}>
           {items.length > 0 ? (
             items.map((item, i) => (
               <motion.li
-                 layout
-                    key={item._id}
-                onClick={() => clickHandler(item._id)}
-                  style={{ cursor }}
-                initial={{ opacity,    x }}
-                animate={{ opacity: 1, x:  0, transition: { duration, delay: i * 0.03 } }}
-                   exit={{ opacity,    x: -x, transition: { duration } }}
+                  layout
+                     key={item._id}
+                 onClick={() => clickHandler(item._id)}
+                   style={{ cursor }}
+                  custom={direction}
+                variants={variants}
+                 initial='enter'
+                 animate='center'
+                    exit='exit'
+              transition={{ duration, delay: 0.03 * i }}
                 {...props}
               >
                 {children(item)}
