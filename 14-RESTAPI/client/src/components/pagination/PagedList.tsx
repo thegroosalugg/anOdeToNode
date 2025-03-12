@@ -4,14 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import { Paginated } from '@/hooks/usePagination';
 import { LIST_CONFIG } from './pagedListConfig';
 import Pagination from './Pagination';
+import User from '@/models/User';
 import css from './PagedList.module.css';
 
-export type PagedConfig = 'feed' | 'userPosts' | 'reply' | 'users' | 'friends';
+export type PagedConfig = 'feed' | 'userPosts' | 'reply' | 'users' | 'friends' | 'mutual';
 
 interface PagedList<T> extends Paginated<T> {
     config: PagedConfig;
   children: (item: T) => React.ReactNode;
 }
+
+// user object will be nested when T is Friend, required for correct navTo functionality
+type IDs = { _id: string, user?: User };
 
 export default function PagedList<T>({
       config,
@@ -23,7 +27,7 @@ export default function PagedList<T>({
     children,
      ...props
   // merge MotionProps while excluding any that conflict with PagedList's own prop types
-}: PagedList<T & { _id: string }> & Omit<HTMLMotionProps<'li'>, keyof PagedList<T>>) {
+}: PagedList<T & IDs> & Omit<HTMLMotionProps<'li'>, keyof PagedList<T>>) {
   const { limit, setColor, listCss, navTo, delay, fallback } = LIST_CONFIG[config];
   const      navigate = useNavigate();
   const    background = limit > items.length ? setColor : '#00000000';
@@ -59,8 +63,12 @@ export default function PagedList<T>({
     }, 1000);
   }, [shouldRecount]);
 
-  function clickHandler(_id: string) {
-    if (!deferring && navTo) navigate(`/${navTo}/${_id}`);
+  function clickHandler(item: T & IDs) {
+    if (!deferring && navTo) {
+      const _id =
+        ['friends', 'mutual'].includes(config) && item.user ? item.user._id : item._id;
+      navigate(`/${navTo}/${_id}`);
+    }
   }
 
   return (
@@ -81,7 +89,7 @@ export default function PagedList<T>({
               <motion.li
                     layout
                        key={item._id}
-                   onClick={() => clickHandler(item._id)}
+                   onClick={() => clickHandler(item)}
                      style={{ cursor }}
                     custom={direction}
                   variants={variants}

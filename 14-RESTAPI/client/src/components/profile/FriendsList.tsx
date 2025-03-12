@@ -9,14 +9,17 @@ function paginate<T>(arr: T[], page: number, limit: number): T[] {
   return arr.slice(start, start + limit);
 };
 
-export default function FriendsList({ friends }: { friends: Friend[] }) {
+export default function FriendsList({
+  friends,
+   mutual,
+}: {
+  friends: Friend[];
+  mutual?: boolean;
+}) {
   const { deferring, current, direction, changePage: setPage } = usePages();
-  const friendsList = friends
-    .filter(({ accepted }) => accepted)
-    .map((item) => ({ ...item, _id: item.user._id }));
-  // connection ID isnt needed in List, however user ID is needed in its place for navTo Fn
+  const friendsList = friends.filter(({ accepted }) => accepted);
 
-  const limit = 10; // must match pagedListConfig.ts
+  const limit = mutual ? 5 : 10; // must match pagedListConfig.ts
   const [pagedData, setPagedData] = useState(paginate(friendsList, current, limit));
 
   // hook function renamed & redefined with extra step setPagedData
@@ -34,7 +37,7 @@ export default function FriendsList({ friends }: { friends: Friend[] }) {
   };
 
   return (
-    <PagedList<Friend> {...{ ...props, config: 'friends' }}>
+    <PagedList<Friend> {...{ ...props, config: mutual ? 'mutual' : 'friends' }}>
       {(friend) => <PeerItem user={friend.user} />}
     </PagedList>
   );

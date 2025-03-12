@@ -23,11 +23,23 @@ const getUsers: RequestHandler = async (req, res, next) => {
 };
 
 const getUserById: RequestHandler = async (req, res, next) => {
+  const user = req.user;
+  if (!user) return next(AppError.devErr());
+
   try {
     const { userId } = req.params; // .'friends' & .'about' required on this page
-    const user = await User.findById(userId).select('-email -password');
-    if (!user) return next(new AppError(404, 'User not found'));
-    res.status(200).json(user);
+    const peer = await User.findById(userId).select('-email -password');
+    if (!peer) return next(new AppError(404, 'User not found'));
+    peer.friends = peer.friends.filter((theirFriend) =>
+      user.friends.some(
+        (yourFriend) =>
+           yourFriend.accepted &&
+          theirFriend.accepted &&
+          theirFriend.user.toString() === yourFriend.user.toString()
+      )
+    ); // filter for mutual friends
+    await peer.populate('friends.user', _public);
+    res.status(200).json(peer);
   } catch (error) {
     next(new AppError(500, 'unable to load user', error));
   }

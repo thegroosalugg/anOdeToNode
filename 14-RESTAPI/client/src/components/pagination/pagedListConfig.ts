@@ -62,4 +62,16 @@ export const LIST_CONFIG = {
     setBckGrd: '#eee',
      fallback: 'Your friends will display here',
   },
+
+    mutual: {
+        limit: 5,
+     setColor: 'var(--team-green)',
+        navTo: 'user',
+        delay: 0.1,
+      listCss: [socialCss['user-list'], socialCss['mutual-friends']],
+      pageCss: [socialCss['friends-pagination']],
+        chars: '…',
+    setBckGrd: '#ebebeb',
+     fallback: 'You have no mutual friends',
+  },
 };

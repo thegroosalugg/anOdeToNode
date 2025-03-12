@@ -10,6 +10,7 @@ import Post from '@/models/Post';
 import Logger from '@/models/Logger';
 import AsyncAwait from '@/components/panel/AsyncAwait';
 import PeerProfile from '@/components/social/PeerProfile';
+import FriendsList from '@/components/profile/FriendsList';
 import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/post/PostItem';
 
@@ -92,6 +93,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
       {peer && (
         <>
           <PeerProfile {...{ user, setUser, peer }} />
+          <FriendsList friends={peer.friends} mutual />
           <PagedList<Post> {...{ ...rest, config: 'feed' }}>
             {(post) => <PostItem {...post} />}
           </PagedList>

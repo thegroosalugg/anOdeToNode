@@ -47,3 +47,7 @@ ul.friends-list {
 section.friends-pagination {
   margin: 0 auto 0.5rem;
 }
+
+ul.mutual-friends {
+  margin-bottom: 0.2rem;
+}

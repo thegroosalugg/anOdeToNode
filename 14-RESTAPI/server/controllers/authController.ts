@@ -46,6 +46,7 @@ const postLogin: RequestHandler = async (req, res, next) => {
       expiresIn: days,
     });
 
+    await user.populate('friends.user', _public);
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
     res.status(200).json({ JWTaccess, JWTrefresh, ...userDets });
   } catch (error) {
