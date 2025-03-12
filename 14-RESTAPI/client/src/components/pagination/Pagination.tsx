@@ -43,7 +43,7 @@ export default function Pagination({
     <motion.section
       className={classes}
         initial={{ opacity: 0 }} // 2nd component in line using this value, adds .5
-        animate={{ opacity: 1, transition: { delay: delay + 0.5, duration: 0.8 } }}
+        animate={{ opacity: 1, transition: { delay: delay + 0.5, duration: 0.5 } }}
     >
       <LayoutGroup>
         {pages.map((page) => {

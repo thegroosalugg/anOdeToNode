@@ -98,7 +98,7 @@ export default function PeerProfile({
       <motion.section
         className={css['peer-profile']}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1, transition: { duration: 0.8, delay: 0.5 } }}
+          animate={{ opacity: 1, transition: { duration: 0.5 } }}
       >
         <div className={css['profile-pic']}>
           <div>

@@ -41,7 +41,7 @@ export default function SocialPage({ user }: Authorized) {
     <AsyncAwait {...{ isLoading, error }}>
       <PagedList<User>
         {...{ ...rest, config: 'users' }}
-        whileHover={{ y: -2, transition: { ease: 'easeInOut' } }}
+        whileHover={{ y: -2, transition: { ease: 'linear', duration: 0.2 } }}
       >
         {(user) => <PeerItem user={user} />}
       </PagedList>

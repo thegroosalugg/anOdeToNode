@@ -6,7 +6,7 @@ import { LIST_CONFIG } from './pagedListConfig';
 import Pagination from './Pagination';
 import css from './PagedList.module.css';
 
-export type PagedConfig = 'feed' | 'userPosts' |'reply' | 'users' | 'friends';
+export type PagedConfig = 'feed' | 'userPosts' | 'reply' | 'users' | 'friends';
 
 interface PagedList<T> extends Paginated<T> {
     config: PagedConfig;
@@ -48,6 +48,8 @@ export default function PagedList<T>({
       exit: (direction: number) => ({ opacity, x: direction < 0 ? 50 : -50 }),
   };
 
+  const stagger = (index: number) => ({ duration, delay: 0.03 * index });
+
   useEffect(() => {
     setTimeout(() => {
       if (listRef.current) {
@@ -77,17 +79,17 @@ export default function PagedList<T>({
           {items.length > 0 ? (
             items.map((item, i) => (
               <motion.li
-                  layout
-                     key={item._id}
-                 onClick={() => clickHandler(item._id)}
-                   style={{ cursor }}
-                  custom={direction}
-                variants={variants}
-                 initial='enter'
-                 animate='center'
-                    exit='exit'
-              transition={{ duration, delay: 0.03 * i }}
-                {...props}
+                    layout
+                       key={item._id}
+                   onClick={() => clickHandler(item._id)}
+                     style={{ cursor }}
+                    custom={direction}
+                  variants={variants}
+                   initial='enter'
+                   animate='center'
+                      exit='exit'
+                transition={{ x: stagger(i), opacity: stagger(i) }}
+                {...props} // target transitions so that whileHover etc. remain undisturbed
               >
                 {children(item)}
               </motion.li>
