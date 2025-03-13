@@ -31,7 +31,7 @@ const validate = (path: string, props: Auth) => {
   const elements = {
     '/feed':          <FeedPage   {...authorized} />,
     '/post/:postId':  <PostPage   {...authorized} />,
-    '/social':        <SocialPage {...authorized} />,
+    '/social':        <SocialPage                 />, // props were never used here
     '/user/:userId':  <PeerPage   {...authorized} />,
     '/inbox':         <ChatPage   {...authorized} />,
     '/inbox/:userId': <ChatPage   {...authorized} />,
