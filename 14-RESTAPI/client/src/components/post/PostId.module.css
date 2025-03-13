@@ -9,6 +9,7 @@
   > h1 {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
     padding: 0.5rem 0.5rem 0;
 
     span {
@@ -17,18 +18,14 @@
       text-wrap: nowrap;
       overflow-x: scroll;
       overflow-y: hidden;
+      flex: 1 1 50%;
 
       &:first-of-type {
-        margin-right: auto;
-        max-width: 60%;
         font-family: "Oswald", sans-serif;
       }
 
       &:last-of-type {
-        margin-left: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.2rem;
+        text-align: end;
         cursor: pointer;
       }
     }

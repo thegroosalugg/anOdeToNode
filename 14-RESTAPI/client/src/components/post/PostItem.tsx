@@ -3,15 +3,15 @@ import ProfilePic from '../profile/ProfilePic';
 import { timeAgo } from '@/util/timeStamps';
 
 export default function PostItem({
-     creator,
-       title,
-   updatedAt,
-     content,
-  onUserPage,
-}: Post & { onUserPage?: boolean }) {
+    creator,
+      title,
+  updatedAt,
+    content,
+  isCreator,
+}: Post & { isCreator?: boolean }) {
   return (
     <>
-      {!onUserPage && (
+      {!isCreator && (
         <h3>
           <ProfilePic user={creator} />
           <span>

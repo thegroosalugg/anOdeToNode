@@ -1,16 +1,13 @@
 import { RequestHandler } from 'express';
 import { Types } from 'mongoose';
 import { io } from '../app';
-import User from '../models/User';
+import User, { _public } from '../models/User';
 import Chat from '../models/Chat';
 import AppError from '../models/Error';
 
-const _public = '-email -password -friends';
-const  devErr = 'Do not use without AuthJWT';
-
 const getChats: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const chats = await Chat.find({
@@ -26,7 +23,7 @@ const getChats: RequestHandler = async (req, res, next) => {
 
 const findChat: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const { userId } = req.params;
@@ -61,7 +58,7 @@ const findChat: RequestHandler = async (req, res, next) => {
 
 const deleteChat: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const  data = req.body;
@@ -96,7 +93,7 @@ const deleteChat: RequestHandler = async (req, res, next) => {
         {
           $set: {
             [`deletedFor.${userId}`]: true, // does not overwrite other keys
-            [`alerts.${userId}`]: 0,
+            [    `alerts.${userId}`]: 0,
           },
         },
         { userId } // pass data to pre middleware

@@ -14,4 +14,8 @@ export default class AppError {
     const  line = stack?.split('\n')[2]; // [0] is Error, [1] is AppError constructor
     this.where  =  line?.match(/at\s+(\S+)/)?.[1] || "<<Unknown Location>>";
   }
+
+  static devErr() {
+    return new AppError(500, 'Something went wrong', 'Do not use without AuthJWT');
+  }
 }

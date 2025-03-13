@@ -1,3 +1,4 @@
+import { motion } from 'motion/react';
 import { useState } from 'react';
 import usePagination from '@/hooks/usePagination';
 import { Authorized } from '@/pages/RootLayout';
@@ -7,6 +8,7 @@ import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import AsyncAwait from '../panel/AsyncAwait';
+import FriendsList from './FriendsList';
 import PagedList from '../pagination/PagedList';
 import PostItem from '../post/PostItem';
 import css from './UserProfile.module.css';
@@ -31,11 +33,15 @@ export default function UserProfile({ user, setUser }: Authorized) {
       <Modal show={showModal}                close={closeModal}>
         <ConfirmDialog onConfirm={logout} onCancel={closeModal} />
       </Modal>
-      <section className={css['user-profile']}>
+      <motion.section
+        className={css['user-profile']}
+             exit={{ opacity: 0, transition: { duration: 0.5 } }}
+      >
         <ProfileHeader {...{ user, setUser }} />
+        <FriendsList friends={user.friends} />
         <AsyncAwait {...{ isLoading, error }}>
-          <PagedList<Post> {...{ ...rest, config: 'profile' }}>
-            {(post) => <PostItem {...post} onUserPage />}
+          <PagedList<Post> {...{ ...rest, config: 'userPosts' }}>
+            {(post) => <PostItem {...post} isCreator />}
           </PagedList>
         </AsyncAwait>
         <Button
@@ -45,7 +51,7 @@ export default function UserProfile({ user, setUser }: Authorized) {
         >
           Logout
         </Button>
-      </section>
+      </motion.section>
     </>
   );
 }

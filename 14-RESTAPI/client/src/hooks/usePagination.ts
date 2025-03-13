@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import useDebounce, { Debounce } from './useDebounce';
 import useFetch from './useFetch';
 
-type     Pages = [previous: number, current: number];
-type Direction = 1 | -1;
+type Direction = -1 | 1;
 
 export type InitState<T> = {
   docCount: number;
@@ -18,15 +17,28 @@ export type Paginated<T = null> = {
    deferring: Debounce['deferring'];
 };
 
+export function usePages() {
+  const { deferring,    deferFn } = useDebounce();
+  const [current,        setPage] = useState(1);
+  const [direction, setDirection] = useState<Direction>(1)
+
+  const changePage = (page: number) => {
+    deferFn(() => {
+      setPage(page);
+      setDirection(page > current ? 1 : -1);
+    }, 1200);
+  };
+
+  return { current, direction, changePage, deferring };
+}
+
 export default function usePagination<T>(baseURL: string, shouldFetch = true) {
   const initState: InitState<T>       = { docCount: 0, items: [] };
   const { data, reqHandler, ...rest } = useFetch(initState);
-  const            isInitial          = useRef(true);
-  const { deferring,        deferFn } = useDebounce();
-  const [pages,             setPages] = useState<Pages>([1, 1]);
-  const [previous,           current] = pages;
-  const direction: Direction          = previous < current ? 1 : -1;
-  const              url              = baseURL + `?page=${current}`;
+  const   isInitial = useRef(true);
+  const  pagedProps = usePages();
+  const { current } = pagedProps;
+  const     url     = baseURL + `?page=${current}`;
 
   useEffect(() => {
     const initData = async () => {
@@ -39,16 +51,5 @@ export default function usePagination<T>(baseURL: string, shouldFetch = true) {
     initData();
   }, [reqHandler, url, shouldFetch]);
 
-  const changePage = (page: number) => {
-    deferFn(() => setPages([current, page]), 1200);
-  };
-
-  return {
-       fetcher: { ...rest, isLoading: isInitial.current },
-          data,
-       current,
-     direction,
-    changePage,
-     deferring,
-  };
+  return { ...pagedProps, fetcher: { ...rest, isLoading: isInitial.current }, data };
 }

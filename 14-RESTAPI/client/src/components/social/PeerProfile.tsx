@@ -6,7 +6,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { getPeerConfig } from './peerProfileConfig';
 import { Auth } from '@/pages/RootLayout';
 import useFetch from '@/hooks/useFetch';
-import User, { getId } from '@/models/User';
+import User from '@/models/User';
 import Modal from '../modal/Modal';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import ProfilePic from '../profile/ProfilePic';
@@ -46,8 +46,8 @@ export default function PeerProfile({
   const { _id, name, surname, createdAt, about } = peer;
   const {    bio,    home,    study,    work   } = about ?? {};
 
-  const  connection = user.friends.find((friend) => getId(friend.user) === _id);
-  const { accepted, initiated } = connection ?? {};
+  const  connection = user.friends.find((friend) => friend.user._id === _id);
+  const { accepted, initiated, acceptedAt } = connection ?? {};
   const       color = connection ?     '#ffffff' : 'var(--team-green)';
   const borderColor = connection ? 'transparent' : 'var(--team-green)';
   const { text, icon, hsl, action } = getPeerConfig(connection);
@@ -98,7 +98,7 @@ export default function PeerProfile({
       <motion.section
         className={css['peer-profile']}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1, transition: { duration: 0.8, delay: 0.5 } }}
+          animate={{ opacity: 1, transition: { duration: 0.5 } }}
       >
         <div className={css['profile-pic']}>
           <div>
@@ -136,6 +136,9 @@ export default function PeerProfile({
         </div>
         <div className={css['user-info']}>
           <h2>Joined on {formatDate(createdAt, ['year'])}</h2>
+          {acceptedAt && (
+            <h2>You have been friends since {formatDate(acceptedAt, ['year'])}</h2>
+          )}
           <InfoTag {...{ text: home,  i: 0 }} />
           <InfoTag {...{ text: work,  i: 1 }} />
           <InfoTag {...{ text: study, i: 2 }} />

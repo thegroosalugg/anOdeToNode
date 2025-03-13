@@ -25,12 +25,11 @@ export default function SocialAlerts({
 }) {
   const { reqHandler } = useFetch<User>();
   const {  deferFn   } = useDebounce();
-  const [ x,    setX ] = useState(0)
+  const [x,      setX] = useState(0)
   const    connections = friends
-    .filter((friend): friend is Friend & { user: User } => {
-      const { user, initiated, meta } = friend;
+    .filter(({ initiated, meta }) => {
       const condition = activeTab === 1 ? initiated : !initiated;
-      return typeof user === 'object' && condition && meta.show;
+      return condition && meta.show;
     })
     .reverse();
 

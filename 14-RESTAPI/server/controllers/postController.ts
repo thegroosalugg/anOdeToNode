@@ -5,11 +5,9 @@ import AppError from '../models/Error';
 import { getErrors, hasErrors } from '../validation/validators';
 import { deleteFile } from '../util/deleteFile';
 
-const devErr = 'Do not use without AuthJWT';
-
 const newPost: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const { title, content } = req.body;
@@ -39,7 +37,7 @@ const newPost: RequestHandler = async (req, res, next) => {
 
 const editPost: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const {     postId     } = req.params;
@@ -76,7 +74,7 @@ const editPost: RequestHandler = async (req, res, next) => {
 
 const deletePost: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const { postId: _id } = req.params;

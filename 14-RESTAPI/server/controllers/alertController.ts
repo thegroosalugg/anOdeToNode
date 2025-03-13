@@ -4,13 +4,11 @@ import AppError from '../models/Error';
 import Post from '../models/Post';
 import Reply from '../models/Reply';
 import Chat from '../models/Chat';
-
-const _public = '-email -password -friends';
-const  devErr = 'Do not use without AuthJWT';
+import { _public } from '../models/User';
 
 const readSocials: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const { type } = req.query;
@@ -32,7 +30,7 @@ const readSocials: RequestHandler = async (req, res, next) => {
 
 const clearSocials: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const { alertId } = req.params;
@@ -49,7 +47,7 @@ const clearSocials: RequestHandler = async (req, res, next) => {
 
 const readReplies: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const { read } = req.query;
@@ -92,7 +90,7 @@ const clearReplies: RequestHandler = async (req, res, next) => {
 
 const clearMsgs: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const { chatId } = req.params;

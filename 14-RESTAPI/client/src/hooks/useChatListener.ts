@@ -94,8 +94,8 @@ export default function useChatListener(
 
     const initData = async () => {
       if (isInitial.current) {
-        await Promise.all([reqChats({ url: 'chat/all' }), getActiveChat()]);
         isInitial.current = false;
+        await Promise.all([reqChats({ url: 'chat/all' }), getActiveChat()]);
       }
     };
 

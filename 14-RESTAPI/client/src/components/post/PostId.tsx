@@ -19,7 +19,7 @@ export default function PostId({
   setModal: (modal: string) => void;
 }) {
   const { title, content, imgURL, creator, updatedAt } = post;
-  const transition = { duration: 0.8 };
+  const transition = { duration: 0.5 };
   const    opacity = 0;
   const     hidden = { opacity };
   const    visible = { opacity: 1, transition };
@@ -50,8 +50,8 @@ export default function PostId({
           {creator?.name    || 'Account'}
           {' '}
           {creator?.surname || 'deleted'}
-          <ProfilePic user={creator} />
         </span>
+        <ProfilePic user={creator} />
       </motion.h1>
       <motion.time variants={variants}>
         {timeAgo(updatedAt)}

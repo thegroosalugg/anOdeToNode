@@ -2,16 +2,25 @@ import { RequestHandler } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { io } from '../app';
-import User from '../models/User';
+import User, { _public } from '../models/User';
 import AppError from '../models/Error';
 import { getErrors, hasErrors } from '../validation/validators';
 
 const mins = '15m';
 const days = '7d';
 
+// verified by middleware, requires a endpoint to return user data
 const getUser: RequestHandler = async (req, res, next) => {
-  // handled by middleware, requires a controller to receive requests
-  res.status(200).json({ ...req.user?.toObject() });
+  const user = req.user;
+  if (!user) return next(AppError.devErr());
+
+  try {
+    await user.populate('friends.user', _public);
+    res.status(200).json({ ...user.toObject() });
+  } catch (error) {
+    // returns unpopulated data
+    res.status(200).json({ ...user.toObject(), message: 'unable to load friends' });
+  }
 };
 
 const postLogin: RequestHandler = async (req, res, next) => {
@@ -37,6 +46,7 @@ const postLogin: RequestHandler = async (req, res, next) => {
       expiresIn: days,
     });
 
+    await user.populate('friends.user', _public);
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
     res.status(200).json({ JWTaccess, JWTrefresh, ...userDets });
   } catch (error) {

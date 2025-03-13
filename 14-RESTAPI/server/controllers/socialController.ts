@@ -1,10 +1,7 @@
 import { RequestHandler } from 'express';
 import { io } from '../app';
-import User, { IFriend } from '../models/User';
+import User, { _public, IFriend } from '../models/User';
 import AppError from '../models/Error';
-
-const _public = '-email -password';
-const  devErr = 'Do not use without AuthJWT';
 
 const getUsers: RequestHandler = async (req, res, next) => {
   try {
@@ -26,11 +23,23 @@ const getUsers: RequestHandler = async (req, res, next) => {
 };
 
 const getUserById: RequestHandler = async (req, res, next) => {
+  const user = req.user;
+  if (!user) return next(AppError.devErr());
+
   try {
-    const { userId } = req.params;
-    const user = await User.findById(userId).select(_public);
-    if (!user) return next(new AppError(404, 'User not found'));
-    res.status(200).json(user);
+    const { userId } = req.params; // .'friends' & .'about' required on this page
+    const peer = await User.findById(userId).select('-email -password');
+    if (!peer) return next(new AppError(404, 'User not found'));
+    peer.friends = peer.friends.filter((theirFriend) =>
+      user.friends.some(
+        (yourFriend) =>
+           yourFriend.accepted &&
+          theirFriend.accepted &&
+          theirFriend.user.toString() === yourFriend.user.toString()
+      )
+    ); // filter for mutual friends
+    await peer.populate('friends.user', _public);
+    res.status(200).json(peer);
   } catch (error) {
     next(new AppError(500, 'unable to load user', error));
   }
@@ -38,7 +47,7 @@ const getUserById: RequestHandler = async (req, res, next) => {
 
 const friendRequest: RequestHandler = async (req, res, next) => {
   const user = req.user;
-  if (!user) return next(new AppError(403, 'Something went wrong', devErr));
+  if (!user) return next(AppError.devErr());
 
   try {
     const { userId, action } = req.params;
@@ -60,8 +69,11 @@ const friendRequest: RequestHandler = async (req, res, next) => {
         user.friends.push({ user: peer._id, initiated: true  } as IFriend);
         break;
       case 'accept':
-        peer.friends[peerIndex].accepted = true;
-        user.friends[userIndex].accepted = true;
+        const date = new Date();
+        peer.friends[peerIndex].accepted   = true;
+        user.friends[userIndex].accepted   = true;
+        peer.friends[peerIndex].acceptedAt = date;
+        user.friends[userIndex].acceptedAt = date;
         break;
       case 'delete':
         peer.friends.splice(peerIndex, 1);
@@ -73,6 +85,8 @@ const friendRequest: RequestHandler = async (req, res, next) => {
 
     await peer.save();
     await user.save();
+    await peer.populate('friends.user', _public);
+    await user.populate('friends.user', _public);
     io.emit(`peer:${user._id}:update`, user);
     io.emit(`peer:${peer._id}:update`, peer);
     res.status(201).json({ message: 'success' });
