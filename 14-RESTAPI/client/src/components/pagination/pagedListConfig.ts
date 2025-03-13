@@ -4,7 +4,7 @@ import socialCss from '../social/PeerItem.module.css';
 
 export const LIST_CONFIG = {
   feed: {                           // each component calls only this key
-        limit: 4,                   // docs per page. Matching no. must be set on Server
+        limit: 4,                   // docs per page. Must match corresponding Server controller
      setColor: 'var(--team-green)', // last list page && pagination color & border
         navTo: 'post',              // if list item should navigate to an ID page
         delay: 0.2,                 // enter animation. Cascades with other components
@@ -52,7 +52,7 @@ export const LIST_CONFIG = {
   },
 
   friends: {
-        limit: 10,
+        limit: 10, // must match FriendsList.tsx
      setColor: 'var(--text-grey)',
         navTo: 'user',
         delay: 0.5,
@@ -64,7 +64,7 @@ export const LIST_CONFIG = {
   },
 
     mutual: {
-        limit: 5,
+        limit: 5, // must match FriendsList.tsx
      setColor: 'var(--team-green)',
         navTo: 'user',
         delay: 0.1,

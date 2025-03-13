@@ -39,6 +39,7 @@ export default function PagedList<T>({
   const       listRef = useRef<HTMLUListElement |   null>(null);
   const        height = useRef<number           | 'auto'>('auto');
   const shouldRecount = docCount < limit && items.length < limit;
+  const  isFriendList = ['friends', 'mutual'].includes(config);
 
   const ULvariants = {
      enter: { opacity },
@@ -65,8 +66,7 @@ export default function PagedList<T>({
 
   function clickHandler(item: T & IDs) {
     if (!deferring && navTo) {
-      const _id =
-        ['friends', 'mutual'].includes(config) && item.user ? item.user._id : item._id;
+      const _id = isFriendList && item.user ? item.user._id : item._id;
       navigate(`/${navTo}/${_id}`);
     }
   }
@@ -83,7 +83,7 @@ export default function PagedList<T>({
               exit='exit'
         transition={{ duration: 1, ease: 'easeInOut', opacity: { delay, duration: 1 } }}
       >
-        <AnimatePresence mode='popLayout' custom={direction}>
+        <AnimatePresence mode='popLayout' custom={direction} initial={!isFriendList}>
           {items.length > 0 ? (
             items.map((item, i) => (
               <motion.li

@@ -1,3 +1,4 @@
+import { motion } from 'motion/react';
 import { useState } from 'react';
 import usePagination from '@/hooks/usePagination';
 import { Authorized } from '@/pages/RootLayout';
@@ -32,7 +33,10 @@ export default function UserProfile({ user, setUser }: Authorized) {
       <Modal show={showModal}                close={closeModal}>
         <ConfirmDialog onConfirm={logout} onCancel={closeModal} />
       </Modal>
-      <section className={css['user-profile']}>
+      <motion.section
+        className={css['user-profile']}
+             exit={{ opacity: 0, transition: { duration: 0.5 } }}
+      >
         <ProfileHeader {...{ user, setUser }} />
         <FriendsList friends={user.friends} />
         <AsyncAwait {...{ isLoading, error }}>
@@ -47,7 +51,7 @@ export default function UserProfile({ user, setUser }: Authorized) {
         >
           Logout
         </Button>
-      </section>
+      </motion.section>
     </>
   );
 }

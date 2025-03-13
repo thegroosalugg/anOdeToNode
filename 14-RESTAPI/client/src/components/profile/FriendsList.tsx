@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePages } from '@/hooks/usePagination';
 import Friend from '@/models/Friend';
 import PagedList from '../pagination/PagedList';
@@ -21,6 +21,18 @@ export default function FriendsList({
 
   const limit = mutual ? 5 : 10; // must match pagedListConfig.ts
   const [pagedData, setPagedData] = useState(paginate(friendsList, current, limit));
+
+  useEffect(() => {
+    setPagedData((prev) => {
+      const newPage = paginate(friendsList, current, limit);
+      // .some fails on reference mismatch, always triggering newPage.
+      // React re-renders only on prop value changes, not new refs.
+      // therefore if a new friend is added, this will also updated pagedData, not just removals
+      return prev.length > newPage.length || prev.some((f) => !friendsList.includes(f))
+        ? newPage
+        : prev;
+    });
+  }, [friendsList, current, limit]);
 
   // hook function renamed & redefined with extra step setPagedData
   const changePage = (page: number) => {
