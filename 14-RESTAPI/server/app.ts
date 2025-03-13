@@ -22,6 +22,9 @@ import   captainsLog from './util/captainsLog';
 import        dotenv from 'dotenv';
               dotenv.config();
 
+const inProduction = process.env.NODE_ENV === 'production';
+const      rootDir = inProduction ? '../' : ''; // re-route to parent folder in production
+
 const    app = express();
 const server = app.listen(3000, () => {
   captainsLog(0, '<<Hudson River, 2 years ago>>');
@@ -35,7 +38,8 @@ export const io = new Server(server, {
   }
 }); // set up websockets. CORS applies only to sockets, not regular HTTP
 
-app.use('/uploads', express.static(join(import.meta.dirname, 'uploads'))); // serve static paths
+// serve static paths
+app.use('/uploads', express.static(join(import.meta.dirname, rootDir, 'uploads')));
 
 // app.use(express.urlencoded({ extended: false })); // x-www-form-urlencoded <form>
 app.use(express.json()); // parse application/json

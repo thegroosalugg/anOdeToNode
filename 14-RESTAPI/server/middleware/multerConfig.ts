@@ -9,10 +9,6 @@ const storage = multer.diskStorage({
   },
 
   filename: (req, file, callback) => {
-    // if (!req.user) {
-    //   // callback failed, 1: error, 2: filename as empty string
-    //   return callback(new Error('User'), '');
-    // }
     const dateStr = new Date().toISOString().replace(/[:.-]/g, '_');
     callback(null, dateStr + '_' + file.originalname);
   },
