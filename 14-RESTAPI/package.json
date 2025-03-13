@@ -8,7 +8,7 @@
     "build": "concurrently \"npm run server-build\" \"npm run client-build\"",
     "client-build": "cd client && npm run build",
     "server-build": "cd server && npm run build",
-    "preview": "concurrently \"npm run server-prod\" \"npm run client-preview\"",
+    "preview": "concurrently \"npm run server-preview\" \"npm run client-preview\"",
     "client-preview": "cd client && npm run preview",
     "server-preview": "cd server && npm run preview"
   },
