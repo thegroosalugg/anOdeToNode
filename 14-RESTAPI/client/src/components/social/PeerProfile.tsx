@@ -47,7 +47,7 @@ export default function PeerProfile({
   const {    bio,    home,    study,    work   } = about ?? {};
 
   const  connection = user.friends.find((friend) => friend.user._id === _id);
-  const { accepted, initiated } = connection ?? {};
+  const { accepted, initiated, acceptedAt } = connection ?? {};
   const       color = connection ?     '#ffffff' : 'var(--team-green)';
   const borderColor = connection ? 'transparent' : 'var(--team-green)';
   const { text, icon, hsl, action } = getPeerConfig(connection);
@@ -136,6 +136,9 @@ export default function PeerProfile({
         </div>
         <div className={css['user-info']}>
           <h2>Joined on {formatDate(createdAt, ['year'])}</h2>
+          {acceptedAt && (
+            <h2>You have been friends since {formatDate(acceptedAt, ['year'])}</h2>
+          )}
           <InfoTag {...{ text: home,  i: 0 }} />
           <InfoTag {...{ text: work,  i: 1 }} />
           <InfoTag {...{ text: study, i: 2 }} />
