@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import usePagination from '@/hooks/usePagination';
 import useSocket from '@/hooks/useSocket';
-import { Authorized } from './RootLayout';
 import User from '@/models/User';
 import Logger from '@/models/Logger';
 import AsyncAwait from '@/components/panel/AsyncAwait';
@@ -9,7 +8,7 @@ import PagedList from '@/components/pagination/PagedList';
 import PeerItem from '@/components/social/PeerItem';
 
 
-export default function SocialPage({ user }: Authorized) {
+export default function SocialPage() {
   const {
     fetcher: { setData, isLoading, error },
      ...rest
