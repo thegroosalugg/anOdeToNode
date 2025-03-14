@@ -22,8 +22,8 @@ import   captainsLog from './util/captainsLog';
 import        dotenv from 'dotenv';
               dotenv.config();
 
-const inProduction = process.env.NODE_ENV === 'production';
-const      rootDir = inProduction ? '../' : ''; // re-route to parent folder in production
+// re-route FS location to parent folder in production
+const rootDir = process.env.NODE_ENV === 'production' ? '../' : '';
 
 const    app = express();
 const server = app.listen(3000, () => {
@@ -53,7 +53,6 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
   // sets allowed headers, content-type for req body
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
   next();
 });
 
