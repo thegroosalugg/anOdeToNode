@@ -20,11 +20,12 @@ const Ellipsis = ({ chars, color }: { chars: string, color: string }) => (
 export default function Pagination({
        config,
      docCount,
+        limit,
       current,
    changePage,
     deferring,
 }: Omit<Paginated, 'data' | 'direction'> & { config: PagedConfig, docCount: number }) {
-  const { limit, pageCss, delay } = LIST_CONFIG[config];
+  const { pageCss, delay } = LIST_CONFIG[config];
   const     last = Math.ceil(docCount / limit);
   const   middle = last < 5 ? 3 : Math.min(Math.max(current, 3), last - 2);
   const    pages: number[] = [];

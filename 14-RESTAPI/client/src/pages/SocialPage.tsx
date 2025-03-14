@@ -1,3 +1,4 @@
+import { isMobile } from 'react-device-detect';
 import { useEffect } from 'react';
 import usePagination from '@/hooks/usePagination';
 import useSocket from '@/hooks/useSocket';
@@ -7,12 +8,11 @@ import AsyncAwait from '@/components/panel/AsyncAwait';
 import PagedList from '@/components/pagination/PagedList';
 import PeerItem from '@/components/social/PeerItem';
 
-
 export default function SocialPage() {
   const {
     fetcher: { setData, isLoading, error },
      ...rest
-  } = usePagination<User>('social/users');
+  } = usePagination<User>('social/users', isMobile ? 8 : 10);
   const socketRef = useSocket('social');
 
   useEffect(() => {

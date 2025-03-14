@@ -20,7 +20,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
   const {
     fetcher: { setData },
    ...rest
-  } = usePagination<Post>(`social/posts/${userId}`, !!userId);
+  } = usePagination<Post>(`social/posts/${userId}`, 4, !!userId);
   const   navigate   = useNavigate();
   const  isInitial   = useRef(true);
   const  socketRef   = useSocket('peer');

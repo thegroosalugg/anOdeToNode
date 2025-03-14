@@ -13,7 +13,7 @@ export const captainsLog = (hue: number, data: unknown[]) => {
   const rootComponent = stack
     .map((line) => line.match(/\/([^/]+)\.tsx?/i)?.[1]) // Extract file names
     .filter(Boolean) // Remove null values
-    .pop() || 'Unknown'; // Get the earliest component in the stack
+    .pop() || ''; // Get the earliest component in the stack
 
   const time = new Date().toLocaleTimeString([], {
       hour: '2-digit',
@@ -21,6 +21,8 @@ export const captainsLog = (hue: number, data: unknown[]) => {
     second: '2-digit',
     hour12: false,
   });
+
+  const space = rootComponent ? ', ' : '';
 
   data.forEach((item) => {
     const type = Array.isArray(item) ? 'Array' : typeof item;
@@ -30,7 +32,7 @@ export const captainsLog = (hue: number, data: unknown[]) => {
       else                       console.dir(item);
       console.groupEnd();
     } else {
-      console.log(`%c${item}\n[${time}, ${rootComponent}]`, style);
+      console.log(`%c${item}\n[${time}${space}${rootComponent}]`, style);
     }
   });
 };

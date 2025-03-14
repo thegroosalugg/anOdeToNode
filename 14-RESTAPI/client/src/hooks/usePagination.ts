@@ -12,6 +12,7 @@ export type InitState<T> = {
 export type Paginated<T = null> = {
         data: InitState<T>;
   changePage: (page: number) => void;
+       limit: number;
      current: number;
    direction: Direction;
    deferring: Debounce['deferring'];
@@ -32,13 +33,13 @@ export function usePages() {
   return { current, direction, changePage, deferring };
 }
 
-export default function usePagination<T>(baseURL: string, shouldFetch = true) {
+export default function usePagination<T>(baseURL: string, limit: number, shouldFetch = true) {
   const initState: InitState<T>       = { docCount: 0, items: [] };
   const { data, reqHandler, ...rest } = useFetch(initState);
   const   isInitial = useRef(true);
   const  pagedProps = usePages();
   const { current } = pagedProps;
-  const     url     = baseURL + `?page=${current}`;
+  const     url     = baseURL + `?page=${current}&limit=${limit}`;
 
   useEffect(() => {
     const initData = async () => {
@@ -51,5 +52,5 @@ export default function usePagination<T>(baseURL: string, shouldFetch = true) {
     initData();
   }, [reqHandler, url, shouldFetch]);
 
-  return { ...pagedProps, fetcher: { ...rest, isLoading: isInitial.current }, data };
+  return { ...pagedProps, limit, data, fetcher: { ...rest, isLoading: isInitial.current } };
 }
