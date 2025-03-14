@@ -60,7 +60,7 @@ export const validateSignUp = [
 
 export const validatePost = [
   validateField('title',   [ 5,   50]),
-  validateField('content', [30, 1000])
+  validateField('content', [20, 1000])
 ];
 
 // .body with no arg gets the entire req.body object
