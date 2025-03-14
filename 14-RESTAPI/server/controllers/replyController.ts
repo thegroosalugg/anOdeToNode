@@ -8,8 +8,8 @@ import { _public } from '../models/User';
 
 const getReplies: RequestHandler = async (req, res, next) => {
   const { postId: post } = req.params;
-  const page = +(req.query.page || 1);
-  const limit = 8;
+  const  page = +(req.query.page  ||  1);
+  const limit = +(req.query.limit || 10);
 
   try {
     const docCount = await Reply.find({ post }).countDocuments();

@@ -17,7 +17,7 @@ export default function UserProfile({ user, setUser }: Authorized) {
   const {
     fetcher: { isLoading, error },
      ...rest
-  } = usePagination<Post>('profile/posts');
+  } = usePagination<Post>('profile/posts', 5);
   const [showModal, setShowModal] = useState(false);
   const closeModal = () => setShowModal(false);
 

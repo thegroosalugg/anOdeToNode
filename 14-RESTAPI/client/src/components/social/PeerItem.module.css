@@ -45,9 +45,19 @@ ul.friends-list {
 }
 
 section.friends-pagination {
-  margin: 0 auto;
+  margin: 0 auto 0.5rem;
 }
 
 ul.mutual-friends {
   margin-bottom: 0.2rem;
+}
+
+@media screen and (pointer: coarse) {
+  ul.user-list {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+
+    > li h2 {
+      font-size: 60%;
+    }
+  }
 }

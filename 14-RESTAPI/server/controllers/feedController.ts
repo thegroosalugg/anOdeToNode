@@ -9,8 +9,8 @@ const getPosts: RequestHandler = async (req, res, next) => {
   try {
     const  isProfile = req.baseUrl === '/profile'; // controller accessed /profile
     const     isPeer = req.baseUrl === '/social';  // controller accessed /social
-    const       page = +(req.query.page || 1);
-    const      limit = isProfile ? 6 : 4;
+    const       page = +(req.query.page  ||  1);
+    const      limit = +(req.query.limit || 10);
     const { userId } = req.params; // only when accessed via /social/posts
     const query: Record<string, Types.ObjectId | string> = {};
 

@@ -20,6 +20,7 @@ type IDs = { _id: string, user?: User };
 export default function PagedList<T>({
       config,
         data: { docCount, items },
+       limit,
      current,
    direction,
   changePage,
@@ -28,7 +29,7 @@ export default function PagedList<T>({
      ...props
   // merge MotionProps while excluding any that conflict with PagedList's own prop types
 }: PagedList<T & IDs> & Omit<HTMLMotionProps<'li'>, keyof PagedList<T>>) {
-  const { limit, setColor, listCss, navTo, delay, fallback } = LIST_CONFIG[config];
+  const { setColor, listCss, navTo, delay, fallback } = LIST_CONFIG[config];
   const      navigate = useNavigate();
   const    background = limit > items.length ? setColor : '#00000000';
   const      position = deferring ? 'sticky' : 'relative';
@@ -116,7 +117,7 @@ export default function PagedList<T>({
         </AnimatePresence>
       </motion.ul>
       {docCount >= limit && (
-        <Pagination {...{ config, current, changePage, docCount, deferring }} />
+        <Pagination {...{ config, current, changePage, docCount, limit, deferring }} />
       )}
     </>
   );

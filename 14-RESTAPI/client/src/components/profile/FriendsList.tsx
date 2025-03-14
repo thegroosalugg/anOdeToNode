@@ -1,3 +1,4 @@
+import { isMobile } from 'react-device-detect';
 import { useEffect, useState } from 'react';
 import { usePages } from '@/hooks/usePagination';
 import Friend from '@/models/Friend';
@@ -19,7 +20,7 @@ export default function FriendsList({
   const { deferring, current, direction, changePage: setPage } = usePages();
   const friendsList = friends.filter(({ accepted }) => accepted);
 
-  const limit = mutual ? 5 : 10; // must match pagedListConfig.ts
+  const limit = isMobile ? 4 : 5;
   const [pagedData, setPagedData] = useState(paginate(friendsList, current, limit));
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function FriendsList({
   // hook function renamed & redefined with extra step setPagedData
   const changePage = (page: number) => {
     if (!deferring) setPagedData(paginate(friendsList, page, limit));
-    setPage(page);// hook function sets deferring
+    setPage(page); // hook function sets deferring
   };
 
   const props = {
@@ -49,7 +50,7 @@ export default function FriendsList({
   };
 
   return (
-    <PagedList<Friend> {...{ ...props, config: mutual ? 'mutual' : 'friends' }}>
+    <PagedList<Friend> {...{ ...props, limit, config: mutual ? 'mutual' : 'friends' }}>
       {(friend) => <PeerItem user={friend.user} />}
     </PagedList>
   );

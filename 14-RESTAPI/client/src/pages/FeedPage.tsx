@@ -15,7 +15,7 @@ export default function FeedPage({ setUser }: Authorized) {
   const {
     fetcher: { setData, isLoading, error },
      ...rest
-  } = usePagination<Post>('feed/posts');
+  } = usePagination<Post>('feed/posts', 4);
   const        socketRef          = useSocket('feed');
   const [showModal, setShowModal] = useState(false);
 

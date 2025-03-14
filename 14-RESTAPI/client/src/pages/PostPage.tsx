@@ -32,7 +32,7 @@ export default function PostPage({ user, setUser }: Authorized) {
   const {
     fetcher: { setData: setReplies },
      ...rest
-  } = usePagination<Reply>(`post/replies/${postId}`, !!postId);
+  } = usePagination<Reply>(`post/replies/${postId}`, 5, !!postId);
   const [modalState, setModalState] = useState('');
   const   navigate  = useNavigate();
   const   socketRef = useSocket('post');

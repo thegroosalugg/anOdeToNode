@@ -6,8 +6,8 @@ import AppError from '../models/Error';
 const getUsers: RequestHandler = async (req, res, next) => {
   try {
     const    query = { _id: { $ne: req.user }};
-    const    limit = 15;
-    const    page  = +(req.query.page || 1);
+    const    limit = +(req.query.limit || 10);
+    const    page  = +(req.query.page  ||  1);
     const docCount = await User.find(query).countDocuments();
     const    items = await User.find(query)
       .skip((page - 1) * limit)
