@@ -1,0 +1,10 @@
+.button {
+  padding: 0.25rem 0.5rem;
+  border: none;
+  color: #fff;
+  width: fit-content;
+
+  &:disabled {
+    pointer-events: none;
+  }
+}

@@ -1,0 +1,59 @@
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  height: 68px;
+  overflow-x: scroll;
+  background: linear-gradient(to right, #12a1a1, #379d9d);
+
+  &::-webkit-scrollbar-thumb {
+    background: #ffffff;
+  }
+
+  > h1 {
+    color: #fff;
+    border: 2px solid #fff;
+    font-size: 1.2rem;
+    font-weight: 900;
+    padding: 0.25rem 0.5rem;
+
+    span:last-of-type {
+      display: none;
+    }
+  }
+
+  > button {
+    &:last-of-type {
+      margin-left: auto;
+    }
+  }
+}
+
+/* move nav bar to the left of screen on mobile landscape */
+@media screen and (pointer: coarse) and (orientation: landscape) {
+  .nav {
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    width: 60px;
+
+    > h1 {
+      span {
+        &:first-of-type {
+          display: none;
+        }
+
+        &:last-of-type {
+          display: block;
+        }
+      }
+    }
+
+    > button {
+      &:last-of-type {
+        margin-left: 0;
+      }
+    }
+  }
+}

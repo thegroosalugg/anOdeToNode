@@ -12,11 +12,11 @@ export default function ErrorPage() {
       >
         The page you're looking for doesn't exist.
       </h1>
-      {/* <img
+      <img
           src='/skeleton.png'
           alt='Skeleton'
         style={{ width: '100%', maxWidth: '200px', alignSelf: 'center' }}
-      /> */}
+      />
     </>
   );
 }

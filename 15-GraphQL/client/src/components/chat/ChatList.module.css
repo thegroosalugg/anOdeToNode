@@ -1,0 +1,128 @@
+.chat-list {
+  flex: 1;
+  width: 100%;
+  max-width: 600px;
+  overflow-y: scroll;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.1rem;
+
+  &::-webkit-scrollbar {
+    height: 0;
+  }
+
+  > li {
+    max-height: 540px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--team-green);
+
+    > h2 {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem;
+      min-height: 2rem;
+
+      /* Recipient name */
+      > span {
+        text-align: center;
+        text-wrap: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1.2rem;
+      }
+
+      /* Back Button (Expanded) */
+      > button {
+        margin-left: auto;
+        font-weight: 700;
+      }
+
+      /* Last Message (Collapsed) */
+      > section {
+        max-width: 40%;
+        margin-left: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+
+        > span {
+          max-width: 100%;
+          text-wrap: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          font-size: var(--text-small);
+
+          /* time stamp */
+          &:first-of-type {
+            color: var(--text-grey);
+          }
+
+          /* Recipient name & counter */
+          &:nth-of-type(2) {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            gap: 0.2rem;
+            font-weight: 700;
+            color: var(--team-green);
+
+            > span {
+              /* Counter override - remove absolute positioning */
+              &:last-of-type {
+                position: static;
+                background: var(--team-green);
+              }
+
+              /* first-of-type loads last & overwrites background when only 1 child span */
+              &:first-of-type {
+                background: none;
+                text-wrap: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+              }
+            }
+          }
+
+          /* message preview */
+          &:last-of-type {
+            color: var(--dark-grey);
+          }
+        }
+      }
+    }
+  }
+}
+
+.isMobile { > li { max-height: calc(100vh - 136px); } }
+.isMenu   { > li { max-height: 360px;               } }
+
+@media screen and (pointer: coarse) and (orientation: landscape) {
+  .isMobile { > li { max-height: calc(100vh - 68px); } }
+  .isMenu   { > li { max-height: 100%;               } }
+}
+
+.delete-buttons {
+  > button {
+    color: #000;
+    border: 1px solid #000;
+    font-weight: 500;
+
+    &:first-of-type {
+      width: 125px;
+      margin-right: 0.1rem;
+    }
+  }
+}
+
+.fallback {
+  padding: 0.25rem;
+  margin: 1rem auto;
+  text-align: center;
+}

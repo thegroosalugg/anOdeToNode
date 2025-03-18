@@ -53,6 +53,7 @@ export const validatePassword = body('password')
 
 export const validateSignUp = [
   validateField('name',    [2, 15]),
+  validateField('surname', [2, 15]),
   validateEmail,
   validatePassword,
 ];
@@ -61,3 +62,24 @@ export const validatePost = [
   validateField('title',   [ 5,   50]),
   validateField('content', [20, 1000])
 ];
+
+// .body with no arg gets the entire req.body object
+export const validateUserInfo = body().custom((body, { req }) => {
+  const fields = ['home', 'work', 'study', 'bio'];
+  const  [key] = Object.keys(body);
+
+  if (!fields.includes(key)) throw new Error('Invalid profile field');
+
+  // due to 0 arg .body(), chaining methods doesn't work & logic is handled inside custom
+  const     value = body[key];
+  const sanitized = value.trim().replace(/\s+/g, ' ').replace(/<|>/g, '');
+  const     isBio = key === 'bio';
+
+  if ((!isBio && sanitized.length > 50) || (isBio && sanitized.length > 100)) {
+    throw new Error(`should not exceed ${isBio ? 100 : 50} characters`);
+  }
+
+  req.body[key] = sanitized || ''; // Converts whitespace-only to empty string
+
+  return true;
+});

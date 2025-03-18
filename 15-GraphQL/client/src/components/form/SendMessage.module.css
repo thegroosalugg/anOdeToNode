@@ -1,0 +1,45 @@
+.send-msg {
+  position: relative;
+  margin-top: auto;
+  width: 100%;
+  max-width: 600px;
+  border-top: 1px solid var(--team-green);
+  background: var(--box-gradient);
+
+  > textarea, > button {
+    display: block;
+    width: inherit;
+    border: none;
+  }
+
+  > textarea {
+    resize: none;
+    border-bottom: 1px solid var(--team-green);
+    padding: 0.5rem;
+    text-align: justify;
+    background: var(--box-gradient);
+  }
+
+  > button {
+    color: #fff;
+    background: #287a91;
+    font-size: var(--text-small);
+    padding: 0.2rem 0.4rem;
+    font-family: "Oswald", sans-serif;
+    font-weight: 900;
+    text-transform: capitalize;
+  }
+}
+
+.isPost {
+  margin: 0.25rem auto;
+  border: 1px solid #000;
+
+  > textarea {
+    border-bottom: 1px solid #000;
+  }
+
+  > button {
+    background: #949494;
+  }
+}
