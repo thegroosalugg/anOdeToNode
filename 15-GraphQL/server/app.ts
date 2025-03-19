@@ -57,13 +57,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// Create an ApolloServer instance with the provided schema (typeDefs) and resolvers
 const apolloServer = new ApolloServer({ typeDefs, resolvers });
+// Start the Apollo Server to begin accepting reqs with top level await
 await apolloServer.start();
-app.use('/graphql', (req, res, next) => {
-  expressMiddleware(apolloServer, {
-    context: async () => ({ req })
-  })(req as any, res as any, next);
-});
+// Set up the '/graphql' route to handle incoming GraphQL requests
+app.use('/graphql', expressMiddleware(apolloServer, {
+  // Pass 'req' into context config Fn, used for auth or other req data
+  context: async ({ req }) => ({ req })
+}));
+// @types/express": "^4.17.21" DevDepedency manually installed to fix tpype mismatch with Apollo
 
 captainsLog(200, "GraphQL resolver test:" + resolvers.Query.hello());
 
