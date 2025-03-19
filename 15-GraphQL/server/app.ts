@@ -1,14 +1,15 @@
-import       express, { ErrorRequestHandler }
-                     from 'express';
+import express,
+{ ErrorRequestHandler, RequestHandler } from 'express';
+import {      storage, fileFilter     } from './middleware/multerConfig';
+import {          ApolloServer        } from '@apollo/server';
+import {       expressMiddleware      } from '@apollo/server/express4';
 import      mongoose from 'mongoose';
 import        multer from 'multer';
 import {   Server  } from 'socket.io';
 import {    join   } from 'path';
-import {
-         storage,
-        fileFilter
-                   } from './middleware/multerConfig';
 import {   authJWT } from './middleware/auth.JWT';
+import {  typeDefs } from './graphQL/schemas/authSchema';
+import { resolvers } from './graphQL/resolvers/authResolver';
 import    authRoutes from './routes/auth';
 import    postRoutes from './routes/post';
 import    feedRoutes from './routes/feed';
@@ -55,6 +56,16 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
+
+const apolloServer = new ApolloServer({ typeDefs, resolvers });
+await apolloServer.start();
+app.use('/graphql', (req, res, next) => {
+  expressMiddleware(apolloServer, {
+    context: async () => ({ req })
+  })(req as any, res as any, next);
+});
+
+captainsLog(200, "GraphQL resolver test:" + resolvers.Query.hello());
 
 app.use(                        authRoutes);
 app.use('/feed',    authJWT,    feedRoutes);

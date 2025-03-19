@@ -1,7 +1,7 @@
 {
   "name": "15-graphql-server",
   "version": "1.0.0",
-  "description": "REST API - The Node Express Server",
+  "description": "Replacing queries with GraphQL",
   "main": "app.ts",
   "type": "module",
   "scripts": {
@@ -12,10 +12,12 @@
     "preview": "clear && node dist/app.js"
   },
   "dependencies": {
+    "@apollo/server": "^4.11.3",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "express-validator": "^7.2.0",
+    "graphql": "^16.10.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.3",
     "multer": "^1.4.5-lts.1",
