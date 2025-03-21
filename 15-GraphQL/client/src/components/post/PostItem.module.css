@@ -1,0 +1,87 @@
+/* increase specificity to override defaults with element.class */
+ul.feed {
+  border-top: 2px solid var(--team-green);
+  border-bottom: 2px solid var(--team-green);
+
+  li {
+    border: 2px solid var(--team-green);
+    cursor: pointer;
+
+    > h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 20px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--team-green);
+      padding-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 *, p, h3 span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    h2, h3 span {
+      white-space: nowrap;
+    }
+
+    h2 {
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+
+      span {
+        max-width: 70%;
+      }
+
+      time {
+        color: var(--text-grey);
+        font-size: var(--text-small);
+      }
+    }
+
+    p {
+      margin-top: 0.2rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+      box-orient: vertical;
+      color: var(--text-grey);
+    }
+  }
+}
+
+ul.isCreator {
+  border-top-color: var(--text-grey);
+  border-bottom-color: var(--text-grey);
+  padding: 0.25rem;
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--text-grey);
+  }
+
+  li {
+    border: none;
+    padding: 0.5rem;
+  }
+}
+
+section.isCreator-pagination {
+  gap: 0;
+  margin: 0 auto;
+
+  > span {
+    color: var(--text-grey);
+    margin: 0 0.1rem;
+  }
+
+  > button {
+    font-weight: 700;
+    min-width: 2.5rem;
+  }
+}

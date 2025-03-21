@@ -1,0 +1,12 @@
+.header {
+  align-self: center;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+  color: var(--team-green);
+
+  > svg {
+    margin-left: 0.2rem;
+  }
+}

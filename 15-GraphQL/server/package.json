@@ -1,0 +1,33 @@
+{
+  "name": "15-graphql-server",
+  "version": "1.0.0",
+  "description": "Replacing queries with GraphQL",
+  "main": "app.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "clear && tsx app.ts",
+    "dev": "clear && nodemon -x tsx app.ts",
+    "build": "tsc && tsc-alias",
+    "preview": "clear && node dist/app.js"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.11.3",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-validator": "^7.2.0",
+    "graphql": "^16.10.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.3",
+    "multer": "^1.4.5-lts.1",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/multer": "^1.4.12",
+    "tsc-alias": "^1.8.10"
+  }
+}

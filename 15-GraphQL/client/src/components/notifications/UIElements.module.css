@@ -1,0 +1,39 @@
+.strong-tag {
+  cursor: pointer;
+  color: var(--dark-grey);
+  max-width: 6rem;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden; /* causes vertical misalignment with sibling inline-block elements */
+  vertical-align: bottom; /* realigns elements */
+}
+
+.time-stamp {
+  position: absolute;
+  top: 0.05rem;
+  right: 0.25rem;
+  font-size: var(--text-small);
+  color: var(--text-grey);
+}
+
+.x-btn {
+  border: 0;
+  background: none;
+  margin-right: 0.25rem;
+}
+
+.alert-text {
+  display: flex;
+  align-items: start;
+  text-align: center;
+  gap: 0.25em;
+  width: 100%;
+
+  > img {
+    width: 30px;
+  }
+
+  > span {
+    margin-top: 0.25rem;
+  }
+}

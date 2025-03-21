@@ -1,0 +1,63 @@
+/* element.class increases specificity to override defaults */
+ul.user-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  align-items: start; /* not required, however will overwrite Default's center alignement */
+  align-content: start; /* forces rows to stack at top */
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+
+  > li {
+    padding: 0;
+    border: 1px solid var(--team-green);
+    cursor: pointer;
+
+    > h2 {
+      padding: 0.1rem 0.2rem;
+      margin: 0.1rem;
+      text-align: center;
+      text-wrap: nowrap;
+      overflow-x: scroll;
+      color: var(--text-grey);
+      font-size: 80%;
+      font-weight: 600;
+    }
+
+    > img {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+    }
+  }
+}
+
+ul.friends-list {
+  > li {
+    border-color: var(--text-grey);
+    > h2 {
+      &::-webkit-scrollbar-thumb {
+        background: var(--text-grey);
+      }
+    }
+  }
+}
+
+section.friends-pagination {
+  margin: 0 auto 0.5rem;
+}
+
+ul.mutual-friends {
+  margin-bottom: 0.2rem;
+}
+
+@media screen and (pointer: coarse) {
+  ul.user-list {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+
+    > li h2 {
+      font-size: 60%;
+    }
+  }
+}

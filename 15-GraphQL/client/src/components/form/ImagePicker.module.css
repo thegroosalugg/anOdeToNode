@@ -1,0 +1,25 @@
+.picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 187px;
+  border: 1px solid var(--team-green);
+  border-radius: 2px;
+  cursor: pointer;
+
+  > input {
+    display: none;
+  }
+
+  > img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  > span {
+    font-family: "Oswald", serif;
+    font-size: var(--text-small);
+    font-weight: 300;
+    color: var(--team-green);
+  }
+}
