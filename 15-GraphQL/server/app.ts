@@ -1,15 +1,13 @@
-import express,
-{ ErrorRequestHandler, RequestHandler } from 'express';
+import express, { ErrorRequestHandler } from 'express';
 import {      storage, fileFilter     } from './middleware/multerConfig';
 import {          ApolloServer        } from '@apollo/server';
 import {       expressMiddleware      } from '@apollo/server/express4';
+import {      typeDefs, resolvers     } from './graphQL';
 import      mongoose from 'mongoose';
 import        multer from 'multer';
 import {   Server  } from 'socket.io';
 import {    join   } from 'path';
 import {   authJWT } from './middleware/auth.JWT';
-import {  typeDefs } from './graphQL/schemas/authSchema';
-import { resolvers } from './graphQL/resolvers/authResolver';
 import    authRoutes from './routes/auth';
 import    postRoutes from './routes/post';
 import    feedRoutes from './routes/feed';
@@ -68,7 +66,7 @@ app.use('/graphql', expressMiddleware(apolloServer, {
 }));
 // @types/express": "^4.17.21" DevDepedency manually installed to fix tpype mismatch with Apollo
 
-captainsLog(200, "GraphQL resolver test:" + resolvers.Query.hello());
+captainsLog(200, "GraphQL resolver test:" + resolvers[0].Query.hello());
 
 app.use(                        authRoutes);
 app.use('/feed',    authJWT,    feedRoutes);
