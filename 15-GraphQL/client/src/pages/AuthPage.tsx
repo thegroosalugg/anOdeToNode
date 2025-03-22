@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { Auth, Authorized } from './RootLayout';
 import Loader from '@/components/loading/Loader';
-import UserProfile from '@/components/profile/UserProfile';
 import LoginForm from '@/components/form/LoginForm';
 
 export default function AuthPage({ auth }: { auth: Auth }) {
@@ -19,7 +18,7 @@ export default function AuthPage({ auth }: { auth: Auth }) {
       {isInitial ? (
         <Loader      key='loader' />
       ) : user ? (
-        <UserProfile key='profile' {...auth as Authorized} />
+        <></>
       ) : (
         <LoginForm   key='form'    {...auth} />
       )}

@@ -9,8 +9,8 @@ import css from './LoginForm.module.css';
 
 export default function LoginForm({ isLoading, error, setError, reqUser }: Auth) {
   const { deferring,  deferFn } = useDebounce();
-  const [ isLogin, setIsLogin ] = useState(true);
-  const [ scope,      animate ] = useAnimate();
+  const [isLogin,   setIsLogin] = useState(true);
+  const [scope,        animate] = useAnimate();
   const    label = isLogin ? 'Login' : 'Sign Up';
   const variants = {
      hidden: { opacity: 0 },
@@ -53,11 +53,30 @@ export default function LoginForm({ isLoading, error, setError, reqUser }: Auth)
     deferFn(async () => {
       const data = new FormData(e.currentTarget); // data parsed by multer
       // const data = Object.fromEntries(formData.entries()); // if application/json
+
+      const graphqlData = {
+        query: `
+          mutation {
+            signUp(userInput: {
+                  name: "${data.get('name')}",
+                 email: "${data.get('email')}",
+              password: "${data.get('password')}"
+            }) {
+              JWTaccess
+              JWTrefresh
+              _id
+              name
+              email
+            }
+          }
+        `
+      };
+
       await reqUser(
         {
-          url: isLogin ? 'login' : 'signup',
+             url: 'graphql',
           method: 'POST',
-          data,
+            data: graphqlData,
         },
         { onSuccess, onError }
       );
@@ -77,15 +96,12 @@ export default function LoginForm({ isLoading, error, setError, reqUser }: Auth)
     >
       <motion.h2 variants={variants}>{label}</motion.h2>
       {!isLogin &&
-        <motion.section variants={variants}>
-          <Input id='name'     errors={error} />
-          <Input id='surname'  errors={error} />
-        </motion.section>
+        <Input id='name'     errors={error} variants={variants} />
       }
-      <Input     id='email'    errors={error} variants={variants} clr={color} />
-      <Input     id='password' errors={error} variants={variants} clr={color} />
+      <Input   id='email'    errors={error} variants={variants} clr={color} />
+      <Input   id='password' errors={error} variants={variants} clr={color} />
       {!isLogin &&
-        <Input   id='password' errors={error} variants={variants} confirm />
+        <Input id='password' errors={error} variants={variants} confirm />
       }
       <motion.button
              type='button'

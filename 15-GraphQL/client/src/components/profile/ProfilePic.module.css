@@ -1,7 +1,0 @@
-.profile-pic {
-  width: 25px;
-  aspect-ratio: 1/1;
-  object-fit: cover;
-  border: 0.8px solid var(--team-green);
-  border-radius: 50%;
-}

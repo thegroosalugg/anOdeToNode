@@ -5,11 +5,6 @@ import {
                    } from './pages/RootLayout';
 import     AuthPage  from './pages/AuthPage';
 import   RootLayout  from './pages/RootLayout';
-import     FeedPage  from './pages/FeedPage';
-import     PostPage  from './pages/PostPage';
-import   SocialPage  from './pages/SocialPage';
-import     PeerPage  from './pages/PeerPage';
-import     ChatPage  from './pages/ChatPage';
 import    ErrorPage  from './pages/ErrorPage';
 
 import {  library  } from '@fortawesome/fontawesome-svg-core';
@@ -29,12 +24,12 @@ const validate = (path: string, props: Auth) => {
   const authorized = props as Authorized;
 
   const elements = {
-    '/feed':          <FeedPage   {...authorized} />,
-    '/post/:postId':  <PostPage   {...authorized} />,
-    '/social':        <SocialPage                 />, // props were never used here
-    '/user/:userId':  <PeerPage   {...authorized} />,
-    '/inbox':         <ChatPage   {...authorized} />,
-    '/inbox/:userId': <ChatPage   {...authorized} />,
+    // '/feed':          <FeedPage   {...authorized} />,
+    // '/post/:postId':  <PostPage   {...authorized} />,
+    // '/social':        <SocialPage                 />, // props were never used here
+    // '/user/:userId':  <PeerPage   {...authorized} />,
+    // '/inbox':         <ChatPage   {...authorized} />,
+    // '/inbox/:userId': <ChatPage   {...authorized} />,
   };
 
   return elements[path as keyof typeof elements];
@@ -47,12 +42,12 @@ const createRoute = (path: string) => ({
 
 const routes = [
   { path: '/',  element: <RootLayout children={(props) => <AuthPage auth={props} />} /> },
-  createRoute('/feed'),
-  createRoute('/post/:postId'),
-  createRoute('/social'),
-  createRoute('/user/:userId'),
-  createRoute('/inbox'),
-  createRoute('/inbox/:userId'),
+  // createRoute('/feed'),
+  // createRoute('/post/:postId'),
+  // createRoute('/social'),
+  // createRoute('/user/:userId'),
+  // createRoute('/inbox'),
+  // createRoute('/inbox/:userId'),
   { path: '*',  element: <RootLayout children={() => <ErrorPage />} /> },
 ];
 

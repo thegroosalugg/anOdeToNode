@@ -1,4 +1,6 @@
 .login-form {
+  --login: #a16512;
+  --signup: #732655;
   align-self: center;
   max-width: 250px;
   width: 100%;
@@ -14,12 +16,12 @@
 
   &.isLogin {
     h2 {
-      color: #a16512;
-      border-color: #a16512;
+      color: var(--login);
+      border-color: var(--login);
     }
 
     .form-link {
-      color: #a16512;
+      color: var(--login);
     }
   }
 
@@ -43,14 +45,9 @@
     font-size: 1.8rem;
     margin-bottom: -0.5rem;
     padding: 0.25rem 0.5rem;
-    color: #732655;
-    border: 2px solid #732655;
+    color: var(--signup);
+    border: 2px solid var(--signup);
     background: var(--box-gradient);
-  }
-
-  > section {
-    display: flex;
-    gap: 0.5rem;
   }
 
   .form-link {
@@ -60,7 +57,7 @@
     margin-bottom: -0.8rem;
     background: none;
     border: none;
-    color: #732655;
+    color: var(--signup);
   }
 
   > button:last-of-type {
