@@ -12,5 +12,5 @@
     "resolveFullPaths": true, // incomplete import paths get full extention (.js)
     "verbose": false // controls the level of logging output during the tsc-alias operation
   },
-  "include": ["**/*.ts"] // Compile all .ts files in this folder & subfolders
+  "include": ["**/*.ts", "jest.config.cjs"] // Compile all .ts files in this folder & subfolders
 }
