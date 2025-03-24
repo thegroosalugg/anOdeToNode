@@ -1,0 +1,14 @@
+.counter {
+  /* width, font-size, right & top set as inline styles */
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  aspect-ratio: 1;
+  font-weight: 700;
+  font-family: "Montserrat", serif;
+  padding: 0 0.5rem;
+  background: var(--error-red);
+  color: #fff;
+}
