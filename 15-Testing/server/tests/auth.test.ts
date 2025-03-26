@@ -17,15 +17,17 @@ const mongoQuery = (value: any) =>
     select: jest.fn().mockResolvedValue(value), // with mocked .select method
   });                                          // that resolves to selected value
 
+const defineReq = (value: [any] = ['Bearer validToken']) => ({ get: () => value[0] });
+
 describe('authJWT Middleware', () => {
   it('should call next(AppError) if no token is provided', async () => {
-    const { req, res, next } = mockReq({ get: () => undefined });
+    const { req, res, next } = mockReq(defineReq([undefined]));
     await authJWT(req, res, next);
     expectAppErr(next, 401, 'You are not logged in');
   });
 
   it('should call next(AppError) if no user is found', async () => {
-    const { req, res, next } = mockReq({ get: () => 'Bearer validToken' });
+    const { req, res, next } = mockReq(defineReq());
     // overwrites single instance of verify instead of globally
     // (jwt.verify as jest.Mock).mockReturnValue({ userId: 'user123' });
     mongoQuery(null);
@@ -34,7 +36,7 @@ describe('authJWT Middleware', () => {
   });
 
   it('should return req.user when valid', async () => {
-    const { req, res, next } = mockReq({ get: () => 'Bearer validToken' });
+    const { req, res, next } = mockReq(defineReq());
     const user = new User({ name: 'a', surname: 'b', email: 'c', password: 'd' });
     mongoQuery(user);
     await authJWT(req, res, next);
