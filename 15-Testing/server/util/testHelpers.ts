@@ -12,8 +12,8 @@ import { Request, Response } from 'express';
 export const expectAppErr = (next: jest.Mock, code: number, message: string) => {
   expect(next).toHaveBeenCalledWith(expect.any(AppError)); // Checks instance
   const error = next.mock.calls[0][0]; // Extract the first argument passed to `next`
+  expect(error.client.message).toBe(message); // check first as more unique
   expect(error.status).toBe(code);
-  expect(error.client.message).toBe(message);
 };
 
 export const mockReq = (obj: Record<string, any>) => {
