@@ -6,7 +6,14 @@ import { postSignup } from '../controllers/authController';
 import { mockReq } from '../util/testHelpers';
 
 jest.mock('../models/User');
-jest.mock('socket.io');
+// jest.mock('socket.io');
+
+jest.mock('socket.io', () => ({
+  Server: jest.fn().mockImplementation(() => ({
+      on: jest.fn(),
+    emit: jest.fn(),
+  })),
+}));
 
 jest.mock('bcryptjs', () => ({
   ...jest.requireActual('bcryptjs'),
@@ -15,7 +22,7 @@ jest.mock('bcryptjs', () => ({
 
 jest.mock('jsonwebtoken', () => ({
   ...jest.requireActual('jsonwebtoken'),
-  sign: jest.fn().mockReturnValue(() => JWTaccess), // accesses const at runtime
+  sign: jest.fn().mockReturnValue('token'),
 }));
 
 const JWTaccess = 'token', JWTrefresh = JWTaccess;
@@ -32,12 +39,9 @@ describe('Auth Controllers', () => {
     const defineReq = { body: { name, surname, email, password } };
     const { req, res, next } = mockReq(defineReq);
 
-    // (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPassword');
-
     const user = new User({ name, surname, email, password });
-    User.prototype.save = user.save;
-
-    // (jwt.sign as jest.Mock).mockReturnValue('jwtToken');
+    User.prototype.save     = jest.fn().mockResolvedValue(user);
+    User.prototype.toObject = jest.fn().mockReturnValue({ name, surname, email });
 
     await postSignup(req, res, next);
 

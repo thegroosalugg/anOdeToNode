@@ -17,8 +17,10 @@ export const expectAppErr = (next: jest.Mock, code: number, message: string) => 
 };
 
 export const mockReq = (obj: Record<string, any>) => {
-  const  req = { ...obj } as Partial<Request> as Request;
-  const  res = {} as Response;
+  const resMock = jest.fn().mockReturnThis();
+
+  const  req = {              ...obj            } as Partial<Request>  as Request;
+  const  res = { status: resMock, json: resMock } as Partial<Response> as Response;
   const next = jest.fn();
 
   return { req, res, next };
