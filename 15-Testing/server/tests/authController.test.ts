@@ -8,9 +8,8 @@ import { mockReq } from '../util/testHelpers';
 jest.mock('../models/User');
 // jest.mock('socket.io');
 
-jest.mock('socket.io', () => ({
-  Server: jest.fn().mockImplementation(() => ({
-      on: jest.fn(),
+jest.mock('../socket', () => ({
+  getIO: jest.fn(() => ({
     emit: jest.fn(),
   })),
 }));
