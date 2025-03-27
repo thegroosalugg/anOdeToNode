@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { Types } from 'mongoose';
-import { io } from '../app';
+import socket from '../socket';
 import User, { _public } from '../models/User';
 import Chat from '../models/Chat';
 import AppError from '../models/Error';
@@ -100,7 +100,7 @@ const deleteChat: RequestHandler = async (req, res, next) => {
       );
     }
 
-    io.emit(`chat:${user._id}:delete`, chats); // emited so nav can listen
+    socket.getIO().emit(`chat:${user._id}:delete`, chats); // emited so nav can listen
     res.status(200).json(chats);
   } catch (error) {
     next(new AppError(500, 'Unable to delete chats', error));

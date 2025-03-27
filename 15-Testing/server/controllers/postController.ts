@@ -1,6 +1,6 @@
-import Post from '../models/Post';
 import { RequestHandler } from 'express';
-import { io } from '../app';
+import socket from '../socket';
+import Post from '../models/Post';
 import AppError from '../models/Error';
 import { getErrors, hasErrors } from '../validation/validators';
 import { deleteFile } from '../util/deleteFile';
@@ -27,6 +27,7 @@ const newPost: RequestHandler = async (req, res, next) => {
     post.creator = user;
 
     const data = { post, isNew: true };
+    const io = socket.getIO();
     io.emit('post:update', data); // emits to main feed page
     io.emit(`post:${user._id}:update`, data); // emits to post creator's page
     res.status(201).json(post);
@@ -63,6 +64,7 @@ const editPost: RequestHandler = async (req, res, next) => {
     await post.save();
     await post.populate('creator', '-email -password');
     const data = { post, isNew: false };
+    const io = socket.getIO();
     io.emit('post:update', data); // emits to main feed page
     io.emit(`post:${user._id}:update`, data); // emits to post creator's page
     io.emit(`post:${postId}:update`, post); // emits to post Id page, isNew not required here
@@ -83,6 +85,7 @@ const deletePost: RequestHandler = async (req, res, next) => {
 
     if (post.imgURL) deleteFile(post.imgURL);
     await Post.deleteOne({ _id, creator: req.user });
+    const io = socket.getIO();
     io.emit('post:delete', post); // emits to main feed page
     io.emit(`post:${_id}:delete`, post); // emits to post Id page
     io.emit(`post:${user._id}:delete`, post); // emits to post creator's page
