@@ -3,10 +3,9 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import AppError from '../models/Error';
 import { postSignup } from '../controllers/authController';
-import { mockReq } from '../util/testHelpers';
+import { getBack, mockReq, settle } from '../util/testHelpers';
 
 jest.mock('../models/User');
-// jest.mock('socket.io');
 
 jest.mock('../socket', () => ({
   getIO: jest.fn(() => ({
@@ -15,12 +14,10 @@ jest.mock('../socket', () => ({
 }));
 
 jest.mock('bcryptjs', () => ({
-  ...jest.requireActual('bcryptjs'),
   hash: jest.fn().mockResolvedValue('hashed'),
 }));
 
 jest.mock('jsonwebtoken', () => ({
-  ...jest.requireActual('jsonwebtoken'),
   sign: jest.fn().mockReturnValue('token'),
 }));
 
@@ -39,8 +36,8 @@ describe('Auth Controllers', () => {
     const { req, res, next } = mockReq(defineReq);
 
     const user = new User({ name, surname, email, password });
-    User.prototype.save     = jest.fn().mockResolvedValue(user);
-    User.prototype.toObject = jest.fn().mockReturnValue({ name, surname, email });
+    User.prototype.save     = settle(user); // settle/getBack reduce long jest boilerplate
+    User.prototype.toObject = getBack({ name, surname, email });
 
     await postSignup(req, res, next);
 

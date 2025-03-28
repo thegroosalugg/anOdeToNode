@@ -1,13 +1,8 @@
 import AppError from '../models/Error';
 import { Request, Response } from 'express';
 
-// One approach is to check the return value is an object with these key/values
-// expect(next).toHaveBeenCalledWith(
-//   expect.objectContaining({
-//     status: 401,
-//     client: expect.objectContaining({ message: 'You are not logged in' }),
-//   })
-// );
+export const  settle = (value: any) => jest.fn().mockResolvedValue(value);
+export const getBack = (value: any) => jest.fn().mockReturnValue(value);
 
 export const expectAppErr = (next: jest.Mock, code: number, message: string) => {
   expect(next).toHaveBeenCalledWith(expect.any(AppError)); // Checks instance
@@ -17,10 +12,10 @@ export const expectAppErr = (next: jest.Mock, code: number, message: string) => 
 };
 
 export const mockReq = (obj: Record<string, any>) => {
-  const resMock = jest.fn().mockReturnThis();
+  const status = jest.fn().mockReturnThis();
 
-  const  req = {              ...obj            } as Partial<Request>  as Request;
-  const  res = { status: resMock, json: resMock } as Partial<Response> as Response;
+  const  req = {       ...obj         } as Partial<Request>  as Request;
+  const  res = { status, json: status } as Partial<Response> as Response;
   const next = jest.fn();
 
   return { req, res, next };

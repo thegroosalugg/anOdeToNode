@@ -1,11 +1,11 @@
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { authJWT } from '../middleware/auth.JWT';
-import { expectAppErr, mockReq } from '../util/testHelpers';
+import { expectAppErr, mockReq, settle } from '../util/testHelpers';
 import User from '../models/User';
 
 jest.mock('../models/User');
 jest.mock('jsonwebtoken', () => ({
-  ...jest.requireActual('jsonwebtoken'), // import and retain the original functionalities
+  // ...jest.requireActual('jsonwebtoken'), // is useless! Lib Fns must always be mocked!
   verify: jest.fn().mockReturnValue({ userId: 'user123' }), // overwrite verify globally
 }));
 
@@ -14,7 +14,7 @@ jest.mock('jsonwebtoken', () => ({
 
 const mongoQuery = (value: any) =>
   (User.findById as jest.Mock).mockReturnValue({ // Returns a "query" object
-    select: jest.fn().mockResolvedValue(value), // with mocked .select method
+    select: settle(value),                      // with mocked .select method
   });                                          // that resolves to selected value
 
 const defineReq = (value: [any] = ['Bearer validToken']) => ({ get: () => value[0] });
@@ -28,8 +28,6 @@ describe('authJWT Middleware', () => {
 
   it('should call next(AppError) if no user is found', async () => {
     const { req, res, next } = mockReq(defineReq());
-    // overwrites single instance of verify instead of globally
-    // (jwt.verify as jest.Mock).mockReturnValue({ userId: 'user123' });
     mongoQuery(null);
     await authJWT(req, res, next);
     expectAppErr(next, 404, 'User not found');
@@ -40,6 +38,7 @@ describe('authJWT Middleware', () => {
     const user = new User({ name: 'a', surname: 'b', email: 'c', password: 'd' });
     mongoQuery(user);
     await authJWT(req, res, next);
+    expect(jwt.verify).toHaveBeenCalledWith('validToken', process.env.JWT_SECRET);
     expect(req.user).toEqual(user);
     expect(next).toHaveBeenCalled();
   });
