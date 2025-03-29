@@ -1,7 +1,7 @@
+import { Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
-import AppError from '../models/Error';
 import { postLogin, postSignup } from '../controllers/authController';
 import { getBack, mockReq, settle } from '../util/testHelpers';
 
@@ -36,27 +36,32 @@ const loginTest =
 describe('Auth Controllers', () => {
   beforeEach(() => jest.clearAllMocks()); // resets all mocks & instances before each test
 
-  const     name = 'John';
-  const  surname = 'Pliskin';
-  const    email = 'hudson@river.com';
-  const password = '2yearsAgo';
-  const     user = new User({ name, surname, email, password });
+  const       name = 'John';
+  const    surname = 'Pliskin';
+  const      email = 'hudson@river.com';
+  const   password = '2yearsAgo';
+  const       user = new User({ name, surname, email });
+  const clientData = getBack(user);
+
+  const expectAuth = (res: Response, code: number) => {
+    expect(jwt.sign).toHaveBeenCalledTimes(2); // 1 access, 1 refresh
+    expect(res.status).toHaveBeenCalledWith(code);
+    expect(res.json).toHaveBeenCalledWith(
+      expect.objectContaining({ JWTaccess, JWTrefresh, ...user })
+    );
+  };
 
   it(signUpTest, async () => {
     const defineReq = { body: { name, surname, email, password } };
     const { req, res, next } = mockReq(defineReq);
 
     User.prototype.save     = settle(user); // settle/getBack reduce long jest boilerplate
-    User.prototype.toObject = getBack({ name, surname, email });
+    User.prototype.toObject = clientData;
     await postSignup(req, res, next);
 
     expect(bcrypt.hash).toHaveBeenCalledWith(password, 12);
     expect(User.prototype.save).toHaveBeenCalled();
-    expect(jwt.sign).toHaveBeenCalledTimes(2); // 1 access, 1 refresh token
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith(
-      expect.objectContaining({ JWTaccess, JWTrefresh, name, surname, email })
-    );
+    expectAuth(res, 201);
   });
 
   it(loginTest, async () => {
@@ -67,17 +72,13 @@ describe('Auth Controllers', () => {
     (User.findOne as jest.Mock).mockResolvedValue({
        ...user,
       password: hashed,
-      populate: jest.fn().mockResolvedValue(user),
-      toObject: jest.fn(() => ({ name, surname, email })),
+      populate: clientData,
+      toObject: clientData,
     });
 
     await postLogin(req, res, next);
 
     expect(bcrypt.compare).toHaveBeenCalledWith(password, hashed);
-    expect(jwt.sign).toHaveBeenCalledTimes(2);
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(
-      expect.objectContaining({ JWTaccess, JWTrefresh, name, surname, email })
-    );
+    expectAuth(res, 200);
   });
 });
