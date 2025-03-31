@@ -12,7 +12,7 @@ jest.mock('jsonwebtoken', () => ({
 // overwrites single instance of verify instead of globally
 // (jwt.verify as jest.Mock).mockReturnValue({ userId: 'user123' });
 
-const mongoQuery = (value: any) =>
+const mockFindById = (value: any) =>
   (User.findById as jest.Mock).mockReturnValue({ // Returns a "query" object
     select: settle(value),                      // with mocked .select method
   });                                          // that resolves to selected value
@@ -28,7 +28,7 @@ describe('authJWT Middleware', () => {
 
   it('should call next(AppError) if no user is found', async () => {
     const { req, res, next } = mockReq(defineReq());
-    mongoQuery(null);
+    mockFindById(null);
     await authJWT(req, res, next);
     expectAppErr(next, 404, 'User not found');
   });
@@ -36,7 +36,7 @@ describe('authJWT Middleware', () => {
   it('should return req.user when valid', async () => {
     const { req, res, next } = mockReq(defineReq());
     const user = new User({ name: 'a', surname: 'b', email: 'c', password: 'd' });
-    mongoQuery(user);
+    mockFindById(user);
     await authJWT(req, res, next);
     expect(jwt.verify).toHaveBeenCalledWith('validToken', process.env.JWT_SECRET);
     expect(req.user).toEqual(user);
