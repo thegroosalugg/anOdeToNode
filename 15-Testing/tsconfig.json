@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist", // Compiled JS files will go here
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ESNext",
+    "esModuleInterop": true, // simplifies import syntax between CommonJS and ES modules
+    "strict": true,
+    "resolveJsonModule": true, // allows TS to import JSON files
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true, // incomplete import paths get full extention (.js)
+    "verbose": false // controls the level of logging output during the tsc-alias operation
+  },
+  "include": ["**/*.ts", "jest.config.cjs"] // Compile all .ts files in this folder & subfolders
+}
