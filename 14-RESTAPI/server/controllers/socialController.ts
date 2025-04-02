@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { io } from '../app';
+import socket from '../socket';
 import User, { _public, IFriend } from '../models/User';
 import AppError from '../models/Error';
 
@@ -87,6 +87,7 @@ const friendRequest: RequestHandler = async (req, res, next) => {
     await user.save();
     await peer.populate('friends.user', _public);
     await user.populate('friends.user', _public);
+    const io = socket.getIO();
     io.emit(`peer:${user._id}:update`, user);
     io.emit(`peer:${peer._id}:update`, peer);
     res.status(201).json({ message: 'success' });

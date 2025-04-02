@@ -2,7 +2,6 @@ import       express, { ErrorRequestHandler }
                      from 'express';
 import      mongoose from 'mongoose';
 import        multer from 'multer';
-import {   Server  } from 'socket.io';
 import {    join   } from 'path';
 import {
          storage,
@@ -19,24 +18,14 @@ import    chatRoutes from './routes/chat';
 import     msgRoutes from './routes/message';
 import   alertRoutes from './routes/alert';
 import   captainsLog from './util/captainsLog';
+import        socket from './socket';
 import        dotenv from 'dotenv';
               dotenv.config();
 
 // re-route FS location to parent folder in production
 const rootDir = process.env.NODE_ENV === 'production' ? '../' : '';
 
-const    app = express();
-const server = app.listen(3000, () => {
-  captainsLog(0, '<<Hudson River, 2 years ago>>');
-}); // createNewServer
-
-export const io = new Server(server, {
-  cors: {
-            origin: process.env.CLIENT_URL,
-           methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-  }
-}); // set up websockets. CORS applies only to sockets, not regular HTTP
+const app = express();
 
 // serve static paths
 app.use('/uploads', express.static(join(import.meta.dirname, rootDir, 'uploads')));
@@ -73,12 +62,8 @@ app.use(((appError, req, res, next) => {
 mongoose
   .connect(process.env.MONGO_URI!)
   .then(() => {
-    io.on('connection', (socket) => {
-      captainsLog(200, '<App IO: <Client connected>>');
-
-      socket.on('disconnect', () => {
-        captainsLog(403, '<App IO: <Client disconnected>>');
-      });
-    });
+    const server = app.listen(3000);
+    socket.init(server);
+    captainsLog(0, '<<Hudson River, 2 years ago>>');
   })
   .catch((error) => captainsLog(403, '<<Mongoose error>>', error));

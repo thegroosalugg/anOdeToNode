@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { io } from '../app';
+import socket from '../socket';
 import Post, { IPost } from '../models/Post';
 import Reply from '../models/Reply';
 import AppError from '../models/Error';
@@ -46,6 +46,7 @@ const postReply: RequestHandler = async (req, res, next) => {
     reply.creator = user
     reply.post    = post;
 
+    const io = socket.getIO();
     io.emit(`post:${postId}:reply:new`, reply); // notify Post Page
     if (user._id.toString() !== post.creator.toString()) {
       io.emit(`nav:${post.creator}:reply`, { action: 'new', reply}); // alert original post user
@@ -64,6 +65,7 @@ const deleteReply: RequestHandler = async (req, res, next) => {
 
     await Reply.deleteOne({ _id, creator: req.user });
     const post = reply.post as IPost;
+    const io = socket.getIO();
     io.emit(`post:${post._id}:reply:delete`, reply); // emits back to PostID page
     io.emit(`nav:${post.creator}:reply`, { action: 'delete', reply }); // alert original post user
     res.status(200).json(null);
