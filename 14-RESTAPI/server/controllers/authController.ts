@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
+import socket from '../socket';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { io } from '../app';
 import User, { _public } from '../models/User';
 import AppError from '../models/Error';
 import { getErrors, hasErrors } from '../validation/validators';
@@ -75,7 +75,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
     });
 
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
-    io.emit('user:new', userDets);
+    socket.getIO().emit('user:new', userDets);
     res.status(201).json({ JWTaccess, JWTrefresh, ...userDets });
   } catch (error) {
     next(new AppError(500, 'Sign up failed.', error));

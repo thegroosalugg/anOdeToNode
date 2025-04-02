@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { io } from '../app';
+import socket from '../socket';
 import AppError from '../models/Error';
 import Post from '../models/Post';
 import Reply from '../models/Reply';
@@ -101,7 +101,7 @@ const clearMsgs: RequestHandler = async (req, res, next) => {
     chat.alerts.set(userId, 0);
     await chat.save();
 
-    io.emit(`chat:${user._id}:alerts`, chat);
+    socket.getIO().emit(`chat:${user._id}:alerts`, chat);
     res.status(200).json(chat);
   } catch (error) {
     next(new AppError(500, 'Unable to reset alerts', error));

@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { io } from '../app';
+import socket from '../socket';
 import AppError from '../models/Error';
 import User from '../models/User';
 import Chat from '../models/Chat';
@@ -71,6 +71,7 @@ const newMessage: RequestHandler = async (req, res, next) => {
       chat.host.toString() === userStrId ? [user, peer] : [peer, user];
     chat.set({ host, guest }); // populate not needed, as data already fetched
 
+    const io = socket.getIO();
     io.emit(`chat:${user._id}:update`, { chat, msg, isNew });
     io.emit(`chat:${peer._id}:update`, { chat, msg, isNew: isNewForPeer });
     res.status(201).json(msg);
