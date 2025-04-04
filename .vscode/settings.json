@@ -1,4 +1,4 @@
 {
   "deno.enable": true,
-  "deno.enablePaths": ["./16-Deno"],
+  "deno.enablePaths": ["./16-Deno", "./17-DenoREST/server"]
 }
