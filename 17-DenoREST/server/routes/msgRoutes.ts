@@ -3,7 +3,7 @@ import { allMsgs, deleteMsg, editMsg, newMsg } from '../controllers/msgControlle
 
 const router = new Router();
 
-router.get('/', allMsgs);
+router.get('/msgs', allMsgs);
 router.post('/new', newMsg);
 router.put('/edit/:msgId', editMsg);
 router.delete('/delete/:msgId', deleteMsg);

@@ -41,6 +41,6 @@ export default class Msg {
     const msgs = await Msg.getAll();
     const updated = msgs.filter(({ _id }) => _id !== msgId);
     await Msg.saveFile(updated);
-    return { message: 'Deleted!' };
+    return updated;
   }
 };

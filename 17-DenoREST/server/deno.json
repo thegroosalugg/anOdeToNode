@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "start": "clear && deno run --watch --allow-net --allow-read --allow-write app.ts",
+    "start": "clear && deno run --watch --allow-net --allow-env --allow-read --allow-write app.ts",
     "test": "clear && deno test --allow-all"
   },
   "imports": {

@@ -1,8 +1,19 @@
 // oak is the express of Deno
 import { Application } from '@oak/oak';
-import msgRoutes from './routes/msgRoutes.ts';
+import "jsr:@std/dotenv/load"; // imports directly from URLs, no installs needed
+import msgRoutes from './routes/msgRoutes.ts'; // .ts extension cannot be omitted like in Node
 
 const app = new Application();
+
+app.use(async ({ response }, next) => {
+  response.headers.set('Access-Control-Allow-Origin', Deno.env.get('CLIENT_URL')!);
+  response.headers.set(
+    'Access-Control-Allow-Methods',
+    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
+  );
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  await next();
+});
 
 // error middleware needs to run before routes in Deno
 app.use(async ({ response }, next) => {
