@@ -34,7 +34,7 @@ export default class Msg {
       msg.text = text;
     };
     await Msg.saveFile(msgs);
-    return { ...msg, message: 'Saved!' };
+    return msgs;
   }
 
   static async delete(msgId: string) {

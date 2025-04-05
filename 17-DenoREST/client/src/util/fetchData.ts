@@ -1,7 +1,9 @@
+export type URL = 'all' | 'new' | `edit/${string}` | `delete/${string}`;
+
 export interface Fetch {
-      url: string;
+      url: URL;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-    data?: FormData | Record<string, unknown>;
+    data?: FormDataEntryValue | Record<string, unknown> | null;
 }
 
 export type FetchError = {

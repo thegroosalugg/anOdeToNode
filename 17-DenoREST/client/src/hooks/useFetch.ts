@@ -1,8 +1,9 @@
 import { Fetch, fetchData, FetchError } from '@/util/fetchData';
-import { useCallback, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 
+export type SetData<T> = Dispatch<SetStateAction<T>>;
 export interface ReqConfig<T> {
-  onSuccess?: (res: T) => void;
+  onSuccess?: (res: T         ) => void;
     onError?: (err: FetchError) => void;
 }
 
