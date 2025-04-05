@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "start": "clear && deno run --watch --allow-net --allow-read --allow-write app.ts",
+    "basic": "clear && deno run --allow-net app_basic.ts",
+    "test": "clear && deno test --allow-all"
+  },
+  "imports": {
+    "@oak/oak": "jsr:@oak/oak@^17.1.4"
+  }
+}

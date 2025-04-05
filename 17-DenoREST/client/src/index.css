@@ -1,0 +1,29 @@
+@import './reset.css';
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
+
+:root {
+  --party-purple: #6312a1;
+  --error-red: #c65740;
+  --text-grey: #818181;
+  --dark-grey: #454545;
+  --main-gradient: linear-gradient(to right, #dbd9d9, #fff);
+  --box-gradient: linear-gradient(to right, #ededed, #fff);
+  --text-small: 0.9rem;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: "Montserrat", serif;
+  color: #272727;
+  background: var(--main-gradient);
+}
+
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+}

@@ -1,0 +1,12 @@
+{
+  "name": "17-denorest",
+  "description": "deno REST app with Mongo & React",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "client": "cd client && npm run dev",
+    "server": "cd server && deno task start"
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
