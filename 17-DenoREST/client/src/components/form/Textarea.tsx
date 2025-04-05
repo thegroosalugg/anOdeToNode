@@ -3,16 +3,16 @@ import { URL } from '@/util/fetchData';
 import { useRef } from 'react';
 import Button from '../button/Button';
 
-export default function Textarea<T>({
-       url,
-   setData,
-        cb,
-  children = '',
+export default function Textarea<T extends { _id: string }>({
+      url,
+  setData,
+       cb,
+     text = '',
 }: {
-        url: Extract<URL, 'new' | `edit/${string}`>;
-        cb?: () => void;
-    setData: SetData<T>;
-  children?: string;
+      url: Extract<URL, 'new' | `edit/${string}`>;
+      cb?: () => void;
+  setData: SetData<T[]>;
+    text?: string;
 }) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const { reqHandler } = useFetch<T>();
@@ -26,8 +26,15 @@ export default function Textarea<T>({
     await reqHandler(
       { url, method, data: { text } },
       {
-        onSuccess: (data) => {
-          setData(data);
+        onSuccess: (_new) => {
+          setData((prev) => {
+            if (url === 'new') {
+              return [_new, ...prev];
+            } else {
+              return prev.map((_old) => (_new._id === _old._id ? _new : _old));
+            }
+          });
+
           if (cb) cb();
           formRef.current?.reset();
         },
@@ -41,9 +48,7 @@ export default function Textarea<T>({
            ref={formRef}
       onSubmit={submitHandler}
     >
-      <textarea name='text' rows={3} style={{ resize: 'none', flex: 1 }}>
-        {children}
-      </textarea>
+      <textarea name='text' rows={3} style={{ resize: 'none', flex: 1 }} defaultValue={text} />
       <Button styled>Send</Button>
     </form>
   );

@@ -15,7 +15,7 @@ export default function List<T>({
               padding: '0.25rem',
       }}
     >
-      {items.reverse().map((item) => children(item))}
+      {items.map((item) => children(item))}
     </ul>
   );
 }

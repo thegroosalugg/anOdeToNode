@@ -15,7 +15,7 @@ export default function Messages() {
 
   return (
     <>
-      <Textarea<Msg[]> {...{ url: 'new', setData }} />
+      <Textarea<Msg> {...{ url: 'new', setData }} />
       {isLoading ? (
         <p>Loading...</p>
       ) : (

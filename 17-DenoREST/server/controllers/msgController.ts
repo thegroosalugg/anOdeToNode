@@ -9,8 +9,9 @@ const allMsgs = async ({ response }: Context) => {
 
 const newMsg = async ({ request, response }: Context) => {
   const { text } = await request.body.json();
-  const msgs = await Msg.save(text);
-  response.body = msgs;
+  const msg = new Msg(text);
+  const res = await msg.save();
+  response.body = res;
 };
 
 const editMsg = async ({
@@ -19,16 +20,17 @@ const editMsg = async ({
     params: { msgId },
 }: RouterContext<'/edit/:msgId'>) => {
   const { text } = await request.body.json();
-  const msgs = await Msg.save(text, msgId);
-  response.body = msgs;
+  const msg = new Msg(text, msgId);
+  const res = await msg.save();
+  response.body = res;
 };
 
 const deleteMsg = async ({
   response,
     params: { msgId },
 }: RouterContext<'/delete/:msgId'>) => {
-  const msgs = await Msg.delete(msgId);
-  response.body = msgs;
+  const res = await Msg.delete(msgId);
+  response.body = res;
 };
 
 export { allMsgs, newMsg, editMsg, deleteMsg };

@@ -1,46 +1,54 @@
-export default class Msg {
-   _id: string;
-  text: string;
+import { ObjectId } from "npm:mongodb@6.1.0";
+import { getDb } from '../db/db_client.ts';
 
-  constructor(text: string) {
-    this._id  = new Date().toISOString();
+const success = true;
+
+export default class Msg {
+  text: string;
+  _id?: ObjectId;
+
+  constructor(text: string, _id?: string) {
     this.text = text;
+    if (_id) this._id = new ObjectId(_id);
   }
 
-  private static async saveFile(msgs: Msg[] = []) {
-    await Deno.writeTextFile('./data/msgs.json', JSON.stringify(msgs));
-    return msgs;
+  private static connect() {
+    return getDb().collection('msgs');
   }
 
   static async getAll() {
     try {
-      const msgs = await Deno.readTextFile('./data/msgs.json');
-      return JSON.parse(msgs) as Msg[];
-    } catch (err) {
-      if (err instanceof Deno.errors.NotFound) return await Msg.saveFile()
-      throw err;
+      const db = Msg.connect();
+      return (await db.find().toArray()).reverse(); // newest first
+    } catch (error) {
+      throw { error, status: 404, message: 'failed to fetch messages' };
     }
   }
 
-  static async save(text: string, msgId?: string) {
-    const msgs = await Msg.getAll();
-    const index = msgs.findIndex(({ _id }) => _id === msgId);
-    let msg;
-    if (index < 0) {
-      msg = new Msg(text);
-      msgs.push(msg);
-    } else {
-      msg = msgs[index];
-      msg.text = text;
-    };
-    await Msg.saveFile(msgs);
-    return msgs;
+  async save() {
+    const db = Msg.connect();
+    let query;
+    const { _id, text } = this;
+
+    if (_id) query = db.updateOne({ _id }, { $set: { text } });
+    else     query = db.insertOne(this);
+
+    try {
+      await query;
+      return { success, ...this }
+    } catch (error) {
+      throw { error, status: 500, message: 'Saving failed' };
+    }
   }
 
   static async delete(msgId: string) {
-    const msgs = await Msg.getAll();
-    const updated = msgs.filter(({ _id }) => _id !== msgId);
-    await Msg.saveFile(updated);
-    return updated;
+    const db = Msg.connect();
+    const _id = new ObjectId(msgId);
+    try {
+      await db.deleteOne({ _id });
+      return { success }
+    } catch (error) {
+      throw { error, status: 500, message: 'Deletion failed' };
+    }
   }
-};
+}

@@ -18,16 +18,14 @@ export default function MsgItem({
   async function deleteMsg(msgId: string) {
     await reqHandler(
       { url: `delete/${msgId}`, method: 'DELETE' },
-      { onSuccess: (data) => setData(data) }
+      { onSuccess: () => setData((prev) => prev.filter(({ _id }) => _id !== msgId)) }
     );
   }
 
   return (
     <li style={{ display: 'flex', alignItems: 'end', gap: 2.5 }}>
       {isEditing ? (
-        <Textarea<Msg[]> {...{ url: `edit/${_id}`, setData, cb: toggleEditing }}>
-          {text}
-        </Textarea>
+        <Textarea<Msg> {...{ url: `edit/${_id}`, setData, text, cb: toggleEditing }} />
       ) : (
         <p style={{ minWidth: 0, marginRight: 'auto' }}>{text}</p>
       )}
