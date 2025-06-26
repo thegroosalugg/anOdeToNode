@@ -114,7 +114,7 @@ export default function PeerProfile({
             disabled={deferring}
           >
             {isLoading ? (
-              <Loader size='small' />
+              <Loader size="xs" color="bg" />
             ) : (
               <span>
                 {text}

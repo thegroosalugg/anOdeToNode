@@ -72,7 +72,7 @@ export default function PostForm({
             whileTap={{ scale: deferring ? 1 : 0.9 }} // overwrites default
            animateEx={{ filter }} // additional animate props without overwriting default
           >
-            {isLoading ? <Loader size='small' /> : 'Post'}
+            {isLoading ? <Loader size="xs" color="bg" /> : 'Post'}
           </Button>
         </motion.form>
       )}

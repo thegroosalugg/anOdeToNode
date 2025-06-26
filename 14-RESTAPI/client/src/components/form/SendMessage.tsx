@@ -68,7 +68,7 @@ export default function SendMessage({
       <motion.button disabled={deferring}>
         <AnimatePresence mode='wait'>
           {isLoading ? (
-            <Loader key='loader' size='small' />
+            <Loader key='loader' size="xs" color="bg" />
           ) : (
             <motion.span
               initial={{ opacity: 0 }}

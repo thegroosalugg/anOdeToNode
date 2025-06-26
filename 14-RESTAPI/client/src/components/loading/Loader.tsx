@@ -1,11 +1,19 @@
 import { motion, HTMLMotionProps } from 'motion/react';
 import css from './Loader.module.css';
 
+interface LoaderProps {
+   size?: "xs" | "sm";
+  color?: "bg" | "white";
+}
+
 export default function Loader({
       size,
+     color,
   ...props
-}: { size?: 'small' } & HTMLMotionProps<'div'>) {
-  const classes = `${css['loader']} ${size ? css[size] : ''}`;
+}: LoaderProps & HTMLMotionProps<'div'>) {
+  let classes = css["loader"];
+  if (size)  classes += ` ${css[size]}`;
+  if (color) classes += ` ${css[color]}`;
 
   return (
     <motion.div
