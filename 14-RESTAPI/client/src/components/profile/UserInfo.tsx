@@ -22,7 +22,7 @@ function InfoField({ id, user }: { id: keyof typeof icons; user: User }) {
   const [scope,                animate] = useAnimate();
   const { deferring,          deferFn } = useDebounce();
   const   fallback = `Add ${id}`;
-  const background = `var(--${error ? 'error-red' : isEditing ? 'team-green' : 'text-grey'})`;
+  const background = `var(--${error ? 'error' : isEditing ? 'accent' : 'gray-500'})`;
   const      width = isEditing ? 30 : 60;
   const       ease = [0.65, 0, 0.35, 1] as const;
   const   duration = 0.4;

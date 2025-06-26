@@ -40,7 +40,7 @@ ul.feed {
 
       time {
         color: var(--text-grey);
-        font-size: var(--text-small);
+        font-size: var(--text-sm);
       }
     }
 

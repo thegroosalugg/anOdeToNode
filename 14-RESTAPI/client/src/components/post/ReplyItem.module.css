@@ -34,7 +34,7 @@ ul.replies {
 
       time {
         margin-left: auto;
-        font-size: var(--text-small);
+        font-size: var(--text-sm);
         color: var(--text-grey);
       }
     }
@@ -52,7 +52,7 @@ ul.replies {
       display: block;
       margin: 0.5rem -0.25rem -0.25rem auto;
       border-radius: 5px;
-      font-size: var(--text-small);
+      font-size: var(--text-sm);
     }
   }
 }

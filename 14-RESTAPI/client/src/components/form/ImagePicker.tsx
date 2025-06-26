@@ -11,8 +11,8 @@ export default function ImagePicker({
   const initialImg = imgURL ? BASE_URL + imgURL : '';
   const [image, setImage] = useState(initialImg);
   const [error, setError] = useState('');
-  const  background = image ?          '#252525' : '#ffffff00';
-  const       color = error ? 'var(--error-red)' : 'var(--team-green)';
+  const  background = image ?      '#252525' : '#ffffff00';
+  const       color = error ? 'var(--error)' : 'var(--accent)';
   const borderColor = color;
   const { style, ...labelProps } = props;
 

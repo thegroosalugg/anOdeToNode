@@ -56,7 +56,7 @@
           text-wrap: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
-          font-size: var(--text-small);
+          font-size: var(--text-sm);
 
           /* time stamp */
           &:first-of-type {

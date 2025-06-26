@@ -41,7 +41,7 @@ export default function SendMessage({
   const onError = (err: FetchError) => {
     animate(
       'button',
-      { background: 'var(--error-red)', x: [null, 5, 0, 5, 0] },
+      { background: 'var(--error)', x: [null, 5, 0, 5, 0] },
       { background: { duration: 1 },    x: { repeat: 1, duration: 0.3 } }
     );
     if (err.status === 401) setUser(null);
