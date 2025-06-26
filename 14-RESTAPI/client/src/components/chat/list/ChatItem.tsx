@@ -9,14 +9,10 @@ import Button from "@/components/ui/button/Button";
 import { timeAgo } from "@/lib/util/timeStamps";
 import Counter from "@/components/notifications/Counter";
 import { ChatListener } from "@/lib/hooks/useChatListener";
+import { createAnimations, createVariants } from "@/lib/motion/animations";
 
 const    opacity = 0;
 const transition = { duration: 0.5, ease: "linear" };
-const animations = {
-  initial: { opacity },
-  animate: { opacity: 1, transition },
-     exit: { opacity },
-};
 
 const Span = ({
   isMarked,
@@ -41,7 +37,6 @@ interface ChatProps extends Pick<ChatListener, "isActive" | "deferring" | "colla
           chat: Chat;
           user: User;
       isMarked: boolean;
-         index: number;
   expandOrMark: (chat: Chat, path: string) => void;
       children: (recipient: User) => ReactNode;
 }
@@ -52,7 +47,6 @@ export default function ChatItem({
   isMarked,
   isActive,
   deferring,
-  index,
   collapse,
   expandOrMark,
   children,
@@ -62,11 +56,12 @@ export default function ChatItem({
   const   recipient = user._id === host._id ? guest : host;
   const      sender = lastMsg?.sender === user._id ? "Me" : recipient.name;
   const        path = `/inbox/${recipient._id}`;
-  const           x = 20 * (index % 2 === 0 ? 1 : -1);
-  const borderColor = isMarked ? "var(--bg)" : "var(--gray-400)";
+  const borderColor = isMarked ?    "var(--bg)" : "var(--text)";
   const  background = isMarked ? "var(--error)" : `var(--box)`;
   const        flex = isActive ? 1 : 0;
   const      cursor = isActive || deferring ? "auto" : "pointer";
+  const  animations = createAnimations({ transition: { ease: "linear"}});
+  const    variants = createVariants({ initial: { flex }, animate: { flex } });
 
   function navTo(path: string) {
     if (!isActive) return;
@@ -76,18 +71,13 @@ export default function ChatItem({
   return (
     <motion.li
         layout
-           key={_id}
       className={`floating-box ${css["chat-item"]}`}
         onClick={() => expandOrMark(chat, path)}
-          style={{ cursor }}
-           exit={{ opacity,    flex, x }}
-       variants={{
-         hidden: { opacity,    flex, x },
-        visible: { opacity: 1, flex, x: 0, background, borderColor },
-      }}
-      {...{ transition }}
+          style={{ cursor, background, borderColor }}
+           exit={{ ...variants.hidden }}
+      {...{ variants, transition }}
     >
-      <h2>
+      <header>
         <ProfilePic
           layout
           animate={{ borderColor }}
@@ -117,7 +107,7 @@ export default function ChatItem({
             </motion.section>
           )}
         </AnimatePresence>
-      </h2>
+      </header>
       {children(recipient)}
     </motion.li>
   );

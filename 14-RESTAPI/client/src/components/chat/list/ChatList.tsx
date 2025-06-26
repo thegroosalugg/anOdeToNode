@@ -14,14 +14,7 @@ import SendMessage from "../../form/SendMessage";
 import AsyncAwait from "../../ui/boundary/AsyncAwait";
 import css from "./ChatList.module.css";
 import ChatItem from "./ChatItem";
-
-const    opacity = 0;
-const transition = { duration: 0.5, ease: "linear" };
-const animations = {
-  initial: { opacity },
-  animate: { opacity: 1, transition },
-     exit: { opacity },
-};
+import { createAnimations } from "@/lib/motion/animations";
 
 export default function ChatList({
   user, // from parent * 2
@@ -48,6 +41,7 @@ export default function ChatList({
   const [marked,       setMarked] = useState<Record<string, boolean>>({});
   const  wasMarked = Object.keys(marked).some((key) => marked[key]);
   const closeModal = () => setShowModal(false);
+  const  animations = createAnimations({ transition: { delay: 0.5 }});
 
   const classes = `${css["chat-list"]} ${
     isMobile ? css["isMobile"] : ""} ${
@@ -101,9 +95,9 @@ export default function ChatList({
       <AsyncAwait {...{ isLoading: isInitial, error }}>
         <LayoutGroup>
           <motion.ul
-            className={classes}
-            initial="hidden"
-            animate="visible"
+             className={classes}
+               initial="hidden"
+               animate="visible"
             transition={{ staggerChildren: 0.03 }}
           >
             {!isMenu && !isActive?.isTemp && (
@@ -117,27 +111,27 @@ export default function ChatList({
                 </Button>
                 <AnimatePresence>
                   {isMarking && (
-                    <Button exit={{ opacity }} onClick={cancelDelete}>
+                    <Button exit={{ opacity: 0 }} onClick={cancelDelete}>
                       Cancel
                     </Button>
                   )}
                 </AnimatePresence>
               </section>
             )}
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence>
               {!chats.length && !isActive ? (
-                <motion.p key="fallback" className={css["fallback"]} {...animations}>
+                <motion.h2 key="fallback" className={css["fallback"]} {...animations}>
                   You haven't started any chats
-                </motion.p>
+                </motion.h2>
               ) : (
-                (isActive ? [isActive] : chats).map((chat, index) => (
+                (isActive ? [isActive] : chats).map((chat) => (
                   <ChatItem
+                    key={chat._id}
                     {...{
                       chat,
                       user,
                       isActive,
                       deferring,
-                      index,
                       isMarked: marked[chat._id],
                       collapse,
                       expandOrMark,
