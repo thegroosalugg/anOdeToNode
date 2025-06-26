@@ -9,7 +9,6 @@
   padding: 0.25rem;
   display: flex;
   flex-direction: column;
-  font-family: "Montserrat", serif;
   border: 1px solid var(--accent);
   background: var(--box-gradient);
   z-index: 99;

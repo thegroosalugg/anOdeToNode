@@ -8,17 +8,6 @@
   overflow: auto;
   border: none;
   background: none;
-  /* Must be inline. Framer motion disables CSS transform */
+  /* Set as inline style. Framer motion disables transform with x/y animations */
   /* transform: translate(-50%, -50%); */
-}
-
-.backdrop {
-  z-index: 9;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.75);
-  cursor: pointer;
 }

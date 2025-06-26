@@ -17,7 +17,6 @@
   }
 
   > span {
-    font-family: "Oswald", serif;
     font-size: var(--text-sm);
     font-weight: 300;
     color: var(--accent);

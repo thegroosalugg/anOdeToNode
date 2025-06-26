@@ -1,6 +1,8 @@
-import { motion, AnimatePresence } from 'motion/react';
-import { createPortal } from 'react-dom';
-import css from './Modal.module.css';
+import { motion, AnimatePresence } from "motion/react";
+import { createPortal } from "react-dom";
+import css from "./Modal.module.css";
+import Backdrop from "./Backdrop";
+import { createAnimations } from "@/lib/motion/animations";
 
 export default function Modal({
   children,
@@ -11,33 +13,27 @@ export default function Modal({
       show: boolean | string;
      close: () => void;
 }) {
-  return createPortal(
+  const    initial = { y: -50 };
+  const    animate = { y:   0 };
+  const animations = createAnimations({ initial, animate });
+
+  const Element = (
     <AnimatePresence>
       {show && (
         <>
-          <motion.div
-             className={css.backdrop}
-               onClick={close}
-               initial={{ opacity: 0 }}
-               animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-            whileHover={{ backgroundColor: 'rgba(10, 10, 10, 0.55)' }}
-            transition={{ duration: 0.5 }}
-          />
+          <Backdrop open onClick={close} />
           <motion.dialog
-                  open
-             className={css.modal}
-                 style={{ translate: '-50% -50%' }} // centers modal
-               initial={{   y: -50, opacity: 0   }}
-               animate={{   y:   0, opacity: 1   }}
-                  exit={{   y: -50, opacity: 0   }}
-            transition={{      duration: 0.3     }}
+            open
+            {...animations}
+            className={css["modal"]}
+                style={{ translate: "-50% -50%" }} // centers modal. Set inline due to framer's y
           >
             {children}
           </motion.dialog>
         </>
       )}
-    </AnimatePresence>,
-    document.getElementById('modal-root')!
+    </AnimatePresence>
   );
+
+  return createPortal(Element, document.getElementById("modal-root")!);
 }

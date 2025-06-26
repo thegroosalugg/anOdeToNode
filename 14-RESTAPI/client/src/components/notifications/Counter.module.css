@@ -7,7 +7,6 @@
   border-radius: 50%;
   aspect-ratio: 1;
   font-weight: 700;
-  font-family: "Montserrat", serif;
   padding: 0 0.5rem;
   background: var(--error);
   color: var(gray-100);
