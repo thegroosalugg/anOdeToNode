@@ -10,24 +10,24 @@ export type HSL = [
  ];
 
 export default function Button({
-        hsl,
-  animateEx = {},
-   children,
-   ...props
+         hsl,
+       color = "var(--bg)",
+  background = "var(--accent)",
+   animateEx = {},
+    children,
+    ...props
 }: {
-          hsl?: HSL;
-    animateEx?: TargetAndTransition;
-      children: ReactNode;
+           hsl?: HSL;
+         color?: string;
+    background?: string;
+     animateEx?: TargetAndTransition;
+       children: ReactNode;
 } & HTMLMotionProps<"button">) {
-  // const  [h, s, l] = hsl;
-  // const background = `hsl(${h}, ${s}%, ${l}%)`;
-  // const    onHover = `hsl(${h}, ${s}%, ${l - 10}%)`
-
   return (
     <motion.button
        className={css["button"]}
          initial={{ opacity: 0 }}
-         animate={{ opacity: 1, ...animateEx }}
+         animate={{ opacity: 1, color, background, borderColor: color, ...animateEx }}
       whileHover={!isMobile ? { opacity: 0.8 } : {}}
         whileTap={{ scale: 0.9 }}
       transition={{ background: { duration: 0.5 } }}

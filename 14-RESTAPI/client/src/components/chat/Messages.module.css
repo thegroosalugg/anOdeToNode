@@ -2,7 +2,7 @@
   --align: start;
   --margin: 0 1rem 0 0;
   --color: var(--accent);
-  --background: var(--box);
+  --background: var(--bg);
 
   flex: 1;
   min-height: 0;
@@ -21,7 +21,7 @@
 
     > time {
       font-size: var(--text-sm);
-      color: var(--text-grey);
+      color: var(--gray-500);
     }
 
     > p {
@@ -38,7 +38,7 @@
     &.sender {
       --align: end;
       --margin: 0 0 0 1rem;
-      --color: var(--box);
+      --color: var(--bg);
       --background: var(--accent);
     }
   }

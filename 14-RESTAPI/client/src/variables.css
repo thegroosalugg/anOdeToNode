@@ -85,3 +85,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.floating-box {
+ border: 1px solid var(--gray-400);
+ background: var(--box);
+ box-shadow: var(--shadow-lg);
+ border-radius: var(--radius-xl);
+}

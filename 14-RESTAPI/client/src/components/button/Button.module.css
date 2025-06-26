@@ -8,7 +8,5 @@
   box-shadow: var(--shadow-lg);
   font-weight: 900;
 
-  &:disabled {
-    pointer-events: none;
-  }
+  &:disabled { pointer-events: none; }
 }

@@ -9,15 +9,13 @@
   gap: 0.2rem;
   padding: 0.1rem;
 
-  &::-webkit-scrollbar {
-    height: 0;
-  }
+  &::-webkit-scrollbar { height: 0; }
 
+  /* uses .floating-box */
   > li {
     max-height: 540px;
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--accent);
 
     > h2 {
       display: flex;
@@ -60,7 +58,7 @@
 
           /* time stamp */
           &:first-of-type {
-            color: var(--text-grey);
+            color: var(--text);
           }
 
           /* Recipient name & counter */
@@ -77,6 +75,7 @@
               /* Counter override - remove absolute positioning */
               &:last-of-type {
                 position: static;
+                color: var(--box);
                 background: var(--accent);
               }
 
@@ -92,7 +91,7 @@
 
           /* message preview */
           &:last-of-type {
-            color: var(--dark-grey);
+            color: var(--text);
           }
         }
       }
@@ -110,8 +109,7 @@
 
 .delete-buttons {
   > button {
-    color: #000;
-    border: 1px solid #000;
+    border: 1px solid transparent;
     font-weight: 500;
 
     &:first-of-type {

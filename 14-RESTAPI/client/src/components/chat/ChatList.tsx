@@ -28,17 +28,17 @@ const animations = {
 
 const Span = ({
   isMarked,
-     color,
+     color = "var(--text)",
   children,
   ...props
 }: {
   isMarked: boolean;
-     color: string;
+    color?: string;
   children: ReactNode;
 } & HTMLMotionProps<'span'>) => (
   <motion.span
-       animate={{ color: isMarked ? '#fff' : color }}
-    transition={transition}
+       animate={{ color: isMarked ? 'var(--bg)' : color }}
+    {...{ transition }}
     {...props}
   >
     {children}
@@ -76,7 +76,7 @@ export default function ChatList({
   const  cursor = isActive || deferring ? 'auto' : 'pointer';
   const classes = `${css['chat-list']} ${
     isMobile ? css['isMobile'] : ''} ${
-      isMenu ? css['isMenu'] : ''
+      isMenu ? css['isMenu']   : ''
   }`;
 
 
@@ -140,18 +140,15 @@ export default function ChatList({
             {!isMenu && !isActive?.isTemp && (
               <section className={css['delete-buttons']}>
                 <Button
-                  hsl={isDeleting || isActive ? [10, 54, 51] : [0, 0, 81]}
-                  onClick={confirmHandler}
-                  animateEx={{
-                          color: isDeleting || isActive ?      '#fff' : '#000',
-                    borderColor: isDeleting || isActive ? '#00000000' : '#000',
-                  }}
+                       color={isDeleting || isActive ?    "var(--bg)" : "var(--fg)"}
+                  background={isDeleting || isActive ? "var(--error)" : "var(--box)"}
+                     onClick={confirmHandler}
                 >
                   {isDeleting || isActive ? 'Delete' : 'Select'} Chat{!isActive ? 's' : ''}
                 </Button>
                 <AnimatePresence>
                   {isDeleting && (
-                    <Button hsl={[0, 0, 81]} exit={{ opacity }} onClick={cancelDelete}>
+                    <Button exit={{ opacity }} onClick={cancelDelete}>
                       Cancel
                     </Button>
                   )}
@@ -172,15 +169,14 @@ export default function ChatList({
                   const        path = `/inbox/${recipient._id}`;
                   const    isMarked = toBeDeleted[_id];
                   const           x = 20 * (i % 2 === 0 ? 1 : -1);
-                  const borderColor = isMarked ? '#ffffff00' : 'var(--accent)';
-                  const  background = isMarked
-                    ? 'linear-gradient(to right, #c65740, #ce4429)'
-                    : `var(--${isMenu ? 'main' : 'box'}-gradient)`;
+                  const borderColor = isMarked ?    'var(--bg)' : 'var(--gray-400)';
+                  const  background = isMarked ? 'var(--error)' : `var(--box)`;
 
                   return (
                     <motion.li
                          layout
                             key={_id}
+                      className="floating-box"
                         onClick={() => setDeletedOrActive(chat, path)}
                           style={{ cursor }}
                            exit={{ opacity,     flex, x }}
@@ -199,7 +195,7 @@ export default function ChatList({
                         />
                         <Span
                           layout
-                          {...{ color: '#000', isMarked }}
+                          {...{ color: 'var(--fg)', isMarked }}
                           onClick={() => navTo(recipient._id)}
                         >
                           {recipient.name} {recipient.surname}
@@ -209,7 +205,6 @@ export default function ChatList({
                             <Button
                                layout
                                   key='btn'
-                                  hsl={[180, 80, 35]}
                                  exit={{ opacity }}
                               onClick={collapse}
                             >
@@ -217,16 +212,16 @@ export default function ChatList({
                             </Button>
                           ) : (
                             <motion.section layout key={lastMsg.updatedAt} {...animations}>
-                              <Span   {...{ color: 'var(--text-grey)',  isMarked }}>
+                              <Span   {...{ isMarked }}>
                                 {timeAgo(lastMsg.updatedAt)}
                               </Span>
                               <span>
                                 <Span {...{ color: 'var(--accent)', isMarked }}>
-                                  {'🗨️' + sender}
+                                  {sender}
                                 </Span>
                                 <Counter count={alerts[user._id]} />
                               </span>
-                              <Span   {...{ color: 'var(--dark-grey)',  isMarked }}>
+                              <Span   {...{ isMarked }}>
                                 {lastMsg.content}
                               </Span>
                             </motion.section>
@@ -239,7 +234,6 @@ export default function ChatList({
                             <Messages
                               {...{
                                        user,
-                                     isMenu,
                                        chat,
                                   loadState,
                                    msgState,
