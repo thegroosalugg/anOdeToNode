@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BASE_URL } from '@/util/fetchData';
+import { BASE_URL } from '@/lib/util/fetchData';
 import css from './ImagePicker.module.css';
 
 export default function ImagePicker({

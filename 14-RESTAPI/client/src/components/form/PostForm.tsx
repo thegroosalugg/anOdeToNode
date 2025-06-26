@@ -1,14 +1,14 @@
 import { useAnimate, stagger, AnimatePresence, motion } from 'motion/react';
-import useDebounce from '@/hooks/useDebounce';
-import useFetch from '@/hooks/useFetch';
-import { FetchError } from '@/util/fetchData';
+import useDebounce from '@/lib/hooks/useDebounce';
+import useFetch from '@/lib/hooks/useFetch';
+import { FetchError } from '@/lib/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import Post from '@/models/Post';
 import Input from './Input';
 import ImagePicker from './ImagePicker';
-import Button from '../button/Button';
-import Error from '../error/Error';
-import Loader from '../loading/Loader';
+import Button from '../ui/button/Button';
+import Error from '../ui/boundary/error/Error';
+import Loader from '../ui/boundary/loader/Loader';
 import css from './PostForm.module.css';
 
 export default function PostForm({

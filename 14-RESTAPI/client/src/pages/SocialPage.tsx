@@ -1,10 +1,10 @@
 import { isMobile } from 'react-device-detect';
 import { useEffect } from 'react';
-import usePagination from '@/hooks/usePagination';
-import useSocket from '@/hooks/useSocket';
+import usePagination from '@/lib/hooks/usePagination';
+import useSocket from '@/lib/hooks/useSocket';
 import User from '@/models/User';
 import Logger from '@/models/Logger';
-import AsyncAwait from '@/components/panel/AsyncAwait';
+import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
 import PagedList from '@/components/pagination/PagedList';
 import PeerItem from '@/components/social/PeerItem';
 

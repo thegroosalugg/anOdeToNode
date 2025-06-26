@@ -1,7 +1,7 @@
 import { motion, AnimatePresence, HTMLMotionProps } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Paginated } from '@/hooks/usePagination';
+import { Paginated } from '@/lib/hooks/usePagination';
 import { LIST_CONFIG } from './pagedListConfig';
 import Pagination from './Pagination';
 import User from '@/models/User';

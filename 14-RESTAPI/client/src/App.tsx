@@ -17,7 +17,7 @@ import {    fab    } from '@fortawesome/free-brands-svg-icons';  // import brand
 import {    fas    } from '@fortawesome/free-solid-svg-icons';   // import solid icons
 import {    far    } from '@fortawesome/free-regular-svg-icons'; // import regular icons
 
-import { captainsLog } from './util/captainsLog';
+import { captainsLog } from './lib/util/captainsLog';
 
 library.add(fab, fas, far);
 

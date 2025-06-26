@@ -1,12 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useChatListener from '@/hooks/useChatListener';
+import useChatListener from '@/lib/hooks/useChatListener';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
-import PortalMenu from '@/components/panel/PortalMenu';
-import ChatList from './ChatList';
-import NavButton from '@/components/navigation/NavButton';
+import PortalMenu from '@/components/ui/menu/PortalMenu';
+import ChatList from '../list/ChatList';
+import NavButton from '@/components/layout/header/NavButton';
 import Counter from '@/components/notifications/Counter';
 import css from './ChatMenu.module.css';
 

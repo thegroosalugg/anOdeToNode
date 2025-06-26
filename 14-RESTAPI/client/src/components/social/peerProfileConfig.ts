@@ -1,5 +1,5 @@
 import Friend from '@/models/Friend';
-import { HSL } from '../button/Button';
+import { HSL } from '../ui/button/Button';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 type ReqAction = 'add' | 'delete' | 'accept' | undefined; // if undefined function will return

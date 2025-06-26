@@ -1,6 +1,6 @@
-import useChatListener from '@/hooks/useChatListener';
+import useChatListener from '@/lib/hooks/useChatListener';
 import { Authorized } from './RootLayout';
-import ChatList from '@/components/chat/ChatList';
+import ChatList from '@/components/chat/list/ChatList';
 
 export default function ChatPage({ user, setUser }: Authorized) {
   const chatProps = useChatListener(user);

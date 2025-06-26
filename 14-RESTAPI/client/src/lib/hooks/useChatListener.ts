@@ -4,7 +4,7 @@ import useFetch from './useFetch';
 import useSocket from './useSocket';
 import useDebounce from './useDebounce';
 import useDepedencyTracker from './useDepedencyTracker';
-import { FetchError } from '@/util/fetchData';
+import { FetchError } from '@/lib/util/fetchData';
 import User from '@/models/User';
 import Chat from '@/models/Chat';
 import Msg from '@/models/Message';

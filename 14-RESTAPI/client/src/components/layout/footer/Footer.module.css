@@ -1,0 +1,6 @@
+.footer {
+  background: var(--accent-hover);
+  color: var(--bg);
+  text-align: center;
+  padding: 1rem;
+}

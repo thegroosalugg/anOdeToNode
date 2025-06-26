@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useFetch from '@/hooks/useFetch';
+import useFetch from '@/lib/hooks/useFetch';
 import Reply from '@/models/Reply';
-import Modal from '../modal/Modal';
-import ConfirmDialog from '../dialog/ConfirmDialog';
-import ProfilePic from '../profile/ProfilePic';
-import Button from '../button/Button';
-import { timeAgo } from '@/util/timeStamps';
+import Modal from '../ui/modal/Modal';
+import ConfirmDialog from '../ui/modal/ConfirmDialog';
+import ProfilePic from '../ui/image/ProfilePic';
+import Button from '../ui/button/Button';
+import { timeAgo } from '@/lib/util/timeStamps';
 
 export default function ReplyItem({
   _id,

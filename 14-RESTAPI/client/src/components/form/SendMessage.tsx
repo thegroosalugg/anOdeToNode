@@ -1,10 +1,10 @@
 import { FormEvent } from 'react';
 import { motion, useAnimate, AnimatePresence } from 'motion/react';
 import { Auth } from '@/pages/RootLayout';
-import { FetchError } from '@/util/fetchData';
-import useFetch from '@/hooks/useFetch';
-import useDebounce from '@/hooks/useDebounce';
-import Loader from '../loading/Loader';
+import { FetchError } from '@/lib/util/fetchData';
+import useFetch from '@/lib/hooks/useFetch';
+import useDebounce from '@/lib/hooks/useDebounce';
+import Loader from '../ui/boundary/loader/Loader';
 import css from './SendMessage.module.css';
 
 export default function SendMessage({

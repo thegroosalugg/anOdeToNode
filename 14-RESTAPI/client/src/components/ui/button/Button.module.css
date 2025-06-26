@@ -5,8 +5,8 @@
   border-radius: var(--radius-lg);
   color: var(--bg);
   background: var(--accent);
-  box-shadow: var(--shadow-lg);
-  font-weight: 900;
+  box-shadow: var(--shadow-pop);
+  font-weight: 600;
 
   &:disabled { pointer-events: none; }
 }

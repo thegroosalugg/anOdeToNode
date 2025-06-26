@@ -1,5 +1,5 @@
 import User from '@/models/User';
-import ProfilePic from '../profile/ProfilePic';
+import ProfilePic from '../ui/image/ProfilePic';
 
 export default function PeerItem({ user }: { user: User }) {
   const { name, surname } = user;

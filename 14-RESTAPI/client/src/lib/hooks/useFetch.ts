@@ -1,4 +1,4 @@
-import fetchData, { Fetch, FetchError } from '@/util/fetchData';
+import fetchData, { Fetch, FetchError } from '@/lib/util/fetchData';
 import { useState, useCallback } from 'react';
 
 export interface ReqConfig<T> {

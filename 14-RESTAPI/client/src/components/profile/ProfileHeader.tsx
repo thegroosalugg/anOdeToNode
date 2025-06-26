@@ -1,14 +1,14 @@
-import useFetch from '@/hooks/useFetch';
+import useFetch from '@/lib/hooks/useFetch';
 import { useState } from 'react';
-import { BASE_URL, FetchError } from '@/util/fetchData';
+import { BASE_URL, FetchError } from '@/lib/util/fetchData';
 import { motion, useAnimate, stagger } from 'motion/react';
 import { Authorized } from '@/pages/RootLayout';
 import ImagePicker from '../form/ImagePicker';
-import Modal from '../modal/Modal';
-import Button from '../button/Button';
-import ErrorPopUp from '../error/ErrorPopUp';
+import Modal from '../ui/modal/Modal';
+import Button from '../ui/button/Button';
+import ErrorPopUp from '../ui/boundary/error/ErrorPopUp';
 import UserInfo from './UserInfo';
-import { formatDate } from '@/util/timeStamps';
+import { formatDate } from '@/lib/util/timeStamps';
 import css from './ProfileHeader.module.css';
 
 export default function ProfileHeader({ user, setUser }: Pick<Authorized, 'user' | 'setUser'>) {

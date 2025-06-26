@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Debounce } from '@/hooks/useDebounce';
+import { Debounce } from '@/lib/hooks/useDebounce';
 import { isMobile } from 'react-device-detect';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import css from './NavButton.module.css';

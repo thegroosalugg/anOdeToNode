@@ -1,13 +1,13 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
-import usePagination from '@/hooks/usePagination';
+import usePagination from '@/lib/hooks/usePagination';
 import { Authorized } from '@/pages/RootLayout';
 import Post from '@/models/Post';
 import ProfileHeader from './ProfileHeader';
-import Modal from '../modal/Modal';
-import Button from '../button/Button';
-import ConfirmDialog from '../dialog/ConfirmDialog';
-import AsyncAwait from '../panel/AsyncAwait';
+import Modal from '../ui/modal/Modal';
+import Button from '../ui/button/Button';
+import ConfirmDialog from '../ui/modal/ConfirmDialog';
+import AsyncAwait from '../ui/boundary/AsyncAwait';
 import FriendsList from './FriendsList';
 import PagedList from '../pagination/PagedList';
 import PostItem from '../post/PostItem';

@@ -1,11 +1,11 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useDebounce from '@/hooks/useDebounce';
+import useDebounce from '@/lib/hooks/useDebounce';
 import { Auth } from '@/pages/RootLayout';
 import NavButton from './NavButton';
-import Notifications from '../notifications/Notifications';
-import ChatMenu from '../chat/ChatMenu';
+import Notifications from '../../notifications/Notifications';
+import ChatMenu from '../../chat/menu/ChatMenu';
 import css from './NavBar.module.css';
 
 export default function NavBar({ user, setUser }: Auth) {

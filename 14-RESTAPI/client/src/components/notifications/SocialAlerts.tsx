@@ -1,13 +1,13 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
-import useDebounce from '@/hooks/useDebounce';
-import useFetch from '@/hooks/useFetch';
-import { FetchError } from '@/util/fetchData';
+import useDebounce from '@/lib/hooks/useDebounce';
+import useFetch from '@/lib/hooks/useFetch';
+import { FetchError } from '@/lib/util/fetchData';
 import { Auth } from '@/pages/RootLayout';
 import User from '@/models/User';
 import Friend from '@/models/Friend';
 import { Alert, Strong, Time, X } from './UIElements';
-import Button from '../button/Button';
+import Button from '../ui/button/Button';
 import css from './SocialAlerts.module.css';
 
 export default function SocialAlerts({

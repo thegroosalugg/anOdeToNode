@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { motion, useAnimate, stagger } from "motion/react";
-import useDebounce from "@/hooks/useDebounce";
+import useDebounce from "@/lib/hooks/useDebounce";
 import { Auth } from "@/pages/RootLayout";
 import Input from "./Input";
-import Button from "../button/Button";
-import Loader from "../loading/Loader";
+import Button from "../ui/button/Button";
+import Loader from "../ui/boundary/loader/Loader";
 import css from "./LoginForm.module.css";
 
 export default function LoginForm({ isLoading, error, setError, reqUser }: Auth) {

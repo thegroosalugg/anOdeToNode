@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { motion, LayoutGroup } from 'motion/react';
-import { Paginated } from '@/hooks/usePagination';
+import { Paginated } from '@/lib/hooks/usePagination';
 import { LIST_CONFIG } from './pagedListConfig';
 import { PagedConfig } from './PagedList';
 import css from './Pagination.module.css';

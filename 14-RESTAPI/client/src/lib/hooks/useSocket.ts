@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { BASE_URL } from '@/util/fetchData';
+import { BASE_URL } from '@/lib/util/fetchData';
 import Logger, { LogConfig } from '@/models/Logger';
 
 export default function useSocket(config: LogConfig) {

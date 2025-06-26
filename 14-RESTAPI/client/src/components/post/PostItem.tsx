@@ -1,6 +1,6 @@
 import Post from '@/models/Post';
-import ProfilePic from '../profile/ProfilePic';
-import { timeAgo } from '@/util/timeStamps';
+import ProfilePic from '../ui/image/ProfilePic';
+import { timeAgo } from '@/lib/util/timeStamps';
 
 export default function PostItem({
     creator,

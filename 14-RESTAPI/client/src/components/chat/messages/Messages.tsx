@@ -1,13 +1,13 @@
 import { motion } from 'motion/react';
 import { useEffect, useRef } from 'react';
-import useFetch from '@/hooks/useFetch';
-import useDepedencyTracker from '@/hooks/useDepedencyTracker';
-import { ChatListener } from '@/hooks/useChatListener';
+import useFetch from '@/lib/hooks/useFetch';
+import useDepedencyTracker from '@/lib/hooks/useDepedencyTracker';
+import { ChatListener } from '@/lib/hooks/useChatListener';
 import User from '@/models/User';
 import Chat from '@/models/Chat';
 import Msg from '@/models/Message';
-import AsyncAwait from '../panel/AsyncAwait';
-import { formatDate } from '@/util/timeStamps';
+import AsyncAwait from '../../ui/boundary/AsyncAwait';
+import { formatDate } from '@/lib/util/timeStamps';
 import css from './Messages.module.css';
 
 export default function Messages({

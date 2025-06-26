@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ProfilePic from '../profile/ProfilePic';
+import ProfilePic from '../ui/image/ProfilePic';
 import User from '@/models/User';
-import { timeAgo } from '@/util/timeStamps';
+import { timeAgo } from '@/lib/util/timeStamps';
 import css from './UIElements.module.css';
 
 export function Strong({ callback, children }: { callback: () => void; children: ReactNode }) {

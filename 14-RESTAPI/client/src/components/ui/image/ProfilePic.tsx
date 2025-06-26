@@ -1,5 +1,5 @@
 import { HTMLMotionProps, motion } from 'motion/react';
-import { BASE_URL } from '@/util/fetchData';
+import { BASE_URL } from '@/lib/util/fetchData';
 import User from '@/models/User';
 import css from './ProfilePic.module.css';
 

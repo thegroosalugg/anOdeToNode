@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction, ReactNode, useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
-import NavBar from '@/components/navigation/NavBar';
-import useFetch, { ReqConfig } from '@/hooks/useFetch';
-import { Fetch, FetchError } from '@/util/fetchData';
+import NavBar from '@/components/layout/header/NavBar';
+import Footer from '@/components/layout/footer/Footer';
+import useFetch, { ReqConfig } from '@/lib/hooks/useFetch';
+import { Fetch, FetchError } from '@/lib/util/fetchData';
 import User from '@/models/User';
 
 type  isUser =       User | null;
@@ -58,6 +59,7 @@ export default function RootLayout({
           {children(props)}
         </motion.main>
       </AnimatePresence>
+      <Footer />
     </>
   );
 }

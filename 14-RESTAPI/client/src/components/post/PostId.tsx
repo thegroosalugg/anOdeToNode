@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL } from '@/util/fetchData';
-import { timeAgo } from '@/util/timeStamps';
+import { BASE_URL } from '@/lib/util/fetchData';
+import { timeAgo } from '@/lib/util/timeStamps';
 import User from '@/models/User';
 import Post from '@/models/Post';
-import ProfilePic from '../profile/ProfilePic';
-import Button from '../button/Button';
+import ProfilePic from '../ui/image/ProfilePic';
+import Button from '../ui/button/Button';
 import css from './PostId.module.css';
 
 export default function PostId({

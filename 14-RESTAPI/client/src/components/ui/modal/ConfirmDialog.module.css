@@ -1,12 +1,12 @@
 .confirm-dialog {
   padding: 0.5rem;
-  background: var(--box-gradient);
+  background: var(--bg);
   overflow-x: scroll;
   width: 240px;
+  border-radius: var(--radius-lg);
 
   > h2 {
     text-align: center;
-    font-family: "Oswald", sans-serif;
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
   }
@@ -17,11 +17,7 @@
 
     > button {
       width: 120px;
-      border: 1px solid #000;
-
-      &:last-of-type {
-        color: #252525;
-      }
+      border: 1px solid transparent;
     }
   }
 }

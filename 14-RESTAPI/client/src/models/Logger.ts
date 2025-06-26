@@ -1,6 +1,6 @@
-import { Dependency } from "@/hooks/useDepedencyTracker";
-import { captainsLog } from "@/util/captainsLog";
-import { Fetch } from "@/util/fetchData";
+import { Dependency } from "@/lib/hooks/useDepedencyTracker";
+import { captainsLog } from "@/lib/util/captainsLog";
+import { Fetch } from "@/lib/util/fetchData";
 
 export type LogConfig =
   | 'feed'

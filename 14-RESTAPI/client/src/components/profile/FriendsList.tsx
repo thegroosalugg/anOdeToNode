@@ -1,6 +1,6 @@
 import { isMobile } from 'react-device-detect';
 import { useEffect, useState } from 'react';
-import { usePages } from '@/hooks/usePagination';
+import { usePages } from '@/lib/hooks/usePagination';
 import Friend from '@/models/Friend';
 import PagedList from '../pagination/PagedList';
 import PeerItem from '../social/PeerItem';

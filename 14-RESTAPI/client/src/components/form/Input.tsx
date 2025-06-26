@@ -1,7 +1,7 @@
 import { motion, AnimatePresence, Variants } from "motion/react";
 import { HTMLProps } from "react";
-import { FetchError } from "@/util/fetchData";
-import ErrorPopUp from "../error/ErrorPopUp";
+import { FetchError } from "@/lib/util/fetchData";
+import ErrorPopUp from "../ui/boundary/error/ErrorPopUp";
 import css from "./Input.module.css";
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);

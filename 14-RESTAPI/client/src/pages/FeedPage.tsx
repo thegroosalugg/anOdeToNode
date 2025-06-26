@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import usePagination from '@/hooks/usePagination';
-import useSocket from '@/hooks/useSocket';
+import usePagination from '@/lib/hooks/usePagination';
+import useSocket from '@/lib/hooks/useSocket';
 import { Authorized } from './RootLayout';
 import Post from '@/models/Post';
 import Logger from '@/models/Logger';
-import Modal from '@/components/modal/Modal';
-import Button from '@/components/button/Button';
+import Modal from '@/components/ui/modal/Modal';
+import Button from '@/components/ui/button/Button';
 import PostForm from '@/components/form/PostForm';
-import AsyncAwait from '@/components/panel/AsyncAwait';
+import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
 import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/post/PostItem';
 
