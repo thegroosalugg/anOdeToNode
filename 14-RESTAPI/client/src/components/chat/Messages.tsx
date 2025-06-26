@@ -17,11 +17,10 @@ export default function Messages({
       setMsgs,
   clearAlerts,
          user,
-       isMenu,
 }: {
   user: User;
   chat: Chat;
-} & Pick<ChatListener, 'msgState' | 'loadState' | 'setMsgs' | 'isMenu' | 'clearAlerts'>) {
+} & Pick<ChatListener, 'msgState' | 'loadState' | 'setMsgs' | 'clearAlerts'>) {
   const      msgs = msgState[chat._id] || [];
   const hasLoaded = loadState.current[chat._id];
   const { reqHandler, error } = useFetch<Msg[]>([]);
@@ -103,27 +102,18 @@ export default function Messages({
       >
         {msgs.map((msg, i) => {
           const { _id, createdAt, sender, content } = msg;
-          const   isSender = user._id === sender;
           const     isLast = i === msgs.length - 1;
-          const alignItems = isSender ?           'end' : 'start';
-          const     margin = isSender ?    '0 0 0 1rem' : '0 1rem 0 0';
-          const      color = isSender ? 'var(--accent)' :  '#fff';
-          const background = isSender
-            ? isMenu
-              ? '#fff'
-              : 'var(--main-gradient)'
-            : 'var(--accent)';
 
           return (
             <motion.li
                 layout
                    key={_id}
               variants={variants}
-                 style={{ alignItems, margin }}
+              className={user._id === sender ? css["sender"] : ""}
               onAnimationComplete={scrollTo}
             >
               <time>{formatDate(createdAt, ['weekday', 'time'])}</time>
-              <p ref={isLast ? msgRef : null} style={{ color, background }}>
+              <p ref={isLast ? msgRef : null}>
                 {content}
               </p>
             </motion.li>

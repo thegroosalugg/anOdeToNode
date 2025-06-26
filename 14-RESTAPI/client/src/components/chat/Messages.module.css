@@ -1,4 +1,9 @@
 .messages {
+  --align: start;
+  --margin: 0 1rem 0 0;
+  --color: var(--accent);
+  --background: var(--box);
+
   flex: 1;
   min-height: 0;
   overflow-y: scroll;
@@ -11,6 +16,8 @@
   > li {
     display: flex;
     flex-direction: column;
+    align-items: var(--align);
+    margin: var(--margin);
 
     > time {
       font-size: var(--text-sm);
@@ -18,9 +25,21 @@
     }
 
     > p {
-      padding: 0.2rem;
-      word-break: break-all;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      padding: 0.25rem 0.5rem;
+      overflow-wrap: break-word;
+      max-width: 100%;
+      color: var(--color);
+      background: var(--background);
       border: 1px solid var(--accent);
+    }
+
+    &.sender {
+      --align: end;
+      --margin: 0 0 0 1rem;
+      --color: var(--box);
+      --background: var(--accent);
     }
   }
 }
