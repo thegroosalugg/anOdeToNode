@@ -17,7 +17,7 @@
     max-height: 540px;
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--team-green);
+    border: 1px solid var(--accent);
 
     > h2 {
       display: flex;
@@ -71,13 +71,13 @@
             justify-content: end;
             gap: 0.2rem;
             font-weight: 700;
-            color: var(--team-green);
+            color: var(--accent);
 
             > span {
               /* Counter override - remove absolute positioning */
               &:last-of-type {
                 position: static;
-                background: var(--team-green);
+                background: var(--accent);
               }
 
               /* first-of-type loads last & overwrites background when only 1 child span */

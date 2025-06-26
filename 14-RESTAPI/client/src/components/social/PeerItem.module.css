@@ -11,7 +11,7 @@ ul.user-list {
 
   > li {
     padding: 0;
-    border: 1px solid var(--team-green);
+    border: 1px solid var(--accent);
     cursor: pointer;
 
     > h2 {

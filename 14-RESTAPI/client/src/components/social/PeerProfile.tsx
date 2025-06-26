@@ -48,8 +48,8 @@ export default function PeerProfile({
 
   const  connection = user.friends.find((friend) => friend.user._id === _id);
   const { accepted, initiated, acceptedAt } = connection ?? {};
-  const       color = connection ?     '#ffffff' : 'var(--team-green)';
-  const borderColor = connection ? 'transparent' : 'var(--team-green)';
+  const       color = connection ?     '#ffffff' : 'var(--accent)';
+  const borderColor = connection ? 'transparent' : 'var(--accent)';
   const { text, icon, hsl, action } = getPeerConfig(connection);
   const closeModal = () => setShowModal(false);
 

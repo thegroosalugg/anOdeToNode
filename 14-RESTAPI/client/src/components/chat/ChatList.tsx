@@ -172,7 +172,7 @@ export default function ChatList({
                   const        path = `/inbox/${recipient._id}`;
                   const    isMarked = toBeDeleted[_id];
                   const           x = 20 * (i % 2 === 0 ? 1 : -1);
-                  const borderColor = isMarked ? '#ffffff00' : 'var(--team-green)';
+                  const borderColor = isMarked ? '#ffffff00' : 'var(--accent)';
                   const  background = isMarked
                     ? 'linear-gradient(to right, #c65740, #ce4429)'
                     : `var(--${isMenu ? 'main' : 'box'}-gradient)`;
@@ -221,7 +221,7 @@ export default function ChatList({
                                 {timeAgo(lastMsg.updatedAt)}
                               </Span>
                               <span>
-                                <Span {...{ color: 'var(--team-green)', isMarked }}>
+                                <Span {...{ color: 'var(--accent)', isMarked }}>
                                   {'🗨️' + sender}
                                 </Span>
                                 <Counter count={alerts[user._id]} />

@@ -7,15 +7,15 @@
   max-width: 100%;
 
   > span {
-    color: var(--team-green);
+    color: var(--accent);
     font-size: 1.2rem;
     font-weight: 600;
   }
 
   > button {
     min-width: 2rem;
-    color: var(--team-green);
-    border: 1.5px solid var(--team-green);
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
     background: #ededed;
   }
 

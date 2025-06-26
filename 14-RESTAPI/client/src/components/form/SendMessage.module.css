@@ -3,7 +3,7 @@
   margin-top: auto;
   width: 100%;
   max-width: 600px;
-  border-top: 1px solid var(--team-green);
+  border-top: 1px solid var(--accent);
   background: var(--box-gradient);
 
   > textarea, > button {
@@ -14,7 +14,7 @@
 
   > textarea {
     resize: none;
-    border-bottom: 1px solid var(--team-green);
+    border-bottom: 1px solid var(--accent);
     padding: 0.5rem;
     text-align: justify;
     background: var(--box-gradient);

@@ -17,7 +17,7 @@
     gap: 0.25em;
     padding: 1rem 0.25rem 0.25rem;
     background: var(--main-gradient);
-    color: var(--team-green);
+    color: var(--accent);
     border: 1px solid var(--dark-grey);
 
     > section {

@@ -105,14 +105,14 @@ export default function Messages({
           const { _id, createdAt, sender, content } = msg;
           const   isSender = user._id === sender;
           const     isLast = i === msgs.length - 1;
-          const alignItems = isSender ?               'end' : 'start';
-          const     margin = isSender ?        '0 0 0 1rem' : '0 1rem 0 0';
-          const      color = isSender ? 'var(--team-green)' :  '#fff';
+          const alignItems = isSender ?           'end' : 'start';
+          const     margin = isSender ?    '0 0 0 1rem' : '0 1rem 0 0';
+          const      color = isSender ? 'var(--accent)' :  '#fff';
           const background = isSender
             ? isMenu
               ? '#fff'
               : 'var(--main-gradient)'
-            : 'var(--team-green)';
+            : 'var(--accent)';
 
           return (
             <motion.li

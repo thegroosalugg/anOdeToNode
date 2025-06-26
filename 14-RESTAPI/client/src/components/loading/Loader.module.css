@@ -3,7 +3,7 @@
   --size-spinner: 64px;
   --border: 8px;
   --margin: 8px;
-  --color: var(--team-green);
+  --color: var(--accent);
 
   display: inline-block;
   position: relative;

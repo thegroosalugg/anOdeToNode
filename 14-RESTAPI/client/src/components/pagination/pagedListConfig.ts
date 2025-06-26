@@ -4,7 +4,7 @@ import socialCss from '../social/PeerItem.module.css';
 
 export const LIST_CONFIG = {
   feed: {                           // each component calls only this key
-     setColor: 'var(--team-green)', // last list page && pagination color & border
+     setColor: 'var(--accent)', // last list page && pagination color & border
         navTo: 'post',              // if list item should navigate to an ID page
         delay: 0.2,                 // enter animation. Cascades with other components
       listCss: [feedCss['feed']],   // override/extra UL styles. Default always applied
@@ -37,7 +37,7 @@ export const LIST_CONFIG = {
   },
 
   users: {
-     setColor: 'var(--team-green)',
+     setColor: 'var(--accent)',
         navTo: 'user',
         delay: 0.5,
       listCss: [socialCss['user-list']],
@@ -59,7 +59,7 @@ export const LIST_CONFIG = {
   },
 
     mutual: {
-     setColor: 'var(--team-green)',
+     setColor: 'var(--accent)',
         navTo: 'user',
         delay: 0.1,
       listCss: [socialCss['user-list'], socialCss['mutual-friends']],

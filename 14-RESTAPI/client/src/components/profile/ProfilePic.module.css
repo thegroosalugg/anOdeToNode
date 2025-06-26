@@ -2,6 +2,6 @@
   width: 25px;
   aspect-ratio: 1/1;
   object-fit: cover;
-  border: 0.8px solid var(--team-green);
+  border: 0.8px solid var(--accent);
   border-radius: 50%;
 }
