@@ -1,23 +1,38 @@
 /* uses .floating-box */
 .chat-item {
+  --color: var(--text);
+  --background: var(--box);
+  --header: var(--fg);
+  --counter: var(--accent);
+
   display: flex;
   flex-direction: column;
   max-height: 100%;
+  background: var(--background);
+  border-color: var(--color);
+  transition: background 0.5s ease, border 0.5s ease;
   /* flex: 1; */ /* set via Framer 0 | 1 */
+
+  /* all <spans> use .truncate */
+  span {
+    transition: color 0.5s ease, background 0.5s ease;
+  }
 
   > header {
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    padding: 0.25rem;
-    /* min-height: 2rem; */
+    padding: 0.5rem;
 
-    /* Recipient name */
+    > img {
+      border-color: var(--color);
+      transition: border 0.5s ease;
+    }
+
+    /* Recipient name  */
     > span {
+      color: var(--header);
       text-align: center;
-      text-wrap: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
       cursor: pointer;
       font-weight: 600;
       font-size: 1.2rem;
@@ -26,11 +41,10 @@
     /* Back Button (Expanded) */
     > button {
       margin-left: auto;
-      font-weight: 700;
     }
 
-    /* Last Message (Collapsed) */
-    > section {
+    /* Last Message info (Collapsed): timestamp, sender/counter & lastMsg */
+    > p {
       max-width: 40%;
       margin-left: auto;
       display: flex;
@@ -39,49 +53,41 @@
 
       > span {
         max-width: 100%;
-        text-wrap: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
         font-size: var(--text-sm);
-
-        /* time stamp */
-        &:first-of-type {
-          color: var(--text);
-        }
-
-        /* Recipient name & counter */
-        &:nth-of-type(2) {
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: end;
-          gap: 0.2rem;
-          font-weight: 700;
-          color: var(--accent);
-
-          > span {
-            /* Counter override - remove absolute positioning */
-            &:last-of-type {
-              position: static;
-              color: var(--box);
-              background: var(--accent);
-            }
-
-            /* first-of-type loads last & overwrites background when only 1 child span */
-            &:first-of-type {
-              background: none;
-              text-wrap: nowrap;
-              text-overflow: ellipsis;
-              overflow: hidden;
-            }
-          }
-        }
-
-        /* message preview */
-        &:last-of-type {
-          color: var(--text);
-        }
+        color: var(--color);
       }
     }
   }
+}
+
+/* Recipient name & counter */
+.counter {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 0.2rem;
+  font-weight: 700;
+
+  > span {
+    /* Counter override - remove absolute positioning */
+    &:last-of-type {
+      position: static;
+      color: var(--background);
+      background: var(--counter);
+    }
+
+    /* first-of-type loads last & overwrites background when only 1 child span */
+    &:first-of-type {
+      color: var(--counter);
+      background: none;
+    }
+  }
+}
+
+.marked {
+  --background: var(--error);
+  --color:   var(--bg);
+  --header:  var(--bg);
+  --counter: var(--bg);
 }

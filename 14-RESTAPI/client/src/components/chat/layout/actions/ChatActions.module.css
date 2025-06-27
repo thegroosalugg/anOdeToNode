@@ -1,4 +1,5 @@
 .chat-actions {
+  padding: 0 0.25rem;
   > button {
     border: 1px solid transparent;
     font-weight: 500;

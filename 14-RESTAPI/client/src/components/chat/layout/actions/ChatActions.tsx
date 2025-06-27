@@ -23,19 +23,18 @@ export default function ChatActions({
    deleteAction,
 }: ActionProps) {
   const { isActive } = useChat();
-
+  const canDelete = isMarking || isActive;
+  const      color = canDelete ?    "var(--bg)" : "var(--fg)"
+  const background = canDelete ? "var(--error)" : "var(--box)";
+  
   return (
     <>
       <Modal show={showModal} close={closeModal}>
         <ConfirmDialog onCancel={closeModal} onConfirm={deleteAction} />
       </Modal>
       <header className={css["chat-actions"]}>
-        <Button
-               color={isMarking || isActive ?    "var(--bg)" : "var(--fg)"}
-          background={isMarking || isActive ? "var(--error)" : "var(--box)"}
-          onClick={confirmAction}
-        >
-          {isMarking || isActive ? "Delete" : "Select"} Chat{!isActive ? "s" : ""}
+        <Button {...{ color, background }} onClick={confirmAction}>
+          {canDelete ? "Delete" : "Select"} Chat{!isActive ? "s" : ""}
         </Button>
         <AnimatePresence>
           {isMarking && (

@@ -11,24 +11,10 @@ import Counter from "@/components/notifications/Counter";
 import { createAnimations, createVariants } from "@/lib/motion/animations";
 import { useChat } from "../../context/ChatContext";
 
-const    opacity = 0;
-const transition = { duration: 0.5, ease: "linear" };
+type TruncateSpan = { children: ReactNode } & HTMLMotionProps<"span">;
 
-const Span = ({
-  isMarked,
-     color = "var(--text)",
-  children,
-  ...props
-}: {
-  isMarked: boolean;
-    color?: string;
-  children: ReactNode;
-} & HTMLMotionProps<"span">) => (
-  <motion.span
-    animate={{ color: isMarked ? "var(--bg)" : color }}
-    {...{ transition }}
-    {...props}
-  >
+const Truncate = ({ children, ...props }: TruncateSpan) => (
+  <motion.span className="truncate" {...props}>
     {children}
   </motion.span>
 );
@@ -41,22 +27,21 @@ interface ChatProps {
 }
 
 export default function ChatItem({
-  chat,
-  isMarked,
+          chat,
+      isMarked,
   expandOrMark,
-  children,
+      children,
 }: ChatProps) {
   const navigate = useNavigate();
   const { user, deferring, isActive, collapse } = useChat();
   const { host, guest, lastMsg, alerts } = chat;
   const   recipient = user._id === host._id ? guest : host;
   const      sender = lastMsg?.sender === user._id ? "Me" : recipient.name;
-  const borderColor = isMarked ?    "var(--bg)" : "var(--text)";
-  const  background = isMarked ? "var(--error)" : `var(--box)`;
   const        flex = isActive ? 1 : 0;
   const      cursor = isActive || deferring ? "auto" : "pointer";
   const  animations = createAnimations({ transition: { ease: "linear"}});
   const    variants = createVariants({ initial: { flex }, animate: { flex } });
+  const     classes = `floating-box ${css["chat-item"]} ${isMarked ? css["marked"] : ""}`;
 
   function navTo(path: string) {
     if (!isActive) return;
@@ -66,40 +51,31 @@ export default function ChatItem({
   return (
     <motion.li
         layout
-      className={`floating-box ${css["chat-item"]}`}
+      className={classes}
         onClick={() => expandOrMark(chat, recipient._id)}
-          style={{ cursor, background, borderColor }}
+          style={{ cursor }}
            exit={{ ...variants.hidden }}
-      {...{ variants, transition }}
+      {...{ variants }}
     >
       <header>
-        <ProfilePic
-          layout
-          animate={{ borderColor }}
-             user={recipient}
-          {...{ transition }}
-        />
-        <Span
-          layout
-          {...{ color: "var(--fg)", isMarked }}
-          onClick={() => navTo(recipient._id)}
-        >
+        <ProfilePic layout user={recipient} />
+        <Truncate layout onClick={() => navTo(recipient._id)}>
           {recipient.name} {recipient.surname}
-        </Span>
+        </Truncate>
         <AnimatePresence mode="wait">
           {isActive ? (
-            <Button layout key="btn" exit={{ opacity }} onClick={collapse}>
+            <Button layout key="btn" exit={{ opacity: 0 }} onClick={collapse}>
               Back
             </Button>
           ) : (
-            <motion.section layout key={lastMsg.updatedAt} {...animations}>
-              <Span {...{ isMarked }}>{timeAgo(lastMsg.updatedAt)}</Span>
-              <span>
-                <Span {...{ color: "var(--accent)", isMarked }}>{sender}</Span>
+            <motion.p layout key={lastMsg.updatedAt} {...animations}>
+              <Truncate>{timeAgo(lastMsg.updatedAt)}</Truncate>
+              <span className={css["counter"]}>
+                <Truncate>{sender}</Truncate>
                 <Counter count={alerts[user._id]} />
               </span>
-              <Span {...{ isMarked }}>{lastMsg.content}</Span>
-            </motion.section>
+              <Truncate>{lastMsg.content}</Truncate>
+            </motion.p>
           )}
         </AnimatePresence>
       </header>
