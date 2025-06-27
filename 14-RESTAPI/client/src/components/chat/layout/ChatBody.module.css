@@ -6,3 +6,9 @@
   padding: 0.5rem;
   overflow-y: scroll;
 }
+
+.fallback {
+  padding: 0.25rem;
+  margin: 1rem auto;
+  text-align: center;
+}
