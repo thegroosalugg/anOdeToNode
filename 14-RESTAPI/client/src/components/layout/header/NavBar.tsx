@@ -5,7 +5,7 @@ import useDebounce from '@/lib/hooks/useDebounce';
 import { Auth } from '@/pages/RootLayout';
 import NavButton from './NavButton';
 import Notifications from '../../notifications/Notifications';
-import ChatMenu from '../../chat/menu/ChatMenu';
+import ChatMenu from '../../chat/ChatMenu';
 import css from './NavBar.module.css';
 import { ChatProvider } from '@/components/chat/context/ChatProvider';
 

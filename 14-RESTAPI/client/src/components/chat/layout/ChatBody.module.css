@@ -1,0 +1,8 @@
+.chat-body {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  overflow-y: scroll;
+}

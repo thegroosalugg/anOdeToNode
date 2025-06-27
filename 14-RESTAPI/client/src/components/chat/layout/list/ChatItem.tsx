@@ -8,9 +8,8 @@ import { useNavigate } from "react-router-dom";
 import Button from "@/components/ui/button/Button";
 import { timeAgo } from "@/lib/util/timeStamps";
 import Counter from "@/components/notifications/Counter";
-import { ChatListener } from "@/lib/hooks/useChatListener";
 import { createAnimations, createVariants } from "@/lib/motion/animations";
-import { useChat } from "../context/ChatContext";
+import { useChat } from "../../context/ChatContext";
 
 const    opacity = 0;
 const transition = { duration: 0.5, ease: "linear" };

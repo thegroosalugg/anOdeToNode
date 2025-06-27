@@ -3,10 +3,10 @@ import { useEffect, useRef } from 'react';
 import useFetch from '@/lib/hooks/useFetch';
 import useDepedencyTracker from '@/lib/hooks/useDepedencyTracker';
 import Msg from '@/models/Message';
-import AsyncAwait from '../../ui/boundary/AsyncAwait';
+import AsyncAwait from '../../../ui/boundary/AsyncAwait';
 import { formatDate } from '@/lib/util/timeStamps';
 import css from './Messages.module.css';
-import { useChat } from '../context/ChatContext';
+import { useChat } from '../../context/ChatContext';
 import Chat from '@/models/Chat';
 
 export default function Messages({ chat }: { chat: Chat }) {

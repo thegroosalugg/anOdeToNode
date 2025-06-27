@@ -1,0 +1,11 @@
+.chat-actions {
+  > button {
+    border: 1px solid transparent;
+    font-weight: 500;
+
+    &:first-of-type {
+      width: 125px;
+      margin-right: 0.1rem;
+    }
+  }
+}
