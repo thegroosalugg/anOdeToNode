@@ -1,6 +1,6 @@
 import { useState, ReactNode, useCallback, useEffect, useRef } from "react";
 import { ChatContext, StatusMap, MsgsMap } from "./ChatContext";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import useFetch from "@/lib/hooks/useFetch";
 import useSocket from "@/lib/hooks/useSocket";
 import useDebounce from "@/lib/hooks/useDebounce";
@@ -29,7 +29,9 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   const [msgsMap,      setMsgs] = useState<MsgsMap>({});
   const [alerts,     setAlerts] = useState(0);
   const { deferring,  deferFn } = useDebounce();
-  const { userId } = useParams();
+  // working here
+  const [searchParams, setSearchParams] = useSearchParams();
+  const userId = searchParams.get("chat");
   const { _id: activeId, isTemp = false } = isActive ?? {};
   const isInitial = useRef(true);
   const loadedMap = useRef<StatusMap>({});
@@ -167,17 +169,21 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   }
 
   function expand(chat: Chat, path: string) {
-    if (!isActive)
-      deferFn(() => {
-        setIsActive(chat);
-        window.history.replaceState(null, "", `?chat=${path}`);
-      }, 2500);
+    if (isActive) return;
+    deferFn(() => {
+      setIsActive(chat);
+      setSearchParams((prev) => {
+        prev.set("chat", path);
+        return prev;
+      });
+    }, 2500);
   }
 
   function collapse() {
-    const url = new URL(window.location.href);
-    url.searchParams.delete("chat");
-    window.history.replaceState(null, "", url.toString());
+    setSearchParams((prev) => {
+      prev.delete("chat");
+      return prev;
+    });
     setIsActive(null);
   }
 
@@ -235,7 +241,6 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     isActive,
     isInitial: isInitial.current,
     deferring,
-    deferFn,
     isOpen,
     openMenu,
     closeMenu,

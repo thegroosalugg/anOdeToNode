@@ -1,4 +1,3 @@
-import { Debounce } from "@/lib/hooks/useDebounce";
 import { FetchError } from "@/lib/util/fetchData";
 import Chat from "@/models/Chat";
 import Msg from "@/models/Message";
@@ -25,6 +24,7 @@ type ChatContext = {
           error: FetchError | null;
        isActive: Chat | null;
       isInitial: boolean;
+      deferring: boolean;
          alerts: number;
     clearAlerts: (id: string) => Promise<void>;
          isOpen: boolean;
@@ -40,7 +40,7 @@ type ChatContext = {
    deleteAction: () => void;
       showModal: boolean;
      closeModal: () => void;
-} & Debounce;
+};
 
 export const ChatContext = createContext<ChatContext | null>(null);
 

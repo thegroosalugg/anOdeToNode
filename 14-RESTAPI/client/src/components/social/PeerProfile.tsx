@@ -72,7 +72,7 @@ export default function PeerProfile({
     if (!accepted) {
       await friendRequest();
     } else {
-      navigate('/inbox/' + peer._id);
+      navigate('?chat=' + peer._id);
     }
   }
 
