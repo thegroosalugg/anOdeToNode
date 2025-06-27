@@ -11,9 +11,9 @@ import { createVariants } from '@/lib/motion/animations';
 import css from './Messages.module.css';
 
 export default function Messages({ chat }: { chat: Chat }) {
-  const { user, msgState, loadState, setMsgs, clearAlerts } = useChat();
-  const      msgs = msgState[chat._id] || [];
-  const hasLoaded = loadState.current[chat._id];
+  const { user, msgsMap, loadedMap, setMsgs, clearAlerts } = useChat();
+  const      msgs = msgsMap[chat._id] || [];
+  const hasLoaded = loadedMap.current[chat._id];
   const { reqHandler, error } = useFetch<Msg[]>([]);
   const isInitial = useRef(true);
   const    msgRef = useRef<HTMLParagraphElement>(null);
@@ -26,7 +26,7 @@ export default function Messages({ chat }: { chat: Chat }) {
         chatId: chat._id,
     chatAlerts: chat.alerts,
     chatIsTemp: chat.isTemp,
-     loadState,
+     loadedMap,
      hasLoaded,
   });
 
@@ -45,7 +45,7 @@ export default function Messages({ chat }: { chat: Chat }) {
         {
           onSuccess: (msgs) => {
             setMsgs((state) => ({ ...state, [chat._id]: msgs }));
-            loadState.current[chat._id] = true;
+            loadedMap.current[chat._id] = true;
           },
         }
       );
@@ -63,7 +63,7 @@ export default function Messages({ chat }: { chat: Chat }) {
     chat._id,
     chat.alerts,
     chat.isTemp,
-    loadState,
+    loadedMap,
     hasLoaded,
     clearAlerts,
     reqHandler,

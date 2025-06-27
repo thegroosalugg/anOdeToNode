@@ -1,5 +1,5 @@
 import { useState, ReactNode, useCallback, useEffect, useRef } from "react";
-import { ChatContext, LoadState, MsgState } from "./ChatContext";
+import { ChatContext, StatusMap, MsgsMap } from "./ChatContext";
 import { useParams } from "react-router-dom";
 import useFetch from "@/lib/hooks/useFetch";
 import useSocket from "@/lib/hooks/useSocket";
@@ -12,7 +12,7 @@ import { Auth } from "@/pages/RootLayout";
 
 interface ChatProviderProps {
       user: User;
-   setUser: Auth['setUser']
+   setUser: Auth["setUser"];
   children: ReactNode;
 }
 
@@ -21,21 +21,28 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
           data: chats,
        setData: setChats,
     reqHandler: reqChats,
-         error,
+    error,
   } = useFetch<Chat[]>([]);
   const { reqHandler: reqChat, error: findChatErr } = useFetch<Chat>();
   const [isOpen,     setIsOpen] = useState(false);
   const [isActive, setIsActive] = useState<Chat | null>(null);
-  const [msgState,     setMsgs] = useState<MsgState>({});
+  const [msgsMap,      setMsgs] = useState<MsgsMap>({});
   const [alerts,     setAlerts] = useState(0);
   const { deferring,  deferFn } = useDebounce();
-  const {       userId        } = useParams();
+  const { userId } = useParams();
   const { _id: activeId, isTemp = false } = isActive ?? {};
   const isInitial = useRef(true);
-  const loadState = useRef<LoadState>({});
-  const    config = "chat";
+  const loadedMap = useRef<StatusMap>({});
+  const config = "chat";
   const socketRef = useSocket(config);
-  const     count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
+  const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
+  // DELETION STATES
+  const [isMarking, setIsMarking] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [markedMap,    setMarked] = useState<StatusMap>({});
+  const wasMarked = Object.keys(markedMap).some((key) => markedMap[key]);
+  const closeModal = () => setShowModal(false);
+  // END
 
   const updateChats = useCallback(
     (chat: Chat) => {
@@ -154,7 +161,10 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     deferFn(async () => setIsOpen(true), 1500);
   };
 
-  const closeMenu = async () => setIsOpen(false);
+  const closeMenu = async () => {
+    setIsOpen(false);
+    cancelAction();
+  }
 
   function expand(chat: Chat, path: string) {
     if (!isActive)
@@ -171,6 +181,47 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     setIsActive(null);
   }
 
+  // DELETION FUNCTIONS
+  function expandOrMark(chat: Chat, path: string) {
+    if (isMarking) {
+      setMarked((state) => ({ ...state, [chat._id]: !state[chat._id] }));
+    } else {
+      expand(chat, path);
+    }
+  }
+
+  function confirmAction() {
+    if ((isMarking && wasMarked) || isActive) {
+      setShowModal(true);
+    } else {
+      setIsMarking(true);
+    }
+  }
+
+  async function deleteAction() {
+    if (!(isMarking || isActive)) return;
+
+    let data;
+    if (wasMarked) {
+      data = Object.fromEntries(Object.entries(markedMap).filter(([_, v]) => v));
+    } else if (isActive) {
+      data = { [isActive._id]: true };
+    }
+
+    if (!data) return;
+
+    await reqChat({ url: "chat/delete", method: "DELETE", data });
+    if (wasMarked) setMarked({});
+    closeModal();
+    setIsMarking(false);
+  }
+
+  function cancelAction() {
+    setIsMarking(false);
+    setMarked({});
+  }
+  // END
+
   const ctxValue = {
     user,
     setUser,
@@ -178,8 +229,8 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     clearAlerts,
     chats,
     error: error || findChatErr, // findChatErr is mostly null. Only on initial find chat render
-    msgState,
-    loadState,
+    msgsMap,
+    loadedMap,
     setMsgs,
     isActive,
     isInitial: isInitial.current,
@@ -190,6 +241,14 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     closeMenu,
     expand,
     collapse,
+    isMarking,
+    markedMap,
+    expandOrMark,
+    confirmAction,
+    cancelAction,
+    deleteAction,
+    showModal,
+    closeModal,
   };
 
   return <ChatContext.Provider value={ctxValue}>{children}</ChatContext.Provider>;

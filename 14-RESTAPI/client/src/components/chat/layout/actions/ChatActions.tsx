@@ -5,28 +5,20 @@ import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import Button from "@/components/ui/button/Button";
 import css from "./ChatActions.module.css";
 
-interface ActionProps {
-      showModal: boolean;
-     closeModal: () => void;
-      isMarking: boolean;
-  confirmAction: () => void;
-   cancelAction: () => void;
-   deleteAction: () => void;
-}
-
-export default function ChatActions({
-      showModal,
-     closeModal,
-      isMarking,
-  confirmAction,
-   cancelAction,
-   deleteAction,
-}: ActionProps) {
-  const { isActive } = useChat();
-  const canDelete = isMarking || isActive;
+export default function ChatActions() {
+  const {
+    isActive,
+    showModal,
+    closeModal,
+    isMarking,
+    confirmAction,
+    cancelAction,
+    deleteAction,
+  } = useChat();
+  const  canDelete = isMarking || isActive;
   const      color = canDelete ?    "var(--bg)" : "var(--fg)"
   const background = canDelete ? "var(--error)" : "var(--box)";
-  
+
   return (
     <>
       <Modal show={showModal} close={closeModal}>

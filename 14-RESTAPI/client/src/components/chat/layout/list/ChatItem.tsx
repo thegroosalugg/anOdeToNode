@@ -1,15 +1,15 @@
-import Chat from "@/models/Chat";
-import css from "./ChatItem.module.css";
-import User from "@/models/User";
-import ProfilePic from "@/components/ui/image/ProfilePic";
-import { ReactNode } from "react";
 import { motion, AnimatePresence, HTMLMotionProps } from "motion/react";
-import { useNavigate } from "react-router-dom";
-import Button from "@/components/ui/button/Button";
-import { timeAgo } from "@/lib/util/timeStamps";
-import Counter from "@/components/notifications/Counter";
-import { createAnimations, createVariants } from "@/lib/motion/animations";
+import { ReactNode } from "react";
 import { useChat } from "../../context/ChatContext";
+import { useNavigate } from "react-router-dom";
+import User from "@/models/User";
+import Chat from "@/models/Chat";
+import ProfilePic from "@/components/ui/image/ProfilePic";
+import Button from "@/components/ui/button/Button";
+import Counter from "@/components/notifications/Counter";
+import { timeAgo } from "@/lib/util/timeStamps";
+import { createAnimations, createVariants } from "@/lib/motion/animations";
+import css from "./ChatItem.module.css";
 
 type TruncateSpan = { children: ReactNode } & HTMLMotionProps<"span">;
 
@@ -20,20 +20,14 @@ const Truncate = ({ children, ...props }: TruncateSpan) => (
 );
 
 interface ChatProps {
-          chat: Chat;
-      isMarked: boolean;
-  expandOrMark: (chat: Chat, path: string) => void;
-      children: (recipient: User) => ReactNode;
+      chat: Chat;
+  children: (recipient: User) => ReactNode;
 }
 
-export default function ChatItem({
-          chat,
-      isMarked,
-  expandOrMark,
-      children,
-}: ChatProps) {
+export default function ChatItem({ chat, children }: ChatProps) {
   const navigate = useNavigate();
-  const { user, deferring, isActive, collapse } = useChat();
+  const { user, deferring, isActive, collapse, markedMap, expandOrMark } = useChat();
+
   const { host, guest, lastMsg, alerts } = chat;
   const   recipient = user._id === host._id ? guest : host;
   const      sender = lastMsg?.sender === user._id ? "Me" : recipient.name;
@@ -41,7 +35,8 @@ export default function ChatItem({
   const      cursor = isActive || deferring ? "auto" : "pointer";
   const  animations = createAnimations({ transition: { ease: "linear"}});
   const    variants = createVariants({ initial: { flex }, animate: { flex } });
-  const     classes = `floating-box ${css["chat-item"]} ${isMarked ? css["marked"] : ""}`;
+  let       classes = `floating-box ${css["chat-item"]} `;
+  if (markedMap[chat._id]) classes += css["marked"];
 
   function navTo(path: string) {
     if (!isActive) return;
