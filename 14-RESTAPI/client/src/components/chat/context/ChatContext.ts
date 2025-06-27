@@ -18,12 +18,12 @@ type ChatContext = {
            user: User,
         setUser: Auth['setUser']
           chats: Chat[];
-        msgsMap: MsgsMap;
-      loadedMap: MutableRefObject<StatusMap>;
-        setMsgs: Dispatch<SetStateAction<MsgsMap>>;
+      isLoading: boolean;
           error: FetchError | null;
+        msgsMap: MsgsMap;
+        setMsgs: Dispatch<SetStateAction<MsgsMap>>;
+      loadedMap: MutableRefObject<StatusMap>;
      activeChat: Chat | null;
-      isInitial: boolean;
       deferring: boolean;
          alerts: number;
     clearAlerts: (id: string) => Promise<void>;

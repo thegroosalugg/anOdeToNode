@@ -7,11 +7,11 @@ import { createAnimations } from "@/lib/motion/animations";
 import css from "./ChatBody.module.css";
 
 export default function ChatBody() {
-  const { isInitial, error, chats, activeChat } = useChat();
+  const { isLoading, error, chats, activeChat } = useChat();
 
   return (
     <div className={css["chat-body"]}>
-      <AsyncAwait {...{ isLoading: isInitial, error }}>
+      <AsyncAwait {...{ isLoading, error }}>
         <ChatActions />
         {!chats.length && !activeChat ? (
           <motion.h2 className={css["fallback"]} {...createAnimations()}>
