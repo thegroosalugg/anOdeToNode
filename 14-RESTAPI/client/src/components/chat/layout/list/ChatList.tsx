@@ -6,18 +6,18 @@ import SendMessage from "../../../form/SendMessage";
 import css from "./ChatList.module.css";
 
 export default function ChatList() {
-  const { setUser, chats, isActive } = useChat();
+  const { setUser, chats, activeChat } = useChat();
   const sendTo = (path: string) => `chat/new-msg/${path}`;
 
   return (
     <LayoutGroup>
       <motion.ul className={css["chat-list"]} initial="hidden" animate="visible">
         <AnimatePresence>
-          {(isActive ? [isActive] : chats).map((chat) => (
+          {(activeChat ? [activeChat] : chats).map((chat) => (
             <ChatItem key={chat._id} {...{ chat }}>
               {(recipient) => (
                 <AnimatePresence>
-                  {isActive && (
+                  {activeChat && (
                     <>
                       <Messages {...{ chat }} />
                       <SendMessage {...{ setUser, url: sendTo(recipient._id) }} />

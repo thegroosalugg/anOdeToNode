@@ -44,7 +44,7 @@ export default function RootLayout({
       await reqUser({ url: 'user' }, { onError: () => setUser(null) });
 
     mountData();
-  }, [reqUser, setUser, pathname]);
+  }, [reqUser, setUser]);
 
   return (
     <>

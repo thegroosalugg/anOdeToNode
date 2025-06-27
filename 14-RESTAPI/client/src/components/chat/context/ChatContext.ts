@@ -5,10 +5,10 @@ import User from "@/models/User";
 import { Auth } from "@/pages/RootLayout";
 import {
   createContext,
-  Dispatch,
-  MutableRefObject,
-  SetStateAction,
   useContext,
+  Dispatch,
+  SetStateAction,
+  MutableRefObject,
 } from "react";
 
 export type   MsgsMap = Record<string, Msg[]>;
@@ -22,7 +22,7 @@ type ChatContext = {
       loadedMap: MutableRefObject<StatusMap>;
         setMsgs: Dispatch<SetStateAction<MsgsMap>>;
           error: FetchError | null;
-       isActive: Chat | null;
+     activeChat: Chat | null;
       isInitial: boolean;
       deferring: boolean;
          alerts: number;
@@ -30,7 +30,6 @@ type ChatContext = {
          isOpen: boolean;
        openMenu: () => void;
       closeMenu: () => void;
-         expand: (chat: Chat, path: string) => void;
        collapse: () => void;
       isMarking: boolean;
       markedMap: StatusMap;

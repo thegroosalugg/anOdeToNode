@@ -9,7 +9,6 @@ export type LogConfig =
   | 'peer'
   | 'user'
   | 'chat'
-  | 'menu'
   | 'alerts';
 
 export default class Logger {
@@ -23,8 +22,7 @@ export default class Logger {
     'social': { emoji: '👥', color: -60 },
       'peer': { emoji: '👤', color: -31 },
       'user': { emoji: '⭐', color:   0 },
-      'chat': { emoji: '💬', color: 170 },
-      'menu': { emoji: '🗨️', color: 200 },
+      'chat': { emoji: '💬', color: 200 },
     'alerts': { emoji: '🔔', color:  50 },
   };
 

@@ -16,26 +16,22 @@ interface ChatProviderProps {
   children: ReactNode;
 }
 
+const config = "chat"; // config logger, sockets and depedencyTracker
+
 export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
-  const {
-          data: chats,
-       setData: setChats,
-    reqHandler: reqChats,
-    error,
-  } = useFetch<Chat[]>([]);
-  const { reqHandler: reqChat, error: findChatErr } = useFetch<Chat>();
-  const [isOpen,     setIsOpen] = useState(false);
-  const [isActive, setIsActive] = useState<Chat | null>(null);
-  const [msgsMap,      setMsgs] = useState<MsgsMap>({});
-  const [alerts,     setAlerts] = useState(0);
-  const { deferring,  deferFn } = useDebounce();
+  const { data: chats, setData: setChats, reqHandler: reqChats, error } = useFetch<Chat[]>([]);
+  const {   reqHandler: reqChat   } = useFetch<Chat>();
+  const [isOpen,         setIsOpen] = useState(false);
+  const [activeChat, setActiveChat] = useState<Chat | null>(null);
+  const [msgsMap,          setMsgs] = useState<MsgsMap>({});
+  const [alerts,         setAlerts] = useState(0);
+  const { deferring,      deferFn } = useDebounce();
   // working here
   const [searchParams, setSearchParams] = useSearchParams();
   const userId = searchParams.get("chat");
-  const { _id: activeId, isTemp = false } = isActive ?? {};
+  const { _id: activeId, isTemp = false } = activeChat ?? {};
   const isInitial = useRef(true);
   const loadedMap = useRef<StatusMap>({});
-  const config = "chat";
   const socketRef = useSocket(config);
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
   // DELETION STATES
@@ -77,20 +73,21 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     const socket = socketRef.current;
     if (!socket) return;
 
-    const getActiveChat = async () => {
-      if (userId) {
-        await reqChat(
-          { url: `chat/find/${userId}` },
-          { onSuccess: (chat) => setIsActive(chat) }
-        );
-      }
-    };
+    // const getActiveChat = async () => {
+    //   if (userId) {
+    //     await reqChat(
+    //       { url: `chat/find/${userId}` },
+    //       { onSuccess: (chat) => setActiveChat(chat) }
+    //     );
+    //   }
+    // };
+    if (userId) console.log(userId);
 
     const initData = async () => {
-      if (isInitial.current) {
-        isInitial.current = false;
-        await Promise.all([reqChats({ url: "chat/all" }), getActiveChat()]);
-      }
+      if (!isInitial.current) return;
+      isInitial.current = false;
+      reqChats({ url: "chat/all" });
+      // await Promise.all([reqChats({ url: "chat/all" }), getActiveChat()]);
     };
 
     initData();
@@ -102,7 +99,7 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     socket.on(`chat:${user._id}:update`, async ({ chat, isNew, msg }) => {
       logger.event(`update, ChatIsNew? ${isNew}`, chat);
 
-      const isSender = user._id === msg.sender;
+      const  isSender = user._id === msg.sender;
       const isVisible = chat._id === activeId && isOpen;
 
       if (isNew) {
@@ -122,7 +119,7 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     socket.on(`chat:${user._id}:delete`, (deleted: Chat[]) => {
       logger.event("delete", deleted);
       const isDeleted = (id?: string) => deleted.some((chat) => chat._id === id);
-      if (isDeleted(activeId)) setIsActive(null);
+      if (isDeleted(activeId)) setActiveChat(null);
       setChats((prevChats) => prevChats.filter((chat) => !isDeleted(chat._id)));
       setMsgs((state) => {
         // remove prev fetched client msgs when chat deleted
@@ -133,7 +130,7 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
 
     socket.on(`chat:${user._id}:alerts`, (chat) => {
       logger.event("alerts", chat);
-      if (chat._id === activeId) setIsActive(chat);
+      if (chat._id === activeId) setActiveChat(chat);
       updateChats(chat);
     });
 
@@ -144,7 +141,6 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
       socket.off(`chat:${user._id}:alerts`);
     };
   }, [
-    config,
     socketRef,
     user._id,
     userId,
@@ -159,32 +155,44 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     clearAlerts,
   ]);
 
+  const getRecipient = ({ host, guest }: Chat) => (user._id === host._id ? guest : host);
+
+  const appendURL = (path: string) =>
+    setSearchParams((prev) => {
+      prev.set("chat", path);
+      return prev;
+    });
+
+  const destroyURL = () =>
+    setSearchParams((prev) => {
+      prev.delete("chat");
+      return prev;
+    });
+
   const openMenu = async () => {
-    deferFn(async () => setIsOpen(true), 1500);
+    deferFn(async () => {
+      if (activeChat) appendURL(getRecipient(activeChat)._id);
+      setIsOpen(true);
+    }, 1500);
   };
 
   const closeMenu = async () => {
     setIsOpen(false);
     cancelAction();
+    destroyURL();
   }
 
   function expand(chat: Chat, path: string) {
-    if (isActive) return;
+    if (activeChat) return;
     deferFn(() => {
-      setIsActive(chat);
-      setSearchParams((prev) => {
-        prev.set("chat", path);
-        return prev;
-      });
+      setActiveChat(chat);
+      appendURL(path);
     }, 2500);
   }
 
   function collapse() {
-    setSearchParams((prev) => {
-      prev.delete("chat");
-      return prev;
-    });
-    setIsActive(null);
+    destroyURL();
+    setActiveChat(null);
   }
 
   // DELETION FUNCTIONS
@@ -197,21 +205,26 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   }
 
   function confirmAction() {
-    if ((isMarking && wasMarked) || isActive) {
+    if ((isMarking && wasMarked) || activeChat) {
       setShowModal(true);
     } else {
       setIsMarking(true);
     }
   }
 
+  function cancelAction() {
+    setIsMarking(false);
+    setMarked({});
+  }
+
   async function deleteAction() {
-    if (!(isMarking || isActive)) return;
+    if (!(isMarking || activeChat)) return;
 
     let data;
     if (wasMarked) {
       data = Object.fromEntries(Object.entries(markedMap).filter(([_, v]) => v));
-    } else if (isActive) {
-      data = { [isActive._id]: true };
+    } else if (activeChat) {
+      data = { [activeChat._id]: true };
     }
 
     if (!data) return;
@@ -221,11 +234,6 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     closeModal();
     setIsMarking(false);
   }
-
-  function cancelAction() {
-    setIsMarking(false);
-    setMarked({});
-  }
   // END
 
   const ctxValue = {
@@ -234,11 +242,11 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     alerts,
     clearAlerts,
     chats,
-    error: error || findChatErr, // findChatErr is mostly null. Only on initial find chat render
+    error,
     msgsMap,
     loadedMap,
     setMsgs,
-    isActive,
+    activeChat,
     isInitial: isInitial.current,
     deferring,
     isOpen,

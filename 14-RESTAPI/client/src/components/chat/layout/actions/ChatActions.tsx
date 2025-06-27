@@ -7,7 +7,7 @@ import css from "./ChatActions.module.css";
 
 export default function ChatActions() {
   const {
-    isActive,
+    activeChat,
     showModal,
     closeModal,
     isMarking,
@@ -15,7 +15,7 @@ export default function ChatActions() {
     cancelAction,
     deleteAction,
   } = useChat();
-  const  canDelete = isMarking || isActive;
+  const  canDelete = isMarking || activeChat;
   const      color = canDelete ?    "var(--bg)" : "var(--fg)"
   const background = canDelete ? "var(--error)" : "var(--box)";
 
@@ -26,7 +26,7 @@ export default function ChatActions() {
       </Modal>
       <header className={css["chat-actions"]}>
         <Button {...{ color, background }} onClick={confirmAction}>
-          {canDelete ? "Delete" : "Select"} Chat{!isActive ? "s" : ""}
+          {canDelete ? "Delete" : "Select"} Chat{!activeChat ? "s" : ""}
         </Button>
         <AnimatePresence>
           {isMarking && (
