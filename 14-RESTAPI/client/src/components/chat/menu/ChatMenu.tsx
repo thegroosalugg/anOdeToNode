@@ -9,7 +9,7 @@ import SideBar from '@/components/ui/menu/SideBar';
 
 export default function ChatMenu({ user, setUser }: { user: User, setUser: Auth['setUser'] }) {
   const [isOpen, setIsOpen] = useState(false);
-  const    chatProps     = useChatListener(user, { isMenu: true, isOpen });
+  const chatProps = useChatListener(user, { isOpen });
   const { alerts, deferring, deferFn } = chatProps;
 
   const openMenu = async () => {

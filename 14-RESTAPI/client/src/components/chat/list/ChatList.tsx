@@ -1,4 +1,3 @@
-import { isMobile } from "react-device-detect";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useState } from "react";
 import useFetch from "@/lib/hooks/useFetch";
@@ -30,7 +29,6 @@ export default function ChatList({
   clearAlerts,
   expand,
   collapse,
-  isMenu, // optional extra
 }: {
   user: User;
   setUser: Auth["setUser"];
@@ -42,11 +40,6 @@ export default function ChatList({
   const  wasMarked = Object.keys(marked).some((key) => marked[key]);
   const closeModal = () => setShowModal(false);
   const  animations = createAnimations({ transition: { delay: 0.5 }});
-
-  const classes = `${css["chat-list"]} ${
-    isMobile ? css["isMobile"] : ""} ${
-      isMenu ? css["isMenu"]   : ""
-  }`;
 
   function expandOrMark(chat: Chat, path: string) {
     if (isMarking) {
@@ -95,12 +88,12 @@ export default function ChatList({
       <AsyncAwait {...{ isLoading: isInitial, error }}>
         <LayoutGroup>
           <motion.ul
-             className={classes}
+             className={css["chat-list"]}
                initial="hidden"
                animate="visible"
             transition={{ staggerChildren: 0.03 }}
           >
-            {!isMenu && !isActive?.isTemp && (
+            {!isActive?.isTemp && (
               <section className={css["delete-buttons"]}>
                 <Button
                        color={isMarking || isActive ?    "var(--bg)" : "var(--fg)"}

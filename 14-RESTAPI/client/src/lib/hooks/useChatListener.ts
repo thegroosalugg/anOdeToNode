@@ -25,12 +25,11 @@ export type ChatListener = {
 clearAlerts: (id: string) => Promise<void>;
      expand: (chat: Chat, path: string) => void;
    collapse: () => void;
-    isMenu?: boolean;
 };
 
 export default function useChatListener(
   user: User,
-  { isMenu, isOpen }: { isMenu?: boolean; isOpen?: boolean } = {}
+  { isOpen }: { isOpen?: boolean } = {}
 ) {
   const {
           data: chats,
@@ -48,9 +47,9 @@ export default function useChatListener(
   const { deferring,            deferFn } = useDebounce();
   const {            userId             } = useParams();
   const { _id: activeId, isTemp = false } = isActive ?? {};
-  const              config               = isMenu ? 'menu' : 'chat';
   const             isInitial             = useRef(true);
   const             loadState             = useRef<LoadState>({});
+  const              config               = "chat";
   const             socketRef             = useSocket(config);
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
 
@@ -75,8 +74,7 @@ export default function useChatListener(
         count,
      activeId,
        isTemp,
-       isMenu,
-         isOpen,
+       isOpen,
   });
 
   useEffect(() => {
@@ -84,7 +82,7 @@ export default function useChatListener(
     if (!socket) return;
 
     const getActiveChat = async () => {
-      if (userId && !isMenu) {
+      if (userId) {
         await reqChat(
           { url: `chat/find/${userId}` },
           { onSuccess: (chat) => setIsActive(chat) }
@@ -109,7 +107,7 @@ export default function useChatListener(
       logger.event(`update, ChatIsNew? ${isNew}`, chat);
 
       const isSender  = user._id === msg.sender;
-      const isVisible = chat._id === activeId && (!isMenu || (isMenu && isOpen));
+      const isVisible = chat._id === activeId && isOpen;
 
       if (isNew) {
         setChats(prevChats => [chat, ...prevChats]);
@@ -120,7 +118,7 @@ export default function useChatListener(
       }
 
       setMsgs((state) => {
-        const chatId = isTemp && !isMenu ? activeId : chat._id;
+        const chatId = isTemp ? activeId : chat._id;
         return { ...state, [chatId]: [...(state[chatId] || []), msg] };
       });
     });
@@ -156,7 +154,6 @@ export default function useChatListener(
     count,
     activeId,
     isTemp,
-    isMenu,
     isOpen,
     reqChat,
     reqChats,
@@ -188,7 +185,6 @@ export default function useChatListener(
     msgState,
     loadState,
     setMsgs,
-    isMenu,
     isActive,
     isInitial: isInitial.current,
     deferring,
