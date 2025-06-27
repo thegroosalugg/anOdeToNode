@@ -2,25 +2,15 @@ import { motion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import useFetch from '@/lib/hooks/useFetch';
 import useDepedencyTracker from '@/lib/hooks/useDepedencyTracker';
-import { ChatListener } from '@/lib/hooks/useChatListener';
-import User from '@/models/User';
-import Chat from '@/models/Chat';
 import Msg from '@/models/Message';
 import AsyncAwait from '../../ui/boundary/AsyncAwait';
 import { formatDate } from '@/lib/util/timeStamps';
 import css from './Messages.module.css';
+import { useChat } from '../context/ChatContext';
+import Chat from '@/models/Chat';
 
-export default function Messages({
-         chat,
-     msgState,
-    loadState,
-      setMsgs,
-  clearAlerts,
-         user,
-}: {
-  user: User;
-  chat: Chat;
-} & Pick<ChatListener, 'msgState' | 'loadState' | 'setMsgs' | 'clearAlerts'>) {
+export default function Messages({ chat }: { chat: Chat }) {
+  const { user, msgState, loadState, setMsgs, clearAlerts } = useChat();
   const      msgs = msgState[chat._id] || [];
   const hasLoaded = loadState.current[chat._id];
   const { reqHandler, error } = useFetch<Msg[]>([]);

@@ -14,21 +14,7 @@ import { createAnimations } from "@/lib/motion/animations";
 import { useChat } from "../context/ChatContext";
 
 export default function ChatList() {
-  const {
-    user,
-    setUser,
-    chats,
-    error,
-    msgState,
-    loadState,
-    setMsgs,
-    isActive,
-    isInitial,
-    deferring,
-    clearAlerts,
-    expand,
-    collapse,
-  } = useChat();
+  const { setUser, chats, error, isActive, isInitial, expand } = useChat();
   const {       reqHandler      } = useFetch<Chat[]>([]);
   const [isMarking, setIsMarking] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -118,11 +104,7 @@ export default function ChatList() {
                     key={chat._id}
                     {...{
                       chat,
-                      user,
-                      isActive,
-                      deferring,
                       isMarked: marked[chat._id],
-                      collapse,
                       expandOrMark,
                     }}
                   >
@@ -130,16 +112,7 @@ export default function ChatList() {
                       <AnimatePresence>
                         {isActive && (
                           <>
-                            <Messages
-                              {...{
-                                user,
-                                chat,
-                                loadState,
-                                msgState,
-                                setMsgs,
-                                clearAlerts,
-                              }}
-                            />
+                            <Messages {...{ chat }} />
                             <SendMessage
                               {...{ setUser, url: `chat/new-msg/${recipient._id}` }}
                             />

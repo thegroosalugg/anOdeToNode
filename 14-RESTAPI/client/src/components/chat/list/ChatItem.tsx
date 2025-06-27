@@ -10,6 +10,7 @@ import { timeAgo } from "@/lib/util/timeStamps";
 import Counter from "@/components/notifications/Counter";
 import { ChatListener } from "@/lib/hooks/useChatListener";
 import { createAnimations, createVariants } from "@/lib/motion/animations";
+import { useChat } from "../context/ChatContext";
 
 const    opacity = 0;
 const transition = { duration: 0.5, ease: "linear" };
@@ -33,9 +34,8 @@ const Span = ({
   </motion.span>
 );
 
-interface ChatProps extends Pick<ChatListener, "isActive" | "deferring" | "collapse"> {
+interface ChatProps {
           chat: Chat;
-          user: User;
       isMarked: boolean;
   expandOrMark: (chat: Chat, path: string) => void;
       children: (recipient: User) => ReactNode;
@@ -43,15 +43,12 @@ interface ChatProps extends Pick<ChatListener, "isActive" | "deferring" | "colla
 
 export default function ChatItem({
   chat,
-  user,
   isMarked,
-  isActive,
-  deferring,
-  collapse,
   expandOrMark,
   children,
 }: ChatProps) {
   const navigate = useNavigate();
+  const { user, deferring, isActive, collapse } = useChat();
   const { host, guest, lastMsg, alerts } = chat;
   const   recipient = user._id === host._id ? guest : host;
   const      sender = lastMsg?.sender === user._id ? "Me" : recipient.name;

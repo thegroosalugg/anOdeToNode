@@ -37,8 +37,8 @@ export default function NavBar({ user, setUser }: Auth) {
             index === 2 ? (
               <Notifications key={index} {...{ user, setUser }} />
             ) : index === 3 ? (
-              <ChatProvider {...{ user, setUser }}>
-                <ChatMenu key={index} />
+              <ChatProvider key={index} {...{ user, setUser }}>
+                <ChatMenu />
               </ChatProvider>
             ) : (
               <NavButton
