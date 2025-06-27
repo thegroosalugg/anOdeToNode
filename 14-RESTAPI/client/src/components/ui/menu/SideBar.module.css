@@ -1,7 +1,5 @@
 .side-bar {
   display: block;
-  /* display: flex; */
-  /* flex-direction: column; */
   position: fixed;
   z-index: 20;
   inset: 0;

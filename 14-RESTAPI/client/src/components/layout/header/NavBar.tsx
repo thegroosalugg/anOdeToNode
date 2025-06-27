@@ -7,6 +7,7 @@ import NavButton from './NavButton';
 import Notifications from '../../notifications/Notifications';
 import ChatMenu from '../../chat/menu/ChatMenu';
 import css from './NavBar.module.css';
+import { ChatProvider } from '@/components/chat/context/ChatProvider';
 
 export default function NavBar({ user, setUser }: Auth) {
   const navigate = useNavigate();
@@ -36,9 +37,12 @@ export default function NavBar({ user, setUser }: Auth) {
             index === 2 ? (
               <Notifications key={index} {...{ user, setUser }} />
             ) : index === 3 ? (
-              <ChatMenu      key={index} {...{ user, setUser }} />
+              <ChatProvider {...{ user, setUser }}>
+                <ChatMenu key={index} />
+              </ChatProvider>
             ) : (
-              <NavButton     key={index}
+              <NavButton
+                key={index}
                 {...{ index, deferring, callback: (path) => navTo(path) }}
               />
             )

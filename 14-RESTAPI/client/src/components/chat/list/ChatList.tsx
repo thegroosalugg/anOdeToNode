@@ -1,10 +1,7 @@
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useState } from "react";
 import useFetch from "@/lib/hooks/useFetch";
-import { Auth } from "@/pages/RootLayout";
-import { ChatListener } from "@/lib/hooks/useChatListener";
 import Chat from "@/models/Chat";
-import User from "@/models/User";
 import Modal from "../../ui/modal/Modal";
 import ConfirmDialog from "../../ui/modal/ConfirmDialog";
 import Button from "../../ui/button/Button";
@@ -14,25 +11,24 @@ import AsyncAwait from "../../ui/boundary/AsyncAwait";
 import css from "./ChatList.module.css";
 import ChatItem from "./ChatItem";
 import { createAnimations } from "@/lib/motion/animations";
+import { useChat } from "../context/ChatContext";
 
-export default function ChatList({
-  user, // from parent * 2
-  setUser,
-  chats, // from hook   * 12
-  error,
-  msgState,
-  loadState,
-  setMsgs,
-  isActive,
-  isInitial,
-  deferring,
-  clearAlerts,
-  expand,
-  collapse,
-}: {
-  user: User;
-  setUser: Auth["setUser"];
-} & ChatListener) {
+export default function ChatList() {
+  const {
+    user,
+    setUser,
+    chats,
+    error,
+    msgState,
+    loadState,
+    setMsgs,
+    isActive,
+    isInitial,
+    deferring,
+    clearAlerts,
+    expand,
+    collapse,
+  } = useChat();
   const {       reqHandler      } = useFetch<Chat[]>([]);
   const [isMarking, setIsMarking] = useState(false);
   const [showModal, setShowModal] = useState(false);
