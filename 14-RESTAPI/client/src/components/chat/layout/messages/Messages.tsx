@@ -1,13 +1,14 @@
 import { motion } from 'motion/react';
 import { useEffect, useRef } from 'react';
+import { useChat } from '../../context/ChatContext';
 import useFetch from '@/lib/hooks/useFetch';
 import useDepedencyTracker from '@/lib/hooks/useDepedencyTracker';
+import Chat from '@/models/Chat';
 import Msg from '@/models/Message';
 import AsyncAwait from '../../../ui/boundary/AsyncAwait';
 import { formatDate } from '@/lib/util/timeStamps';
+import { createVariants } from '@/lib/motion/animations';
 import css from './Messages.module.css';
-import { useChat } from '../../context/ChatContext';
-import Chat from '@/models/Chat';
 
 export default function Messages({ chat }: { chat: Chat }) {
   const { user, msgState, loadState, setMsgs, clearAlerts } = useChat();
@@ -17,6 +18,8 @@ export default function Messages({ chat }: { chat: Chat }) {
   const isInitial = useRef(true);
   const    msgRef = useRef<HTMLParagraphElement>(null);
   const  scrollTo = () => msgRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const  variants = createVariants();
+  const isLoading = isInitial.current && msgs.length < 1 && !chat.isTemp;
 
   useDepedencyTracker('chat', {
        reqUser: user._id,
@@ -67,24 +70,14 @@ export default function Messages({ chat }: { chat: Chat }) {
     setMsgs,
   ]);
 
-  const  opacity = 0;
-  const duration = 0.5;
-  const variants = {
-     hidden: { opacity },
-    visible: { opacity: 1, transition: { duration } },
-  };
-
-  const isLoading = isInitial.current && msgs.length < 1 && !chat.isTemp;
-
   return (
     <AsyncAwait {...{ isLoading, error }}>
       <motion.ul
          className={css['messages']}
            initial='hidden'
            animate='visible'
-              exit={{ opacity }}
         transition={{
-                 duration,
+                 duration: 0.5,
                      ease: 'easeOut',
             delayChildren: 0.5,
           staggerChildren: msgs.length < 20 ? 0.1 : 0,
@@ -92,13 +85,13 @@ export default function Messages({ chat }: { chat: Chat }) {
       >
         {msgs.map((msg, i) => {
           const { _id, createdAt, sender, content } = msg;
-          const     isLast = i === msgs.length - 1;
+          const isLast = i === msgs.length - 1;
 
           return (
             <motion.li
                 layout
                    key={_id}
-              variants={variants}
+              {...{ variants }}
               className={user._id === sender ? css["sender"] : ""}
               onAnimationComplete={scrollTo}
             >
