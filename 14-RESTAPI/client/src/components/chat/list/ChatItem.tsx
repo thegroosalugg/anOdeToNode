@@ -52,10 +52,9 @@ export default function ChatItem({
   children,
 }: ChatProps) {
   const navigate = useNavigate();
-  const { _id, host, guest, lastMsg, alerts } = chat;
+  const { host, guest, lastMsg, alerts } = chat;
   const   recipient = user._id === host._id ? guest : host;
   const      sender = lastMsg?.sender === user._id ? "Me" : recipient.name;
-  const        path = `/inbox/${recipient._id}`;
   const borderColor = isMarked ?    "var(--bg)" : "var(--text)";
   const  background = isMarked ? "var(--error)" : `var(--box)`;
   const        flex = isActive ? 1 : 0;
@@ -72,7 +71,7 @@ export default function ChatItem({
     <motion.li
         layout
       className={`floating-box ${css["chat-item"]}`}
-        onClick={() => expandOrMark(chat, path)}
+        onClick={() => expandOrMark(chat, recipient._id)}
           style={{ cursor, background, borderColor }}
            exit={{ ...variants.hidden }}
       {...{ variants, transition }}

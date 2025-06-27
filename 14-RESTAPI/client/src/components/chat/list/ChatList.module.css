@@ -11,15 +11,6 @@
 
   &::-webkit-scrollbar { height: 0; }
 }
-
-.isMobile { > li { max-height: calc(100vh - 136px); } }
-.isMenu   { > li { max-height: 360px;               } }
-
-@media screen and (pointer: coarse) and (orientation: landscape) {
-  .isMobile { > li { max-height: calc(100vh - 68px); } }
-  .isMenu   { > li { max-height: 100%;               } }
-}
-
 .delete-buttons {
   > button {
     border: 1px solid transparent;

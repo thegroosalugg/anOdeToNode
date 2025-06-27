@@ -30,7 +30,7 @@ clearAlerts: (id: string) => Promise<void>;
 
 export default function useChatListener(
   user: User,
-  { isMenu, show }: { isMenu?: boolean; show?: boolean } = {}
+  { isMenu, isOpen }: { isMenu?: boolean; isOpen?: boolean } = {}
 ) {
   const {
           data: chats,
@@ -76,7 +76,7 @@ export default function useChatListener(
      activeId,
        isTemp,
        isMenu,
-         show,
+         isOpen,
   });
 
   useEffect(() => {
@@ -109,7 +109,7 @@ export default function useChatListener(
       logger.event(`update, ChatIsNew? ${isNew}`, chat);
 
       const isSender  = user._id === msg.sender;
-      const isVisible = chat._id === activeId && (!isMenu || (isMenu && show));
+      const isVisible = chat._id === activeId && (!isMenu || (isMenu && isOpen));
 
       if (isNew) {
         setChats(prevChats => [chat, ...prevChats]);
@@ -157,7 +157,7 @@ export default function useChatListener(
     activeId,
     isTemp,
     isMenu,
-    show,
+    isOpen,
     reqChat,
     reqChats,
     setChats,
@@ -169,13 +169,15 @@ export default function useChatListener(
     if (!isActive)
       deferFn(() => {
         setIsActive(chat);
-        if (!isMenu) window.history.replaceState(null, '', path);
+        window.history.replaceState(null, '', `?chat=${path}`);
       }, 2500);
   }
 
   function collapse() {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('chat');
+    window.history.replaceState(null, '', url.toString());
     setIsActive(null);
-    if (!isMenu) window.history.replaceState(null, '', '/inbox');
   }
 
   return {

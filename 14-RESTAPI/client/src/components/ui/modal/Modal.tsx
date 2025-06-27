@@ -21,7 +21,7 @@ export default function Modal({
     <AnimatePresence>
       {show && (
         <>
-          <Backdrop open onClick={close} />
+          <Backdrop isOpen onClick={close} />
           <motion.dialog
             open
             {...animations}
