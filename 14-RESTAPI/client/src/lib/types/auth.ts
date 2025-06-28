@@ -1,19 +1,7 @@
 import User from "@/models/User";
-import { FetchError, SetData } from "./common";
-import { ReqData } from "../hooks/useFetch";
+import { FetchState } from "./fetch";
 
-type  isUser =       User | null;
-type isError = FetchError | null;
-
-export interface Auth {
-       user: isUser;
-    setUser: SetData<isUser>;
-    reqUser: ReqData<isUser>;
-  isLoading: boolean;
-      error: isError;
-   setError: SetData<isError>;
-}
-
+export type Auth = FetchState<User | null, "user">
 export interface Authorized extends Auth {
   user: User;
 }

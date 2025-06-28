@@ -1,22 +1,16 @@
 import { createContext, useContext, MutableRefObject } from "react";
-import { Dict, FetchError, SetData } from "@/lib/types/common";
+import { Dict, SetData } from "@/lib/types/common";
 import { Auth } from "@/lib/types/auth";
-import { ReqData } from "@/lib/hooks/useFetch";
 import { Debounce } from "@/lib/hooks/useDebounce";
 import Chat from "@/models/Chat";
 import Msg from "@/models/Message";
 import User from "@/models/User";
+import { FetchState } from "@/lib/types/fetch";
 
 export type   MsgsMap = Dict<Msg[]>;
 export type StatusMap = Dict<boolean>;
 
-type ChatData = {
-      chats: Chat[];
-   setChats: SetData<Chat[]>;
-   reqChats: ReqData<Chat[]>;
-  isLoading: boolean;
-      error: FetchError | null;
-};
+type ChatData = FetchState<Chat[], "chats">
 
 type MessageData = {
     msgsMap: MsgsMap;
