@@ -10,7 +10,7 @@ import { FetchState } from "@/lib/types/fetch";
 export type   MsgsMap = Dict<Msg[]>;
 export type StatusMap = Dict<boolean>;
 
-type ChatData = FetchState<Chat[], "chats">
+type ChatData = Omit<FetchState<Chat[], "chats">, "setError">;
 
 type MessageData = {
     msgsMap: MsgsMap;

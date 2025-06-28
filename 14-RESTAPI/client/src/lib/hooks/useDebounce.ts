@@ -7,7 +7,7 @@ export type Debounce = {
     deferFn: DeferFn;
 };
 
-export default function useDebounce() {
+export function useDebounce() {
   const [deferring, setDeferring] = useState(false);
 
   const deferFn: DeferFn = async (callback, timeout) => {

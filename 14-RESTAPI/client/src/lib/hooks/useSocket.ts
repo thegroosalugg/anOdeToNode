@@ -3,7 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import { BASE_URL } from '@/lib/util/fetchData';
 import Logger, { LogConfig } from '@/models/Logger';
 
-export default function useSocket(config: LogConfig) {
+export function useSocket(config: LogConfig) {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {

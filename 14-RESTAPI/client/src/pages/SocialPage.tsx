@@ -1,7 +1,7 @@
 import { isMobile } from 'react-device-detect';
 import { useEffect } from 'react';
-import usePagination from '@/lib/hooks/usePagination';
-import useSocket from '@/lib/hooks/useSocket';
+import { usePagination } from '@/lib/hooks/usePagination';
+import { useSocket } from '@/lib/hooks/useSocket';
 import User from '@/models/User';
 import Logger from '@/models/Logger';
 import AsyncAwait from '@/components/ui/boundary/AsyncAwait';

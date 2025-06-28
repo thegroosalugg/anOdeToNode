@@ -1,4 +1,4 @@
-import useFetch from '@/lib/hooks/useFetch';
+import { useFetch } from '@/lib/hooks/useFetch';
 import { useState } from 'react';
 import { BASE_URL } from '@/lib/util/fetchData';
 import { motion, useAnimate, stagger } from 'motion/react';

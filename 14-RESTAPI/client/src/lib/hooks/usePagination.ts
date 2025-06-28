@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import useDebounce, { Debounce } from './useDebounce';
-import useFetch from './useFetch';
+import { useDebounce, Debounce } from './useDebounce';
+import { useFetch } from './useFetch';
 
 type Direction = -1 | 1;
 
@@ -33,8 +33,8 @@ export function usePages() {
   return { current, direction, changePage, deferring };
 }
 
-export default function usePagination<T>(baseURL: string, limit: number, shouldFetch = true) {
-  const initState: InitState<T>       = { docCount: 0, items: [] };
+export function usePagination<T>(baseURL: string, limit: number, shouldFetch = true) {
+  const initState: InitState<T> = { docCount: 0, items: [] };
   const { data, reqData, ...rest } = useFetch(initState);
   const   isInitial = useRef(true);
   const  pagedProps = usePages();

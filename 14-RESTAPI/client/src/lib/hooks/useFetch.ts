@@ -9,7 +9,7 @@ interface ReqConfig<T> {
 
 export type ReqData<T> = (params: Fetch, config?: ReqConfig<T>) => Promise<T | void>;
 
-const useFetch = <T>(initialData: T = null as T, loading = false) => {
+export const useFetch = <T>(initialData: T = null as T, loading = false) => {
   const [     data,      setData] = useState<T>(initialData);
   const [isLoading, setIsLoading] = useState(loading);
   const [    error,     setError] = useState<FetchError | null>(null);
@@ -37,5 +37,3 @@ const useFetch = <T>(initialData: T = null as T, loading = false) => {
 
   return { data, setData, isLoading, error, setError, reqData };
 };
-
-export default useFetch;

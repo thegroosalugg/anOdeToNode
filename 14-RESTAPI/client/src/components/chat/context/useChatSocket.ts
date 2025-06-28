@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import useSocket from "@/lib/hooks/useSocket";
+import { useSocket } from "@/lib/hooks/useSocket";
 import { useChat } from "./ChatContext";
 import Chat from "@/models/Chat";
 import Logger from "@/models/Logger";

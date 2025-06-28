@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
-import usePagination from '@/lib/hooks/usePagination';
+import { usePagination } from '@/lib/hooks/usePagination';
 import { Authorized } from '@/lib/types/auth';
 import Post from '@/models/Post';
 import ProfileHeader from './ProfileHeader';

@@ -4,7 +4,7 @@ import { Dict } from '../types/common';
 
 export type Dependency<T = unknown> = Dict<T>;
 
-export default function useDepedencyTracker(key: LogConfig, deps: Dependency) {
+export function useDepedencyTracker(key: LogConfig, deps: Dependency) {
   const prevDeps = useRef<Dependency>({});
 
   useEffect(() => {

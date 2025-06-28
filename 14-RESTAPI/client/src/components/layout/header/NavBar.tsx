@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useDebounce from '@/lib/hooks/useDebounce';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 import { Auth } from '@/lib/types/auth';
 import NavButton from './NavButton';
 import Notifications from '../../notifications/Notifications';

@@ -1,6 +1,6 @@
 import { useAnimate, stagger, AnimatePresence, motion } from 'motion/react';
-import useDebounce from '@/lib/hooks/useDebounce';
-import useFetch from '@/lib/hooks/useFetch';
+import { useDebounce } from '@/lib/hooks/useDebounce';
+import { useFetch } from '@/lib/hooks/useFetch';
 import { Auth } from '@/lib/types/auth';
 import { FetchError } from '@/lib/types/common';
 import Post from '@/models/Post';

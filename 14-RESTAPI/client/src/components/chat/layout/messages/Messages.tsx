@@ -1,8 +1,8 @@
 import { motion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import { useChat } from '../../context/ChatContext';
-import useFetch from '@/lib/hooks/useFetch';
-import useDepedencyTracker from '@/lib/hooks/useDepedencyTracker';
+import { useFetch } from '@/lib/hooks/useFetch';
+import { useDepedencyTracker } from '@/lib/hooks/useDepedencyTracker';
 import Chat from '@/models/Chat';
 import Msg from '@/models/Message';
 import AsyncAwait from '../../../ui/boundary/AsyncAwait';

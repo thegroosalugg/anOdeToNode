@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useFetch from '@/lib/hooks/useFetch';
+import { useFetch } from '@/lib/hooks/useFetch';
 import Reply from '@/models/Reply';
 import Modal from '../ui/modal/Modal';
 import ConfirmDialog from '../ui/modal/ConfirmDialog';

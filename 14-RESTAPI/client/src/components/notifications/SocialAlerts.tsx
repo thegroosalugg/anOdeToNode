@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
-import useDebounce from '@/lib/hooks/useDebounce';
-import useFetch from '@/lib/hooks/useFetch';
+import { useDebounce } from '@/lib/hooks/useDebounce';
+import { useFetch } from '@/lib/hooks/useFetch';
 import { FetchError } from '@/lib/types/common';
 import { Auth } from '@/lib/types/auth';
 import User from '@/models/User';

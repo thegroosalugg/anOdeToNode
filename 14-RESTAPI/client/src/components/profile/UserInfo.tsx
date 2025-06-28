@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { AnimatePresence, motion, useAnimate } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useFetch from '@/lib/hooks/useFetch';
-import useDebounce from '@/lib/hooks/useDebounce';
+import { useFetch } from '@/lib/hooks/useFetch';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 import User from '@/models/User';
 import Button from '../ui/button/Button';
 import css from './UserInfo.module.css';

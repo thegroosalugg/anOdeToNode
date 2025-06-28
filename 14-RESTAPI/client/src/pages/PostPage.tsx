@@ -1,9 +1,9 @@
-import useFetch from '@/lib/hooks/useFetch';
+import { useFetch } from '@/lib/hooks/useFetch';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import usePagination from '@/lib/hooks/usePagination';
-import useSocket from '@/lib/hooks/useSocket';
-import useDepedencyTracker from '@/lib/hooks/useDepedencyTracker';
+import { usePagination } from '@/lib/hooks/usePagination';
+import { useSocket } from '@/lib/hooks/useSocket';
+import { useDepedencyTracker } from '@/lib/hooks/useDepedencyTracker';
 import { FetchError } from '@/lib/types/common';
 import { Authorized } from '@/lib/types/auth';
 import Post from '@/models/Post';

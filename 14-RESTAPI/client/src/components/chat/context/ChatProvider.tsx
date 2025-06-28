@@ -1,9 +1,9 @@
 import { useState, ReactNode, useRef, useCallback } from "react";
 import { ChatContext, MsgsMap, StatusMap } from "./ChatContext";
 import { useSearchParams } from "react-router-dom";
-import useFetch from "@/lib/hooks/useFetch";
-import useDebounce from "@/lib/hooks/useDebounce";
-import useDepedencyTracker from "@/lib/hooks/useDepedencyTracker";
+import { useFetch } from "@/lib/hooks/useFetch";
+import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
 import User from "@/models/User";
 import Chat from "@/models/Chat";
 import { Auth } from "@/lib/types/auth";

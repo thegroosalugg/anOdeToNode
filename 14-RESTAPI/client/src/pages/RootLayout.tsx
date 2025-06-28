@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 import NavBar from '@/components/layout/header/NavBar';
 import Footer from '@/components/layout/footer/Footer';
-import useFetch from '@/lib/hooks/useFetch';
+import { useFetch } from '@/lib/hooks/useFetch';
 import { Auth } from '@/lib/types/auth';
 
 export default function RootLayout({ children }: { children: (props: Auth) => ReactNode }) {
