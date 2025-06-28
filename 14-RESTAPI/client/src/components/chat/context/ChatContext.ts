@@ -1,14 +1,14 @@
 import { createContext, useContext, MutableRefObject } from "react";
 import { Dict, SetData } from "@/lib/types/common";
-import { Auth } from "@/lib/types/auth";
+import { Authorized } from "@/lib/types/auth";
 import { Debounce } from "@/lib/hooks/useDebounce";
+import { FetchState } from "@/lib/types/fetch";
 import Chat from "@/models/Chat";
 import Msg from "@/models/Message";
-import User from "@/models/User";
-import { FetchState } from "@/lib/types/fetch";
 
 export type   MsgsMap = Dict<Msg[]>;
 export type StatusMap = Dict<boolean>;
+export type  UserData = Pick<Authorized, "user" | "setUser">;
 
 type ChatData = Omit<FetchState<Chat[], "chats">, "setError">;
 
@@ -50,17 +50,17 @@ type AlertsControl = {
   clearAlerts: (id: string) => Promise<void>;
 }
 
-type ChatContext = {
-       user: User;
-    setUser: Auth["setUser"];
-  deferring: Debounce["deferring"];
-}    & ChatData &
+type ChatContext =
+       UserData &
+       ChatData &
     MessageData &
     ChatControl &
     MenuControl &
    ModalControl &
   ActionControl &
-  AlertsControl;
+  AlertsControl &
+  Pick<Debounce, "deferring">;
+
 export const ChatContext = createContext<ChatContext | null>(null);
 
 export function useChat() {

@@ -1,16 +1,12 @@
 import { useState, ReactNode, useRef, useCallback } from "react";
-import { ChatContext, MsgsMap, StatusMap } from "./ChatContext";
+import { ChatContext, MsgsMap, StatusMap, UserData } from "./ChatContext";
 import { useSearchParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
-import User from "@/models/User";
 import Chat from "@/models/Chat";
-import { Auth } from "@/lib/types/auth";
 
-interface ChatProviderProps {
-      user: User;
-   setUser: Auth["setUser"];
+interface ChatProviderProps extends UserData {
   children: ReactNode;
 }
 
@@ -25,24 +21,19 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
         error,
   } = useFetch<Chat[]>([]);
   const { reqData } = useFetch<Chat>();
-  const [isOpen,         setIsOpen] = useState(false); // main menu
-  const [activeChat, setActiveChat] = useState<Chat | null>(null);
-  const [msgsMap,          setMsgs] = useState<MsgsMap>({});
-  const [alerts,         setAlerts] = useState(0);
-
-  const { deferring,      deferFn } = useDebounce();
-  // working here
+  const [isOpen,             setIsOpen] = useState(false); // main menu
+  const [activeChat,     setActiveChat] = useState<Chat | null>(null);
+  const [msgsMap,              setMsgs] = useState<MsgsMap>({});
+  const [alerts,             setAlerts] = useState(0);
+  const { deferring,          deferFn } = useDebounce();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isMarking,       setIsMarking] = useState(false);
+  const [markedMap,          setMarked] = useState<StatusMap>({});
+  const [showModal,       setShowModal] = useState(false);
+
   const peerId = searchParams.get("chat");
   const loadedMap = useRef<StatusMap>({}); // loaded messages per chat
-
-  // DELETION STATES
-  const [isMarking, setIsMarking] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [markedMap,    setMarked] = useState<StatusMap>({});
   const wasMarked = Object.keys(markedMap).some((key) => markedMap[key]);
-  const closeModal = () => setShowModal(false);
-  // END
 
   useDepedencyTracker(config, {
     config,
@@ -97,7 +88,8 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     setActiveChat(null);
   }
 
-  // DELETION FUNCTIONS
+  const closeModal = () => setShowModal(false);
+
   function expandOrMark(chat: Chat, path: string) {
     if (isMarking) {
       setMarked((state) => ({ ...state, [chat._id]: !state[chat._id] }));
@@ -136,7 +128,6 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     closeModal();
     setIsMarking(false);
   }
-  // END
 
   const ctxValue = {
     user,
