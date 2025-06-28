@@ -3,7 +3,7 @@ import Friend from './Friend';
 export const getId = (user: User | string) =>
   typeof user === 'object' && '_id' in user ? user._id : user;
 
-interface Profile {
+type Profile = {
    home?: string;
    work?: string;
   study?: string;

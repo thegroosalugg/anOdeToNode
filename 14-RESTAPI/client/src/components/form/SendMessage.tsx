@@ -35,7 +35,7 @@ export default function SendMessage({
       { background: [null, '#12a1a1', '#12a1a1', isPost ? '#949494' : '#287a91'] },
       { duration: 2, times: [0, 0.1, 0.85, 1] }
     );
-    setTimeout(() => scope.current.reset(), 800);
+    setTimeout(() => scope.current?.reset(), 800);
   };
 
   const onError = (err: FetchError) => {

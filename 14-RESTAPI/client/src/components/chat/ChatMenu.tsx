@@ -4,9 +4,11 @@ import Counter from '@/components/notifications/Counter';
 import SideBar from '@/components/ui/menu/SideBar';
 import { useChat } from './context/ChatContext';
 import { useChatSocket } from './context/useChatSocket';
+import { useChatParamsSync } from './context/useChatParamsSync';
 
 export default function ChatMenu() {
   useChatSocket(); // alters context values
+  useChatParamsSync();
   const { alerts, deferring, isOpen, openMenu, closeMenu } = useChat();
 
   return (

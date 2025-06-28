@@ -20,6 +20,7 @@ type MessageData = {
 
 type MenuControl = {
      isOpen: boolean;
+  setIsOpen: SetData<boolean>;
    openMenu: () => void;
   closeMenu: () => void;
 };

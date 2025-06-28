@@ -14,10 +14,10 @@ export const useChatSocket = () => {
     setChats,
     reqChats,
     activeChat,
+    setActiveChat,
+    setMsgs,
     setAlerts,
     clearAlerts,
-    setMsgs,
-    setActiveChat,
   } = useChat();
 
   const socketRef = useSocket(config);
@@ -50,7 +50,7 @@ export const useChatSocket = () => {
     socket.on(`chat:${user._id}:update`, async ({ chat, isNew, msg }) => {
       logger.event(`update, ChatIsNew? ${isNew}`, chat);
 
-      const isSender = user._id === msg.sender;
+      const  isSender = user._id === msg.sender;
       const isVisible = chat._id === activeId && isOpen;
 
       if (isNew) {

@@ -26,12 +26,11 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   const [msgsMap,              setMsgs] = useState<MsgsMap>({});
   const [alerts,             setAlerts] = useState(0);
   const { deferring,          deferFn } = useDebounce();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [_,            setSearchParams] = useSearchParams();
   const [isMarking,       setIsMarking] = useState(false);
   const [markedMap,          setMarked] = useState<StatusMap>({});
   const [showModal,       setShowModal] = useState(false);
 
-  const peerId = searchParams.get("chat");
   const loadedMap = useRef<StatusMap>({}); // loaded messages per chat
   const wasMarked = Object.keys(markedMap).some((key) => markedMap[key]);
 
@@ -70,10 +69,13 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   };
 
   const closeMenu = async () => {
-    setIsOpen(false);
-    cancelAction();
-    destroyURL();
-  }
+    destroyURL(); // async URL update
+    setTimeout(() => { // temp fix for menu re-open when URL destroyed
+      setIsOpen(false);
+      cancelAction();
+      if (activeChat?.isTemp) setActiveChat(null);
+    }, 0);
+  };
 
   function expand(chat: Chat, path: string) {
     if (activeChat) return;
@@ -147,6 +149,7 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     isLoading,
     deferring,
     isOpen,
+    setIsOpen,
     openMenu,
     closeMenu,
     expand,
