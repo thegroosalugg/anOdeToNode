@@ -1,3 +1,5 @@
+import { ReqHandler } from "@/lib/hooks/useFetch";
+import { SetData } from "@/lib/types/common";
 import { FetchError } from "@/lib/util/fetchData";
 import Chat from "@/models/Chat";
 import Msg from "@/models/Message";
@@ -6,8 +8,6 @@ import { Auth } from "@/pages/RootLayout";
 import {
   createContext,
   useContext,
-  Dispatch,
-  SetStateAction,
   MutableRefObject,
 } from "react";
 
@@ -18,14 +18,18 @@ type ChatContext = {
            user: User,
         setUser: Auth['setUser']
           chats: Chat[];
+       setChats: SetData<Chat[]>;
+       reqChats: ReqHandler<Chat[]>;
       isLoading: boolean;
           error: FetchError | null;
         msgsMap: MsgsMap;
-        setMsgs: Dispatch<SetStateAction<MsgsMap>>;
+        setMsgs: SetData<MsgsMap>;
       loadedMap: MutableRefObject<StatusMap>;
      activeChat: Chat | null;
+  setActiveChat: SetData<Chat | null>;
       deferring: boolean;
          alerts: number;
+      setAlerts: SetData<number>
     clearAlerts: (id: string) => Promise<void>;
          isOpen: boolean;
        openMenu: () => void;

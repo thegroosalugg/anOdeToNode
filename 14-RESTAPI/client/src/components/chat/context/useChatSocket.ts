@@ -1,26 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
-import useFetch from "@/lib/hooks/useFetch";
+import { useCallback, useEffect } from "react";
 import useSocket from "@/lib/hooks/useSocket";
-import { MsgsMap } from "./ChatContext";
-import User from "@/models/User";
+import { useChat } from "./ChatContext";
 import Chat from "@/models/Chat";
 import Logger from "@/models/Logger";
 
 const config = "chat"; // logger/sockets
 
-export const useChatSocket = ({ user, isOpen }: { user: User; isOpen: boolean }) => {
+export const useChatSocket = () => {
   const {
-          data: chats,
-       setData: setChats,
-    reqHandler: reqChats,
-     isLoading,
-         error,
-  } = useFetch<Chat[]>([]);
-  const { reqHandler } = useFetch<Chat>();
+    user,
+    isOpen,
+    chats,
+    setChats,
+    reqChats,
+    activeChat,
+    setAlerts,
+    clearAlerts,
+    setMsgs,
+    setActiveChat,
+  } = useChat();
+
   const socketRef = useSocket(config);
-  const [activeChat, setActiveChat] = useState<Chat | null>(null);
-  const [msgsMap,          setMsgs] = useState<MsgsMap>({});
-  const [alerts,         setAlerts] = useState(0);
 
   const { _id: activeId, isTemp = false } = activeChat ?? {};
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
@@ -32,13 +32,6 @@ export const useChatSocket = ({ user, isOpen }: { user: User; isOpen: boolean })
       );
     },
     [setChats]
-  );
-
-  const clearAlerts = useCallback(
-    async (id: string) => {
-      await reqHandler({ url: `alerts/chat/${id}` });
-    },
-    [reqHandler]
   );
 
   useEffect(() => {
@@ -57,7 +50,7 @@ export const useChatSocket = ({ user, isOpen }: { user: User; isOpen: boolean })
     socket.on(`chat:${user._id}:update`, async ({ chat, isNew, msg }) => {
       logger.event(`update, ChatIsNew? ${isNew}`, chat);
 
-      const  isSender = user._id === msg.sender;
+      const isSender = user._id === msg.sender;
       const isVisible = chat._id === activeId && isOpen;
 
       if (isNew) {
@@ -107,18 +100,9 @@ export const useChatSocket = ({ user, isOpen }: { user: User; isOpen: boolean })
     isOpen,
     setChats,
     updateChats,
+    setActiveChat,
+    setMsgs,
+    setAlerts,
     clearAlerts,
   ]);
-
-  return {
-    alerts,
-    clearAlerts,
-    error,
-    isLoading,
-    chats,
-    activeChat,
-    setActiveChat,
-    msgsMap,
-    setMsgs,
-  };
 };

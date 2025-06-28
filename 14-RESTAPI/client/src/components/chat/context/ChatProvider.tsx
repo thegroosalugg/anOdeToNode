@@ -1,5 +1,5 @@
-import { useState, ReactNode, useRef } from "react";
-import { ChatContext, StatusMap } from "./ChatContext";
+import { useState, ReactNode, useRef, useCallback } from "react";
+import { ChatContext, MsgsMap, StatusMap } from "./ChatContext";
 import { useSearchParams } from "react-router-dom";
 import useFetch from "@/lib/hooks/useFetch";
 import useDebounce from "@/lib/hooks/useDebounce";
@@ -7,7 +7,6 @@ import useDepedencyTracker from "@/lib/hooks/useDepedencyTracker";
 import User from "@/models/User";
 import Chat from "@/models/Chat";
 import { Auth } from "@/pages/RootLayout";
-import { useChatSocket } from "./useChatSocket";
 
 interface ChatProviderProps {
       user: User;
@@ -18,24 +17,25 @@ interface ChatProviderProps {
 const config = "chat"; // config logger, sockets and depedencyTracker
 
 export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
-  const [isOpen, setIsOpen] = useState(false); // main menu
   const {
-    alerts,
-    clearAlerts,
-    error,
-    isLoading,
-    chats,
-    activeChat,
-    setActiveChat,
-    msgsMap,
-    setMsgs,
-  } = useChatSocket({ user, isOpen });
-  const { reqHandler: reqChat } = useFetch<Chat>();
+          data: chats,
+       setData: setChats,
+    reqHandler: reqChats,
+     isLoading,
+         error,
+  } = useFetch<Chat[]>([]);
+  const { reqHandler } = useFetch<Chat>();
+  const [isOpen,         setIsOpen] = useState(false); // main menu
+  const [activeChat, setActiveChat] = useState<Chat | null>(null);
+  const [msgsMap,          setMsgs] = useState<MsgsMap>({});
+  const [alerts,         setAlerts] = useState(0);
+
   const { deferring,      deferFn } = useDebounce();
   // working here
   const [searchParams, setSearchParams] = useSearchParams();
   const peerId = searchParams.get("chat");
-  const loadedMap = useRef<StatusMap>({});
+  const loadedMap = useRef<StatusMap>({}); // loaded messages per chat
+
   // DELETION STATES
   const [isMarking, setIsMarking] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -51,6 +51,13 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   });
 
   const getRecipient = ({ host, guest }: Chat) => (user._id === host._id ? guest : host);
+
+  const clearAlerts = useCallback(
+    async (id: string) => {
+      await reqHandler({ url: `alerts/chat/${id}` });
+    },
+    [reqHandler]
+  );
 
   const appendURL = (path: string) =>
     setSearchParams((prev) => {
@@ -124,7 +131,7 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
 
     if (!data) return;
 
-    await reqChat({ url: "chat/delete", method: "DELETE", data });
+    await reqHandler({ url: "chat/delete", method: "DELETE", data });
     if (wasMarked) setMarked({});
     closeModal();
     setIsMarking(false);
@@ -135,13 +142,17 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     user,
     setUser,
     alerts,
+    setAlerts,
     clearAlerts,
     chats,
+    setChats,
+    reqChats,
     error,
     msgsMap,
     loadedMap,
     setMsgs,
     activeChat,
+    setActiveChat,
     isLoading,
     deferring,
     isOpen,

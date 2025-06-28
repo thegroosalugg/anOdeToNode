@@ -6,6 +6,8 @@ export interface ReqConfig<T> {
     onError?: (err: FetchError) => void;
 }
 
+export type ReqHandler<T> = (params: Fetch, config?: ReqConfig<T>) => Promise<void | T>;
+
 const useFetch = <T>(initialData: T = null as T, loading = false) => {
   const [     data,      setData] = useState<T>(initialData);
   const [isLoading, setIsLoading] = useState(loading);

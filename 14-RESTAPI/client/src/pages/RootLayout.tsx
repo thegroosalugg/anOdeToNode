@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 import NavBar from '@/components/layout/header/NavBar';
@@ -6,17 +6,18 @@ import Footer from '@/components/layout/footer/Footer';
 import useFetch, { ReqConfig } from '@/lib/hooks/useFetch';
 import { Fetch, FetchError } from '@/lib/util/fetchData';
 import User from '@/models/User';
+import { SetData } from '@/lib/types/common';
 
 type  isUser =       User | null;
 type isError = FetchError | null;
 
 export interface Auth {
        user: isUser;
-    setUser: Dispatch<SetStateAction<isUser>>;
+    setUser: SetData<isUser>;
     reqUser: (params: Fetch, config?: ReqConfig<isUser>) => Promise<isUser | void>;
   isLoading: boolean;
       error: isError;
-   setError: Dispatch<SetStateAction<isError>>;
+   setError: SetData<isError>;
 }
 
 export interface Authorized extends Auth {
@@ -40,10 +41,7 @@ export default function RootLayout({
   const props = { user, setUser, reqUser, isLoading, error, setError };
 
   useEffect(() => {
-    const mountData = async () =>
-      await reqUser({ url: 'user' }, { onError: () => setUser(null) });
-
-    mountData();
+    reqUser({ url: 'user' }, { onError: () => setUser(null) });
   }, [reqUser, setUser]);
 
   return (
