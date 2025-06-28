@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/lib/hooks/useDebounce';
 import { getPeerConfig } from './peerProfileConfig';
-import { Auth } from '@/pages/RootLayout';
+import { Auth } from '@/lib/types/auth';
 import useFetch from '@/lib/hooks/useFetch';
 import User from '@/models/User';
 import Modal from '../ui/modal/Modal';

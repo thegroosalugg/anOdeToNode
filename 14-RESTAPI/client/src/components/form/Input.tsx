@@ -1,6 +1,6 @@
 import { motion, AnimatePresence, Variants } from "motion/react";
 import { HTMLProps } from "react";
-import { FetchError } from "@/lib/util/fetchData";
+import { FetchError } from '@/lib/types/common';
 import ErrorPopUp from "../ui/boundary/error/ErrorPopUp";
 import css from "./Input.module.css";
 

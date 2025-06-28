@@ -1,18 +1,12 @@
 import Logger from '@/models/Logger';
 import refreshToken from './refreshToken';
+import { FetchError } from '../types/common';
 
 export interface Fetch {
       url: string;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
     data?: FormData | { [k: string]: FormDataEntryValue | boolean | number };
 }
-
-export type FetchError = {
-  [key: string]: string;
-} & {
-  message: string;
-   status: number;
-};
 
 export const BASE_URL = import.meta.env.VITE_SERVER_URL;
 

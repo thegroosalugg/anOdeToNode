@@ -1,7 +1,7 @@
 import { AnimatePresence } from 'motion/react';
+import { FetchError } from '@/lib/types/common';
 import Error from './error/Error';
 import Loader from './loader/Loader';
-import { FetchError } from '@/lib/util/fetchData';
 
 interface AsyncAwait {
   isLoading: boolean;

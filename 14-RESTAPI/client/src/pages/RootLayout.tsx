@@ -3,32 +3,10 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 import NavBar from '@/components/layout/header/NavBar';
 import Footer from '@/components/layout/footer/Footer';
-import useFetch, { ReqConfig } from '@/lib/hooks/useFetch';
-import { Fetch, FetchError } from '@/lib/util/fetchData';
-import User from '@/models/User';
-import { SetData } from '@/lib/types/common';
+import useFetch from '@/lib/hooks/useFetch';
+import { Auth } from '@/lib/types/auth';
 
-type  isUser =       User | null;
-type isError = FetchError | null;
-
-export interface Auth {
-       user: isUser;
-    setUser: SetData<isUser>;
-    reqUser: (params: Fetch, config?: ReqConfig<isUser>) => Promise<isUser | void>;
-  isLoading: boolean;
-      error: isError;
-   setError: SetData<isError>;
-}
-
-export interface Authorized extends Auth {
-  user: User;
-}
-
-export default function RootLayout({
-  children,
-}: {
-  children: (props: Auth) => ReactNode;
-}) {
+export default function RootLayout({ children }: { children: (props: Auth) => ReactNode }) {
   const { pathname } = useLocation();
   const {
           data: user,

@@ -1,7 +1,8 @@
-import fetchData, { Fetch, FetchError } from '@/lib/util/fetchData';
+import fetchData, { Fetch } from '@/lib/util/fetchData';
 import { useState, useCallback } from 'react';
+import { FetchError } from '../types/common';
 
-export interface ReqConfig<T> {
+interface ReqConfig<T> {
   onSuccess?: (res:     T     ) => void;
     onError?: (err: FetchError) => void;
 }

@@ -1,8 +1,8 @@
 import { useAnimate, stagger, AnimatePresence, motion } from 'motion/react';
 import useDebounce from '@/lib/hooks/useDebounce';
 import useFetch from '@/lib/hooks/useFetch';
-import { FetchError } from '@/lib/util/fetchData';
-import { Auth } from '@/pages/RootLayout';
+import { Auth } from '@/lib/types/auth';
+import { FetchError } from '@/lib/types/common';
 import Post from '@/models/Post';
 import Input from './Input';
 import ImagePicker from './ImagePicker';

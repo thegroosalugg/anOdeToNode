@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
-import { Auth, Authorized } from './RootLayout';
+import { Auth, Authorized } from '@/lib/types/auth';
 import Loader from '@/components/ui/boundary/loader/Loader';
 import UserProfile from '@/components/profile/UserProfile';
 import LoginForm from '@/components/form/LoginForm';

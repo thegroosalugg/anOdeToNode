@@ -1,8 +1,4 @@
 import { useRoutes } from 'react-router-dom';
-import {
-            Auth,
-         Authorized
-                   } from './pages/RootLayout';
 import     AuthPage  from './pages/AuthPage';
 import   RootLayout  from './pages/RootLayout';
 import     FeedPage  from './pages/FeedPage';
@@ -17,6 +13,7 @@ import {    fas    } from '@fortawesome/free-solid-svg-icons';   // import solid
 import {    far    } from '@fortawesome/free-regular-svg-icons'; // import regular icons
 
 import { captainsLog } from './lib/util/captainsLog';
+import { Auth, Authorized } from './lib/types/auth';
 
 library.add(fab, fas, far);
 

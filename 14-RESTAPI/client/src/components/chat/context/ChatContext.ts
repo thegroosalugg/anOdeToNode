@@ -1,15 +1,10 @@
+import { createContext, useContext, MutableRefObject } from "react";
+import { FetchError, SetData } from "@/lib/types/common";
+import { Auth } from "@/lib/types/auth";
 import { ReqHandler } from "@/lib/hooks/useFetch";
-import { SetData } from "@/lib/types/common";
-import { FetchError } from "@/lib/util/fetchData";
 import Chat from "@/models/Chat";
 import Msg from "@/models/Message";
 import User from "@/models/User";
-import { Auth } from "@/pages/RootLayout";
-import {
-  createContext,
-  useContext,
-  MutableRefObject,
-} from "react";
 
 export type   MsgsMap = Record<string, Msg[]>;
 export type StatusMap = Record<string, boolean>;

@@ -6,7 +6,7 @@ import useDebounce from "@/lib/hooks/useDebounce";
 import useDepedencyTracker from "@/lib/hooks/useDepedencyTracker";
 import User from "@/models/User";
 import Chat from "@/models/Chat";
-import { Auth } from "@/pages/RootLayout";
+import { Auth } from "@/lib/types/auth";
 
 interface ChatProviderProps {
       user: User;

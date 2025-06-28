@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
 import usePagination from '@/lib/hooks/usePagination';
-import { Authorized } from '@/pages/RootLayout';
+import { Authorized } from '@/lib/types/auth';
 import Post from '@/models/Post';
 import ProfileHeader from './ProfileHeader';
 import Modal from '../ui/modal/Modal';

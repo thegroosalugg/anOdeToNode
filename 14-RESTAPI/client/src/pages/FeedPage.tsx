@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import usePagination from '@/lib/hooks/usePagination';
 import useSocket from '@/lib/hooks/useSocket';
-import { Authorized } from './RootLayout';
+import { Authorized } from '@/lib/types/auth';
 import Post from '@/models/Post';
 import Logger from '@/models/Logger';
 import Modal from '@/components/ui/modal/Modal';

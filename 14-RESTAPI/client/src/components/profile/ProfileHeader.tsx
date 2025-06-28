@@ -1,8 +1,9 @@
 import useFetch from '@/lib/hooks/useFetch';
 import { useState } from 'react';
-import { BASE_URL, FetchError } from '@/lib/util/fetchData';
+import { BASE_URL } from '@/lib/util/fetchData';
 import { motion, useAnimate, stagger } from 'motion/react';
-import { Authorized } from '@/pages/RootLayout';
+import { Authorized } from '@/lib/types/auth';
+import { FetchError } from '@/lib/types/common';
 import ImagePicker from '../form/ImagePicker';
 import Modal from '../ui/modal/Modal';
 import Button from '../ui/button/Button';

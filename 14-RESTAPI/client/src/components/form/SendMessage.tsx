@@ -1,7 +1,7 @@
 import { FormEvent } from 'react';
 import { motion, useAnimate, AnimatePresence } from 'motion/react';
-import { Auth } from '@/pages/RootLayout';
-import { FetchError } from '@/lib/util/fetchData';
+import { Auth } from '@/lib/types/auth';
+import { FetchError } from '@/lib/types/common';
 import useFetch from '@/lib/hooks/useFetch';
 import useDebounce from '@/lib/hooks/useDebounce';
 import Loader from '../ui/boundary/loader/Loader';

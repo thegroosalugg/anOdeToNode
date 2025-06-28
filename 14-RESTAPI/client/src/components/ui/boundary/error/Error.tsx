@@ -1,6 +1,6 @@
-import { FetchError } from '@/lib/util/fetchData';
-import css from './Error.module.css';
+import { FetchError } from '@/lib/types/common';
 import { motion } from 'motion/react';
+import css from './Error.module.css';
 
 export default function Error({ error }: { error: FetchError }) {
   return (

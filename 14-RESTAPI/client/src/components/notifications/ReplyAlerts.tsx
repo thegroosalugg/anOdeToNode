@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import useDebounce from '@/lib/hooks/useDebounce';
 import useFetch from '@/lib/hooks/useFetch';
-import { FetchError } from '@/lib/util/fetchData';
+import { FetchError } from '@/lib/types/common';
 import { SetData } from '@/lib/types/common';
 import Reply from '@/models/Reply';
 import { Alert, Strong, Time, X } from './UIElements';
