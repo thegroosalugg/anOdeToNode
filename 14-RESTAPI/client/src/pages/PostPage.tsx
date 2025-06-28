@@ -21,12 +21,12 @@ import PagedList from '@/components/pagination/PagedList';
 
 export default function PostPage({ user, setUser }: Authorized) {
   const {
-          data: post,
-       setData: setPost,
-    reqHandler: reqPost,
-     isLoading,
-         error,
-      setError,
+         data: post,
+      setData: setPost,
+      reqData: reqPost,
+    isLoading,
+        error,
+     setError,
   } = useFetch<Post | null>();
   const { postId } = useParams();
   const {

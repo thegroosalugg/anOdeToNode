@@ -7,14 +7,14 @@ interface ReqConfig<T> {
     onError?: (err: FetchError) => void;
 }
 
-export type ReqHandler<T> = (params: Fetch, config?: ReqConfig<T>) => Promise<void | T>;
+export type ReqData<T> = (params: Fetch, config?: ReqConfig<T>) => Promise<T | void>;
 
 const useFetch = <T>(initialData: T = null as T, loading = false) => {
   const [     data,      setData] = useState<T>(initialData);
   const [isLoading, setIsLoading] = useState(loading);
   const [    error,     setError] = useState<FetchError | null>(null);
 
-  const reqHandler = useCallback(
+  const reqData = useCallback(
     async (params: Fetch, config: ReqConfig<T> = {}): Promise<T | void> => {
       if (params.method) console.clear(); // **LOGDATA
       const { onSuccess, onError } = config;
@@ -35,7 +35,7 @@ const useFetch = <T>(initialData: T = null as T, loading = false) => {
     []
   );
 
-  return { data, setData, isLoading, error, setError, reqHandler };
+  return { data, setData, isLoading, error, setError, reqData };
 };
 
 export default useFetch;

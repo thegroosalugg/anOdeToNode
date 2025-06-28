@@ -23,7 +23,7 @@ export default function SocialAlerts({
       navTo: (path: string) => void;
     onError: (err: FetchError) => void;
 }) {
-  const { reqHandler } = useFetch<User>();
+  const { reqData } = useFetch<User>();
   const {  deferFn   } = useDebounce();
   const [x,      setX] = useState(0)
   const    connections = friends
@@ -36,14 +36,14 @@ export default function SocialAlerts({
   const friendRequest = async (_id: string, action: 'accept' | 'delete') => {
     setX(-20);
     deferFn(async () => {
-      await reqHandler({ url: `social/${_id}/${action}`, method: 'POST' }, { onError });
+      await reqData({ url: `social/${_id}/${action}`, method: 'POST' }, { onError });
     }, 1000);
   };
 
   const clearAlert = async (_id: string) => {
     setX(-20);
     deferFn(async () => {
-      await reqHandler(
+      await reqData(
         { url: `alerts/social/hide/${_id}` },
         { onError, onSuccess: (updated) => setUser(updated) }
       );

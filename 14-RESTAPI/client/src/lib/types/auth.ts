@@ -1,6 +1,6 @@
 import User from "@/models/User";
 import { FetchError, SetData } from "./common";
-import { ReqHandler } from "../hooks/useFetch";
+import { ReqData } from "../hooks/useFetch";
 
 type  isUser =       User | null;
 type isError = FetchError | null;
@@ -8,7 +8,7 @@ type isError = FetchError | null;
 export interface Auth {
        user: isUser;
     setUser: SetData<isUser>;
-    reqUser: ReqHandler<isUser>;
+    reqUser: ReqData<isUser>;
   isLoading: boolean;
       error: isError;
    setError: SetData<isError>;

@@ -9,12 +9,12 @@ import { Auth } from '@/lib/types/auth';
 export default function RootLayout({ children }: { children: (props: Auth) => ReactNode }) {
   const { pathname } = useLocation();
   const {
-          data: user,
-       setData: setUser,
-    reqHandler: reqUser,
-     isLoading,
-         error,
-      setError,
+         data: user,
+      setData: setUser,
+      reqData: reqUser,
+    isLoading,
+        error,
+     setError,
   } = useFetch<Auth['user']>(null, true); // null initial, true loading before useEffect
   const props = { user, setUser, reqUser, isLoading, error, setError };
 

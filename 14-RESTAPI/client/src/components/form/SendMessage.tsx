@@ -16,7 +16,7 @@ export default function SendMessage({
   setUser: Auth['setUser'];
   isPost?: boolean;
 }) {
-  const { reqHandler, isLoading, error, setError } = useFetch();
+  const { reqData, isLoading, error, setError } = useFetch();
   const [ scope,     animate ] = useAnimate();
   const { deferring, deferFn } = useDebounce();
   const classes = `${css['send-msg']} ${isPost ? css['isPost'] : ''}`;
@@ -49,7 +49,7 @@ export default function SendMessage({
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     const data = new FormData(e.currentTarget);
-    await reqHandler({ url, method: 'POST', data }, { onSuccess, onError });
+    await reqData({ url, method: 'POST', data }, { onSuccess, onError });
   };
 
   return (

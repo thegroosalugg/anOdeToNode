@@ -1,7 +1,7 @@
 import { createContext, useContext, MutableRefObject } from "react";
 import { Dict, FetchError, SetData } from "@/lib/types/common";
 import { Auth } from "@/lib/types/auth";
-import { ReqHandler } from "@/lib/hooks/useFetch";
+import { ReqData } from "@/lib/hooks/useFetch";
 import { Debounce } from "@/lib/hooks/useDebounce";
 import Chat from "@/models/Chat";
 import Msg from "@/models/Message";
@@ -13,7 +13,7 @@ export type StatusMap = Dict<boolean>;
 type ChatData = {
       chats: Chat[];
    setChats: SetData<Chat[]>;
-   reqChats: ReqHandler<Chat[]>;
+   reqChats: ReqData<Chat[]>;
   isLoading: boolean;
       error: FetchError | null;
 };

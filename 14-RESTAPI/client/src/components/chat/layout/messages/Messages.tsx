@@ -14,7 +14,7 @@ export default function Messages({ chat }: { chat: Chat }) {
   const { user, msgsMap, loadedMap, setMsgs, clearAlerts } = useChat();
   const      msgs = msgsMap[chat._id] || [];
   const hasLoaded = loadedMap.current[chat._id];
-  const { reqHandler, error } = useFetch<Msg[]>([]);
+  const { reqData, error } = useFetch<Msg[]>([]);
   const isInitial = useRef(true);
   const    msgRef = useRef<HTMLParagraphElement>(null);
   const  scrollTo = () => msgRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -40,7 +40,7 @@ export default function Messages({ chat }: { chat: Chat }) {
 
     const getMessages = async () => {
       if (hasLoaded) return;
-      await reqHandler(
+      await reqData(
         { url: `chat/messages/${chat._id}` },
         {
           onSuccess: (msgs) => {
@@ -66,7 +66,7 @@ export default function Messages({ chat }: { chat: Chat }) {
     loadedMap,
     hasLoaded,
     clearAlerts,
-    reqHandler,
+    reqData,
     setMsgs,
   ]);
 

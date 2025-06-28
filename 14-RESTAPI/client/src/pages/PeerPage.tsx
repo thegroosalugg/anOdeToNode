@@ -15,7 +15,7 @@ import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/post/PostItem';
 
 export default function PeerPage({ user, setUser }: Authorized) {
-  const { data: peer, isLoading, error, reqHandler } = useFetch<User | null>();
+  const { data: peer, isLoading, error, reqData } = useFetch<User | null>();
   const { userId } = useParams();
   const {
     fetcher: { setData },
@@ -46,7 +46,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
     if (!socket) return;
 
     const fetchPeer = async () => {
-      if (userId) await reqHandler({ url: `social/find/${userId}` });
+      if (userId) await reqData({ url: `social/find/${userId}` });
     };
 
     if (isInitial.current) {
@@ -86,7 +86,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
         socket.off(`post:${peer?._id}:delete`);
       }
     }
-  }, [pathname, socketRef, userId, user._id, peer?._id, setData, reqHandler, navigate]);
+  }, [pathname, socketRef, userId, user._id, peer?._id, setData, reqData, navigate]);
 
   return (
     <AsyncAwait {...{ isLoading, error }}>

@@ -35,7 +35,7 @@ export function usePages() {
 
 export default function usePagination<T>(baseURL: string, limit: number, shouldFetch = true) {
   const initState: InitState<T>       = { docCount: 0, items: [] };
-  const { data, reqHandler, ...rest } = useFetch(initState);
+  const { data, reqData, ...rest } = useFetch(initState);
   const   isInitial = useRef(true);
   const  pagedProps = usePages();
   const { current } = pagedProps;
@@ -45,12 +45,12 @@ export default function usePagination<T>(baseURL: string, limit: number, shouldF
     const initData = async () => {
       // guard request with optional conditions to prevent FC dismount requests
       if (shouldFetch) {
-        await reqHandler({ url });
+        await reqData({ url });
         if (isInitial.current) isInitial.current = false;
       }
     }
     initData();
-  }, [reqHandler, url, shouldFetch]);
+  }, [reqData, url, shouldFetch]);
 
   return { ...pagedProps, limit, data, fetcher: { ...rest, isLoading: isInitial.current } };
 }

@@ -17,7 +17,7 @@ export default function ProfileHeader({ user, setUser }: Pick<Authorized, 'user'
   const [showModal,            setShowModal] = useState(false);
   const [displayPic,          setDisplayPic] = useState(imgURL);
   const [scope,                     animate] = useAnimate();
-  const { reqHandler,   error,    setError } = useFetch<{ imgURL: string}>();
+  const { reqData,     error,     setError } = useFetch<{ imgURL: string}>();
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -46,7 +46,7 @@ export default function ProfileHeader({ user, setUser }: Pick<Authorized, 'user'
       setShowModal(false);
     };
 
-    await reqHandler(
+    await reqData(
       { url: 'profile/set-pic', method: 'POST', data },
       { onError, onSuccess }
     );

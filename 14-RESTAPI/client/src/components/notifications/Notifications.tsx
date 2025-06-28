@@ -26,11 +26,11 @@ export default function Notifications({
      user: User;
   setUser: Auth['setUser'];
 }) {
-  const { error, reqHandler: reqSocialAlerts } = useFetch<User>();
+  const { error, reqData: reqSocialAlerts } = useFetch<User>();
   const {
-          data: replies,
-       setData: setReplies,
-    reqHandler: reqReplyAlerts,
+       data: replies,
+    setData: setReplies,
+    reqData: reqReplyAlerts,
   } = useFetch<Reply[]>([]);
   const [menu,                  showMenu] = useState(false);
   const [activeTab,         setActiveTab] = useState(0);

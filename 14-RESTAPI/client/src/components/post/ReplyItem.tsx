@@ -16,12 +16,12 @@ export default function ReplyItem({
   userId,
 }: Reply & { userId?: string }) {
   const [showModal, setShowModal] = useState(false);
-  const { reqHandler } = useFetch();
+  const { reqData } = useFetch();
   const    navigate    = useNavigate();
   const closeModal = () => setShowModal(false);
 
   const deleteReply = async () => {
-    await reqHandler({ url: `post/delete-reply/${_id}`, method: 'DELETE' });
+    await reqData({ url: `post/delete-reply/${_id}`, method: 'DELETE' });
     closeModal();
   };
 

@@ -18,13 +18,13 @@ const config = "chat"; // config logger, sockets and depedencyTracker
 
 export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   const {
-          data: chats,
-       setData: setChats,
-    reqHandler: reqChats,
-     isLoading,
-         error,
+         data: chats,
+      setData: setChats,
+      reqData: reqChats,
+    isLoading,
+        error,
   } = useFetch<Chat[]>([]);
-  const { reqHandler } = useFetch<Chat>();
+  const { reqData } = useFetch<Chat>();
   const [isOpen,         setIsOpen] = useState(false); // main menu
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [msgsMap,          setMsgs] = useState<MsgsMap>({});
@@ -54,9 +54,9 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
 
   const clearAlerts = useCallback(
     async (id: string) => {
-      await reqHandler({ url: `alerts/chat/${id}` });
+      await reqData({ url: `alerts/chat/${id}` });
     },
-    [reqHandler]
+    [reqData]
   );
 
   const appendURL = (path: string) =>
@@ -131,7 +131,7 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
 
     if (!data) return;
 
-    await reqHandler({ url: "chat/delete", method: "DELETE", data });
+    await reqData({ url: "chat/delete", method: "DELETE", data });
     if (wasMarked) setMarked({});
     closeModal();
     setIsMarking(false);

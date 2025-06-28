@@ -15,7 +15,7 @@ const icons = {
 } as const;
 
 function InfoField({ id, user }: { id: keyof typeof icons; user: User }) {
-  const { reqHandler, error, setError } = useFetch<string>();
+  const { reqData, error, setError } = useFetch<string>();
   const [isEditing,       setIsEditing] = useState(false);
   const [value,               setValue] = useState('');
   const [text,                 setText] = useState(user.about?.[id]);
@@ -51,7 +51,7 @@ function InfoField({ id, user }: { id: keyof typeof icons; user: User }) {
     editAction(async () => {
       if (isEditing) {
         const data = { [id]: value };
-        await reqHandler(
+        await reqData(
           { url: 'profile/info', method: 'POST', data },
           {
             onSuccess: (res) => {

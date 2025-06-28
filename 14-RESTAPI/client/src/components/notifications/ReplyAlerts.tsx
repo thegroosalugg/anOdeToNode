@@ -22,14 +22,14 @@ export default function ReplyAlerts({
        navTo: (path: string) => void;
      onError: (err: FetchError) => void;
 }) {
-  const { reqHandler } = useFetch<Reply | null>();
+  const { reqData } = useFetch<Reply | null>();
   const {  deferFn   } = useDebounce();
   const    opacity = 0;
   const transition = { duration: 0.5 };
 
   const clearAlert = async (_id: string) => {
     deferFn(async () => {
-      await reqHandler(
+      await reqData(
         { url: `alerts/reply/hide/${_id}` },
         {
           onError,

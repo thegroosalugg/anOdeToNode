@@ -20,7 +20,7 @@ export default function PostForm({
      setUser: Auth['setUser'];
        post?: Post | null;
 }) {
-  const { isLoading, error, reqHandler } = useFetch<Post | null>();
+  const { isLoading, error, reqData } = useFetch<Post | null>();
   const [ scope,               animate ] = useAnimate();
   const { deferring,           deferFn } = useDebounce();
   const { _id = '', title = '', content = '', imgURL = '' } = post || {};
@@ -43,7 +43,7 @@ export default function PostForm({
     e.preventDefault();
     deferFn(async () => {
       const data = new FormData(e.currentTarget); // multipart/form-data
-      await reqHandler({ url, method, data }, { onError, onSuccess });
+      await reqData({ url, method, data }, { onError, onSuccess });
     }, 1200)
   }
 

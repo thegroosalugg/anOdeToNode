@@ -39,7 +39,7 @@ export default function PeerProfile({
   setUser: Auth['setUser'];
      peer: User;
 }) {
-  const { isLoading, reqHandler } = useFetch();
+  const { isLoading, reqData } = useFetch();
   const { deferring,    deferFn } = useDebounce();
   const [showModal, setShowModal] = useState(false);
   const         navigate          = useNavigate();
@@ -57,7 +57,7 @@ export default function PeerProfile({
     if (!reqAction) return; // action = undefined if connection accepted
     // in this case an argument must be passed
     deferFn(async () => {
-      await reqHandler(
+      await reqData(
         { url: `social/${_id}/${reqAction}`, method: 'POST' },
         {
           onError: (err) => {
