@@ -1,45 +1,72 @@
 import { createContext, useContext, MutableRefObject } from "react";
-import { FetchError, SetData } from "@/lib/types/common";
+import { Dict, FetchError, SetData } from "@/lib/types/common";
 import { Auth } from "@/lib/types/auth";
 import { ReqHandler } from "@/lib/hooks/useFetch";
+import { Debounce } from "@/lib/hooks/useDebounce";
 import Chat from "@/models/Chat";
 import Msg from "@/models/Message";
 import User from "@/models/User";
 
-export type   MsgsMap = Record<string, Msg[]>;
-export type StatusMap = Record<string, boolean>;
+export type   MsgsMap = Dict<Msg[]>;
+export type StatusMap = Dict<boolean>;
 
-type ChatContext = {
-           user: User,
-        setUser: Auth['setUser']
-          chats: Chat[];
-       setChats: SetData<Chat[]>;
-       reqChats: ReqHandler<Chat[]>;
-      isLoading: boolean;
-          error: FetchError | null;
-        msgsMap: MsgsMap;
-        setMsgs: SetData<MsgsMap>;
-      loadedMap: MutableRefObject<StatusMap>;
+type ChatData = {
+      chats: Chat[];
+   setChats: SetData<Chat[]>;
+   reqChats: ReqHandler<Chat[]>;
+  isLoading: boolean;
+      error: FetchError | null;
+};
+
+type MessageData = {
+    msgsMap: MsgsMap;
+    setMsgs: SetData<MsgsMap>;
+  loadedMap: MutableRefObject<StatusMap>;
+};
+
+type MenuControl = {
+     isOpen: boolean;
+   openMenu: () => void;
+  closeMenu: () => void;
+};
+
+type ChatControl = {
      activeChat: Chat | null;
   setActiveChat: SetData<Chat | null>;
-      deferring: boolean;
-         alerts: number;
-      setAlerts: SetData<number>
-    clearAlerts: (id: string) => Promise<void>;
-         isOpen: boolean;
-       openMenu: () => void;
-      closeMenu: () => void;
-       collapse: () => void;
+       collapse: () => void; // expand is bound with Mark => expandOrMark: declatative action
+}
+
+type ModalControl = {
+   showModal: boolean;
+  closeModal: () => void;
+};
+
+type ActionControl = {
       isMarking: boolean;
       markedMap: StatusMap;
    expandOrMark: (chat: Chat, path: string) => void;
   confirmAction: () => void;
    cancelAction: () => void;
    deleteAction: () => void;
-      showModal: boolean;
-     closeModal: () => void;
 };
 
+type AlertsControl = {
+       alerts: number;
+    setAlerts: SetData<number>;
+  clearAlerts: (id: string) => Promise<void>;
+}
+
+type ChatContext = {
+       user: User;
+    setUser: Auth["setUser"];
+  deferring: Debounce["deferring"];
+}    & ChatData &
+    MessageData &
+    ChatControl &
+    MenuControl &
+   ModalControl &
+  ActionControl &
+  AlertsControl;
 export const ChatContext = createContext<ChatContext | null>(null);
 
 export function useChat() {
