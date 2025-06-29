@@ -73,9 +73,7 @@ export const useChatSocket = () => {
       logger.event("delete", deleted);
       const isDeleted = (id?: string) => deleted.some((chat) => chat._id === id);
       // if dummy chat, use the stored real chatId, else active chat is real
-      if (isDeleted(isTemp ? chatId : activeId)) {
-        collapse();
-      }
+      if (isDeleted(isTemp ? chatId : activeId)) collapse();
       deleted.forEach(({ _id }) => {
         delete loadedMap.current[_id]; // force future re-fetch
       });

@@ -8,6 +8,7 @@ export const useChatParamsSync = () => {
   const [searchParams] = useSearchParams();
   const peerId = searchParams.get("chat");
   const hasLoaded = useRef(false);
+  const lastChatsRef = useRef(0);
 
   useEffect(() => {
     const initData = async () => {
@@ -20,6 +21,13 @@ export const useChatParamsSync = () => {
 
   useEffect(() => {
     if (!peerId || !hasLoaded.current) return;
+
+    // Check if chats array got shorter (deletion)
+    const chatsDecreased = chats.length < lastChatsRef.current;
+
+    lastChatsRef.current = chats.length;
+    if (chatsDecreased) return;
+
     let chat = chats.find(({ guest, host }) => [host._id, guest._id].includes(peerId));
     if (!chat) {
       const peer = user.friends.find(({ user }) => user._id === peerId)?.user;

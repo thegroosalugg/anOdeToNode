@@ -73,7 +73,13 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     destroyURL(); // async URL update
     setIsOpen(false);
     cancelAction();
-    if (activeChat?.isTemp && !activeChat.chatId) setActiveChat(null);
+    if (!activeChat?.isTemp) return;
+    if (activeChat.chatId) { // silently replace temp chat with real while out of view
+      const chat = chats.find(({ _id }) => _id === activeChat.chatId);
+      if (chat) setTimeout(() => setActiveChat(chat), 500);
+    } else {
+      setActiveChat(null);
+    }
   };
 
   const expand = (chat: Chat, path: string) => {
