@@ -16,6 +16,7 @@ export const useChatSocket = () => {
     activeChat,
     setActiveChat,
     collapse,
+    loadedMap,
     setMsgs,
     setAlerts,
     clearAlerts,
@@ -80,6 +81,9 @@ export const useChatSocket = () => {
         collapse();
       }
       setChats((prevChats) => prevChats.filter((chat) => !isDeleted(chat._id)));
+      deleted.forEach(({ _id }) => {
+        delete loadedMap.current[_id]; // force future re-fetch
+      });
       setMsgs((state) => {
         // remove prev fetched client msgs when chat deleted
         const updated = deleted.reduce((acc, { _id }) => ({ ...acc, [_id]: [] }), {});
@@ -108,6 +112,7 @@ export const useChatSocket = () => {
     activeId,
     isTemp,
     isOpen,
+    loadedMap,
     setChats,
     updateChats,
     setActiveChat,

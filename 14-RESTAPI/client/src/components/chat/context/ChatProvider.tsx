@@ -73,7 +73,7 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     destroyURL(); // async URL update
     setIsOpen(false);
     cancelAction();
-    if (activeChat?.isTemp) setActiveChat(null);
+    if (activeChat?.isTemp && !activeChat.chatId) setActiveChat(null);
   };
 
   const expand = (chat: Chat, path: string) => {
