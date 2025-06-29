@@ -7,8 +7,8 @@ import { useChatSocket } from './context/useChatSocket';
 import { useChatParamsSync } from './context/useChatParamsSync';
 
 export default function ChatMenu() {
-  useChatSocket(); // alters context values
-  useChatParamsSync();
+  useChatParamsSync(); // alters context values
+  useChatSocket();
   const { alerts, deferring, isOpen, openMenu, closeMenu } = useChat();
 
   return (

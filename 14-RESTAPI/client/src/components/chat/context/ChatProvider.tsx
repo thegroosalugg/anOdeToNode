@@ -115,6 +115,12 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   async function deleteAction() {
     if (!(isMarking || activeChat)) return;
 
+    if (activeChat?.isTemp && !activeChat.chatId) {
+      closeModal(); // allows UI simulation of deleting dummy unsaved chat
+      collapse();
+      return;
+    }
+
     let data;
     if (wasMarked) {
       data = Object.fromEntries(Object.entries(markedMap).filter(([_, v]) => v));
