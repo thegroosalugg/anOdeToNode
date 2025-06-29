@@ -49,7 +49,6 @@ const routes = [
 ];
 
 export default function App() {
-  console.clear(); // **LOGDATA
   captainsLog(-1, ['⇚⇚⇚App⇛⇛⇛']);
 
   const  element = useRoutes(routes);

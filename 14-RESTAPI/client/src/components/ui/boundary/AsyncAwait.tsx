@@ -2,6 +2,7 @@ import { AnimatePresence } from 'motion/react';
 import { FetchError } from '@/lib/types/common';
 import Error from './error/Error';
 import Loader from './loader/Loader';
+import { Fragment } from 'react/jsx-runtime';
 
 interface AsyncAwait {
   isLoading: boolean;
@@ -17,7 +18,7 @@ export default function AsyncAwait({ isLoading, error, children }: AsyncAwait) {
       ) : error ? (
         <Error key='error' error={error} />
       ) : (
-        <>{children}</>
+        <Fragment key="children">{children}</Fragment>
       )}
     </AnimatePresence>
   );

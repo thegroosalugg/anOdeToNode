@@ -10,25 +10,28 @@ export default function ChatList() {
   const sendTo = (path: string) => `chat/new-msg/${path}`;
 
   return (
-    <LayoutGroup>
-      <motion.ul className={css["chat-list"]} initial="hidden" animate="visible">
+    <motion.ul
+       className={css["chat-list"]}
+         initial="hidden"
+         animate="visible"
+      transition={{ staggerChildren: 0.2 }} // applies when you load app with chat URL
+    >
+      <LayoutGroup>
         <AnimatePresence>
           {(activeChat ? [activeChat] : chats).map((chat) => (
             <ChatItem key={chat._id} {...{ chat }}>
-              {(recipient) => (
-                <AnimatePresence>
-                  {activeChat && (
-                    <>
-                      <Messages {...{ chat }} />
-                      <SendMessage {...{ setUser, url: sendTo(recipient._id) }} />
-                    </>
-                  )}
-                </AnimatePresence>
-              )}
+              {(recipient) =>
+                activeChat && (
+                  <>
+                    <Messages {...{ chat }} />
+                    <SendMessage {...{ setUser, url: sendTo(recipient._id) }} />
+                  </>
+                )
+              }
             </ChatItem>
           ))}
         </AnimatePresence>
-      </motion.ul>
-    </LayoutGroup>
+      </LayoutGroup>
+    </motion.ul>
   );
 }

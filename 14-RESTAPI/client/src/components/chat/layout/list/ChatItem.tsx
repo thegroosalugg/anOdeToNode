@@ -33,8 +33,8 @@ export default function ChatItem({ chat, children }: ChatProps) {
   const      sender = lastMsg?.sender === user._id ? "Me" : recipient.name;
   const        flex = activeChat ? 1 : 0;
   const      cursor = activeChat || deferring ? "auto" : "pointer";
-  const  animations = createAnimations({ transition: { ease: "linear"}});
-  const    variants = createVariants({ initial: { flex }, animate: { flex } });
+  const  animations = createAnimations({ transition: { ease: "linear" }});
+  const    variants = createVariants({ initial: { flex: 0 }, animate: { flex } });
   let       classes = `floating-box ${css["chat-item"]} `;
   if (markedMap[chat._id]) classes += css["marked"];
 
@@ -49,7 +49,7 @@ export default function ChatItem({ chat, children }: ChatProps) {
       className={classes}
         onClick={() => expandOrMark(chat, recipient._id)}
           style={{ cursor }}
-           exit={{ ...variants.hidden }}
+           exit={{ ...variants.hidden, x: -10 }}
       {...{ variants }}
     >
       <header>
