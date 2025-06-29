@@ -15,6 +15,7 @@ export const useChatSocket = () => {
     reqChats,
     activeChat,
     setActiveChat,
+    collapse,
     setMsgs,
     setAlerts,
     clearAlerts,
@@ -26,11 +27,10 @@ export const useChatSocket = () => {
   const count = chats.reduce((total, { alerts }) => (total += alerts[user._id] || 0), 0);
 
   const updateChats = useCallback(
-    (chat: Chat) => {
+    (chat: Chat) =>
       setChats((prevChats) =>
         prevChats.map((prev) => (prev._id === chat._id ? chat : prev))
-      );
-    },
+      ),
     [setChats]
   );
 
@@ -55,6 +55,11 @@ export const useChatSocket = () => {
 
       if (isNew) {
         setChats((prevChats) => [chat, ...prevChats]);
+        // store real chatID only inside temp chat for possible deletion
+        setActiveChat((prev) => {
+          if (prev?.isTemp) return { ...prev, chatId: chat._id };
+          return prev; // do not overwrite temp chat with real => will cause component dismount
+        });
       } else if ((isVisible || isTemp) && !isSender) {
         await clearAlerts(chat._id); // states updated by alerts socket
       } else {
@@ -62,6 +67,7 @@ export const useChatSocket = () => {
       }
 
       setMsgs((state) => {
+        // if still in temp chat, store messages there until its destroyed
         const chatId = isTemp ? activeId : chat._id;
         return { ...state, [chatId]: [...(state[chatId] || []), msg] };
       });
@@ -70,7 +76,9 @@ export const useChatSocket = () => {
     socket.on(`chat:${user._id}:delete`, (deleted: Chat[]) => {
       logger.event("delete", deleted);
       const isDeleted = (id?: string) => deleted.some((chat) => chat._id === id);
-      if (isDeleted(activeId)) setActiveChat(null);
+      if (isDeleted(activeChat?.isTemp ? activeChat.chatId : activeChat?._id)) {
+        collapse();
+      }
       setChats((prevChats) => prevChats.filter((chat) => !isDeleted(chat._id)));
       setMsgs((state) => {
         // remove prev fetched client msgs when chat deleted
@@ -81,6 +89,7 @@ export const useChatSocket = () => {
 
     socket.on(`chat:${user._id}:alerts`, (chat) => {
       logger.event("alerts", chat);
+      // keeps temp chat active when reply received to block UI re renders.
       if (chat._id === activeId) setActiveChat(chat);
       updateChats(chat);
     });
@@ -93,6 +102,7 @@ export const useChatSocket = () => {
     };
   }, [
     socketRef,
+    activeChat,
     user._id,
     count,
     activeId,
@@ -101,6 +111,7 @@ export const useChatSocket = () => {
     setChats,
     updateChats,
     setActiveChat,
+    collapse,
     setMsgs,
     setAlerts,
     clearAlerts,

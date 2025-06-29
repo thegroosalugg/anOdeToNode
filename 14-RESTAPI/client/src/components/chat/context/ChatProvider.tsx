@@ -35,9 +35,7 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   const wasMarked = Object.keys(markedMap).some((key) => markedMap[key]);
 
   useDepedencyTracker(config, {
-    config,
-    reqUser: user._id,
-    isOpen,
+    chatId: activeChat?._id
   });
 
   const getRecipient = ({ host, guest }: Chat) => (user._id === host._id ? guest : host);
@@ -55,11 +53,14 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
       return prev;
     });
 
-  const destroyURL = () =>
-    setSearchParams((prev) => {
-      prev.delete("chat");
-      return prev;
-    });
+  const destroyURL = useCallback(
+    () =>
+      setSearchParams((prev) => {
+        prev.delete("chat");
+        return prev;
+      }),
+    [setSearchParams]
+  );
 
   const openMenu = async () => {
     deferFn(async () => {
@@ -70,14 +71,12 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
 
   const closeMenu = async () => {
     destroyURL(); // async URL update
-    setTimeout(() => { // temp fix for menu re-open when URL destroyed
-      setIsOpen(false);
-      cancelAction();
-      if (activeChat?.isTemp) setActiveChat(null);
-    }, 0);
+    setIsOpen(false);
+    cancelAction();
+    if (activeChat?.isTemp) setActiveChat(null);
   };
 
-  function expand(chat: Chat, path: string) {
+  const expand = (chat: Chat, path: string) => {
     if (activeChat) return;
     deferFn(() => {
       setActiveChat(chat);
@@ -85,14 +84,14 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     }, 2500);
   }
 
-  function collapse() {
+  const collapse = useCallback(() => {
     destroyURL();
     setActiveChat(null);
-  }
+  }, [destroyURL])
 
   const closeModal = () => setShowModal(false);
 
-  function expandOrMark(chat: Chat, path: string) {
+  const expandOrMark = (chat: Chat, path: string) => {
     if (isMarking) {
       setMarked((state) => ({ ...state, [chat._id]: !state[chat._id] }));
     } else {
@@ -100,7 +99,7 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     }
   }
 
-  function confirmAction() {
+  const confirmAction = () => {
     if ((isMarking && wasMarked) || activeChat) {
       setShowModal(true);
     } else {
@@ -108,7 +107,7 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     }
   }
 
-  function cancelAction() {
+  const cancelAction = () => {
     setIsMarking(false);
     setMarked({});
   }
@@ -120,7 +119,9 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
     if (wasMarked) {
       data = Object.fromEntries(Object.entries(markedMap).filter(([_, v]) => v));
     } else if (activeChat) {
-      data = { [activeChat._id]: true };
+      // if temp chat, it will have stored the newly created real chat's ID
+      const _id = activeChat.isTemp ? activeChat.chatId : activeChat._id;
+      if (_id) data = { [_id]: true };
     }
 
     if (!data) return;

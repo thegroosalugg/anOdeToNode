@@ -3,11 +3,12 @@ import Msg from "./Message";
 import User from "./User";
 
 class Chat {
-         _id: string = "";
+         _id: string = crypto.randomUUID();
         host: User;
        guest: User;
      lastMsg: Msg = new Msg();
       isTemp: boolean = true;
+     chatId?: string; // stores real chatID inside temp chat
       alerts: Dict<number> = {};
   deletedFor: Dict<boolean> = {};
 

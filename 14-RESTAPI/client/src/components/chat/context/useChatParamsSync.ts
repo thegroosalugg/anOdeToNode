@@ -16,9 +16,9 @@ export const useChatParamsSync = () => {
         if (peer) chat = new Chat(user, peer);
       }
       if (chat) {
-        setActiveChat(chat);
+        setActiveChat(prev => prev?.isTemp ? prev : chat);
         setIsOpen(true);
       }
     }
-  }, [user, peerId, chats, isOpen, setActiveChat, setIsOpen]);
+  }, [peerId, user, chats, setIsOpen, setActiveChat]);
 };
