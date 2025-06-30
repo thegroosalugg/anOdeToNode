@@ -3,6 +3,7 @@ import { useSocket } from "@/lib/hooks/useSocket";
 import { useChat } from "./ChatContext";
 import Chat from "@/models/Chat";
 import Logger from "@/models/Logger";
+import { useSearchParams } from "react-router-dom";
 
 const config = "chat"; // logger/sockets
 
@@ -20,6 +21,7 @@ export const useChatSocket = () => {
     setAlerts,
     clearAlerts,
   } = useChat();
+  const [_, setSearchParams] = useSearchParams();
 
   const socketRef = useSocket(config);
 
@@ -73,7 +75,16 @@ export const useChatSocket = () => {
       logger.event("delete", deleted);
       const isDeleted = (id?: string) => deleted.some((chat) => chat._id === id);
       // if dummy chat, use the stored real chatId, else active chat is real
-      if (isDeleted(isTemp ? chatId : activeId)) collapse();
+      if (isDeleted(isTemp ? chatId : activeId)) {
+        collapse();
+      } else {
+        // else must trigger the same params change collapse() triggers to wake useChatParamsSync Effect
+        setSearchParams((prev) => {
+          prev.set("chat", "deleted"); // dummy event retriggers effect either if or else
+          return prev;
+        });
+      }
+
       deleted.forEach(({ _id }) => {
         delete loadedMap.current[_id]; // force future re-fetch
       });
@@ -114,5 +125,6 @@ export const useChatSocket = () => {
     setMsgs,
     setAlerts,
     clearAlerts,
+    setSearchParams,
   ]);
 };

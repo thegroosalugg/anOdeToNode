@@ -21,15 +21,15 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
         error,
   } = useFetch<Chat[]>([]);
   const { reqData } = useFetch<Chat>();
-  const [isOpen,             setIsOpen] = useState(false); // main menu
-  const [activeChat,     setActiveChat] = useState<Chat | null>(null);
-  const [msgsMap,              setMsgs] = useState<MsgsMap>({});
-  const [alerts,             setAlerts] = useState(0);
-  const { deferring,          deferFn } = useDebounce();
-  const [_,            setSearchParams] = useSearchParams();
-  const [isMarking,       setIsMarking] = useState(false);
-  const [markedMap,          setMarked] = useState<StatusMap>({});
-  const [showModal,       setShowModal] = useState(false);
+  const [isOpen,         setIsOpen] = useState(false); // main menu
+  const [activeChat, setActiveChat] = useState<Chat | null>(null);
+  const [msgsMap,          setMsgs] = useState<MsgsMap>({});
+  const [alerts,         setAlerts] = useState(0);
+  const [isMarking,   setIsMarking] = useState(false);
+  const [markedMap,      setMarked] = useState<StatusMap>({});
+  const [showModal,   setShowModal] = useState(false);
+  const [_,        setSearchParams] = useSearchParams();
+  const { deferring,      deferFn } = useDebounce();
 
   const loadedMap = useRef<StatusMap>({}); // loaded messages per chat
   const wasMarked = Object.keys(markedMap).some((key) => markedMap[key]);
