@@ -62,9 +62,9 @@ export default function FeedPage({ setUser }: Authorized) {
         <PostForm {...{ setUser }} onSuccess={closeModal} />
       </Modal>
       <Button
-          onClick={() => setShowModal(true)}
-            style={{ margin: '0 auto 0.5rem' }}
-        animateEx={{ transition: { opacity: { delay: 0.8 }}}}
+           onClick={() => setShowModal(true)}
+             style={{ margin: '0 auto 0.5rem' }}
+        animations={{ transition: { opacity: { delay: 0.8 }}}}
       >
         New Post
       </Button>

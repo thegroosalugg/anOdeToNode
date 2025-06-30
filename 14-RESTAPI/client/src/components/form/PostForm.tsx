@@ -67,10 +67,9 @@ export default function PostForm({
             <ImagePicker imgURL={imgURL} style={{ marginTop: '2px' }} /> {/* applies to this layout only */}
           </section>
           <Button
-                 hsl={[180, 80, 35]}
-            disabled={deferring}
-            whileTap={{ scale: deferring ? 1 : 0.9 }} // overwrites default
-           animateEx={{ filter }} // additional animate props without overwriting default
+             disabled={deferring}
+             whileTap={{ scale: deferring ? 1 : 0.9 }} // overwrites default
+           animations={{ filter }} // additional animate props without overwriting default
           >
             {isLoading ? <Loader size="xs" color="bg" /> : 'Post'}
           </Button>

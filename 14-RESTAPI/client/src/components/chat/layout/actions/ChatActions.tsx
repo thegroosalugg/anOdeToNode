@@ -25,7 +25,7 @@ export default function ChatActions() {
       <ConfirmDialog open={showModal} onCancel={closeModal} onConfirm={deleteAction} />
       <header className={css["chat-actions"]}>
         <div>
-          <Button {...{ color, background }} onClick={confirmAction}>
+          <Button {...{ color, background }} border onClick={confirmAction}>
             {canDelete ? "Delete" : "Select"} Chat{!activeChat ? "s" : ""}
           </Button>
           <AnimatePresence>

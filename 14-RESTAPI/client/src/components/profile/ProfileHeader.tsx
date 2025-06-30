@@ -63,7 +63,7 @@ export default function ProfileHeader({ user, setUser }: Pick<Authorized, 'user'
         <form className={css['upload-image']} onSubmit={submitHandler} ref={scope}>
           <h2>Select a Profile Picture</h2>
           <ImagePicker imgURL={displayPic} />
-          <Button hsl={[197, 71, 53]}>Submit</Button>
+          <Button>Submit</Button>
           {error && (
             <ErrorPopUp
               error={error.message}

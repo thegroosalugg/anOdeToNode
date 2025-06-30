@@ -1,7 +1,7 @@
 .button {
   padding: 0.25rem 0.5rem;
   width: fit-content;
-  border: none;
+  border: 1px solid #ffffff00;
   border-radius: var(--radius-lg);
   color: var(--bg);
   background: var(--accent);

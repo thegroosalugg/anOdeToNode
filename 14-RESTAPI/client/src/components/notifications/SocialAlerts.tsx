@@ -81,13 +81,11 @@ export default function SocialAlerts({
                     </Alert>
                     <div className={css['buttons']}>
                       <Button
-                            hsl={[102, 44, 40]}
                         onClick={() => friendRequest(_id, 'accept')}
                       >
                         Accept
                       </Button>
                       <Button
-                            hsl={[10, 54, 51]}
                         onClick={() => friendRequest(_id, 'delete')}
                       >
                         Decline
@@ -102,7 +100,6 @@ export default function SocialAlerts({
                       </Strong>
                     </Alert>
                     <Button
-                            hsl={[10, 54, 51]}
                       className={css['cancel-btn']}
                         onClick={() => friendRequest(_id, 'delete')}
                     >

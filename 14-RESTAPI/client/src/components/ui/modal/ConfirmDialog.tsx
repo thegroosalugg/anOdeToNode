@@ -19,7 +19,7 @@ export default function ConfirmDialog({
           <Button color="var(--bg)" background="var(--error)" onClick={onConfirm}>
             Probably
           </Button>
-          <Button color="var(--fg)" background="var(--box)"   onClick={onCancel}>
+          <Button color="var(--fg)" background="var(--box)" border onClick={onCancel}>
             Probably Not
           </Button>
         </section>

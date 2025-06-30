@@ -93,10 +93,10 @@ export default function PostId({
       </AnimatePresence>
       {user._id === creator?._id && (
         <motion.section className={css['buttons']} variants={variants}>
-          <Button hsl={[180, 80, 35]} onClick={() => setModal('edit')}>
+          <Button onClick={() => setModal('edit')}>
             Edit
           </Button>
-          <Button hsl={[10, 54, 51]} onClick={() => setModal('delete')}>
+          <Button onClick={() => setModal('delete')}>
             Delete
           </Button>
         </motion.section>

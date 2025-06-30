@@ -49,7 +49,7 @@ export default function PeerProfile({
   const { accepted, initiated, acceptedAt } = connection ?? {};
   const       color = connection ?   '#ffffff' : 'var(--accent)';
   const borderColor = connection ? '#ffffff00' : 'var(--accent)';
-  const { text, icon, hsl, action } = getPeerConfig(connection);
+  const { text, icon, action } = getPeerConfig(connection);
   const closeModal = () => setShowModal(false);
 
   const friendRequest = async (reqAction = action) => {
@@ -106,7 +106,6 @@ export default function PeerProfile({
             </h2>
           </div>
           <Button
-                 hsl={hsl}
              onClick={handleAction}
                style={{ color, borderColor }}
             disabled={deferring}
@@ -121,7 +120,7 @@ export default function PeerProfile({
             )}
           </Button>
           {(accepted || (connection && !initiated)) && (
-            <Button hsl={[10, 54, 51]} onClick={deleteFriend}>
+            <Button onClick={deleteFriend}>
               {accepted ? (
                   'Remove Friend'
               ) : (

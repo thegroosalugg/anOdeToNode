@@ -98,7 +98,6 @@ function InfoField({ id, user }: { id: keyof typeof icons; user: User }) {
       </motion.p>
       <motion.section className={css['buttons']}>
         <Button
-              hsl={[0, 0, 100]}
           onClick={saveOrEdit}
             style={{ width }}
          disabled={deferring}
@@ -106,7 +105,7 @@ function InfoField({ id, user }: { id: keyof typeof icons; user: User }) {
           {isEditing ? <FontAwesomeIcon icon='check' /> : text ? 'Edit' : 'Add'}
         </Button>
         {isEditing && (
-          <Button hsl={[0, 0, 100]} onClick={cancel} disabled={deferring}>
+          <Button onClick={cancel} disabled={deferring}>
             <FontAwesomeIcon icon='x' />
           </Button>
         )}
