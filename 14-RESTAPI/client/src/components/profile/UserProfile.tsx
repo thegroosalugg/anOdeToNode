@@ -4,7 +4,6 @@ import { usePagination } from '@/lib/hooks/usePagination';
 import { Authorized } from '@/lib/types/auth';
 import Post from '@/models/Post';
 import ProfileHeader from './ProfileHeader';
-import Modal from '../ui/modal/Modal';
 import Button from '../ui/button/Button';
 import ConfirmDialog from '../ui/modal/ConfirmDialog';
 import AsyncAwait from '../ui/boundary/AsyncAwait';
@@ -30,9 +29,7 @@ export default function UserProfile({ user, setUser }: Authorized) {
 
   return (
     <>
-      <Modal show={showModal}                close={closeModal}>
-        <ConfirmDialog onConfirm={logout} onCancel={closeModal} />
-      </Modal>
+      <ConfirmDialog open={showModal} onConfirm={logout} onCancel={closeModal} />
       <motion.section
         className={css['user-profile']}
              exit={{ opacity: 0, transition: { duration: 0.5 } }}
@@ -45,7 +42,6 @@ export default function UserProfile({ user, setUser }: Authorized) {
           </PagedList>
         </AsyncAwait>
         <Button
-              hsl={[10, 54, 51]}
           onClick={() => setShowModal(true)}
           animate={{ opacity: 1, transition: { opacity: { delay: 2.2 }} }}
         >

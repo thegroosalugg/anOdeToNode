@@ -6,11 +6,11 @@ import { createAnimations } from "@/lib/motion/animations";
 
 export default function Modal({
   children,
-      show,
+      open,
      close,
 }: {
   children: React.ReactNode;
-      show: boolean | string;
+      open: boolean;
      close: () => void;
 }) {
   const    initial = { y: -50 };
@@ -19,7 +19,7 @@ export default function Modal({
 
   const Element = (
     <AnimatePresence>
-      {show && (
+      {open && (
         <>
           <Backdrop isOpen onClick={close} zIndex={25} />
           <motion.dialog

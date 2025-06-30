@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFetch } from '@/lib/hooks/useFetch';
 import Reply from '@/models/Reply';
-import Modal from '../ui/modal/Modal';
 import ConfirmDialog from '../ui/modal/ConfirmDialog';
 import ProfilePic from '../ui/image/ProfilePic';
 import Button from '../ui/button/Button';
@@ -27,9 +26,7 @@ export default function ReplyItem({
 
   return (
     <>
-      <Modal show={showModal} close={closeModal}>
-        <ConfirmDialog onCancel={closeModal} onConfirm={deleteReply} />
-      </Modal>
+      <ConfirmDialog open={showModal} onCancel={closeModal} onConfirm={deleteReply} />
       <h2 onClick={() => navigate('/user/' + creator._id)}>
         <ProfilePic user={creator} />
         <span>
@@ -41,7 +38,7 @@ export default function ReplyItem({
       </h2>
       <p>{content}</p>
       {userId === creator._id && (
-        <Button hsl={[10, 54, 51]} onClick={() => setShowModal(true)}>
+        <Button onClick={() => setShowModal(true)}>
           Delete
         </Button>
       )}

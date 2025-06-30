@@ -6,7 +6,9 @@ import {
   faRss,
   faUser,
   faUsers,
+  faUserPlus,
   faBell,
+  faComment,
   faComments,
   faEnvelope,
   faPaperPlane,
@@ -16,6 +18,7 @@ import {
   faBriefcase,
   faBook,
   faCheck,
+  faCheckToSlot,
   faRectangleXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -25,7 +28,9 @@ library.add(
   faRss,
   faUser,
   faUsers,
+  faUserPlus,
   faBell,
+  faComment,
   faComments,
   faEnvelope,
   faPaperPlane,
@@ -35,6 +40,7 @@ library.add(
   faBriefcase,
   faBook,
   faCheck,
+  faCheckToSlot,
   faRectangleXmark
 );
 

@@ -34,8 +34,8 @@
     overflow-y: hidden;
     text-wrap: nowrap;
     padding: 0.25rem 0;
-    border-left: 0.5rem solid transparent;
-    border-right: 0.5rem solid transparent;
+    border-left: 0.5rem solid #ffffff00;
+    border-right: 0.5rem solid #ffffff00;
 
     &::-webkit-scrollbar-thumb {
       background: #fff;

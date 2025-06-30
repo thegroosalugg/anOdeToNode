@@ -7,7 +7,6 @@ import { getPeerConfig } from './peerProfileConfig';
 import { Auth } from '@/lib/types/auth';
 import { useFetch } from '@/lib/hooks/useFetch';
 import User from '@/models/User';
-import Modal from '../ui/modal/Modal';
 import ConfirmDialog from '../ui/modal/ConfirmDialog';
 import ProfilePic from '../ui/image/ProfilePic';
 import Button from '../ui/button/Button';
@@ -48,8 +47,8 @@ export default function PeerProfile({
 
   const  connection = user.friends.find((friend) => friend.user._id === _id);
   const { accepted, initiated, acceptedAt } = connection ?? {};
-  const       color = connection ?     '#ffffff' : 'var(--accent)';
-  const borderColor = connection ? 'transparent' : 'var(--accent)';
+  const       color = connection ?   '#ffffff' : 'var(--accent)';
+  const borderColor = connection ? '#ffffff00' : 'var(--accent)';
   const { text, icon, hsl, action } = getPeerConfig(connection);
   const closeModal = () => setShowModal(false);
 
@@ -86,15 +85,14 @@ export default function PeerProfile({
 
   return (
     <>
-      <Modal show={showModal} close={closeModal}>
-        <ConfirmDialog
-          onConfirm={async () => {
-            await friendRequest('delete');
-            closeModal();
-          }}
-          onCancel={closeModal}
-        />
-      </Modal>
+      <ConfirmDialog
+             open={showModal}
+        onConfirm={async () => {
+          await friendRequest('delete');
+          closeModal();
+        }}
+        onCancel={closeModal}
+      />
       <motion.section
         className={css['peer-profile']}
           initial={{ opacity: 0 }}

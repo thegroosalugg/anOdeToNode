@@ -1,6 +1,5 @@
 import { AnimatePresence } from "motion/react";
 import { useChat } from "../../context/ChatContext";
-import Modal from "@/components/ui/modal/Modal";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import Button from "@/components/ui/button/Button";
 import css from "./ChatActions.module.css";
@@ -21,9 +20,7 @@ export default function ChatActions() {
 
   return (
     <>
-      <Modal show={showModal} close={closeModal}>
-        <ConfirmDialog onCancel={closeModal} onConfirm={deleteAction} />
-      </Modal>
+      <ConfirmDialog open={showModal} onCancel={closeModal} onConfirm={deleteAction} />
       <header className={css["chat-actions"]}>
         <Button {...{ color, background }} onClick={confirmAction}>
           {canDelete ? "Delete" : "Select"} Chat{!activeChat ? "s" : ""}
