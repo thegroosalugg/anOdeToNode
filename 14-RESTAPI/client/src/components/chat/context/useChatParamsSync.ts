@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export const useChatParamsSync = () => {
-  const { user, chats, setIsOpen, setActiveChat, reqChats } = useChat();
-  const [searchParams] = useSearchParams();
+  const { user, deferring, chats, isOpen, setIsOpen, setActiveChat, reqChats } = useChat();
+  const [searchParams, setSearchParams] = useSearchParams();
   const peerId = searchParams.get("chat");
   const hasLoaded = useRef(false);
   const lastChatsRef = useRef(0);
@@ -22,6 +22,15 @@ export const useChatParamsSync = () => {
   useEffect(() => {
     if (!peerId || !hasLoaded.current) return;
 
+    // delete URL if user tries to open menu via new message as soon as close triggered
+    if (deferring && !isOpen) {
+      setSearchParams((prev) => {
+        prev.delete("chat");
+        return prev;
+      });
+      return;
+    }
+
     // Check if chats array got shorter (deletion)
     const chatsDecreased = chats.length < lastChatsRef.current;
 
@@ -33,9 +42,12 @@ export const useChatParamsSync = () => {
       const peer = user.friends.find(({ user }) => user._id === peerId)?.user;
       if (peer) chat = new Chat(user, peer);
     }
+    // !chat = new Chat(dummy) => send 1st msg => socket updates chats & retriggers this effect
+    // this time chat is found, and if it replaces prev, it changes ID and causes dismount
+    // therefore, if chat is temp, prev state is preserved instead
     if (chat) {
       setActiveChat((prev) => (prev?.isTemp ? prev : chat));
       setIsOpen(true);
     }
-  }, [peerId, user, chats, setIsOpen, setActiveChat]);
+  }, [peerId, deferring, user, chats, isOpen, setIsOpen, setActiveChat, setSearchParams]);
 };
