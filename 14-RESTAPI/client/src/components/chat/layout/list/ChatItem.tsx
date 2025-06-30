@@ -1,7 +1,7 @@
 import { motion, AnimatePresence, HTMLMotionProps } from "motion/react";
 import { ReactNode } from "react";
 import { useChat } from "../../context/ChatContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import User from "@/models/User";
 import Chat from "@/models/Chat";
 import ProfilePic from "@/components/ui/image/ProfilePic";
@@ -26,6 +26,7 @@ interface ChatProps {
 
 export default function ChatItem({ chat, children }: ChatProps) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user, deferring, activeChat, collapse, markedMap, expandOrMark } = useChat();
 
   const { host, guest, lastMsg, alerts } = chat;
@@ -40,7 +41,10 @@ export default function ChatItem({ chat, children }: ChatProps) {
 
   function navTo(path: string) {
     if (!activeChat) return;
-    navigate("/user/" + path);
+    navigate({
+      pathname: `/user/${path}`,
+        search: searchParams.toString(),
+    });
   }
 
   return (
