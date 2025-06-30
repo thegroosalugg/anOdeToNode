@@ -4,10 +4,19 @@ import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export const useChatParamsSync = () => {
-  const { user, deferring, chats, isOpen, setIsOpen, setActiveChat, reqChats } = useChat();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const peerId = searchParams.get("chat");
-  const hasLoaded = useRef(false);
+  const {
+    user,
+    chats,
+    reqChats,
+    isOpen,
+    setIsOpen,
+    setActiveChat,
+    destroyURL,
+    deferring,
+  } = useChat();
+  const [searchParams] = useSearchParams();
+  const       peerId = searchParams.get("chat");
+  const    hasLoaded = useRef(false);
   const lastChatsRef = useRef(0);
 
   useEffect(() => {
@@ -24,10 +33,7 @@ export const useChatParamsSync = () => {
 
     // delete URL if user tries to open menu via new message as soon as close triggered
     if (deferring && !isOpen) {
-      setSearchParams((prev) => {
-        prev.delete("chat");
-        return prev;
-      });
+      destroyURL();
       return;
     }
 
@@ -49,5 +55,5 @@ export const useChatParamsSync = () => {
       setActiveChat((prev) => (prev?.isTemp ? prev : chat));
       setIsOpen(true);
     }
-  }, [peerId, deferring, user, chats, isOpen, setIsOpen, setActiveChat, setSearchParams]);
+  }, [peerId, deferring, user, chats, isOpen, setIsOpen, setActiveChat, destroyURL]);
 };

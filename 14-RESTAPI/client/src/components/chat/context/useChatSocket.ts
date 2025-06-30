@@ -3,7 +3,6 @@ import { useSocket } from "@/lib/hooks/useSocket";
 import { useChat } from "./ChatContext";
 import Chat from "@/models/Chat";
 import Logger from "@/models/Logger";
-import { useSearchParams } from "react-router-dom";
 import { Dict } from "@/lib/types/common";
 
 const config = "chat"; // logger/sockets
@@ -21,8 +20,8 @@ export const useChatSocket = () => {
     setMsgs,
     setAlerts,
     clearAlerts,
+    appendURL,
   } = useChat();
-  const [_, setSearchParams] = useSearchParams();
 
   const socketRef = useSocket(config);
 
@@ -54,8 +53,8 @@ export const useChatSocket = () => {
 
       if (isNew) {
         setChats((prevChats) => [chat, ...prevChats]);
-        // store real chatID only inside temp chat for possible deletion
         setActiveChat((prev) => {
+          // store real chatID only inside temp chat for possible deletion
           if (prev?.isTemp) return { ...prev, chatId: chat._id };
           return prev; // do not overwrite temp chat with real => will cause component dismount
         });
@@ -75,16 +74,11 @@ export const useChatSocket = () => {
     socket.on(`chat:${user._id}:delete`, (deletedChats: Chat[]) => {
       logger.event("delete", deletedChats);
       const isDeleted = (id?: string) => deletedChats.some((chat) => chat._id === id);
+
       // if dummy chat, use the stored real chatId, else active chat is real
-      if (isDeleted(isTemp ? chatId : activeId)) {
-        collapse();
-      } else {
-        // else must trigger the same params change collapse() triggers to wake useChatParamsSync Effect
-        setSearchParams((prev) => {
-          prev.set("chat", "deleted"); // dummy event retriggers effect either if or else
-          return prev;
-        });
-      }
+      if (isDeleted(isTemp ? chatId : activeId)) collapse();
+      // else must trigger the same change collapse() triggers to wake useChatParamsSync Effect
+      else appendURL("deleted"); // dummy event retriggers effect either if or else
 
       setChats((prevChats) => prevChats.filter((chat) => !isDeleted(chat._id)));
 
@@ -102,7 +96,7 @@ export const useChatSocket = () => {
 
     socket.on(`chat:${user._id}:alerts`, (chat) => {
       logger.event("alerts", chat);
-      // NOT SURE if I need this line anymore - to review
+      // prevents socket updates from replacing temp chat => no component dismount
       if (chat._id === activeId) setActiveChat(chat);
       updateChats(chat);
     });
@@ -129,6 +123,6 @@ export const useChatSocket = () => {
     setMsgs,
     setAlerts,
     clearAlerts,
-    setSearchParams,
+    appendURL,
   ]);
 };

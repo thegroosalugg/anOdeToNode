@@ -1,4 +1,4 @@
-import { createContext, useContext, MutableRefObject } from "react";
+import { createContext, useContext } from "react";
 import { Dict, SetData } from "@/lib/types/common";
 import { Authorized } from "@/lib/types/auth";
 import { Debounce } from "@/lib/hooks/useDebounce";
@@ -52,6 +52,11 @@ type AlertsControl = {
   clearAlerts: (id: string) => Promise<void>;
 }
 
+type ParamsControl = {
+   appendURL: (path: string) => void;
+  destroyURL: () => void;
+}
+
 type ChatContext =
        UserData &
        ChatData &
@@ -61,6 +66,7 @@ type ChatContext =
    ModalControl &
   ActionControl &
   AlertsControl &
+  ParamsControl &
   Pick<Debounce, "deferring">;
 
 export const ChatContext = createContext<ChatContext | null>(null);

@@ -1,4 +1,4 @@
-import { useState, ReactNode, useRef, useCallback } from "react";
+import { useState, ReactNode, useCallback } from "react";
 import { ChatContext, MsgsMap, StatusMap, UserData } from "./ChatContext";
 import { useSearchParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
@@ -45,11 +45,16 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
     [reqData]
   );
 
-  const appendURL = (path: string) =>
-    setSearchParams((prev) => {
-      prev.set("chat", path);
-      return prev;
-    });
+  const appendURL = useCallback(
+    (path: string) => {
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev.toString());
+        next.set("chat", path);
+        return next;
+      });
+    },
+    [setSearchParams]
+  );
 
   const destroyURL = useCallback(
     () =>
@@ -174,6 +179,8 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
     alerts,
     setAlerts,
     clearAlerts,
+    appendURL,
+    destroyURL,
     deferring,
   };
 
