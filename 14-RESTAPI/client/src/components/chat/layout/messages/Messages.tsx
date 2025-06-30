@@ -1,85 +1,64 @@
-import { motion } from 'motion/react';
-import { useEffect, useRef } from 'react';
-import { useChat } from '../../context/ChatContext';
-import { useFetch } from '@/lib/hooks/useFetch';
-import { useDepedencyTracker } from '@/lib/hooks/useDepedencyTracker';
-import Chat from '@/models/Chat';
-import Msg from '@/models/Message';
-import AsyncAwait from '../../../ui/boundary/AsyncAwait';
-import { formatDate } from '@/lib/util/timeStamps';
-import { createVariants } from '@/lib/motion/animations';
-import css from './Messages.module.css';
+import { motion } from "motion/react";
+import { useEffect, useRef } from "react";
+import { useChat } from "../../context/ChatContext";
+import { useFetch } from "@/lib/hooks/useFetch";
+import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
+import Chat from "@/models/Chat";
+import Msg from "@/models/Message";
+import AsyncAwait from "../../../ui/boundary/AsyncAwait";
+import { formatDate } from "@/lib/util/timeStamps";
+import { createVariants } from "@/lib/motion/animations";
+import css from "./Messages.module.css";
 
 export default function Messages({ chat }: { chat: Chat }) {
-  const { user, msgsMap, loadedMap, setMsgs, clearAlerts } = useChat();
-  const      msgs = msgsMap[chat._id] || [];
-  const hasLoaded = loadedMap.current[chat._id];
-  const { reqData, error } = useFetch<Msg[]>([]);
-  const isInitial = useRef(true);
+  const { user, msgsMap, loadedMap, setMsgs, setLoaded, clearAlerts } = useChat();
+  const { reqData, isLoading, error } = useFetch<Msg[]>([]);
+  const      msgs =   msgsMap[chat._id] || [];
+  const hasLoaded = loadedMap[chat._id];
+  const  noAlerts = chat.alerts[user._id] <= 0;
   const    msgRef = useRef<HTMLParagraphElement>(null);
-  const  scrollTo = () => msgRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const  scrollTo = () => msgRef.current?.scrollIntoView({ behavior: "smooth" });
   const  variants = createVariants();
-  const isLoading = isInitial.current && msgs.length < 1 && !chat.isTemp;
 
-  useDepedencyTracker('chat', {
+  useDepedencyTracker("chat", {
        reqUser: user._id,
         chatId: chat._id,
     chatAlerts: chat.alerts,
     chatIsTemp: chat.isTemp,
      loadedMap,
      hasLoaded,
+      noAlerts,
   });
 
   useEffect(() => {
-    if (chat.isTemp) return;
+    if (chat.isTemp || noAlerts) return;
+    clearAlerts(chat._id);
+  }, [chat._id, chat.isTemp, noAlerts, clearAlerts]);
 
-    const markAlertsAsRead = async () => {
-      if (chat.alerts[user._id] <= 0) return;
-      clearAlerts(chat._id);
-    };
+  useEffect(() => {
+    if (chat.isTemp || hasLoaded) return;
 
-    const getMessages = async () => {
-      if (hasLoaded) return;
-      await reqData(
-        { url: `chat/messages/${chat._id}` },
-        {
-          onSuccess: (msgs) => {
+    reqData(
+      { url: `chat/messages/${chat._id}` },
+      {
+        onSuccess: (msgs) => {
             setMsgs((state) => ({ ...state, [chat._id]: msgs }));
-            loadedMap.current[chat._id] = true;
-          },
-        }
-      );
-    };
-
-    const initData = async () => {
-      await Promise.all([getMessages(), markAlertsAsRead()]);
-      isInitial.current = false;
-    };
-
-    if (isInitial.current) initData();
-    else           markAlertsAsRead();
-  }, [
-    user._id,
-    chat._id,
-    chat.alerts,
-    chat.isTemp,
-    loadedMap,
-    hasLoaded,
-    clearAlerts,
-    reqData,
-    setMsgs,
-  ]);
+          setLoaded((state) => ({ ...state, [chat._id]: true }));
+        },
+      }
+    );
+  }, [chat._id, chat.isTemp, hasLoaded, loadedMap, reqData, setMsgs, setLoaded]);
 
   return (
     <AsyncAwait {...{ isLoading, error }}>
       <motion.ul
-         className={css['messages']}
-           initial='hidden'
-           animate='visible'
+         className={css["messages"]}
+           initial="hidden"
+           animate="visible"
         transition={{
                  duration: 0.5,
-                     ease: 'easeOut',
-            delayChildren: 0.5,
+                     ease: "easeOut",
+            delayChildren: 0.2,
           staggerChildren: msgs.length < 20 ? 0.1 : 0,
         }}
       >
@@ -89,16 +68,14 @@ export default function Messages({ chat }: { chat: Chat }) {
 
           return (
             <motion.li
-                layout
-                   key={_id}
+              key={_id}
+              layout
               {...{ variants }}
               className={user._id === sender ? css["sender"] : ""}
               onAnimationComplete={scrollTo}
             >
-              <time>{formatDate(createdAt, ['weekday', 'time'])}</time>
-              <p ref={isLast ? msgRef : null}>
-                {content}
-              </p>
+              <time>{formatDate(createdAt, ["weekday", "time"])}</time>
+              <p ref={isLast ? msgRef : null}>{content}</p>
             </motion.li>
           );
         })}

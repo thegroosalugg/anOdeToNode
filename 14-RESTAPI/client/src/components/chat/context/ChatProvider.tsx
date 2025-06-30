@@ -6,13 +6,11 @@ import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
 import Chat from "@/models/Chat";
 
-interface ChatProviderProps extends UserData {
+interface ChatProvider extends UserData {
   children: ReactNode;
 }
 
-const config = "chat"; // config logger, sockets and depedencyTracker
-
-export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
+export function ChatProvider({ user, setUser, children }: ChatProvider) {
   const {
          data: chats,
       setData: setChats,
@@ -24,6 +22,7 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   const [isOpen,         setIsOpen] = useState(false); // main menu
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [msgsMap,          setMsgs] = useState<MsgsMap>({});
+  const [loadedMap,      setLoaded] = useState<StatusMap>({});
   const [alerts,         setAlerts] = useState(0);
   const [isMarking,   setIsMarking] = useState(false);
   const [markedMap,      setMarked] = useState<StatusMap>({});
@@ -31,10 +30,9 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   const [_,        setSearchParams] = useSearchParams();
   const { deferring,      deferFn } = useDebounce();
 
-  const loadedMap = useRef<StatusMap>({}); // loaded messages per chat
   const wasMarked = Object.keys(markedMap).some((key) => markedMap[key]);
 
-  useDepedencyTracker(config, {
+  useDepedencyTracker("chat", {
     chatId: activeChat?._id
   });
 
@@ -63,9 +61,9 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   );
 
   const openMenu = () => {
+    setIsOpen(true);
     deferFn(() => {
       if (activeChat) appendURL(getRecipient(activeChat)._id);
-      setIsOpen(true);
     }, 500);
   };
 
@@ -149,34 +147,34 @@ export function ChatProvider({ user, setUser, children }: ChatProviderProps) {
   const ctxValue = {
     user,
     setUser,
-    alerts,
-    setAlerts,
-    clearAlerts,
     chats,
     setChats,
     reqChats,
+    isLoading,
     error,
     msgsMap,
-    loadedMap,
     setMsgs,
-    activeChat,
-    setActiveChat,
-    isLoading,
-    deferring,
+    loadedMap,
+    setLoaded,
     isOpen,
     setIsOpen,
     openMenu,
     closeMenu,
-    expand,
+    activeChat,
+    setActiveChat,
     collapse,
+    showModal,
+    closeModal,
     isMarking,
     markedMap,
     expandOrMark,
     confirmAction,
     cancelAction,
     deleteAction,
-    showModal,
-    closeModal,
+    alerts,
+    setAlerts,
+    clearAlerts,
+    deferring,
   };
 
   return <ChatContext.Provider value={ctxValue}>{children}</ChatContext.Provider>;

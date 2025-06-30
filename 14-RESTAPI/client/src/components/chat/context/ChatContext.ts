@@ -15,7 +15,8 @@ type ChatData = Omit<FetchState<Chat[], "chats">, "setError">;
 type MessageData = {
     msgsMap: MsgsMap;
     setMsgs: SetData<MsgsMap>;
-  loadedMap: MutableRefObject<StatusMap>;
+  loadedMap: StatusMap;
+  setLoaded: SetData<StatusMap>;
 };
 
 type MenuControl = {

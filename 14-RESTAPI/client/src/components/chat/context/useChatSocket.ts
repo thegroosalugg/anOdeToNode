@@ -4,6 +4,7 @@ import { useChat } from "./ChatContext";
 import Chat from "@/models/Chat";
 import Logger from "@/models/Logger";
 import { useSearchParams } from "react-router-dom";
+import { Dict } from "@/lib/types/common";
 
 const config = "chat"; // logger/sockets
 
@@ -16,7 +17,7 @@ export const useChatSocket = () => {
     activeChat,
     setActiveChat,
     collapse,
-    loadedMap,
+    setLoaded,
     setMsgs,
     setAlerts,
     clearAlerts,
@@ -71,9 +72,9 @@ export const useChatSocket = () => {
       });
     });
 
-    socket.on(`chat:${user._id}:delete`, (deleted: Chat[]) => {
-      logger.event("delete", deleted);
-      const isDeleted = (id?: string) => deleted.some((chat) => chat._id === id);
+    socket.on(`chat:${user._id}:delete`, (deletedChats: Chat[]) => {
+      logger.event("delete", deletedChats);
+      const isDeleted = (id?: string) => deletedChats.some((chat) => chat._id === id);
       // if dummy chat, use the stored real chatId, else active chat is real
       if (isDeleted(isTemp ? chatId : activeId)) {
         collapse();
@@ -85,15 +86,18 @@ export const useChatSocket = () => {
         });
       }
 
-      deleted.forEach(({ _id }) => {
-        delete loadedMap.current[_id]; // force future re-fetch
-      });
       setChats((prevChats) => prevChats.filter((chat) => !isDeleted(chat._id)));
-      setMsgs((state) => {
-        // remove prev fetched client msgs when chat deleted
-        const updated = deleted.reduce((acc, { _id }) => ({ ...acc, [_id]: [] }), {});
-        return { ...state, ...updated };
-      });
+
+      const cleanState = <T extends Dict<unknown>>(state: T) => {
+        const updated = { ...state };
+        deletedChats.forEach(({ _id }) => {
+          delete updated[_id];
+        });
+        return updated;
+      };
+
+      setLoaded((state) => cleanState(state));
+        setMsgs((state) => cleanState(state));
     });
 
     socket.on(`chat:${user._id}:alerts`, (chat) => {
@@ -117,7 +121,7 @@ export const useChatSocket = () => {
     chatId, // saved chat ID stored in dummy chat
     isTemp, // dummy chat flag
     isOpen,
-    loadedMap,
+    setLoaded,
     setChats,
     updateChats,
     setActiveChat,
