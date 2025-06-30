@@ -9,7 +9,5 @@
   background: var(--error);
   color: var(--gray-100);
 
-  &::-webkit-scrollbar-thumb {
-    background: var(--gray-100);
-  }
+  &::-webkit-scrollbar-thumb { background: var(--box); }
 }

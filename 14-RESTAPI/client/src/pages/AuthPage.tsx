@@ -3,7 +3,7 @@ import { AnimatePresence } from 'motion/react';
 import { Auth, Authorized } from '@/lib/types/auth';
 import Loader from '@/components/ui/boundary/loader/Loader';
 import UserProfile from '@/components/profile/UserProfile';
-import LoginForm from '@/components/form/LoginForm';
+import AuthForm from '@/components/form/AuthForm';
 
 export default function AuthPage({ auth }: { auth: Auth }) {
   const { user,       isLoading } = auth;
@@ -21,7 +21,7 @@ export default function AuthPage({ auth }: { auth: Auth }) {
       ) : user ? (
         <UserProfile key='profile' {...auth as Authorized} />
       ) : (
-        <LoginForm   key='form'    {...auth} />
+        <AuthForm   key='form'    {...auth} />
       )}
     </AnimatePresence>
   );

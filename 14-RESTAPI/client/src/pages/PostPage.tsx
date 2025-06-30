@@ -14,7 +14,7 @@ import PostId from "@/components/post/PostId";
 import Modal from "@/components/ui/modal/Modal";
 import PostForm from "@/components/form/PostForm";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
-import SendMessage from "@/components/form/SendMessage";
+import ChatBox from "@/components/form/ChatBox";
 import ReplyItem from "@/components/post/ReplyItem";
 import PagedList from "@/components/pagination/PagedList";
 
@@ -132,7 +132,7 @@ export default function PostPage({ user, setUser }: Authorized) {
         {post && (
           <>
             <PostId {...{ post, user }} setModal={setModalState} />
-            <SendMessage {...{ url: `post/reply/${post._id}`, setUser, isPost: true }} />
+            <ChatBox {...{ url: `post/reply/${post._id}`, setUser, isPost: true }} />
             <PagedList<Reply> {...{ ...rest, config: "reply" }}>
               {(reply) => <ReplyItem {...reply} userId={user._id} />}
             </PagedList>

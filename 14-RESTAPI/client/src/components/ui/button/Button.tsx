@@ -26,6 +26,7 @@ export default function Button({
          animate={{ opacity: 1, color, background, borderColor, ...animations }}
       whileHover={!isMobile ? { filter: "brightness(0.75)" } : {}}
         whileTap={{ scale: 0.9 }}
+      transition={{ background: { duration: 0.5 } }}
       {...props}
     >
       {children}

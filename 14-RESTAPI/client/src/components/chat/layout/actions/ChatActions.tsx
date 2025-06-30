@@ -36,7 +36,7 @@ export default function ChatActions() {
             )}
           </AnimatePresence>
         </div>
-        <Button background="var(--error)" onClick={closeMenu}>
+        <Button background="var(--text)" onClick={closeMenu}>
           <FontAwesomeIcon icon="x" />
         </Button>
       </header>

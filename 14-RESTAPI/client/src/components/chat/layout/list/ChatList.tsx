@@ -2,7 +2,7 @@ import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useChat } from "../../context/ChatContext";
 import ChatItem from "./ChatItem";
 import Messages from "../messages/Messages";
-import SendMessage from "../../../form/SendMessage";
+import ChatBox from "@/components/form/ChatBox";
 import css from "./ChatList.module.css";
 
 export default function ChatList() {
@@ -24,7 +24,7 @@ export default function ChatList() {
                 activeChat && (
                   <>
                     <Messages {...{ chat }} />
-                    <SendMessage {...{ setUser, url: sendTo(recipient._id) }} />
+                    <ChatBox {...{ setUser, url: sendTo(recipient._id) }} />
                   </>
                 )
               }

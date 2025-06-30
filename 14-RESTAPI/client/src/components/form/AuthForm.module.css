@@ -1,4 +1,4 @@
-.login-form {
+.auth-form {
   --color: var(--accent-hover);
   --background: var(--box);
   align-self: center;

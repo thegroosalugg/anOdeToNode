@@ -5,17 +5,15 @@ import { useDebounce } from "@/lib/hooks/useDebounce";
 import Input from "./Input";
 import Button from "../ui/button/Button";
 import Loader from "../ui/boundary/loader/Loader";
-import css from "./LoginForm.module.css";
+import { createVariants } from "@/lib/motion/animations";
+import css from "./AuthForm.module.css";
 
-export default function LoginForm({ isLoading, error, setError, reqUser }: Auth) {
+export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) {
   const { deferring, deferFn } = useDebounce();
   const [isLogin,  setIsLogin] = useState(true);
   const [scope,       animate] = useAnimate();
   const label = isLogin ? "Login" : "Sign Up";
-  const variants = {
-     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.2 } },
-  };
+  const variants = createVariants({ transition: { duration: 0.2 } });
 
   function switchForm() {
     deferFn(() => {
@@ -68,7 +66,7 @@ export default function LoginForm({ isLoading, error, setError, reqUser }: Auth)
              key={isLogin + ""}
              ref={scope}
         onSubmit={submitHandler}
-       className={`${css["login-form"]} ${isLogin ? css["isLogin"] : ""}`}
+       className={`${css["auth-form"]} ${isLogin ? css["isLogin"] : ""}`}
          initial="hidden"
          animate="visible"
             exit={{ opacity: 0, transition: { duration: 0.8 } }}
