@@ -1,4 +1,5 @@
 import { AnimatePresence } from "motion/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useChat } from "../../context/ChatContext";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import Button from "@/components/ui/button/Button";
@@ -13,25 +14,31 @@ export default function ChatActions() {
     confirmAction,
     cancelAction,
     deleteAction,
+    closeMenu,
   } = useChat();
   const  canDelete = isMarking || activeChat;
-  const      color = canDelete ?    "var(--bg)" : "var(--fg)"
+  const      color = canDelete ?    "var(--bg)" : "var(--fg)";
   const background = canDelete ? "var(--error)" : "var(--box)";
 
   return (
     <>
       <ConfirmDialog open={showModal} onCancel={closeModal} onConfirm={deleteAction} />
       <header className={css["chat-actions"]}>
-        <Button {...{ color, background }} onClick={confirmAction}>
-          {canDelete ? "Delete" : "Select"} Chat{!activeChat ? "s" : ""}
+        <div>
+          <Button {...{ color, background }} onClick={confirmAction}>
+            {canDelete ? "Delete" : "Select"} Chat{!activeChat ? "s" : ""}
+          </Button>
+          <AnimatePresence>
+            {isMarking && (
+              <Button exit={{ opacity: 0 }} onClick={cancelAction}>
+                Cancel
+              </Button>
+            )}
+          </AnimatePresence>
+        </div>
+        <Button background="var(--error)" onClick={closeMenu}>
+          <FontAwesomeIcon icon="x" />
         </Button>
-        <AnimatePresence>
-          {isMarking && (
-            <Button exit={{ opacity: 0 }} onClick={cancelAction}>
-              Cancel
-            </Button>
-          )}
-        </AnimatePresence>
       </header>
     </>
   );
