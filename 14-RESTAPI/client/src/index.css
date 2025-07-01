@@ -4,16 +4,12 @@
 :root {
   --bg: var(--gray-200);
   --fg: var(--gray-900);
-  --accent: var(--blue-600);
-  --accent-hover: var(--blue-700);
+  --accent: var(--steel-600);
+  --accent-hover: var(--steel-700);
   --text: var(--gray-500);
   --box: var(--gray-100);
-  --error: var(--red-600);
-
-  --text-grey: #818181;
-  --dark-grey: #454545;
-  --main-gradient: linear-gradient(to right, #dbd9d9, #fff);
-  --box-gradient: linear-gradient(to right, #ededed, #fff);
+  --error: var(--rust-600);
+  --nav-size: 68px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,11 +17,11 @@
   :root {
     --bg: var(--gray-800);
     --fg: var(--gray-100);
-    --accent: var(--lime-500);
-    --accent-hover: var(--lime-400);
+    --accent: var(--steel-300);
+    --accent-hover: var(--steel-200);
     --text: var(--gray-300);
     --box: var(--gray-700);
-    --error: var(--red-500);
+    --error: var(--rust-500);
   }
 }
 
@@ -77,5 +73,5 @@ a, p, h1, h2, h3, h4, h5, h6, button, label, input, textarea, select, option {
 @media screen and (pointer: coarse) and (orientation: landscape) {
   #root { flex-direction: row; }
   /* align main content by width of nav bar (position fixed, not in element flow) */
-  #main { margin-left: 60px; }
+  #main { margin-left: var(--nav-size); }
 }

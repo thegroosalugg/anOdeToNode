@@ -15,7 +15,7 @@ import PortalMenu from '../ui/menu/PortalMenu';
 import AsyncAwait from '../ui/boundary/AsyncAwait';
 import SocialAlerts from './SocialAlerts';
 import ReplyAlerts from './ReplyAlerts';
-import NavButton from '../layout/header/NavButton';
+import IconButton from '../ui/button/IconButton';
 import Counter from './Counter';
 import css from './Notifications.module.css';
 
@@ -195,9 +195,10 @@ export default function Notifications({
           </AnimatePresence>
         </AsyncAwait>
       </PortalMenu>
-      <NavButton {...{ index: 2, deferring, callback: openMenu }}>
+      <IconButton icon="bell" onClick={openMenu} {...{ deferring }}>
         <Counter {...{count}} />
-      </NavButton>
+        Alerts
+      </IconButton>
     </>
   );
 }
