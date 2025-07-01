@@ -1,12 +1,13 @@
 import { useState, ReactNode, useCallback } from "react";
-import { ChatContext, MsgsMap, StatusMap, UserData } from "./ChatContext";
+import { ChatContext, MsgsMap, StatusMap } from "./ChatContext";
 import { useSearchParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
+import { UserState } from "@/lib/types/auth";
 import Chat from "@/models/Chat";
 
-interface ChatProvider extends UserData {
+interface ChatProvider extends UserState {
   children: ReactNode;
 }
 

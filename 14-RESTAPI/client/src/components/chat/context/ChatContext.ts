@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { Dict, SetData } from "@/lib/types/common";
-import { Authorized } from "@/lib/types/auth";
+import { UserState } from "@/lib/types/auth";
 import { Debounce } from "@/lib/hooks/useDebounce";
 import { FetchState } from "@/lib/types/fetch";
 import Chat from "@/models/Chat";
@@ -8,7 +8,6 @@ import Msg from "@/models/Message";
 
 export type   MsgsMap = Dict<Msg[]>;
 export type StatusMap = Dict<boolean>;
-export type  UserData = Pick<Authorized, "user" | "setUser">;
 
 type ChatData = Omit<FetchState<Chat[], "chats">, "setError">;
 
@@ -58,7 +57,7 @@ type ParamsControl = {
 }
 
 type ChatContext =
-       UserData &
+      UserState &
        ChatData &
     MessageData &
     ChatControl &

@@ -2,10 +2,11 @@ import { AnimatePresence, motion } from "motion/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { Auth } from "@/lib/types/auth";
-import IconButton from "../../ui/button/IconButton";
+import { AlertsProvider } from "@/components/notifications/context/AlertsProvider";
+import { ChatProvider } from "@/components/chat/context/ChatProvider";
 import Notifications from "../../notifications/Notifications";
 import ChatMenu from "../../chat/ChatMenu";
-import { ChatProvider } from "@/components/chat/context/ChatProvider";
+import IconButton from "../../ui/button/IconButton";
 import css from "./NavBar.module.css";
 
 export default function NavBar({ user, setUser }: Auth) {
@@ -50,8 +51,10 @@ export default function NavBar({ user, setUser }: Auth) {
             >
               Social
             </IconButton>
-            <Notifications {...{ user, setUser }} />
-            <ChatProvider  {...{ user, setUser }}>
+            <AlertsProvider {...{ user, setUser }}>
+              <Notifications />
+            </AlertsProvider>
+            <ChatProvider   {...{ user, setUser }}>
               <ChatMenu />
             </ChatProvider>
             <IconButton
