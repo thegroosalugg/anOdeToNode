@@ -6,24 +6,29 @@ import { createAnimations } from "@/lib/motion/animations";
 import Backdrop from "../modal/Backdrop";
 
 export default function SideBar({
-    isOpen,
+      open,
      close,
+   onRight,
   children,
 }: {
-    isOpen: boolean;
+      open: boolean;
      close: () => void;
+  onRight?: boolean;
   children: ReactNode;
 }) {
-  const    initial = { translateX: "100%" };
-  const    animate = { translateX: isOpen ? 0 : "100%" };
+  const dir = onRight ? "100%" : "-100%";
+  const    initial = { translateX: dir };
+  const    animate = { translateX: open ? 0 : dir };
   const animations = createAnimations({ initial, animate });
+  let classes = css["side-bar"];
+  if (onRight) classes += ` ${css["on-right"]}`;
 
   const Element = (
     <>
-      <Backdrop {...{ isOpen }} onClick={close} smHidden />
+      <Backdrop {...{ open }} onClick={close} shouldHide />
       <motion.dialog
         {...animations}
-        className={css["side-bar"]}
+        className={classes}
       >
         {children}
       </motion.dialog>

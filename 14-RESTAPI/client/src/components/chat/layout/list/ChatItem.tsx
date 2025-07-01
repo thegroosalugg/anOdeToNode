@@ -6,7 +6,7 @@ import User from "@/models/User";
 import Chat from "@/models/Chat";
 import ProfilePic from "@/components/ui/image/ProfilePic";
 import Button from "@/components/ui/button/Button";
-import Counter from "@/components/notifications/Counter";
+import Counter from "@/components/ui/counter/Counter";
 import { timeAgo } from "@/lib/util/timeStamps";
 import { createAnimations, createVariants } from "@/lib/motion/animations";
 import css from "./ChatItem.module.css";

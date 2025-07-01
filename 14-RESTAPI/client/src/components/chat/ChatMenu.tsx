@@ -1,6 +1,6 @@
 import ChatBody from './layout/ChatBody';
 import IconButton from '@/components/ui/button/IconButton';
-import Counter from '@/components/notifications/Counter';
+import Counter from '@/components/ui/counter/Counter';
 import SideBar from '@/components/ui/menu/SideBar';
 import { useChat } from './context/ChatContext';
 import { useChatSocket } from './context/useChatSocket';
@@ -13,7 +13,7 @@ export default function ChatMenu() {
 
   return (
     <>
-      <SideBar {...{ isOpen }} close={closeMenu}>
+      <SideBar onRight open={isOpen} close={closeMenu}>
         <ChatBody />
       </SideBar>
       <IconButton icon="comments" onClick={openMenu} {...{ deferring }}>

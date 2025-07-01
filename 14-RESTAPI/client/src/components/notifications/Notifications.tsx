@@ -11,12 +11,12 @@ import { Auth } from '@/lib/types/auth';
 import User from '@/models/User';
 import Reply from '@/models/Reply';
 import Logger from '@/models/Logger';
-import PortalMenu from '../ui/menu/PortalMenu';
+import SideBar from '../ui/menu/SideBar';
 import AsyncAwait from '../ui/boundary/AsyncAwait';
 import SocialAlerts from './SocialAlerts';
 import ReplyAlerts from './ReplyAlerts';
 import IconButton from '../ui/button/IconButton';
-import Counter from './Counter';
+import Counter from '../ui/counter/Counter';
 import css from './Notifications.module.css';
 
 export default function Notifications({
@@ -169,7 +169,7 @@ export default function Notifications({
 
   return (
     <>
-      <PortalMenu show={menu} close={() => showMenu(false)}>
+      <SideBar open={menu} close={() => showMenu(false)}>
         <section className={css['menu-bar']}>
           {alerts.map((count, i) => (
             <motion.button
@@ -194,7 +194,7 @@ export default function Notifications({
             )}
           </AnimatePresence>
         </AsyncAwait>
-      </PortalMenu>
+      </SideBar>
       <IconButton icon="bell" onClick={openMenu} {...{ deferring }}>
         <Counter {...{count}} />
         Alerts
