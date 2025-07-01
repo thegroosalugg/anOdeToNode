@@ -16,9 +16,9 @@
     align-items: center;
     gap: 0.25em;
     padding: 1rem 0.25rem 0.25rem;
-    background: var(--main-gradient);
+    background: var(--box);
     color: var(--accent);
-    border: 1px solid var(--dark-grey);
+    border: var(--border-text);
 
     > section {
       display: flex;
@@ -31,7 +31,7 @@
         text-wrap: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        color: var(--text-grey);
+        color: var(--text);
       }
     }
 

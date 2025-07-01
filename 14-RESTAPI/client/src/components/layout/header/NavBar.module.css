@@ -22,10 +22,10 @@
 }
 
 .nav {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  width: 100%;
 
   > button:last-of-type { margin-left: auto; }
 }

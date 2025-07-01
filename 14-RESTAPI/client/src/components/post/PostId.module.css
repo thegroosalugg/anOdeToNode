@@ -3,7 +3,7 @@
   border: 2px solid var(--accent);
   width: 100%;
   max-width: 600px;
-  background: var(--box-gradient);
+  background: var(--box);
   padding: 0.1rem; /* scrollbar gap */
 
   > h1 {
@@ -31,7 +31,7 @@
     display: block;
     padding: 0 0.7rem 0.5rem;
     font-size: var(--text-sm);
-    color: var(--text-grey);
+    color: var(--text);
     text-align: right;
     text-wrap: nowrap;
     overflow-x: scroll;

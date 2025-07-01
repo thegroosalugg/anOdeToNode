@@ -9,7 +9,7 @@
   padding: 0.25rem;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--accent);
+  border: var(--border-accent);
   background: var(--box-gradient);
   z-index: 99;
 }

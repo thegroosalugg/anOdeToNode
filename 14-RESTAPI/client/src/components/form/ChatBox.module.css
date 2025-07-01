@@ -2,7 +2,7 @@
   position: relative;
   margin: auto auto 0.75rem;
   width: 94%;
-  border: 1px solid var(--text);
+  border: var(--border-text);
   border-radius: var(--radius-4xl);
   box-shadow: var(--shadow-pop);
   background: var(--bg);

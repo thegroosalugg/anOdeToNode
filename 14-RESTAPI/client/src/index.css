@@ -9,6 +9,11 @@
   --text: var(--gray-500);
   --box: var(--gray-100);
   --error: var(--rust-600);
+  --transparent: #ffffff00;
+
+  --border-accent: 1px solid var(--accent);
+  --border-text: 1px solid var(--text);
+  --border-transparent: 1px solid var(--transparent);
   --nav-size: 68px;
 }
 

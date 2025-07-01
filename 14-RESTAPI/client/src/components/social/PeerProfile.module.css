@@ -8,8 +8,8 @@
   overflow: auto;
   padding: 0.75rem;
   margin-bottom: 0.2rem;
-  border: 1px solid var(--accent);
-  background: var(--box-gradient);
+  border: var(--border-accent);
+  background: var(--box);
 
   .profile-pic {
     width: 150px;
@@ -19,7 +19,7 @@
       > img {
         width: 150px;
         border-radius: 0;
-        background: var(--box-gradient);
+        background: var(--box);
       }
 
       > h2 {

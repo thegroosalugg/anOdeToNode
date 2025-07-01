@@ -88,7 +88,7 @@
 }
 
 .floating-box {
- border: 1px solid var(--gray-400);
+ border: var(--border-text);
  background: var(--box);
  box-shadow: var(--shadow-lg);
  border-radius: var(--radius-xl);
