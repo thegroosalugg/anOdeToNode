@@ -1,26 +1,19 @@
 .chat-actions {
-  flex-shrink: 0;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap-reverse;
+  justify-content: flex-end;
   align-items: start;
   gap: 0.5rem;
   padding: 0.25rem;
-  overflow-x: scroll;
 
   > div {
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 0.5rem;
 
-    button:first-child {
-      width: 125px;
-    }
+    button:first-child { width: 125px; }
   }
-}
 
-@media screen and (max-width: 200px) {
-  .chat-actions {
-    justify-content: flex-end;
-    > div { display: none; }
-  }
+  > button { margin-left: auto;}
 }

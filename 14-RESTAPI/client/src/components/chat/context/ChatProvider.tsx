@@ -33,8 +33,15 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
 
   const wasMarked = Object.keys(markedMap).some((key) => markedMap[key]);
 
+  const activeId = activeChat?._id + "";
   useDepedencyTracker("chat", {
-    chatId: activeChat?._id
+    currentChat: activeId,
+         istemp: activeChat?.isTemp,
+    savedChatId: activeChat?.chatId,
+         alerts,
+      hasLoaded: loadedMap[activeId],
+       noOfMsgs:   msgsMap[activeId]?.length,
+    markedChats: markedMap[activeId],
   });
 
   const getRecipient = ({ host, guest }: Chat) => (user._id === host._id ? guest : host);

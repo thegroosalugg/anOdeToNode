@@ -2,7 +2,6 @@ import { motion } from "motion/react";
 import { useEffect, useRef } from "react";
 import { useChat } from "../../context/ChatContext";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
 import Chat from "@/models/Chat";
 import Msg from "@/models/Message";
 import AsyncAwait from "../../../ui/boundary/AsyncAwait";
@@ -19,16 +18,6 @@ export default function Messages({ chat }: { chat: Chat }) {
   const    msgRef = useRef<HTMLParagraphElement>(null);
   const  scrollTo = () => msgRef.current?.scrollIntoView({ behavior: "smooth" });
   const  variants = createVariants();
-
-  useDepedencyTracker("chat", {
-       reqUser: user._id,
-        chatId: chat._id,
-    chatAlerts: chat.alerts,
-    chatIsTemp: chat.isTemp,
-     loadedMap,
-     hasLoaded,
-      noAlerts,
-  });
 
   useEffect(() => {
     if (chat.isTemp || noAlerts) return;

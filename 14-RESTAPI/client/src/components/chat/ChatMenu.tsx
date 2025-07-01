@@ -1,10 +1,10 @@
-import ChatBody from './layout/ChatBody';
-import IconButton from '@/components/ui/button/IconButton';
-import Counter from '@/components/ui/counter/Counter';
-import SideBar from '@/components/ui/menu/SideBar';
 import { useChat } from './context/ChatContext';
 import { useChatSocket } from './context/useChatSocket';
 import { useChatParamsSync } from './context/useChatParamsSync';
+import SideBar from '@/components/ui/menu/SideBar';
+import ChatBody from './layout/ChatBody';
+import IconButton from '@/components/ui/button/IconButton';
+import Counter from '@/components/ui/counter/Counter';
 
 export default function ChatMenu() {
   useChatParamsSync(); // alters context values

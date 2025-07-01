@@ -1,38 +1,36 @@
-import { useState, ReactNode, useCallback, useEffect } from "react";
+import { useState, ReactNode, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AlertCounts, AlertsContext } from "./AlertsContext";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { useSocket } from "@/lib/hooks/useSocket";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
 import { UserState } from "@/lib/types/auth";
 import { FetchError } from "@/lib/types/common";
 import User from "@/models/User";
 import Reply from "@/models/Reply";
-import Logger from "@/models/Logger";
 
 interface AlertsProvider extends UserState {
   children: ReactNode;
 }
 
 export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
-  const { error, reqData: reqSocialAlerts } = useFetch<User>();
+  const { error, reqData: reqSocials } = useFetch<User>();
   const {
-       data: replies,
-    setData: setReplies,
-    reqData: reqReplyAlerts,
+         data: replies,
+      setData: setReplies,
+      reqData: reqReplies,
     isLoading,
   } = useFetch<Reply[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen,       setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-  const { deferring, deferFn } = useDebounce();
-  const socketRef = useSocket("alerts");
-  const navigate = useNavigate();
+  const { deferring,    deferFn } = useDebounce();
+  const   navigate  = useNavigate();
   const { friends } = user;
+
   const [inbound, outbound] = friends.reduce(
     ([inTotal, outTotal], { initiated, accepted, meta }) => {
       if (!meta.read) {
-        if (!initiated) inTotal += 1;
+        if (     !initiated      )  inTotal += 1;
         if (accepted && initiated) outTotal += 1;
       }
       return [inTotal, outTotal];
@@ -45,29 +43,29 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     return total;
   }, 0);
 
-  const count = inbound + outbound + newReplies;
+  const  count = inbound + outbound + newReplies;
   const alerts = [inbound, outbound, newReplies] as AlertCounts;
 
-  const markSocialsAsRead = useCallback(
+  const markSocials = useCallback(
     async (index = activeTab) =>
-      await reqSocialAlerts(
+      await reqSocials(
         { url: `alerts/social?type=${["inbound", "outbound"][index]}` },
         { onSuccess: (updated) => setUser(updated) }
       ),
-    [activeTab, reqSocialAlerts, setUser]
+    [activeTab, reqSocials, setUser]
   );
 
-  const markRepliesAsRead = useCallback(
-    async () => await reqReplyAlerts({ url: "alerts/replies?read=true" }),
-    [reqReplyAlerts]
+  const markReplies = useCallback(
+    async () => await reqReplies({ url: "alerts/replies?read=true" }),
+    [reqReplies]
   );
 
   const handleAlerts = async (index = activeTab) => {
     if (alerts[index] > 0) {
       if (index < 2) {
-        await markSocialsAsRead(index);
+        await markSocials(index);
       } else {
-        await markRepliesAsRead();
+        await markReplies();
       }
     }
   };
@@ -97,61 +95,10 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
 
   useDepedencyTracker("alerts", {
     isLoading,
-    socketRef,
     isOpen,
     activeTab,
     reqUser: user._id,
   });
-
-  useEffect(() => {
-    reqReplyAlerts({ url: "alerts/replies" });
-  }, [reqReplyAlerts]);
-
-  useEffect(() => {
-    const socket = socketRef.current;
-    if (!socket) return;
-
-    const logger = new Logger("alerts");
-    socket.on("connect", () => logger.connect());
-
-    socket.on(`peer:${user._id}:update`, async (updated) => {
-      logger.event("peer:update", updated);
-      if (isOpen && activeTab < 2) {
-        await markSocialsAsRead();
-      } else {
-        setUser(updated);
-      }
-    });
-
-    socket.on(`nav:${user._id}:reply`, async ({ action, reply }) => {
-      logger.event(`reply, action: ${action}`, reply);
-      if (isOpen && activeTab === 2) {
-        await markRepliesAsRead();
-      } else {
-        if (action === "new") {
-          setReplies((prev) => [reply, ...prev]);
-        } else if (action === "delete") {
-          setReplies((prev) => prev.filter(({ _id }) => _id !== reply._id));
-        }
-      }
-    });
-
-    return () => {
-      socket.off("connect");
-      socket.off(`peer:${user._id}:update`);
-      socket.off(`nav:${user._id}:reply`);
-    };
-  }, [
-    socketRef,
-    isOpen,
-    activeTab,
-    user._id,
-    reqReplyAlerts,
-    markSocialsAsRead,
-    markRepliesAsRead,
-    setUser,
-    setReplies,
-  ]);
 
   const ctxValue = {
     user,
@@ -159,6 +106,9 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     onError,
     replies,
     setReplies,
+    reqReplies,
+    markReplies,
+    markSocials,
     isLoading,
     error,
     count,

@@ -4,10 +4,11 @@ import { FetchError } from "@/lib/types/common";
 import { UserState } from "@/lib/types/auth";
 import { FetchState } from "@/lib/types/fetch";
 import Reply from "@/models/Reply";
+import User from "@/models/User";
 
 type UserControl = UserState & { onError: (err: FetchError) => void };
 
-type ReplyData = Omit<FetchState<Reply[], "replies">, "reqReplies" | "setError">;
+type ReplyData = Omit<FetchState<Reply[], "replies">, "setError">;
 
 type MenuControl = {
      isOpen: boolean;
@@ -20,9 +21,11 @@ type MenuControl = {
 export type AlertCounts = [inbound: number, outbound: number, newReplies: number];
 
 type AlertsContext = {
-   count: number;
-  alerts: AlertCounts;
-   navTo: (path: string) => void;
+         count: number;
+        alerts: AlertCounts;
+         navTo: (path:   string) => void;
+   markSocials: (              ) => Promise<User    | void>;
+   markReplies: (index?: number) => Promise<Reply[] | void>;
 } & UserControl &
       ReplyData &
     MenuControl &
