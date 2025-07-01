@@ -6,8 +6,8 @@ import { FetchError } from '@/lib/types/common';
 import { Auth } from '@/lib/types/auth';
 import User from '@/models/User';
 import Friend from '@/models/Friend';
-import { Alert, Strong, Time, X } from './UIElements';
-import Button from '../ui/button/Button';
+import { Alert, Strong, Time, X } from '../ui/UIElements';
+import Button from '../../../ui/button/Button';
 import css from './SocialAlerts.module.css';
 
 export default function SocialAlerts({

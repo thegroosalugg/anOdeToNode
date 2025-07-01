@@ -1,6 +1,6 @@
 .strong-tag {
   cursor: pointer;
-  color: var(--dark-grey);
+  color: var(--text);
   max-width: 6rem;
   text-wrap: nowrap;
   text-overflow: ellipsis;
@@ -13,7 +13,7 @@
   top: 0.05rem;
   right: 0.25rem;
   font-size: var(--text-sm);
-  color: var(--text-grey);
+  color: var(--text);
 }
 
 .x-btn {

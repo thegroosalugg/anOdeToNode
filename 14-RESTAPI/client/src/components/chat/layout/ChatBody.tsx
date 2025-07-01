@@ -11,8 +11,8 @@ export default function ChatBody() {
 
   return (
     <div className={css["chat-body"]}>
+      <ChatActions />
       <AsyncAwait {...{ isLoading, error }}>
-        <ChatActions />
         {!chats.length && !activeChat ? (
           <motion.h2 className={css["fallback"]} {...createAnimations()}>
             You haven't started any chats

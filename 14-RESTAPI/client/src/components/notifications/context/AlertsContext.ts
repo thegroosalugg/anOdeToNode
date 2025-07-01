@@ -21,9 +21,8 @@ export type AlertCounts = [inbound: number, outbound: number, newReplies: number
 
 type AlertsContext = {
    count: number;
-  // alerts: number[];
   alerts: AlertCounts;
-  navTo: (path: string) => void;
+   navTo: (path: string) => void;
 } & UserControl &
       ReplyData &
     MenuControl &

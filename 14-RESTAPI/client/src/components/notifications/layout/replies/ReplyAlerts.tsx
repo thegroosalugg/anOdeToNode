@@ -4,7 +4,7 @@ import { useFetch } from '@/lib/hooks/useFetch';
 import { FetchError } from '@/lib/types/common';
 import { SetData } from '@/lib/types/common';
 import Reply from '@/models/Reply';
-import { Alert, Strong, Time, X } from './UIElements';
+import { Alert, Strong, Time, X } from '../ui/UIElements';
 import css from './ReplyAlerts.module.css';
 
 // attempted to make as much of FriendAlerts reusable here

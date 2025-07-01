@@ -27,6 +27,7 @@
     --text: var(--gray-300);
     --box: var(--gray-700);
     --error: var(--rust-500);
+    --transparent: #00000000;
   }
 }
 

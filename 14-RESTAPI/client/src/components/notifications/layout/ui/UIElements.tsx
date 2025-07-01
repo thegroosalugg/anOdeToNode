@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ProfilePic from '../ui/image/ProfilePic';
+import ProfilePic from '@/components/ui/image/ProfilePic';
 import User from '@/models/User';
 import { timeAgo } from '@/lib/util/timeStamps';
 import css from './UIElements.module.css';
