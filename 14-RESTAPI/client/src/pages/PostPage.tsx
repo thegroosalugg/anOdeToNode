@@ -1,7 +1,7 @@
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { usePagination } from "@/lib/hooks/usePagination";
+import { usePagedFetch } from "@/components/pagination/usePagedFetch";
 import { useSocket } from "@/lib/hooks/useSocket";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
 import { FetchError } from "@/lib/types/common";
@@ -31,7 +31,7 @@ export default function PostPage({ user, setUser }: Authorized) {
   const {
     fetcher: { setData: setReplies },
     ...rest
-  } = usePagination<Reply>(`post/replies/${postId}`, 5, !!postId);
+  } = usePagedFetch<Reply>(`post/replies/${postId}`, 5, !!postId);
   const [modalState, setModalState] = useState("");
   const   navigate = useNavigate();
   const  socketRef = useSocket("post");

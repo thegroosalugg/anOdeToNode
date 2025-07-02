@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { usePagination } from '@/lib/hooks/usePagination';
+import { usePagedFetch } from '@/components/pagination/usePagedFetch';
 import { useSocket } from '@/lib/hooks/useSocket';
 import { Authorized } from '@/lib/types/auth';
 import Post from '@/models/Post';
@@ -15,7 +15,7 @@ export default function FeedPage({ setUser }: Authorized) {
   const {
     fetcher: { setData, isLoading, error },
      ...rest
-  } = usePagination<Post>('feed/posts', 3);
+  } = usePagedFetch<Post>('feed/posts', 3);
   const        socketRef          = useSocket('feed');
   const [showModal, setShowModal] = useState(false);
 

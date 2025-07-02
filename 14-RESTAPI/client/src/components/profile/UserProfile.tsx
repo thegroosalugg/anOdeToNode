@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
-import { usePagination } from '@/lib/hooks/usePagination';
+import { usePagedFetch } from '../pagination/usePagedFetch';
 import { Authorized } from '@/lib/types/auth';
 import Post from '@/models/Post';
 import ProfileHeader from './ProfileHeader';
@@ -16,7 +16,7 @@ export default function UserProfile({ user, setUser }: Authorized) {
   const {
     fetcher: { isLoading, error },
      ...rest
-  } = usePagination<Post>('profile/posts', 4);
+  } = usePagedFetch<Post>('profile/posts', 4);
   const [showModal, setShowModal] = useState(false);
   const closeModal = () => setShowModal(false);
 

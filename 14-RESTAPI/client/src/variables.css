@@ -110,3 +110,7 @@
 .scrollbar-bg {
   &::-webkit-scrollbar-thumb { background: var(--bg); }
 }
+
+.scrollbar-accent {
+  &::-webkit-scrollbar-thumb { background: var(--accent); }
+}

@@ -1,6 +1,6 @@
 import { isMobile } from 'react-device-detect';
 import { useEffect } from 'react';
-import { usePagination } from '@/lib/hooks/usePagination';
+import { usePagedFetch } from '@/components/pagination/usePagedFetch';
 import { useSocket } from '@/lib/hooks/useSocket';
 import User from '@/models/User';
 import Logger from '@/models/Logger';
@@ -12,7 +12,7 @@ export default function SocialPage() {
   const {
     fetcher: { setData, isLoading, error },
      ...rest
-  } = usePagination<User>('social/users', isMobile ? 8 : 10);
+  } = usePagedFetch<User>('social/users', isMobile ? 8 : 10);
   const socketRef = useSocket('social');
 
   useEffect(() => {

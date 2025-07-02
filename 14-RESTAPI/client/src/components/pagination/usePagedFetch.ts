@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
-import { useDebounce, Debounce } from './useDebounce';
-import { useFetch } from './useFetch';
-
-type Direction = -1 | 1;
+import { useEffect, useRef } from 'react';
+import { useFetch } from '@/lib/hooks/useFetch';
+import { usePages } from '@/lib/hooks/usePages';
+import { Debounce } from "@/lib/hooks/useDebounce";
+import { Direction } from '@/lib/types/common';
 
 export type InitState<T> = {
   docCount: number;
@@ -18,22 +18,7 @@ export type Paginated<T = null> = {
    deferring: Debounce['deferring'];
 };
 
-export function usePages() {
-  const { deferring,    deferFn } = useDebounce();
-  const [current,        setPage] = useState(1);
-  const [direction, setDirection] = useState<Direction>(1)
-
-  const changePage = (page: number) => {
-    deferFn(() => {
-      setPage(page);
-      setDirection(page > current ? 1 : -1);
-    }, 1200);
-  };
-
-  return { current, direction, changePage, deferring };
-}
-
-export function usePagination<T>(baseURL: string, limit: number, shouldFetch = true) {
+export function usePagedFetch<T>(baseURL: string, limit: number, shouldFetch = true) {
   const initState: InitState<T> = { docCount: 0, items: [] };
   const { data, reqData, ...rest } = useFetch(initState);
   const   isInitial = useRef(true);
@@ -45,7 +30,7 @@ export function usePagination<T>(baseURL: string, limit: number, shouldFetch = t
     const initData = async () => {
       // guard request with optional conditions to prevent FC dismount requests
       if (shouldFetch) {
-        await reqData({ url });
+        await reqData({ url }); // ref required to disable loaders on page swap after initial
         if (isInitial.current) isInitial.current = false;
       }
     }

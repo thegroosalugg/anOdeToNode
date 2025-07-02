@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useFetch } from '@/lib/hooks/useFetch';
 import { useSocket } from '@/lib/hooks/useSocket';
-import { usePagination } from '@/lib/hooks/usePagination';
+import { usePagedFetch } from '@/components/pagination/usePagedFetch';
 import { useDepedencyTracker } from '@/lib/hooks/useDepedencyTracker';
 import { Authorized } from '@/lib/types/auth';
 import User from '@/models/User';
@@ -20,7 +20,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
   const {
     fetcher: { setData },
    ...rest
-  } = usePagination<Post>(`social/posts/${userId}`, 4, !!userId);
+  } = usePagedFetch<Post>(`social/posts/${userId}`, 4, !!userId);
   const   navigate   = useNavigate();
   const  isInitial   = useRef(true);
   const  socketRef   = useSocket('peer');

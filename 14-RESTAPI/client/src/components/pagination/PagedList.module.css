@@ -9,20 +9,17 @@
   padding: 0.2rem;
   overflow-y: scroll;
 
+  /* uses floating box class */
   li {
     width: 100%;
     padding: 1rem;
-    background: var(--box-gradient);
   }
 
-  &::-webkit-scrollbar {
-    height: 0;
-    width: 2px;
-  }
+  &::-webkit-scrollbar { height: 0; width: 2px; }
 
+  /* uses floating box class */
   .fallback{
     text-align: center;
-    color: #fff;
     padding: 0.5rem;
     /* ignore grid placement when the UL is a grid */
     place-self: center;
