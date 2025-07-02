@@ -36,8 +36,9 @@ export default function NavBar({ user, setUser }: Auth) {
             transition={{ staggerChildren: 0.2 }}
           >
             <IconButton
-              isActive={isActivePath(["feed", "post"])}
                   icon="rss"
+              isActive={isActivePath(["feed", "post"])}
+              layoutId="nav-group"
                onClick={() => navTo("/feed")}
               {...{ deferring }}
             >
@@ -46,6 +47,7 @@ export default function NavBar({ user, setUser }: Auth) {
             <IconButton
                   icon="users"
               isActive={isActivePath(["social", "user"])}
+              layoutId="nav-group"
                onClick={() => navTo("/social")}
               {...{ deferring }}
             >
@@ -60,6 +62,7 @@ export default function NavBar({ user, setUser }: Auth) {
             <IconButton
               isActive={pathname === "/"}
                   icon="user"
+              layoutId="nav-group"
                onClick={() => navTo("/")}
               {...{ deferring }}
             >

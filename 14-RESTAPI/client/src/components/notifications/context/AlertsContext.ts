@@ -1,14 +1,19 @@
 import { createContext, useContext } from "react";
 import { Debounce } from "@/lib/hooks/useDebounce";
 import { FetchError } from "@/lib/types/common";
-import { UserState } from "@/lib/types/auth";
+import { Authorized } from "@/lib/types/auth";
 import { FetchState } from "@/lib/types/fetch";
 import Reply from "@/models/Reply";
 import User from "@/models/User";
 
-type UserControl = UserState & { onError: (err: FetchError) => void };
+type UserControl = Pick<Authorized, "user" | "setUser" | "error"> & {
+  onError: (err: FetchError) => void;
+};
 
-type ReplyData = Omit<FetchState<Reply[], "replies">, "setError">;
+type ReplyData = Pick<
+  FetchState<Reply[], "replies">,
+  "replies" | "setReplies" | "reqReplies"
+>;
 
 type MenuControl = {
      isOpen: boolean;

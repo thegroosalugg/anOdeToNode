@@ -58,7 +58,8 @@
   --radius-3xl: 1.5rem;
   --radius-4xl: 2rem;
 
-  --text-sm: 0.9rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
 
   --text-shadow-2xs: 0px 1px 0px rgb(0 0 0 / 0.15);
   --text-shadow-xs:  0px 1px 1px rgb(0 0 0 / 0.2);
@@ -92,4 +93,20 @@
  background: var(--box);
  box-shadow: var(--shadow-lg);
  border-radius: var(--radius-xl);
+}
+
+.no-scrollbars {
+  &::-webkit-scrollbar { height: 0px; width: 0px; }
+}
+
+.no-scrollbar-x {
+  &::-webkit-scrollbar { height: 0px; }
+}
+
+.no-scrollbar-y {
+  &::-webkit-scrollbar { width: 0px; }
+}
+
+.scrollbar-bg {
+  &::-webkit-scrollbar-thumb { background: var(--bg); }
 }

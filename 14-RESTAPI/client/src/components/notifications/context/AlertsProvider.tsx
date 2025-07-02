@@ -19,7 +19,6 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
          data: replies,
       setData: setReplies,
       reqData: reqReplies,
-    isLoading,
   } = useFetch<Reply[]>([]);
   const [isOpen,       setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
@@ -94,10 +93,10 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
   };
 
   useDepedencyTracker("alerts", {
-    isLoading,
-    isOpen,
+       isOpen,
     activeTab,
-    reqUser: user._id,
+       alerts,
+      reqUser: user._id,
   });
 
   const ctxValue = {
@@ -109,7 +108,6 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     reqReplies,
     markReplies,
     markSocials,
-    isLoading,
     error,
     count,
     alerts,

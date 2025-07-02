@@ -4,7 +4,7 @@
   padding: 0.25rem;
   font-weight: 700;
   font-size: var(--text-sm);
-  color: var(--bg);
+  color: var(--accent);
   border: none;
   background: none;
   transition: 0.5s ease-in-out;
@@ -16,18 +16,18 @@
 
   .active-tab {
     position: absolute;
-    width: 100%;
-    height: 2px;
-    background: var(--color);
     left: 0;
     bottom: 0.1rem;
+    height: 2px;
+    width: 100%;
     border-radius: 3px;
+    background: var(--color);
   }
 
   &:disabled { pointer-events: none; }
-  &.active { color: var(--color); }
+  &.active   { color: var(--color);  }
 }
 
 @media (prefers-color-scheme: dark) {
-  .icon-button { --color: var(--steel-600); }
+  .icon-button { --color: var(--gray-100); }
 }

@@ -66,7 +66,7 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
              key={isLogin + ""}
              ref={scope}
         onSubmit={submitHandler}
-       className={`${css["auth-form"]} ${isLogin ? css["isLogin"] : ""}`}
+       className={`${css["auth-form"]} ${isLogin ? css["is-login"] : ""}`}
          initial="hidden"
          animate="visible"
             exit={{ opacity: 0, transition: { duration: 0.8 } }}
