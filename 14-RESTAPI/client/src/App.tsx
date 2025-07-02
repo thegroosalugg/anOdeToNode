@@ -18,10 +18,10 @@ const validate = (path: string, props: Auth) => {
   const authorized = props as Authorized;
 
   const elements = {
-    "/feed":         <FeedPage {...authorized} />,
-    "/post/:postId": <PostPage {...authorized} />,
-    "/social":       <SocialPage />, // props were never used here
-    "/user/:userId": <PeerPage {...authorized} />,
+    "/feed":         <FeedPage   {...authorized} />,
+    "/post/:postId": <PostPage   {...authorized} />,
+    "/social":       <SocialPage {...authorized} />,
+    "/user/:userId": <PeerPage   {...authorized} />,
   };
 
   return elements[path as keyof typeof elements];

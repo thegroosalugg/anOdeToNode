@@ -1,6 +1,5 @@
 import   feedCss from '../post/PostItem.module.css';
 import  replyCss from '../post/ReplyItem.module.css';
-import socialCss from '../social/PeerItem.module.css';
 
 export const LIST_CONFIG = {
   feed: {                           // each component calls only this key
@@ -24,24 +23,4 @@ export const LIST_CONFIG = {
      fallback: 'No comments yet...',
   },
 
-  users: {
-        navTo: 'user',
-        delay: 0.5,
-      listCss: [socialCss['user-list']],
-     fallback: 'Nobody here...',
-  },
-
-  friends: {
-        navTo: 'user',
-        delay: 0.5,
-      listCss: [socialCss['user-list'], socialCss['friends-list']],
-     fallback: 'Your friends will display here',
-  },
-
-    mutual: {
-        navTo: 'user',
-        delay: 0.1,
-      listCss: [socialCss['user-list'], socialCss['mutual-friends']],
-     fallback: 'You have no mutual friends',
-  },
 };

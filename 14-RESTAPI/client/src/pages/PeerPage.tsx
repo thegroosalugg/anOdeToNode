@@ -93,7 +93,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
       {peer && (
         <>
           <PeerProfile {...{ user, setUser, peer }} />
-          <FriendsList friends={peer.friends} mutual />
+          <FriendsList friends={peer.friends} />
           <PagedList<Post> {...{ ...rest, config: 'feed' }}>
             {(post) => <PostItem {...post} />}
           </PagedList>

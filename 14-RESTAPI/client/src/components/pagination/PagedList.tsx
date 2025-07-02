@@ -1,46 +1,49 @@
 import { motion, AnimatePresence, HTMLMotionProps } from "motion/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { Paginated } from "./usePagedFetch";
 import { custom } from "@/lib/hooks/usePages";
-import { LIST_CONFIG } from "./pagedListConfig";
-import PageButtons from "./PageButtons";
 import User from "@/models/User";
+import PageButtons from "./PageButtons";
 import { createAnimations } from "@/lib/motion/animations";
 import css from "./PagedList.module.css";
 
-export type PagedConfig = "feed" | "userPosts" | "reply" | "users" | "friends" | "mutual";
-
 interface PagedList<T> extends Paginated<T> {
-    config: PagedConfig;
-  children: (item: T) => React.ReactNode;
+     className?: string;
+         delay?: number;
+          path?: string;
+      fallback?: string;
+  isFriendList?: boolean;
+    children: (item: T) => ReactNode;
 }
 
-// user object will be nested when T is Friend, required for correct navTo functionality
-type IDs = { _id: string; user?: User };
+type ID = { _id: string; user?: User };
 
-export default function PagedList<T>({
-      config,
-        data: { docCount, items },
-       limit,
-     current,
-   direction,
-  changePage,
-   deferring,
-    children,
-    ...props
-}: // merge MotionProps while excluding any that conflict with PagedList's own prop types
-PagedList<T & IDs> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
-  const { listCss, navTo, delay, fallback } = LIST_CONFIG[config];
+export default function PagedList<T extends ID>({
+     className = "",
+         delay = 0,
+          path,
+      fallback = "No results found",
+  isFriendList,
+          data: { docCount, items },
+         limit,
+       current,
+     direction,
+    changePage,
+     deferring,
+      children,
+      ...props
+}: // merges PagedList & <motion.li> props; excluding common duplicates: [key, children, ...etc]
+PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   const      navigate = useNavigate();
-  const       classes = ["scrollbar-accent", css["list"], ...listCss].filter(Boolean).join(" ");
+  const       classes = `scrollbar-accent" ${css["list"]} ${className}`;
   const       listRef = useRef<HTMLUListElement | null>(null);
   const        height = useRef<number | "auto">("auto");
   const shouldRecount = docCount < limit && items.length < limit;
-  const  isFriendList = ["friends", "mutual"].includes(config);
+  // const  isFriendList = ["friends", "mutual"].includes(config);
   const       opacity = 0;
   const      duration = 0.5;
-  const        cursor = deferring ?   "wait" : "auto";
+  const        cursor = deferring ? "wait" : "";
   const       stagger = (index: number) => ({ duration, delay: 0.05 * index });
 
   useEffect(() => {
@@ -52,11 +55,10 @@ PagedList<T & IDs> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
     }, 1000);
   }, [shouldRecount]);
 
-  function clickHandler(item: T & IDs) {
-    if (!deferring && navTo) {
-      const _id = isFriendList && item.user ? item.user._id : item._id;
-      navigate(`/${navTo}/${_id}`);
-    }
+  function navTo(item: T) {
+    if (deferring || !path) return;
+    const _id = isFriendList && item.user ? item.user._id : item._id;
+    navigate(`/${path}/${_id}`);
   }
 
   return (
@@ -75,7 +77,7 @@ PagedList<T & IDs> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
          }}
         transition={{ duration, ease: "easeInOut", opacity: { delay } }}
       >
-        <AnimatePresence mode="popLayout" custom={direction} initial={!isFriendList}>
+        <AnimatePresence mode="popLayout" custom={direction}>
           {items.length > 0 ? (
             items.map((item, i) => (
               <motion.li
@@ -85,12 +87,12 @@ PagedList<T & IDs> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
                       exit="exit"
                        key={item._id}
                  className="floating-box"
-                   onClick={() => clickHandler(item)}
+                   onClick={() => navTo(item)}
                      style={{ cursor }}
                     custom={direction}
                   variants={{ ...custom }}
                 transition={{ x: stagger(i), opacity: stagger(i) }}
-                {...props} // target transitions so that whileHover etc. remain undisturbed
+                {...props}
               >
                 {children(item)}
               </motion.li>
@@ -107,7 +109,7 @@ PagedList<T & IDs> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
         </AnimatePresence>
       </motion.ul>
       {docCount >= limit && (
-        <PageButtons {...{ config, current, changePage, docCount, limit, deferring }} />
+        <PageButtons {...{ docCount, limit, current, changePage, deferring, delay }} />
       )}
     </>
   );

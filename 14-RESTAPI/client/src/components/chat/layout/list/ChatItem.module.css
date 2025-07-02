@@ -4,6 +4,7 @@
   --background: var(--box);
   --header: var(--fg);
   --counter: var(--accent);
+  --img: var(--text);
 
   display: flex;
   flex-direction: column;
@@ -25,8 +26,8 @@
     padding: 0.5rem;
 
     > img {
-      border-color: var(--color);
-      transition: border 0.5s ease;
+      border-color: var(--img);
+      transition: border-color 0.3s ease;
     }
 
     /* Recipient name  */
@@ -87,6 +88,7 @@
 
 .marked {
   --background: var(--error);
+  --img: var(--error);
   --color:   var(--bg);
   --header:  var(--bg);
   --counter: var(--bg);

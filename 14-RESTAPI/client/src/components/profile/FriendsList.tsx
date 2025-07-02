@@ -1,22 +1,17 @@
-import { isMobile } from 'react-device-detect';
-import { useEffect, useState } from 'react';
-import { usePages } from '@/lib/hooks/usePages';
-import Friend from '@/models/Friend';
-import PagedList from '../pagination/PagedList';
-import PeerItem from '../social/PeerItem';
+import { isMobile } from "react-device-detect";
+import { useEffect, useState } from "react";
+import { usePages } from "@/lib/hooks/usePages";
+import Friend from "@/models/Friend";
+import PagedList from "../pagination/PagedList";
+import PeerItem from "../social/PeerItem";
+import css from "../social/PeerItem.module.css";
 
 function paginate<T>(arr: T[], page: number, limit: number): T[] {
   const start = (page - 1) * limit;
   return arr.slice(start, start + limit);
-};
+}
 
-export default function FriendsList({
-  friends,
-   mutual,
-}: {
-  friends: Friend[];
-  mutual?: boolean;
-}) {
+export default function FriendsList({ friends }: { friends: Friend[] }) {
   const { deferring, current, direction, changePage: setPage } = usePages();
   const friendsList = friends.filter(({ accepted }) => accepted);
 
@@ -47,11 +42,18 @@ export default function FriendsList({
      direction,
     changePage,
      deferring,
+         limit,
   };
 
   return (
-    <PagedList<Friend> {...{ ...props, limit, config: mutual ? 'mutual' : 'friends' }}>
-      {(friend) => <PeerItem user={friend.user} />}
+    <PagedList<Friend>
+         className={css["user-list"]}
+              path="user"
+          fallback="Nobody here..."
+       isFriendList
+      {...props}
+    >
+      {(friend) => <PeerItem user={friend.user} count={friendsList.length} />}
     </PagedList>
   );
 }

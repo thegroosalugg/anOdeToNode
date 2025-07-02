@@ -6,6 +6,7 @@
   height: var(--nav-size);
   overflow-x: scroll;
   background: var(--accent);
+  box-shadow: var(--shadow-pop);
 
   &::-webkit-scrollbar-thumb { background: var(--bg); }
 

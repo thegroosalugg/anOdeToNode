@@ -6,7 +6,7 @@
   --fg: var(--gray-900);
   --accent: var(--steel-600);
   --accent-hover: var(--steel-700);
-  --text: var(--gray-500);
+  --text: var(--gray-600);
   --box: var(--gray-100);
   --error: var(--rust-600);
   --transparent: #ffffff00;

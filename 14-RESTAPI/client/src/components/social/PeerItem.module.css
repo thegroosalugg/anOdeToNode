@@ -1,63 +1,44 @@
 /* element.class increases specificity to override defaults */
-ul.user-list {
+.user-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   align-items: start; /* not required, however will overwrite Default's center alignement */
   align-content: start; /* forces rows to stack at top */
 
-  &::-webkit-scrollbar {
-    width: 0;
-  }
-
+  /* remove default .floatin-box class */
   > li {
     padding: 0;
-    border: var(--border-accent);
+    border: none;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
     cursor: pointer;
 
+    /* uses .truncate class */
     > h2 {
-      padding: 0.1rem 0.2rem;
-      margin: 0.1rem;
-      text-align: center;
-      text-wrap: nowrap;
-      overflow-x: scroll;
-      color: var(--text-grey);
+      padding: 0.1rem 0.2rem 0;
       font-size: 80%;
       font-weight: 600;
     }
 
     > img {
       width: 100%;
-      border: none;
-      border-radius: 0;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+    }
+
+    > p {
+      padding-left: 0.1rem;
+      font-size: var(--text-xs);
+      color: var(--text);
     }
   }
-}
-
-ul.friends-list {
-  > li {
-    border-color: var(--text-grey);
-    > h2 {
-      &::-webkit-scrollbar-thumb {
-        background: var(--text-grey);
-      }
-    }
-  }
-}
-
-section.friends-pagination {
-  margin: 0 auto 0.5rem;
-}
-
-ul.mutual-friends {
-  margin-bottom: 0.2rem;
 }
 
 @media screen and (pointer: coarse) {
-  ul.user-list {
+  .user-list {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
 
-    > li h2 {
-      font-size: 60%;
-    }
+    > li h2 { font-size: 60%; }
   }
 }

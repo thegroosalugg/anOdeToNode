@@ -29,11 +29,11 @@ export function usePagedFetch<T>(baseURL: string, limit: number, shouldFetch = t
   useEffect(() => {
     const initData = async () => {
       // guard request with optional conditions to prevent FC dismount requests
-      if (shouldFetch) {
-        await reqData({ url }); // ref required to disable loaders on page swap after initial
-        if (isInitial.current) isInitial.current = false;
-      }
-    }
+      if (!shouldFetch) return;
+      await reqData({ url }); // ref required to disable loaders on page swap after initial
+      if (isInitial.current) isInitial.current = false;
+    };
+    
     initData();
   }, [reqData, url, shouldFetch]);
 

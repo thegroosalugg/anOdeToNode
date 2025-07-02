@@ -2,6 +2,6 @@
   width: 25px;
   aspect-ratio: 1/1;
   object-fit: cover;
-  border: var(--border-accent);
+  border: var(--border-text);
   border-radius: 50%;
 }

@@ -1,8 +1,6 @@
 import { Fragment } from 'react';
 import { motion, LayoutGroup } from 'motion/react';
 import { Paginated } from './usePagedFetch';
-import { LIST_CONFIG } from './pagedListConfig';
-import { PagedConfig } from './PagedList';
 import css from './PageButtons.module.css';
 
 const Ellipsis = () => (
@@ -17,17 +15,16 @@ const Ellipsis = () => (
 );
 
 export default function PageButtons({
-       config,
      docCount,
         limit,
       current,
    changePage,
     deferring,
-}: Omit<Paginated, 'data' | 'direction'> & { config: PagedConfig, docCount: number }) {
-  const { delay } = LIST_CONFIG[config];
-  const     last = Math.ceil(docCount / limit);
-  const   middle = last < 5 ? 3 : Math.min(Math.max(current, 3), last - 2);
-  const    pages: number[] = [];
+        delay,
+}: Omit<Paginated, 'data' | 'direction'> & { docCount: number; delay: number }) {
+  const   last = Math.ceil(docCount / limit);
+  const middle = last < 5 ? 3 : Math.min(Math.max(current, 3), last - 2);
+  const  pages: number[] = [];
 
   if (last >= 1) pages.push(1);
   if (last >= 2) pages.push(middle - 1);
@@ -38,7 +35,7 @@ export default function PageButtons({
   const filter = `brightness(${deferring ? 0.9 : 1})`
 
   return (
-    <motion.section
+    <motion.div
       className={`${css['page-buttons']} no-scrollbar-x`}
         initial={{ opacity: 0 }} // 2nd component in line using this value, adds .5
         animate={{ opacity: 1, transition: { delay: delay + 0.5, duration: 0.5 } }}
@@ -75,6 +72,6 @@ export default function PageButtons({
           );
         })}
       </LayoutGroup>
-    </motion.section>
+    </motion.div>
   );
 }

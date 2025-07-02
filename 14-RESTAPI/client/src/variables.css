@@ -92,7 +92,7 @@
  border: var(--border-text);
  background: var(--box);
  box-shadow: var(--shadow-lg);
- border-radius: var(--radius-xl);
+ border-radius: var(--radius-2xl);
 }
 
 .no-scrollbars {
