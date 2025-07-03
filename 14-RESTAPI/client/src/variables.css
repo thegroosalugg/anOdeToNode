@@ -88,6 +88,14 @@
   white-space: nowrap;
 }
 
+.line-clamp {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Real McCoy */
+  -webkit-box-orient: vertical;
+  line-clamp: 2; /* not widely supported - set only to silence linter */
+}
+
 .floating-box {
  border: var(--border-text);
  background: var(--box);

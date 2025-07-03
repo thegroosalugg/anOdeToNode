@@ -1,53 +1,60 @@
-import { motion } from 'motion/react';
-import { useState } from 'react';
-import { usePagedFetch } from '../pagination/usePagedFetch';
-import { Authorized } from '@/lib/types/auth';
-import Post from '@/models/Post';
-import ProfileHeader from './ProfileHeader';
-import Button from '../ui/button/Button';
-import ConfirmDialog from '../ui/modal/ConfirmDialog';
-import AsyncAwait from '../ui/boundary/AsyncAwait';
-import FriendsList from './FriendsList';
-import PagedList from '../pagination/PagedList';
-import PostItem from '../post/PostItem';
-import css from './UserProfile.module.css';
+import { motion } from "motion/react";
+import { useState } from "react";
+import { usePagedFetch } from "../pagination/usePagedFetch";
+import { Authorized } from "@/lib/types/auth";
+import Post from "@/models/Post";
+import ProfileHeader from "./ProfileHeader";
+import Button from "../ui/button/Button";
+import ConfirmDialog from "../ui/modal/ConfirmDialog";
+import AsyncAwait from "../ui/boundary/AsyncAwait";
+import FriendsList from "./FriendsList";
+import PagedList from "../pagination/PagedList";
+import PostItem from "../post/PostItem";
+import css from "./UserProfile.module.css";
+import styles from '@/components/post/PostItem.module.css';
 
 export default function UserProfile({ user, setUser }: Authorized) {
   const {
     fetcher: { isLoading, error },
-     ...rest
-  } = usePagedFetch<Post>('profile/posts', 4);
+    ...rest
+  } = usePagedFetch<Post>("profile/posts", 4);
   const [showModal, setShowModal] = useState(false);
   const closeModal = () => setShowModal(false);
 
   function logout() {
     closeModal();
     setUser(null);
-    localStorage.removeItem('jwt-access');
-    localStorage.removeItem('jwt-refresh');
+    localStorage.removeItem("jwt-access");
+    localStorage.removeItem("jwt-refresh");
   }
 
   return (
     <>
       <ConfirmDialog open={showModal} onConfirm={logout} onCancel={closeModal} />
-      <motion.section
-        className={css['user-profile']}
+      <motion.div
+        className={css["user-profile"]}
              exit={{ opacity: 0, transition: { duration: 0.5 } }}
       >
         <ProfileHeader {...{ user, setUser }} />
         <FriendsList target={user} />
         <AsyncAwait {...{ isLoading, error }}>
-          <PagedList<Post> {...{ ...rest, config: 'userPosts' }}>
+          <PagedList<Post>
+            className={styles["feed"]}
+                 path="post"
+             fallback="You haven't post anything @end py-20"
+            {...rest}
+          >
             {(post) => <PostItem {...post} isCreator />}
           </PagedList>
         </AsyncAwait>
         <Button
-          onClick={() => setShowModal(true)}
-          animate={{ opacity: 1, transition: { opacity: { delay: 2.2 }} }}
+             onClick={() => setShowModal(true)}
+          background="var(--error)"
+          animations={{ transition: { opacity: { delay: 1.8 } } }}
         >
           Logout
         </Button>
-      </motion.section>
+      </motion.div>
     </>
   );
 }

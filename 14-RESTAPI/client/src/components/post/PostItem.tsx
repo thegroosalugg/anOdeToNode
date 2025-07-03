@@ -1,6 +1,11 @@
-import Post from '@/models/Post';
-import ProfilePic from '../ui/image/ProfilePic';
-import { timeAgo } from '@/lib/util/timeStamps';
+import Post from "@/models/Post";
+import ProfilePic from "../ui/image/ProfilePic";
+import { timeAgo } from "@/lib/util/timeStamps";
+import { ReactNode } from "react";
+
+const Truncate = ({ children }: { children: ReactNode }) => (
+  <span className="truncate">{children}</span>
+);
 
 export default function PostItem({
     creator,
@@ -9,23 +14,22 @@ export default function PostItem({
     content,
   isCreator,
 }: Post & { isCreator?: boolean }) {
+  const { name = "account", surname = "deleted" } = creator;
   return (
     <>
       {!isCreator && (
-        <h3>
+        <h1>
           <ProfilePic user={creator} />
-          <span>
-            {creator?.name    || 'account'}
-            {' '}
-            {creator?.surname || 'deleted'}
-          </span>
-        </h3>
+          <Truncate>
+            {name} {surname}
+          </Truncate>
+        </h1>
       )}
       <h2>
-        <span>{title}</span>
-        <time>{timeAgo(updatedAt)}</time>
+        <Truncate>{title}</Truncate>
+        <Truncate>{timeAgo(updatedAt)}</Truncate>
       </h2>
-      <p>{content}</p>
+      <p className="line-clamp">{content}</p>
     </>
   );
 }

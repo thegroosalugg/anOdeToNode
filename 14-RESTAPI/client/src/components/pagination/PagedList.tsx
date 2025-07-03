@@ -97,7 +97,7 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
           ) : (
             <motion.li
                     key="fallback"
-              className={`floating-box ${css["fallback"]}`}
+              className={css["fallback"]}
               {...createAnimations()}
               {...{ style }} // padding: py-value px-1.5rem; text-align: value;
             >
