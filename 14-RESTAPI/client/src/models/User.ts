@@ -1,8 +1,5 @@
 import Friend from './Friend';
 
-export const getId = (user: User | string) =>
-  typeof user === 'object' && '_id' in user ? user._id : user;
-
 type Profile = {
    home?: string;
    work?: string;

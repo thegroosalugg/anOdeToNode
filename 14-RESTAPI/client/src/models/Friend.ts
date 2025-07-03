@@ -1,13 +1,16 @@
+import { Meta } from '@/lib/types/common';
 import User from './User';
+export default class Friend {
+         _id!: string;
+   createdAt!: string;
+  acceptedAt!: string;
+    accepted!: boolean;
+   initiated!: boolean;
+        user!: User | string;
+        meta!: Meta;
 
-type Friend = {
-         _id: string;
-   createdAt: string;
-  acceptedAt: string;
-    accepted: boolean;
-   initiated: boolean;
-        user: User;
-        meta: { read: boolean; show: boolean };
-};
-
-export default Friend;
+  static getId = (friend: { _id: string; user?: Friend["user"] }): string => {
+    const { user = "" } = friend;
+    return typeof user === "object" && "_id" in user ? user._id : user;
+  };
+}

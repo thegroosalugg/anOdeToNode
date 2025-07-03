@@ -1,5 +1,6 @@
-import User, { getId } from "@/models/User";
+import User from "@/models/User";
 import ProfilePic from "../ui/image/ProfilePic";
+import Friend from "@/models/Friend";
 
 // user = the one being viewed | peer = the comparison filter
 export default function UserItem({ target, watcher }: { target: User; watcher: User }) {
@@ -7,7 +8,8 @@ export default function UserItem({ target, watcher }: { target: User; watcher: U
 
   const count = watcher.friends.filter((your) =>
     friends.some(
-      (their) => getId(your.user) === getId(their.user) && your.accepted && their.accepted
+      (their) =>
+        Friend.getId(your) === Friend.getId(their) && your.accepted && their.accepted
     )
   ).length;
 

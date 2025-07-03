@@ -6,6 +6,8 @@ export type Dict<T> = Record<string, T>;
 
 export type Direction = -1 | 1;
 
+export type Meta = { read: boolean; show: boolean };
+
 export type FetchError = {
   [key: string]: string;
 } & {

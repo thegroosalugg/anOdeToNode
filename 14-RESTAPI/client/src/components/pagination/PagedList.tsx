@@ -3,7 +3,7 @@ import { useEffect, useRef, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { Paginated } from "./usePagedFetch";
 import { custom } from "@/lib/hooks/usePages";
-import User from "@/models/User";
+import Friend from "@/models/Friend";
 import PageButtons from "./PageButtons";
 import { createAnimations } from "@/lib/motion/animations";
 import { getStyles } from "../../lib/util/getStyles";
@@ -18,9 +18,7 @@ interface PagedList<T> extends Paginated<T> {
        children: (item: T) => ReactNode;
 }
 
-type ID = { _id: string; user?: User };
-
-export default function PagedList<T extends ID>({
+export default function PagedList<T extends { _id: string }>({
      className = "",
          delay = 0,
           path,
@@ -56,7 +54,7 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
 
   function navTo(item: T) {
     if (deferring || !path) return;
-    const _id = isFriendList && item.user ? item.user._id : item._id;
+    const _id = isFriendList ? Friend.getId(item) : item._id;
     navigate(`/${path}/${_id}`);
   }
 

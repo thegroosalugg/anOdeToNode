@@ -1,7 +1,7 @@
 import { isMobile } from "react-device-detect";
 import { useEffect, useState } from "react";
 import { usePages } from "@/lib/hooks/usePages";
-import User, { getId } from "@/models/User";
+import User from "@/models/User";
 import Friend from "@/models/Friend";
 import PagedList from "../pagination/PagedList";
 import UserItem from "../social/UserItem";
@@ -17,10 +17,11 @@ export default function FriendsList({ target, watcher }: { target: User; watcher
 
   if (!watcher) watcher = target;
   const friendsList = target.friends.filter(
-    ({ user, accepted }) =>
-      getId(user) !== watcher._id &&
+    (their) =>
+      Friend.getId(their) !== watcher._id &&
       watcher.friends.some(
-        (your) => getId(your.user) === getId(user) && your.accepted && accepted
+        (your) =>
+          Friend.getId(your) === Friend.getId(their) && your.accepted && their.accepted
       )
   );
 
@@ -66,7 +67,9 @@ export default function FriendsList({ target, watcher }: { target: User; watcher
       isFriendList
       {...props}
     >
-      {({ user }) => <UserItem {...{ target: user, watcher }} />}
+      {({ user }) =>
+        typeof user === "object" && <UserItem target={user} watcher={watcher} />
+      }
     </PagedList>
   );
 }
