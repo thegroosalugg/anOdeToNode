@@ -35,7 +35,7 @@ export default function UserProfile({ user, setUser }: Authorized) {
              exit={{ opacity: 0, transition: { duration: 0.5 } }}
       >
         <ProfileHeader {...{ user, setUser }} />
-        <FriendsList friends={user.friends} />
+        <FriendsList target={user} />
         <AsyncAwait {...{ isLoading, error }}>
           <PagedList<Post> {...{ ...rest, config: 'userPosts' }}>
             {(post) => <PostItem {...post} isCreator />}

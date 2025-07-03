@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { Types } from 'mongoose';
 import socket from '../socket';
-import User, { _public } from '../models/User';
+import { _basic } from '../models/User';
 import Chat from '../models/Chat';
 import AppError from '../models/Error';
 
@@ -15,7 +15,7 @@ const getChats: RequestHandler = async (req, res, next) => {
       [`deletedFor.${user._id}`]: { $ne: true },
     })
     .sort({ 'lastMsg.updatedAt': -1 })
-    .populate('host guest', _public);
+    .populate('host guest', _basic);
 
     res.status(200).json(chats);
   } catch (error) {

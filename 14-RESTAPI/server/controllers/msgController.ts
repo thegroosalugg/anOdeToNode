@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import socket from '../socket';
 import AppError from '../models/Error';
-import User from '../models/User';
+import User, { _basic } from '../models/User';
 import Chat from '../models/Chat';
 import Msg from '../models/Msg';
 import { getErrors, hasErrors } from '../validation/validators';
@@ -32,7 +32,7 @@ const newMessage: RequestHandler = async (req, res, next) => {
 
     const { content } = req.body;
     const { userId  } = req.params;
-    const peer = await User.findById(userId);
+    const peer = await User.findOne({ _id: userId }).select(_basic);
     if (!peer) return next(new AppError(404, 'User not found'));
 
     if (!user.isFriend(userId)) { // send msgs only to those on friends list
@@ -65,7 +65,7 @@ const newMessage: RequestHandler = async (req, res, next) => {
     // count alerts for other person
     chat.alerts.set(peerStrId, (chat.alerts.get(peerStrId) || 0) + 1); // create dynamic key
     await chat.save();
-    peer.set({ email: 'hidden', friends: [] }); // sensor data
+    // peer.set({ email: 'hidden', friends: [] }); // sensor data
     // reset host/guest to full objects for client
     const [host, guest] =
       chat.host.toString() === userStrId ? [user, peer] : [peer, user];

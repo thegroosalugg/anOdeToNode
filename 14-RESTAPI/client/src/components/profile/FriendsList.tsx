@@ -1,19 +1,28 @@
 import { isMobile } from "react-device-detect";
 import { useEffect, useState } from "react";
 import { usePages } from "@/lib/hooks/usePages";
+import User, { getId } from "@/models/User";
 import Friend from "@/models/Friend";
 import PagedList from "../pagination/PagedList";
-import PeerItem from "../social/PeerItem";
-import css from "../social/PeerItem.module.css";
+import UserItem from "../social/UserItem";
+import css from "../social/UserItem.module.css";
 
 function paginate<T>(arr: T[], page: number, limit: number): T[] {
   const start = (page - 1) * limit;
   return arr.slice(start, start + limit);
 }
 
-export default function FriendsList({ friends }: { friends: Friend[] }) {
+export default function FriendsList({ target, watcher }: { target: User; watcher?: User }) {
   const { deferring, current, direction, changePage: setPage } = usePages();
-  const friendsList = friends.filter(({ accepted }) => accepted);
+
+  if (!watcher) watcher = target;
+  const friendsList = target.friends.filter(
+    ({ user, accepted }) =>
+      getId(user) !== watcher._id &&
+      watcher.friends.some(
+        (your) => getId(your.user) === getId(user) && your.accepted && accepted
+      )
+  );
 
   const limit = isMobile ? 4 : 5;
   const [pagedData, setPagedData] = useState(paginate(friendsList, current, limit));
@@ -47,13 +56,13 @@ export default function FriendsList({ friends }: { friends: Friend[] }) {
 
   return (
     <PagedList<Friend>
-         className={css["user-list"]}
-              path="user"
-          fallback="Nobody here..."
-       isFriendList
+      className={`${css["user-list"]} no-scrollbar-y`}
+           path="user"
+       fallback={watcher === target ? "Your friends will appear here" : "No mutual friends"}
+      isFriendList
       {...props}
     >
-      {(friend) => <PeerItem user={friend.user} count={friendsList.length} />}
+      {({ user }) => <UserItem {...{ target: user, watcher }} />}
     </PagedList>
   );
 }

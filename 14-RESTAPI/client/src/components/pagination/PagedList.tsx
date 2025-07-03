@@ -14,7 +14,7 @@ interface PagedList<T> extends Paginated<T> {
           path?: string;
       fallback?: string;
   isFriendList?: boolean;
-    children: (item: T) => ReactNode;
+       children: (item: T) => ReactNode;
 }
 
 type ID = { _id: string; user?: User };
@@ -40,7 +40,6 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   const       listRef = useRef<HTMLUListElement | null>(null);
   const        height = useRef<number | "auto">("auto");
   const shouldRecount = docCount < limit && items.length < limit;
-  // const  isFriendList = ["friends", "mutual"].includes(config);
   const       opacity = 0;
   const      duration = 0.5;
   const        cursor = deferring ? "wait" : "";
@@ -103,12 +102,12 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
               className={`floating-box ${css["fallback"]}`}
               {...createAnimations()}
             >
-              {fallback}
+              {fallback}...
             </motion.li>
           )}
         </AnimatePresence>
       </motion.ul>
-      {docCount >= limit && (
+      {docCount > limit && (
         <PageButtons {...{ docCount, limit, current, changePage, deferring, delay }} />
       )}
     </>

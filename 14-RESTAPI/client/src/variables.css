@@ -96,21 +96,21 @@
 }
 
 .no-scrollbars {
-  &::-webkit-scrollbar { height: 0px; width: 0px; }
+  &::-webkit-scrollbar { height: 0px !important; width: 0px !important; }
 }
 
 .no-scrollbar-x {
-  &::-webkit-scrollbar { height: 0px; }
+  &::-webkit-scrollbar { height: 0px !important; }
 }
 
 .no-scrollbar-y {
-  &::-webkit-scrollbar { width: 0px; }
+  &::-webkit-scrollbar { width: 0px !important; }
 }
 
 .scrollbar-bg {
-  &::-webkit-scrollbar-thumb { background: var(--bg); }
+  &::-webkit-scrollbar-thumb { background: var(--bg) !important; }
 }
 
 .scrollbar-accent {
-  &::-webkit-scrollbar-thumb { background: var(--accent); }
+  &::-webkit-scrollbar-thumb { background: var(--accent) !important; }
 }

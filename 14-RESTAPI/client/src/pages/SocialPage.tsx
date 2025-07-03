@@ -6,8 +6,8 @@ import User from "@/models/User";
 import Logger from "@/models/Logger";
 import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
 import PagedList from "@/components/pagination/PagedList";
-import PeerItem from "@/components/social/PeerItem";
-import css from "@/components/social/PeerItem.module.css";
+import UserItem from "@/components/social/UserItem";
+import css from "@/components/social/UserItem.module.css";
 import { Authorized } from "@/lib/types/auth";
 
 export default function SocialPage({ user }: Authorized) {
@@ -16,7 +16,6 @@ export default function SocialPage({ user }: Authorized) {
     ...rest
   } = usePagedFetch<User>("social/users", isMobile ? 8 : 10);
   const socketRef = useSocket("social");
-  const count = user.friends.filter(({ accepted }) => accepted).length;
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -48,7 +47,7 @@ export default function SocialPage({ user }: Authorized) {
         {...rest}
         whileHover={{ y: -2, transition: { ease: "linear", duration: 0.2 } }}
       >
-        {(user) => <PeerItem {...{ user, count }} />}
+        {(peer) => <UserItem target={peer} watcher={user} />}
       </PagedList>
     </AsyncAwait>
   );

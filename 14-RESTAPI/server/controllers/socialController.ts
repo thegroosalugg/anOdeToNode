@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import socket from '../socket';
-import User, { _public, IFriend } from '../models/User';
+import User, { _friends, _full, IFriend } from '../models/User';
 import AppError from '../models/Error';
 
 const getUsers: RequestHandler = async (req, res, next) => {
@@ -12,7 +12,7 @@ const getUsers: RequestHandler = async (req, res, next) => {
     const    items = await User.find(query)
       .skip((page - 1) * limit)
       .limit(limit)
-      .select(_public)
+      .select(_friends)
       .sort({ createdAt: -1 });
 
     if (!items) return next(new AppError(404, 'No users found'));
@@ -27,21 +27,14 @@ const getUserById: RequestHandler = async (req, res, next) => {
   if (!user) return next(AppError.devErr());
 
   try {
-    const { userId } = req.params; // .'friends' & .'about' required on this page
-    const peer = await User.findById(userId).select('-email -password');
-    if (!peer) return next(new AppError(404, 'User not found'));
-    peer.friends = peer.friends.filter((theirFriend) =>
-      user.friends.some(
-        (yourFriend) =>
-           yourFriend.accepted &&
-          theirFriend.accepted &&
-          theirFriend.user.toString() === yourFriend.user.toString()
-      )
-    ); // filter for mutual friends
-    await peer.populate('friends.user', _public);
+    const { userId } = req.params;
+    const peer = await User.findById(userId)
+      .select(_full)
+      .populate("friends.user", _friends);
+    if (!peer) return next(new AppError(404, "User not found"));
     res.status(200).json(peer);
   } catch (error) {
-    next(new AppError(500, 'unable to load user', error));
+    next(new AppError(500, "unable to load user", error));
   }
 };
 
@@ -85,8 +78,8 @@ const friendRequest: RequestHandler = async (req, res, next) => {
 
     await peer.save();
     await user.save();
-    await peer.populate('friends.user', _public);
-    await user.populate('friends.user', _public);
+    await peer.populate('friends.user', _friends);
+    await user.populate('friends.user', _friends);
     const io = socket.getIO();
     io.emit(`peer:${user._id}:update`, user);
     io.emit(`peer:${peer._id}:update`, peer);

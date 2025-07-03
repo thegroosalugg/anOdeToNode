@@ -1,7 +1,9 @@
 @import "./variables.css";
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900");
 
 :root {
+  --font-major: "Montserrat", serif;
+  --font-minor: "Lato", sans-serif;
   --bg: var(--gray-200);
   --fg: var(--gray-900);
   --accent: var(--steel-600);
@@ -39,7 +41,7 @@ body {
   color: var(--fg);
   background: var(--bg);
   line-height: 1.2;
-  font-family: "Montserrat", serif; /* replace */
+  font-family: var(--font-major);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh; /* overlays stretch to screen height */
