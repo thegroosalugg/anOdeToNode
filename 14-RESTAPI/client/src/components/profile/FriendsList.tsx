@@ -58,7 +58,11 @@ export default function FriendsList({ target, watcher }: { target: User; watcher
     <PagedList<Friend>
       className={`${css["user-list"]} no-scrollbar-y`}
            path="user"
-       fallback={watcher === target ? "Your friends will appear here" : "No mutual friends"}
+       fallback={
+        watcher === target
+          ? "Your friends will appear here @center py-10"
+          : "No mutual friends @py-20"
+      }
       isFriendList
       {...props}
     >

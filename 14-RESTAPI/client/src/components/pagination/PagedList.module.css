@@ -10,7 +10,7 @@
   overflow-y: scroll;
 
   /* uses floating box class */
-  li {
+  > li {
     width: 100%;
     padding: 1rem;
   }
@@ -19,11 +19,11 @@
 
   /* uses floating box class */
   .fallback{
+    /* padding: py-value px-1.5rem; text-align: value; set as inline styles dynamically */
     cursor: auto;
     font-family: var(--font-minor);
     font-weight: 300;
     font-size: 1.5rem;
-    padding: 0.25rem 1.5rem;
     /* ignore grid placement when the UL is a grid */
     place-self: center;
     grid-column: 1 / -1;

@@ -6,6 +6,7 @@ import { custom } from "@/lib/hooks/usePages";
 import User from "@/models/User";
 import PageButtons from "./PageButtons";
 import { createAnimations } from "@/lib/motion/animations";
+import { getStyles } from "../../lib/util/getStyles";
 import css from "./PagedList.module.css";
 
 interface PagedList<T> extends Paginated<T> {
@@ -44,13 +45,12 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   const      duration = 0.5;
   const        cursor = deferring ? "wait" : "";
   const       stagger = (index: number) => ({ duration, delay: 0.05 * index });
+  const { text, style } = getStyles(fallback);
 
   useEffect(() => {
     setTimeout(() => {
-      if (listRef.current) {
-        height.current = listRef.current.offsetHeight;
-      }
-      if (shouldRecount) height.current = "auto";
+      if (listRef.current) height.current = listRef.current.offsetHeight;
+      if ( shouldRecount ) height.current = "auto";
     }, 1000);
   }, [shouldRecount]);
 
@@ -77,7 +77,7 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
         transition={{ duration, ease: "easeInOut", opacity: { delay } }}
       >
         <AnimatePresence mode="popLayout" custom={direction}>
-          {items.length > 0 ? (
+          {items.length ? (
             items.map((item, i) => (
               <motion.li
                     layout
@@ -101,8 +101,9 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
                     key="fallback"
               className={`floating-box ${css["fallback"]}`}
               {...createAnimations()}
+              {...{ style }} // padding: py-value px-1.5rem; text-align: value;
             >
-              {fallback}...
+              {text}...
             </motion.li>
           )}
         </AnimatePresence>
