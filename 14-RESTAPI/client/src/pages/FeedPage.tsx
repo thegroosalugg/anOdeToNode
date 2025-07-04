@@ -4,12 +4,12 @@ import { useSocket } from '@/lib/hooks/useSocket';
 import { Authorized } from '@/lib/types/auth';
 import Post from '@/models/Post';
 import Logger from '@/models/Logger';
-import Modal from '@/components/ui/modal/Modal';
 import Button from '@/components/ui/button/Button';
 import PostForm from '@/components/form/PostForm';
 import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
 import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/post/PostItem';
+import SideBar from '@/components/ui/menu/SideBar';
 
 export default function FeedPage({ setUser }: Authorized) {
   const {
@@ -58,9 +58,9 @@ export default function FeedPage({ setUser }: Authorized) {
 
   return (
     <>
-      <Modal open={showModal}          close={closeModal}>
+      <SideBar open={showModal}        close={closeModal}>
         <PostForm {...{ setUser }} onSuccess={closeModal} />
-      </Modal>
+      </SideBar>
       <Button
            onClick={() => setShowModal(true)}
              style={{ margin: '0 auto 0.5rem' }}

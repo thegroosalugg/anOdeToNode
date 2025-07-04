@@ -25,6 +25,7 @@ export default function PostId({
   const    visible = { opacity: 1, transition };
   const   variants = { hidden, visible };
   const   navigate = useNavigate();
+  const { name = "account", surname = "deleted" } = creator;
 
   const htmlRef = useRef<HTMLParagraphElement | null>(null);
   const [height, setHeight] = useState<number | 'auto'>('auto');
@@ -47,9 +48,7 @@ export default function PostId({
           {title}
         </motion.span>
         <span onClick={() => navigate('/user/' + creator._id)}>
-          {creator?.name    || 'Account'}
-          {' '}
-          {creator?.surname || 'deleted'}
+          {name} {surname}
         </span>
         <ProfilePic user={creator} />
       </motion.h1>

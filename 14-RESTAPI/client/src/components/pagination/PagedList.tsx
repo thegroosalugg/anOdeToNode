@@ -34,7 +34,7 @@ export default function PagedList<T extends { _id: string }>({
 }: // merges PagedList & <motion.li> props; excluding common duplicates: [key, children, ...etc]
 PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   const      navigate = useNavigate();
-  const       classes = `scrollbar-accent" ${css["list"]} ${className}`;
+  const       classes = `scrollbar-accent ${css["list"]} ${className}`;
   const       listRef = useRef<HTMLUListElement | null>(null);
   const        height = useRef<number | "auto">("auto");
   const shouldRecount = docCount < limit && items.length < limit;

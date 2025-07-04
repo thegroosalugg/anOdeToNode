@@ -133,7 +133,7 @@ export default function PostPage({ user, setUser }: Authorized) {
           <>
             <PostId {...{ post, user }} setModal={setModalState} />
             <ChatBox {...{ url: `post/reply/${post._id}`, setUser, isPost: true }} />
-            <PagedList<Reply> {...{ ...rest, config: "reply" }}>
+            <PagedList<Reply> fallback="Reply to this post @end" {...rest}>
               {(reply) => <ReplyItem {...reply} userId={user._id} />}
             </PagedList>
           </>

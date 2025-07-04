@@ -61,7 +61,7 @@ export default function FriendsList({ target, watcher }: { target: User; watcher
            path="user"
        fallback={
         watcher === target
-          ? "Your friends will appear here"
+          ? "Your friends will appear here @start"
           : "No mutual friends @start"
       }
       isFriendList

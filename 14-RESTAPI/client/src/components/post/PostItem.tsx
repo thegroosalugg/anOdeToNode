@@ -17,7 +17,7 @@ export default function PostItem({
 }: Post & { isCreator?: boolean }) {
   const { name = "account", surname = "deleted" } = creator;
   return (
-    <article className={`${css["post-item"]} floating-box`}>
+    <article className={`${css["post"]} floating-box`}>
       {!isCreator && (
         <h1>
           <ProfilePic user={creator} />
