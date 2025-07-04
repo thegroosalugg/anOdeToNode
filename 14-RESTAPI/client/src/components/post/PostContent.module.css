@@ -1,9 +1,7 @@
-.postId {
+.post-content {
   align-self: center;
-  border: 2px solid var(--accent);
   width: 100%;
   max-width: 600px;
-  background: var(--box);
   padding: 0.1rem; /* scrollbar gap */
 
   > h1 {
@@ -42,9 +40,6 @@
     /* height: 200px; */ /* motion configured */
     object-fit: contain;
     margin: 0 auto;
-    border-top: 1px solid var(--accent);
-    border-bottom: 1px solid var(--accent);
-    background: var(--main-gradient);
   }
 
   > p {

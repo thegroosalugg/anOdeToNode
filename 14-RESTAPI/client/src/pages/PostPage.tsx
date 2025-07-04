@@ -10,7 +10,7 @@ import Post from "@/models/Post";
 import Reply from "@/models/Reply";
 import Logger from "@/models/Logger";
 import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
-import PostId from "@/components/post/PostId"
+import PostContent from "@/components/post/PostContent";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import ChatBox from "@/components/form/layout/ChatBox";
 import ReplyItem from "@/components/post/ReplyItem";
@@ -132,7 +132,7 @@ export default function PostPage({ user, setUser }: Authorized) {
       <AsyncAwait {...{ isLoading, error }}>
         {post && (
           <>
-            <PostId {...{ post, user }} setModal={setModalState} />
+            <PostContent {...{ post, user }} setModal={setModalState} />
             <ChatBox {...{ url: `post/reply/${post._id}`, setUser, isPost: true }} />
             <PagedList<Reply>
               header={{ fallback: ["Reply to this post", "end"] }}

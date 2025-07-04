@@ -1,34 +1,16 @@
 .reply {
   --pl: 0;
   --pr: 2rem;
-  --ml-first: 0;
-  --ml-last: auto;
   padding-left: var(--pl);
   padding-right: var(--pr);
 
-  > h2 {
+  > header {
     display: flex;
-    align-items: center;
+    align-items: end;
+    justify-content: space-between;
     gap: 0.25rem;
     padding: 1rem 1.2rem 0.2rem;
     cursor: pointer;
-
-    > img { border: 2px solid var(--fg); }
-
-    > span {
-      &:first-of-type {
-        font-weight: 900;
-        text-decoration: underline;
-        text-underline-offset: 0.2rem;
-        margin-left: var(--ml-first);
-      }
-      &:last-of-type {
-        margin-bottom: -0.9rem;
-        margin-left: var(--ml-last);
-        color: var(--text);
-        font-size: var(--text-sm);
-      }
-    }
   }
 
   > p {
@@ -57,11 +39,8 @@
 .reverse {
   --pr: 0;
   --pl: 2rem;
-  --ml-first: auto;
-  --ml-last: 0;
 
-  > h2 {
-    > img                { order: 2; } /*  last  */
-    > span:first-of-type { order: 1; } /* center */
-  } /* span:last-of-type { order: 0; }    first  */
+  > header {
+    > h2 { order: 1; } /* <NameTag> last in order */
+  }
 }

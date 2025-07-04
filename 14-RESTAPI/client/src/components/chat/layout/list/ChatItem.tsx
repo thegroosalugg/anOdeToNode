@@ -1,23 +1,16 @@
-import { motion, AnimatePresence, HTMLMotionProps } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { ReactNode } from "react";
 import { useChat } from "../../context/ChatContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import User from "@/models/User";
 import Chat from "@/models/Chat";
-import ProfilePic from "@/components/ui/image/ProfilePic";
 import Button from "@/components/ui/button/Button";
-import Counter from "@/components/ui/counter/Counter";
-import { timeAgo } from "@/lib/util/timeStamps";
+import Counter from "@/components/ui/tags/Counter";
 import { createAnimations, createVariants } from "@/lib/motion/animations";
+import NameTag from "@/components/ui/tags/NameTag";
+import Time from "@/components/ui/tags/Time";
 import css from "./ChatItem.module.css";
-
-type TruncateSpan = { children: ReactNode } & HTMLMotionProps<"span">;
-
-const Truncate = ({ children, ...props }: TruncateSpan) => (
-  <motion.span className="truncate" {...props}>
-    {children}
-  </motion.span>
-);
+import Truncate from "@/components/ui/tags/Truncate";
 
 interface ChatProps {
       chat: Chat;
@@ -57,10 +50,12 @@ export default function ChatItem({ chat, children }: ChatProps) {
       {...{ variants }}
     >
       <header style={{ boxShadow: activeChat ? "var(--shadow-sm)" : ""}}>
-        <ProfilePic layout user={recipient} />
-        <Truncate layout onClick={() => navTo(recipient._id)}>
-          {recipient.name} {recipient.surname}
-        </Truncate>
+        <NameTag
+          layout
+             user={recipient}
+            align="center"
+          onClick={() => navTo(recipient._id)}
+        />
         <AnimatePresence mode="wait">
           {activeChat ? (
             <Button layout key="btn" exit={{ opacity: 0 }} onClick={collapse}>
@@ -68,7 +63,7 @@ export default function ChatItem({ chat, children }: ChatProps) {
             </Button>
           ) : (
             <motion.p layout key={lastMsg.updatedAt} {...animations}>
-              <Truncate>{timeAgo(lastMsg.updatedAt)}</Truncate>
+              <Time time={lastMsg.updatedAt} />
               <span className={css["counter"]}>
                 <Truncate>{sender}</Truncate>
                 <Counter count={alerts[user._id]} />

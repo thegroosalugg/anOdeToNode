@@ -15,46 +15,37 @@
   /* flex: 1; */ /* set via Framer 0 | 1 */
 
   /* all <spans> use .truncate */
-  span {
+  span, time {
     transition: color 0.5s ease, background 0.5s ease;
   }
 
   > header {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    justify-content: space-between;
+    gap: 0.5rem;
     padding: 0.5rem;
 
-    > img {
-      border-color: var(--img);
-      transition: border-color 0.3s ease;
-    }
-
-    /* Recipient name  */
-    > span {
-      color: var(--header);
-      text-align: center;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 1.2rem;
-    }
-
-    /* Back Button (Expanded) */
-    > button {
-      margin-left: auto;
+    /* Recipient Name */
+    > h2 {
+      min-width: 0;
+      > img {
+        border-color: var(--img);
+        transition: border-color 0.3s ease;
+      }
+      > span { color: var(--header); }
     }
 
     /* Last Message info (Collapsed): timestamp, sender/counter & lastMsg */
     > p {
-      max-width: 40%;
-      margin-left: auto;
       display: flex;
       flex-direction: column;
       align-items: end;
+      min-width: 0;
+      flex: 0 1 50%;
 
-      > span {
+      > span, time {
         max-width: 100%;
-        font-size: var(--text-sm);
         color: var(--color);
       }
     }
@@ -63,10 +54,8 @@
 
 /* Recipient name & counter */
 .counter {
-  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: end;
   gap: 0.2rem;
   font-weight: 700;
 
@@ -76,6 +65,7 @@
       position: static;
       color: var(--background);
       background: var(--counter);
+      min-width: 20px;
     }
 
     /* first-of-type loads last & overwrites background when only 1 child span */

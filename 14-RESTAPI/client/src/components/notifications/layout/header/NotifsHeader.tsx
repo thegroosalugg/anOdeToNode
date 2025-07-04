@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { useAlerts } from "../../context/AlertsContext";
-import Counter from "@/components/ui/counter/Counter";
+import Counter from "@/components/ui/tags/Counter";
 import CloseButton from "@/components/ui/button/CloseButton";
 import IconButton from "@/components/ui/button/IconButton";
 import css from "./NotifsHeader.module.css";

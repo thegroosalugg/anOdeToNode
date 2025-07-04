@@ -3,12 +3,12 @@ import { useEffect, useRef, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { Paginated } from "./usePagedFetch";
 import { custom } from "@/lib/hooks/usePages";
+import { Align } from "@/lib/types/common";
 import Friend from "@/models/Friend";
 import PageButtons from "./PageButtons";
 import Heading from "../ui/layout/Heading";
 import css from "./PagedList.module.css";
 
-type  Align = "start" | "center" | "end";
 type Config = [string, Align?];
 type Header = { title?: Config; fallback?: Config };
 

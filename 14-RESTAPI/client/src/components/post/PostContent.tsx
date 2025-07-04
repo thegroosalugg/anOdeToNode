@@ -7,9 +7,9 @@ import User from '@/models/User';
 import Post from '@/models/Post';
 import ProfilePic from '../ui/image/ProfilePic';
 import Button from '../ui/button/Button';
-import css from './PostId.module.css';
+import css from './PostContent.module.css';
 
-export default function PostId({
+export default function PostContent({
       post,
       user,
   setModal,
@@ -38,7 +38,7 @@ export default function PostId({
 
   return (
     <motion.section
-       className={css['postId']}
+       className={css['post-content']}
          initial='hidden'
          animate='visible'
       transition={{ staggerChildren: 0.3 }}
