@@ -56,7 +56,7 @@ export default function ChatItem({ chat, children }: ChatProps) {
            exit={{ ...variants.hidden, x: -10 }}
       {...{ variants }}
     >
-      <header>
+      <header style={{ boxShadow: activeChat ? "var(--shadow-sm)" : ""}}>
         <ProfilePic layout user={recipient} />
         <Truncate layout onClick={() => navTo(recipient._id)}>
           {recipient.name} {recipient.surname}

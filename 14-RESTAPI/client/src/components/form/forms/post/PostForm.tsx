@@ -11,15 +11,17 @@ import Error from "@/components/ui/boundary/error/Error";
 import Loader from "@/components/ui/boundary/loader/Loader";
 import css from "./PostForm.module.css";
 
+export interface PostFormProps {
+  onSuccess?: () => void;
+     setUser: Auth["setUser"];
+       post?: Post | null;
+}
+
 export default function PostForm({
   onSuccess = () => console.log("Posted!"),
     setUser,
        post,
-}: {
-  onSuccess?: () => void;
-     setUser: Auth["setUser"];
-       post?: Post | null;
-}) {
+}: PostFormProps) {
   const { isLoading, error, reqData, setError } = useFetch<Post | null>();
   const [scope,       animate] = useAnimate();
   const { deferring, deferFn } = useDebounce();
@@ -69,13 +71,6 @@ export default function PostForm({
            onSubmit={submitHandler}
                exit={{ opacity: 0, scale: 0.8 }}
         >
-          <section className={css["controls"]}>
-            <section>
-              <Input control="title"   errors={error} defaultValue={title} />
-              <Input control="content" errors={error} defaultValue={content} rows={5} />
-            </section>
-            <ImagePicker {...{ imgURL }} /> {/* applies to this layout only */}
-          </section>
           <Button
               disabled={deferring}
               whileTap={{ scale: deferring ? 1 : 0.9 }} // overwrites default
@@ -83,6 +78,9 @@ export default function PostForm({
           >
             {isLoading ? <Loader size="xs" color="bg" /> : "Post"}
           </Button>
+          <Input control="title"   errors={error} defaultValue={title} />
+          <Input control="content" errors={error} defaultValue={content} rows={5} />
+          <ImagePicker {...{ imgURL }} />
         </motion.form>
       )}
     </AnimatePresence>

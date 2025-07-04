@@ -1,8 +1,8 @@
 import { AnimatePresence } from "motion/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useChat } from "../../context/ChatContext";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import Button from "@/components/ui/button/Button";
+import CloseButton from "@/components/ui/button/CloseButton";
 import css from "./ChatActions.module.css";
 
 export default function ChatActions() {
@@ -36,9 +36,7 @@ export default function ChatActions() {
             )}
           </AnimatePresence>
         </div>
-        <Button background="var(--text)" onClick={closeMenu}>
-          <FontAwesomeIcon icon="x" />
-        </Button>
+        <CloseButton onClick={closeMenu} />
       </header>
     </>
   );

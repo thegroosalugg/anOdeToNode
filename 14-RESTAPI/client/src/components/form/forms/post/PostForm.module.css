@@ -1,26 +1,14 @@
 .post-form {
-  padding: 1rem;
-  border-radius: 2px;
-  background: var(--box-gradient);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
   overflow-y: scroll;
-  height: 100%;
-
-  .controls {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    overflow: auto;
-    gap: 1rem;
-
-    > section {
-      display: flex;
-      flex-direction: column;
-      gap: 1.6rem;
-      margin-bottom: 1.4rem;
-    }
-  }
+  padding: 1rem 2rem;
 
   > button {
-    width: 100%;
-    margin-top: 1rem;
+    display: block;
+    align-self: end;
+    min-width: 56px;
   }
 }

@@ -1,8 +1,7 @@
 import { ReactNode } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAlerts } from "../../context/AlertsContext";
 import Counter from "@/components/ui/counter/Counter";
-import Button from "@/components/ui/button/Button";
+import CloseButton from "@/components/ui/button/CloseButton";
 import IconButton from "@/components/ui/button/IconButton";
 import css from "./NotifsHeader.module.css";
 
@@ -17,9 +16,7 @@ export default function NotifsHeader() {
 
   return (
     <header className={css["header"]}>
-      <Button background="var(--text)" onClick={closeMenu}>
-        <FontAwesomeIcon icon="x" />
-      </Button>
+      <CloseButton onClick={closeMenu} />
       <nav className="floating-box no-scrollbar-x">
         {alerts.map((count, i) => {
           const [line1, line2] = labels[i].split(" ");

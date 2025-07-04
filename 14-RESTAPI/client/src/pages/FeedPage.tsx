@@ -5,11 +5,10 @@ import { Authorized } from '@/lib/types/auth';
 import Post from '@/models/Post';
 import Logger from '@/models/Logger';
 import Button from '@/components/ui/button/Button';
-import PostForm from '@/components/form/forms/post/PostForm';
 import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
 import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/post/PostItem';
-import SideBar from '@/components/ui/menu/SideBar';
+import PostFormSideBar from '@/components/form/forms/post/PostFormSideBar';
 
 export default function FeedPage({ setUser }: Authorized) {
   const {
@@ -58,9 +57,11 @@ export default function FeedPage({ setUser }: Authorized) {
 
   return (
     <>
-      <SideBar open={showModal}        close={closeModal}>
-        <PostForm {...{ setUser }} onSuccess={closeModal} />
-      </SideBar>
+      <PostFormSideBar
+             open={showModal}
+            close={closeModal}
+        formProps={{ setUser, onSuccess: closeModal }}
+      />
       <Button
            onClick={() => setShowModal(true)}
              style={{ margin: '0 auto 0.5rem' }}

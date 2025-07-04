@@ -10,13 +10,12 @@ import Post from "@/models/Post";
 import Reply from "@/models/Reply";
 import Logger from "@/models/Logger";
 import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
-import PostId from "@/components/post/PostId";
-import PostForm from "@/components/form/forms/post/PostForm";
+import PostId from "@/components/post/PostId"
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import ChatBox from "@/components/form/layout/ChatBox";
 import ReplyItem from "@/components/post/ReplyItem";
 import PagedList from "@/components/pagination/PagedList";
-import SideBar from "@/components/ui/menu/SideBar";
+import PostFormSideBar from "@/components/form/forms/post/PostFormSideBar";
 
 export default function PostPage({ user, setUser }: Authorized) {
   const {
@@ -120,9 +119,11 @@ export default function PostPage({ user, setUser }: Authorized) {
 
   return (
     <>
-      <SideBar open={modalState === "edit"} close={closeModal}>
-        <PostForm { ...{ setUser, post }} />
-      </SideBar>
+      <PostFormSideBar
+             open={modalState === "edit"}
+            close={closeModal}
+        formProps={{ setUser, post }}
+      />
       <ConfirmDialog
              open={modalState === "delete"}
         onConfirm={deletePost}
