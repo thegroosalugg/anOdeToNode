@@ -8,11 +8,15 @@ import PageButtons from "./PageButtons";
 import Heading from "../ui/layout/Heading";
 import css from "./PagedList.module.css";
 
+type  Align = "start" | "center" | "end";
+type Config = [string, Align?];
+type Header = { title?: Config; fallback?: Config };
+
 interface PagedList<T> extends Paginated<T> {
      className?: string;
          delay?: number;
           path?: string;
-      fallback?: string;
+        header?: Header;
   isFriendList?: boolean;
        children: (item: T) => ReactNode;
 }
@@ -21,7 +25,7 @@ export default function PagedList<T extends { _id: string }>({
      className = "",
          delay = 0,
           path,
-      fallback = "No results found",
+        header,
   isFriendList,
           data: { docCount, items },
          limit,
@@ -34,6 +38,7 @@ export default function PagedList<T extends { _id: string }>({
 }: // merges PagedList & <motion.li> props; excluding common duplicates: [key, children, ...etc]
 PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   const      navigate = useNavigate();
+  const      hasItems = items.length > 0;
   const       classes = `scrollbar-accent ${css["list"]} ${className}`;
   const       listRef = useRef<HTMLUListElement | null>(null);
   const        height = useRef<number | "auto">("auto");
@@ -42,9 +47,7 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   const      duration = 0.5;
   const        cursor = deferring ? "wait" : "";
   const       stagger = (index: number) => ({ duration, delay: 0.05 * index });
-  const [text, align] = fallback.split("@");
-  const    alignments = ["start", "center", "end"] as const;
-  const     textAlign = alignments.find((prop) => prop === align) ?? "center";
+  const { title = ["", "start"], fallback = ["No results found", "start"] } = header ?? {};
 
   useEffect(() => {
     setTimeout(() => {
@@ -61,13 +64,13 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
 
   return (
     <>
-      {items.length === 0 ? (
-        <Heading
-          style={{ maxWidth: "600px", width: "100%", margin: "0 auto", textAlign }}
-        >
-          {text}...
-        </Heading>
-      ) : (
+      <Heading
+        className={`${css["header"]} ${hasItems ? css["title"] : ""}`}
+            style={{ textAlign: hasItems && title ? title[1] : fallback[1] }}
+      >
+        {hasItems ? title[0] : `${fallback[0]}...`}
+      </Heading>
+      {hasItems && (
         <>
           <motion.ul
               initial="enter"

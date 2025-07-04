@@ -95,7 +95,11 @@ export default function PeerPage({ user, setUser }: Authorized) {
           <PeerProfile {...{ user, setUser, peer }} />
           <FriendsList target={peer} watcher={user} />
           <PagedList<Post>
-            fallback={`${peer.name} hasn't posted anything yet @end`}
+              path="post"
+            header={{
+                 title: [`${peer.name}'s posts`,                    "end"],
+              fallback: [`${peer.name} hasn't posted anything yet`, "end"],
+            }}
             {...rest}
           >
             {(post) => <PostItem {...post} />}

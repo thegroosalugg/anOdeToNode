@@ -11,12 +11,12 @@ import Reply from "@/models/Reply";
 import Logger from "@/models/Logger";
 import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
 import PostId from "@/components/post/PostId";
-import Modal from "@/components/ui/modal/Modal";
 import PostForm from "@/components/form/PostForm";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import ChatBox from "@/components/form/ChatBox";
 import ReplyItem from "@/components/post/ReplyItem";
 import PagedList from "@/components/pagination/PagedList";
+import SideBar from "@/components/ui/menu/SideBar";
 
 export default function PostPage({ user, setUser }: Authorized) {
   const {
@@ -120,9 +120,9 @@ export default function PostPage({ user, setUser }: Authorized) {
 
   return (
     <>
-      <Modal open={modalState === "edit"} close={closeModal}>
+      <SideBar open={modalState === "edit"} close={closeModal}>
         <PostForm setUser={setUser} post={post} />
-      </Modal>
+      </SideBar>
       <ConfirmDialog
              open={modalState === "delete"}
         onConfirm={deletePost}
@@ -133,8 +133,11 @@ export default function PostPage({ user, setUser }: Authorized) {
           <>
             <PostId {...{ post, user }} setModal={setModalState} />
             <ChatBox {...{ url: `post/reply/${post._id}`, setUser, isPost: true }} />
-            <PagedList<Reply> fallback="Reply to this post @end" {...rest}>
-              {(reply) => <ReplyItem {...reply} userId={user._id} />}
+            <PagedList<Reply>
+              header={{ fallback: ["Reply to this post", "end"] }}
+              {...rest}
+            >
+              {(reply) => <ReplyItem {...reply } userId={user._id} />}
             </PagedList>
           </>
         )}

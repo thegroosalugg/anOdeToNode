@@ -18,7 +18,7 @@
     > span {
       &:first-of-type {
         font-weight: 900;
-        text-decoration-line: underline;
+        text-decoration: underline;
         text-underline-offset: 0.2rem;
         margin-left: var(--ml-first);
       }

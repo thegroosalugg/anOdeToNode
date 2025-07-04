@@ -43,7 +43,7 @@ export default function SocialPage({ user }: Authorized) {
       <PagedList<User>
         className={`${css["user-list"]} no-scrollbar-y`}
              path="user"
-         fallback="Nobody here"
+           header={{ title: ["Users"], fallback: ["Nobody here", "center"] }}
         {...rest}
         whileHover={{ y: -2, transition: { ease: "linear", duration: 0.2 } }}
       >

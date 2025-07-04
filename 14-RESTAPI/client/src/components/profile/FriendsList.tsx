@@ -55,15 +55,16 @@ export default function FriendsList({ target, watcher }: { target: User; watcher
          limit,
   };
 
+  const [fallback, title] =
+    watcher === target
+      ? ["Your friends will appear here", "Your friends"]
+      : ["No mutual friends", `${target.name}'s friends`];
+
   return (
     <PagedList<Friend>
       className={`${css["user-list"]} no-scrollbar-y`}
            path="user"
-       fallback={
-        watcher === target
-          ? "Your friends will appear here @start"
-          : "No mutual friends @start"
-      }
+         header={{ fallback: [fallback], title: [title] }}
       isFriendList
       {...props}
     >

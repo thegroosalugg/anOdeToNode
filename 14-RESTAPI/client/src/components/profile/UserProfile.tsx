@@ -38,8 +38,11 @@ export default function UserProfile({ user, setUser }: Authorized) {
         <FriendsList target={user} />
         <AsyncAwait {...{ isLoading, error }}>
           <PagedList<Post>
-                 path="post"
-             fallback="You haven't posted anything @end"
+              path="post"
+            header={{
+                 title: ["Your Posts",                  "end"],
+              fallback: ["You haven't posted anything", "end"],
+            }}
             {...rest}
           >
             {(post) => <PostItem {...post} isCreator />}

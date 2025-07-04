@@ -4,11 +4,16 @@ import { createAnimations } from "@/lib/motion/animations";
 import css from "./Heading.module.css";
 
 export default function Heading({
-  children,
-  ...props
-}: { children: ReactNode } & HTMLMotionProps<"h1">) {
+  className = "",
+   children,
+   ...props
+}: { className?: string; children: ReactNode } & HTMLMotionProps<"h1">) {
   return (
-    <motion.h1 className={css["heading"]} {...createAnimations()} {...props}>
+    <motion.h1
+      className={`${css["heading"]} ${className}`}
+      {...createAnimations()}
+      {...props}
+    >
       {children}
     </motion.h1>
   );

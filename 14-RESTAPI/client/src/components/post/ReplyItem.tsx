@@ -18,13 +18,13 @@ export default function ReplyItem({
   content,
   createdAt,
   userId,
-}: Reply & { userId?: string }) {
+}: Reply & { userId: string }) {
   const [showModal, setShowModal] = useState(false);
   const { reqData } = useFetch();
   const navigate = useNavigate();
   const closeModal = () => setShowModal(false);
-  const { name = "account", surname = "deleted" } = creator;
   const isOp = userId === creator._id;
+  const { name = "account", surname = "deleted" } = creator;
 
   const deleteReply = async () => {
     await reqData({ url: `post/delete-reply/${_id}`, method: "DELETE" });

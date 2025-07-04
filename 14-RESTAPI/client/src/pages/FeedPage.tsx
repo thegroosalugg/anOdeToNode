@@ -71,7 +71,7 @@ export default function FeedPage({ setUser }: Authorized) {
       <AsyncAwait {...{ isLoading, error }}>
         <PagedList<Post>
                path="post"
-           fallback="Slow news day"
+             header={{ title: ["User posts"], fallback: ["Slow news day", "center"] }}
           {...rest}
         >
           {(post) => <PostItem {...post} />}

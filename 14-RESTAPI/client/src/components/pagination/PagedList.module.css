@@ -12,3 +12,18 @@
 
   > li { width: 100%; position: relative; } /* must be set on <li> too*/
 }
+
+.header {
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+
+  &.title {
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+    text-decoration-thickness: 1px;
+    padding: 0 2rem;
+    margin-bottom: -0.25rem;
+  }
+}
