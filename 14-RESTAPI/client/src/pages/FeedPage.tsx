@@ -10,7 +10,6 @@ import PostForm from '@/components/form/PostForm';
 import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
 import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/post/PostItem';
-import css from '@/components/post/PostItem.module.css';
 
 export default function FeedPage({ setUser }: Authorized) {
   const {
@@ -71,9 +70,8 @@ export default function FeedPage({ setUser }: Authorized) {
       </Button>
       <AsyncAwait {...{ isLoading, error }}>
         <PagedList<Post>
-          className={css["feed"]}
                path="post"
-           fallback="Slow news day @center py-50"
+           fallback="Slow news day"
           {...rest}
         >
           {(post) => <PostItem {...post} />}

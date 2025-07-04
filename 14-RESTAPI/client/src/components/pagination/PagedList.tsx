@@ -5,8 +5,7 @@ import { Paginated } from "./usePagedFetch";
 import { custom } from "@/lib/hooks/usePages";
 import Friend from "@/models/Friend";
 import PageButtons from "./PageButtons";
-import { createAnimations } from "@/lib/motion/animations";
-import { getStyles } from "../../lib/util/getStyles";
+import Heading from "../ui/layout/Heading";
 import css from "./PagedList.module.css";
 
 interface PagedList<T> extends Paginated<T> {
@@ -43,7 +42,9 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   const      duration = 0.5;
   const        cursor = deferring ? "wait" : "";
   const       stagger = (index: number) => ({ duration, delay: 0.05 * index });
-  const { text, style } = getStyles(fallback);
+  const [text, align] = fallback.split("@");
+  const    alignments = ["start", "center", "end"] as const;
+  const     textAlign = alignments.find((prop) => prop === align) ?? "center";
 
   useEffect(() => {
     setTimeout(() => {
@@ -60,54 +61,52 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
 
   return (
     <>
-      <motion.ul
-          initial="enter"
-          animate="center"
-             exit="exit"
-              ref={listRef}
-        className={classes}
-            style={{ height: height.current }}
-         variants={{
-            enter: { opacity    },
-           center: { opacity: 1 },
-             exit: { opacity    },
-         }}
-        transition={{ duration, ease: "easeInOut", opacity: { delay } }}
-      >
-        <AnimatePresence mode="popLayout" custom={direction}>
-          {items.length ? (
-            items.map((item, i) => (
-              <motion.li
-                    layout
-                   initial="enter"
-                   animate="center"
-                      exit="exit"
-                       key={item._id}
-                 className="floating-box"
-                   onClick={() => navTo(item)}
-                     style={{ cursor }}
-                    custom={direction}
-                  variants={{ ...custom }}
-                transition={{ x: stagger(i), opacity: stagger(i) }}
-                {...props}
-              >
-                {children(item)}
-              </motion.li>
-            ))
-          ) : (
-            <motion.li
-                    key="fallback"
-              className={css["fallback"]}
-              {...createAnimations()}
-              {...{ style }} // padding: py-value px-1.5rem; text-align: value;
-            >
-              {text}...
-            </motion.li>
+      {items.length === 0 ? (
+        <Heading
+          style={{ maxWidth: "600px", width: "100%", margin: "0 auto", textAlign }}
+        >
+          {text}...
+        </Heading>
+      ) : (
+        <>
+          <motion.ul
+              initial="enter"
+              animate="center"
+                 exit="exit"
+                  ref={listRef}
+            className={classes}
+                style={{ height: height.current }}
+             variants={{
+               enter: { opacity    },
+              center: { opacity: 1 },
+                exit: { opacity    },
+            }}
+            transition={{ duration, ease: "easeInOut", opacity: { delay } }}
+          >
+            <AnimatePresence mode="popLayout" custom={direction}>
+              {items.map((item, i) => (
+                <motion.li
+                      layout
+                     initial="enter"
+                     animate="center"
+                        exit="exit"
+                         key={item._id}
+                     onClick={() => navTo(item)}
+                       style={{ cursor }}
+                      custom={direction}
+                    variants={{ ...custom }}
+                  transition={{ x: stagger(i), opacity: stagger(i) }}
+                  {...props}
+                >
+                  {children(item)}
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </motion.ul>
+          {docCount > limit && (
+            <PageButtons {...{ docCount, limit, current, changePage, deferring, delay }} />
           )}
-        </AnimatePresence>
-      </motion.ul>
-      {docCount > limit && (
-        <PageButtons {...{ docCount, limit, current, changePage, deferring, delay }} />
+        </>
       )}
     </>
   );

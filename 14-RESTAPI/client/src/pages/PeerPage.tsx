@@ -94,7 +94,10 @@ export default function PeerPage({ user, setUser }: Authorized) {
         <>
           <PeerProfile {...{ user, setUser, peer }} />
           <FriendsList target={peer} watcher={user} />
-          <PagedList<Post> {...{ ...rest, config: 'feed' }}>
+          <PagedList<Post>
+            fallback={`${peer.name} hasn't posted anything yet @end`}
+            {...rest}
+          >
             {(post) => <PostItem {...post} />}
           </PagedList>
         </>

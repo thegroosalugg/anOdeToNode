@@ -1,0 +1,6 @@
+  .heading {
+    font-family: var(--font-minor);
+    font-weight: 300;
+    font-size: 1.5rem;
+    padding: 2rem;
+  }

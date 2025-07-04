@@ -7,5 +7,4 @@ export const LIST_CONFIG = {
       listCss: [replyCss['replies']],
      fallback: 'No comments yet...',
   },
-
 };

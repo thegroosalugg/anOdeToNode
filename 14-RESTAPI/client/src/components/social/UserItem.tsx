@@ -1,6 +1,7 @@
 import User from "@/models/User";
 import ProfilePic from "../ui/image/ProfilePic";
 import Friend from "@/models/Friend";
+import css from "./UserItem.module.css";
 
 // user = the one being viewed | peer = the comparison filter
 export default function UserItem({ target, watcher }: { target: User; watcher: User }) {
@@ -14,7 +15,7 @@ export default function UserItem({ target, watcher }: { target: User; watcher: U
   ).length;
 
   return (
-    <>
+    <article className={css["user-item"]}>
       <ProfilePic user={target} />
       <h2 className="truncate">
         {name} {surname}
@@ -24,6 +25,6 @@ export default function UserItem({ target, watcher }: { target: User; watcher: U
           {count} mutual friend{count > 1 ? "s" : ""}
         </p>
       )}
-    </>
+    </article>
   );
 }

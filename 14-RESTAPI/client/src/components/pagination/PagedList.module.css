@@ -1,4 +1,5 @@
 .list {
+  position: relative; /* prevents out of view port <li> shooting across screen on transition */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,23 +10,5 @@
   padding: 0.5rem;
   overflow-y: scroll;
 
-  /* uses floating box class */
-  > li {
-    width: 100%;
-    padding: 1rem;
-  }
-
-  &::-webkit-scrollbar { height: 0; width: 2px; }
-
-  /* uses floating box class */
-  .fallback{
-    /* padding: py-value px-1.5rem; text-align: value; set as inline styles dynamically */
-    cursor: auto;
-    font-family: var(--font-minor);
-    font-weight: 300;
-    font-size: 1.5rem;
-    /* ignore grid placement when the UL is a grid */
-    place-self: center;
-    grid-column: 1 / -1;
-  }
+  > li { width: 100%; position: relative; } /* must be set on <li> too*/
 }

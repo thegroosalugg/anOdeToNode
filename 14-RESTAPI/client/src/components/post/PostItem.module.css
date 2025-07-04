@@ -1,39 +1,36 @@
-/* increase specificity to override defaults with element.class */
-.feed {
-  li {
-    cursor: pointer;
+.post-item {
+  cursor: pointer;
+  padding: 1rem;
 
-    > h1 {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-size: 1.25rem;
-      font-weight: 600;
-      border-bottom: var(--border-text);
-      padding-bottom: 0.25rem;
-      margin-bottom: 0.5rem;
-    }
+  > h1 {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    border-bottom: var(--border-text);
+    padding-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
 
-    > h2 {
-      font-weight: 500;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
+  > h2 {
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
 
-      span {
-
-        &:first-child { max-width: 70%; }
-        &:last-child {
-          color: var(--text);
-          font-size: var(--text-sm);
-         }
+    span {
+      &:first-child { max-width: 70%; }
+      &:last-child {
+        color: var(--text);
+        font-size: var(--text-sm);
       }
     }
+  }
 
-    > p {
-      margin-top: 0.2rem;
-      color: var(--text);
-    }
+  > p {
+    margin-top: 0.2rem;
+    color: var(--text);
   }
 }

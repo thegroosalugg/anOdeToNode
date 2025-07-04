@@ -11,7 +11,6 @@ import FriendsList from "./FriendsList";
 import PagedList from "../pagination/PagedList";
 import PostItem from "../post/PostItem";
 import css from "./UserProfile.module.css";
-import styles from '@/components/post/PostItem.module.css';
 
 export default function UserProfile({ user, setUser }: Authorized) {
   const {
@@ -39,9 +38,8 @@ export default function UserProfile({ user, setUser }: Authorized) {
         <FriendsList target={user} />
         <AsyncAwait {...{ isLoading, error }}>
           <PagedList<Post>
-            className={styles["feed"]}
                  path="post"
-             fallback="You haven't post anything @end py-20"
+             fallback="You haven't posted anything @end"
             {...rest}
           >
             {(post) => <PostItem {...post} isCreator />}

@@ -2,6 +2,7 @@ import Post from "@/models/Post";
 import ProfilePic from "../ui/image/ProfilePic";
 import { timeAgo } from "@/lib/util/timeStamps";
 import { ReactNode } from "react";
+import css from "./PostItem.module.css";
 
 const Truncate = ({ children }: { children: ReactNode }) => (
   <span className="truncate">{children}</span>
@@ -16,7 +17,7 @@ export default function PostItem({
 }: Post & { isCreator?: boolean }) {
   const { name = "account", surname = "deleted" } = creator;
   return (
-    <>
+    <article className={`${css["post-item"]} floating-box`}>
       {!isCreator && (
         <h1>
           <ProfilePic user={creator} />
@@ -30,6 +31,6 @@ export default function PostItem({
         <Truncate>{timeAgo(updatedAt)}</Truncate>
       </h2>
       <p className="line-clamp">{content}</p>
-    </>
+    </article>
   );
 }

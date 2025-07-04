@@ -4,41 +4,34 @@
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   align-items: start; /* not required, however will overwrite Default's center alignement */
   align-content: start; /* forces rows to stack at top */
+}
 
-  /* remove default .floatin-box class */
-  > li {
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background: none;
-    box-shadow: none;
-    cursor: pointer;
+.user-item {
+  cursor: pointer;
 
-    /* uses .truncate class */
-    > h2 {
-      padding: 0.1rem 0.2rem 0;
-      font-size: 80%;
-      font-weight: 600;
-    }
+  /* uses .truncate class */
+  > h2 {
+    padding: 0.1rem 0.2rem 0;
+    font-size: 80%;
+    font-weight: 600;
+  }
 
-    > img {
-      width: 100%;
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl);
-    }
+  > img {
+    width: 100%;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+  }
 
-    > p {
-      padding-left: 0.1rem;
-      font-size: var(--text-xs);
-      color: var(--text);
-    }
+  > p {
+    padding-left: 0.1rem;
+    font-size: var(--text-xs);
+    color: var(--text);
   }
 }
 
 @media screen and (pointer: coarse) {
   .user-list {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-
-    > li h2 { font-size: 60%; }
   }
+  .user-item h2 { font-size: 60%; }
 }
