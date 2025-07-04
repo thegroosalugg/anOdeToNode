@@ -4,7 +4,7 @@ import { BASE_URL } from '@/lib/util/fetchData';
 import { motion, useAnimate, stagger } from 'motion/react';
 import { Authorized } from '@/lib/types/auth';
 import { FetchError } from '@/lib/types/common';
-import ImagePicker from '../form/ImagePicker';
+import ImagePicker from '../form/layout/ImagePicker';
 import Modal from '../ui/modal/Modal';
 import Button from '../ui/button/Button';
 import ErrorPopUp from '../ui/boundary/error/ErrorPopUp';

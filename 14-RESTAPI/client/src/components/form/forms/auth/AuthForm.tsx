@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Auth } from "@/lib/types/auth";
 import { motion, useAnimate, stagger } from "motion/react";
 import { useDebounce } from "@/lib/hooks/useDebounce";
-import Input from "./Input";
-import Button from "../ui/button/Button";
-import Loader from "../ui/boundary/loader/Loader";
+import Input from "../../layout/Input";
+import Button from "@/components/ui/button/Button";
+import Loader from "@/components/ui/boundary/loader/Loader";
 import { createVariants } from "@/lib/motion/animations";
 import css from "./AuthForm.module.css";
 
@@ -77,14 +77,14 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
       </motion.h2>
       {!isLogin && (
         <motion.section {...{ variants }}>
-          <Input id="name"     errors={error} />
-          <Input id="surname"  errors={error} />
+          <Input control="name"     errors={error} />
+          <Input control="surname"  errors={error} />
         </motion.section>
       )}
-      <Input     id="email"    errors={error} {...{ variants }} />
-      <Input     id="password" errors={error} {...{ variants }} />
+      <Input     control="email"    errors={error} {...{ variants }} />
+      <Input     control="password" errors={error} {...{ variants }} />
       {!isLogin &&
-        <Input   id="password" errors={error} {...{ variants }} confirm />
+        <Input   control="password" errors={error} {...{ variants }} confirm />
       }
       <motion.button
         {...{ variants }}

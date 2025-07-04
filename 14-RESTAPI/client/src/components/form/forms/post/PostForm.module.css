@@ -2,13 +2,13 @@
   padding: 1rem;
   border-radius: 2px;
   background: var(--box-gradient);
+  overflow-y: scroll;
+  height: 100%;
 
-  .inputs {
+  .controls {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    align-items: center;
     overflow: auto;
-    max-width: 600px;
     gap: 1rem;
 
     > section {
@@ -22,7 +22,5 @@
   > button {
     width: 100%;
     margin-top: 1rem;
-    font-weight: 900;
-    border-radius: 2px;
   }
 }

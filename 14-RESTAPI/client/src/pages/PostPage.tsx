@@ -11,9 +11,9 @@ import Reply from "@/models/Reply";
 import Logger from "@/models/Logger";
 import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
 import PostId from "@/components/post/PostId";
-import PostForm from "@/components/form/PostForm";
+import PostForm from "@/components/form/forms/post/PostForm";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
-import ChatBox from "@/components/form/ChatBox";
+import ChatBox from "@/components/form/layout/ChatBox";
 import ReplyItem from "@/components/post/ReplyItem";
 import PagedList from "@/components/pagination/PagedList";
 import SideBar from "@/components/ui/menu/SideBar";
@@ -121,7 +121,7 @@ export default function PostPage({ user, setUser }: Authorized) {
   return (
     <>
       <SideBar open={modalState === "edit"} close={closeModal}>
-        <PostForm setUser={setUser} post={post} />
+        <PostForm { ...{ setUser, post }} />
       </SideBar>
       <ConfirmDialog
              open={modalState === "delete"}

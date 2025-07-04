@@ -5,7 +5,7 @@ import { Authorized } from '@/lib/types/auth';
 import Post from '@/models/Post';
 import Logger from '@/models/Logger';
 import Button from '@/components/ui/button/Button';
-import PostForm from '@/components/form/PostForm';
+import PostForm from '@/components/form/forms/post/PostForm';
 import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
 import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/post/PostItem';

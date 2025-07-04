@@ -4,7 +4,7 @@ import { Auth } from "@/lib/types/auth";
 import { FetchError } from "@/lib/types/common";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
-import Loader from "../ui/boundary/loader/Loader";
+import Loader from "../../ui/boundary/loader/Loader";
 import { createAnimations } from "@/lib/motion/animations";
 import css from "./ChatBox.module.css";
 
