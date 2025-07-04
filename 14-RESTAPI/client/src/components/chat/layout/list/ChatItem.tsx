@@ -25,11 +25,13 @@ export default function ChatItem({ chat, children }: ChatProps) {
   const { host, guest, lastMsg, alerts } = chat;
   const   recipient = user._id === host._id ? guest : host;
   const      sender = lastMsg?.sender === user._id ? "Me" : recipient.name;
-  const        flex = activeChat ? 1 : 0;
-  const      cursor = activeChat || deferring ? "auto" : "pointer";
-  const  animations = createAnimations({ transition: { ease: "linear" }});
-  const    variants = createVariants({ initial: { flex: 0 }, animate: { flex } });
-  let       classes = `floating-box ${css["chat-item"]} `;
+  const        flex = activeChat ? 1 : 0; // <li> (expand/collapse)
+  const      cursor = activeChat || deferring ? "auto" : "pointer"; // <li> pointer events
+  const  animations = createAnimations({ transition: { ease: "linear" }}); // <p>
+  const    variants = createVariants({ initial: { flex: 0 }, animate: { flex } }); // <li>
+  const  translateY = activeChat ?  -6 :   0; // <NameTag> > <span>
+  const  fontWeight = activeChat ? 500 : 400; // <NameTag> > <span>
+  let       classes = `floating-box ${css["chat-item"]} `; // <li>
   if (markedMap[chat._id]) classes += css["marked"];
 
   function navTo(path: string) {
@@ -51,10 +53,14 @@ export default function ChatItem({ chat, children }: ChatProps) {
     >
       <header style={{ boxShadow: activeChat ? "var(--shadow-sm)" : ""}}>
         <NameTag
-          layout
-             user={recipient}
-            align="center"
-          onClick={() => navTo(recipient._id)}
+            layout
+              user={recipient}
+             align="center"
+           onClick={() => navTo(recipient._id)}
+          tagProps={{
+            initial: { translateY },
+            animate: { translateY, fontWeight, transition: { delay: 1, ease: "easeIn" } },
+          }}
         />
         <AnimatePresence mode="wait">
           {activeChat ? (

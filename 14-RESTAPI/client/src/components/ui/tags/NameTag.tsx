@@ -6,18 +6,21 @@ import { Align } from "@/lib/types/common";
 import Truncate from "./Truncate";
 
 interface NameTag extends HTMLMotionProps<"h2"> {
-      user: User;
-     bold?: boolean,
-  reverse?: boolean;
-    align?: Align;
+       user: User;
+      bold?: boolean,
+   reverse?: boolean;
+     align?: Align;
+  tagProps?: HTMLMotionProps<"span">;
 }
 
 export default function NameTag({
-     user,
-     bold,
-  reverse,
-    align,
+      user,
+      bold,
+   reverse,
+     align,
+  tagProps = {},
   ...props
+
 }: NameTag) {
   const { name = "account", surname = "deleted" } = user;
   let classes = css["name-tag"];
@@ -28,7 +31,7 @@ export default function NameTag({
   return (
     <motion.h2 className={classes} {...props}>
       <ProfilePic {...{ user }} />
-      <Truncate>
+      <Truncate {...tagProps}>
         {name} {surname}
       </Truncate>
     </motion.h2>

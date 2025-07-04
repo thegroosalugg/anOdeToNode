@@ -21,7 +21,7 @@
 
     > time {
       font-size: var(--text-sm);
-      color: var(--gray-500);
+      color: var(--text);
     }
 
     > p {
