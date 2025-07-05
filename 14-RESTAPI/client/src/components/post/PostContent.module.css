@@ -1,19 +1,18 @@
 .post-content {
-  --margin: 5%;
+  --offset: 5%;
   align-self: center;
   width: 100%;
-  max-width: 600px;
+  max-width: var(--screen-sm);
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
 
-  > h2   { margin: 0 1rem 0.2rem auto; } /* <NameTag> */
-  > form { margin-left: var(--margin); }
+  > h2 { margin: 0 1rem 0.2rem auto; } /* <NameTag> */
 }
 
 .post-body {
   padding: 0.5rem;
-  margin-left: var(--margin);
+  margin-left: var(--offset);
 
   > h2 {
     display: flex;
@@ -48,7 +47,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc(100% - var(--margin));
+  width: calc(100% - var(--offset));
   max-height: 400px;
   min-height: 200px;
   margin: 1rem 0;

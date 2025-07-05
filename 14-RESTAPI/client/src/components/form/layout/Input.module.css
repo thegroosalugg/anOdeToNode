@@ -15,7 +15,7 @@
   /* uses .floating-box */
   input, textarea {
     padding: 0.25rem 0.5rem;
-    font-size: 1.2rem;
+    font-size: var(--text-xl);
     resize: none;
     transition: color 0.5s ease, border-color 0.5s ease;
   }

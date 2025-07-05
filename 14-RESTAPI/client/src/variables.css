@@ -58,20 +58,34 @@
   --radius-3xl: 1.5rem;
   --radius-4xl: 2rem;
 
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
+  --text-xs:  0.75rem;
+  --text-sm:  0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+  --text-7xl: 4.5rem;
+  --text-8xl: 6rem;
+  --text-9xl: 8rem;
 
   --text-shadow-2xs: 0px 1px 0px rgb(0 0 0 / 0.15);
   --text-shadow-xs:  0px 1px 1px rgb(0 0 0 / 0.2);
-  --text-shadow-sm:  0px 1px 0px rgb(0 0 0 / 0.075),
-                     0px 1px 1px rgb(0 0 0 / 0.075),
-                     0px 2px 2px rgb(0 0 0 / 0.075);
-  --text-shadow-md:  0px 1px 1px rgb(0 0 0 / 0.1),
-                     0px 1px 2px rgb(0 0 0 / 0.1),
-                     0px 2px 4px rgb(0 0 0 / 0.1);
-  --text-shadow-lg:  0px 1px 2px rgb(0 0 0 / 0.1),
-                     0px 3px 2px rgb(0 0 0 / 0.1),
-                     0px 4px 8px rgb(0 0 0 / 0.1);
+  --text-shadow-sm:
+    0px 1px 0px rgb(0 0 0 / 0.075),
+    0px 1px 1px rgb(0 0 0 / 0.075),
+    0px 2px 2px rgb(0 0 0 / 0.075);
+  --text-shadow-md:
+    0px 1px 1px rgb(0 0 0 / 0.1),
+    0px 1px 2px rgb(0 0 0 / 0.1),
+    0px 2px 4px rgb(0 0 0 / 0.1);
+  --text-shadow-lg:
+    0px 1px 2px rgb(0 0 0 / 0.1),
+    0px 3px 2px rgb(0 0 0 / 0.1),
+    0px 4px 8px rgb(0 0 0 / 0.1);
 
   --shadow-xs:  0  1px  2px   0   rgb(0 0 0 / 0.05);
   --shadow-sm:  0  1px  3px   0   rgb(0 0 0 / 0.1), 0 1px  2px -1px rgb(0 0 0 / 0.1);
@@ -80,6 +94,13 @@
   --shadow-xl:  0 20px 25px  -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --shadow-pop: 0  2px  4px   0   rgb(0 0 0 / 0.3), 0 4px 6px -1px rgb(0 0 0 / 0.3);
+
+  --screen-sm: 640px;
+  --screen-md: 768px;
+  --screen-lg: 1024px;
+  --screen-xl: 1280px;
+  --screen-2xl: 1536px;
+  --screen-3xl: 1792px;
 }
 
 .truncate {

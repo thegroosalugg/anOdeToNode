@@ -3,8 +3,20 @@ import ProfilePic from "../../ui/image/ProfilePic";
 import Friend from "@/models/Friend";
 import css from "./UserItem.module.css";
 
+interface UserItem {
+      target: User;
+     watcher: User;
+  className?: string;
+       font?: "truncate" | "line-clamp";
+}
+
 // user = the one being viewed | peer = the comparison filter
-export default function UserItem({ target, watcher }: { target: User; watcher: User }) {
+export default function UserItem({
+     target,
+    watcher,
+  className = "",
+       font = "truncate",
+}: UserItem) {
   const { name, surname, friends } = target;
 
   const count = watcher.friends.filter((your) =>
@@ -15,9 +27,9 @@ export default function UserItem({ target, watcher }: { target: User; watcher: U
   ).length;
 
   return (
-    <article className={css["user-item"]}>
+    <article className={`${css["user-item"]} ${className}`}>
       <ProfilePic user={target} />
-      <h2 className="truncate">
+      <h2 className={font}>
         {name} {surname}
       </h2>
       {count > 0 && (

@@ -26,7 +26,7 @@
     text-transform: capitalize;
     text-wrap: nowrap;
     font-weight: 900;
-    font-size: 1.8rem;
+    font-size: var(--text-3xl);
     margin-bottom: -0.5rem;
     padding: 0.25rem 0.5rem;
     color: var(--color);

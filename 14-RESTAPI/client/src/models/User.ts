@@ -1,6 +1,6 @@
 import Friend from './Friend';
 
-type Profile = {
+export type Profile = {
    home?: string;
    work?: string;
   study?: string;

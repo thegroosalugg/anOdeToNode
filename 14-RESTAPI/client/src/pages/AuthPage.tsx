@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { Auth, Authorized } from '@/lib/types/auth';
 import Loader from '@/components/ui/boundary/loader/Loader';
-import UserProfile from '@/components/profile/UserProfile';
+import UserProfile from '@/components/user/UserProfile';
 import AuthForm from '@/components/form/forms/auth/AuthForm';
 
 export default function AuthPage({ auth }: { auth: Auth }) {

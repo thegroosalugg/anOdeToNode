@@ -1,0 +1,10 @@
+.info-tag {
+  color: var(--text);
+  font-size: var(--text-sm);
+
+  > svg {
+    width: 20px;
+    margin-right: 0.2rem;
+    color: var(--accent);
+  }
+}

@@ -9,7 +9,7 @@ import User from '@/models/User';
 import Post from '@/models/Post';
 import Logger from '@/models/Logger';
 import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
-import PeerProfile from '@/components/social/PeerProfile';
+import UserDashboard from '@/components/user/dashboard/UserDashboard';
 import FriendsList from '@/components/list/user/FriendsList';
 import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/list/post/PostItem';
@@ -92,7 +92,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
     <AsyncAwait {...{ isLoading, error }}>
       {peer && (
         <>
-          <PeerProfile {...{ user, setUser, peer }} />
+          <UserDashboard {...{ user, setUser, peer }} />
           <FriendsList target={peer} watcher={user} />
           <PagedList<Post>
               path="post"

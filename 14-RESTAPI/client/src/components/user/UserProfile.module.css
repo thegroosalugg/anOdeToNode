@@ -1,6 +1,6 @@
 .user-profile {
   margin: 0 auto;
-  max-width: 600px;
+  max-width: var(--screen-sm);
   width: 100%;
   display: flex;
   flex-direction: column;
