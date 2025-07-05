@@ -21,7 +21,6 @@ export default function IconButton({
    isActive,
    layoutId,
         size = "lg",
-  deferring,
    children,
     ...props
 }: ButtonProps) {
@@ -30,13 +29,11 @@ export default function IconButton({
 
   const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;
   const      [x, y] = isLandscape ? [75, 0] : [0, -75];
-  const     opacity =   deferring ?     0.6 : 1;
-  const    variants = createVariants({ initial: { y, x }, animate: { y: 0, x: 0, opacity }});
+  const    variants = createVariants({ initial: { y, x }, animate: { y: 0, x: 0 }});
 
   return (
     <motion.button
       className={classes}
-      disabled={deferring}
       whileHover={{ opacity: 0.6 }}
       {...{ variants }}
       {...props}

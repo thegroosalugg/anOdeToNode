@@ -20,6 +20,8 @@ export default function NavBar({ user, setUser }: Auth) {
     deferFn(() => navigate(path), 1200);
   }
 
+  const navProps = { disabled: deferring, layoutId: "nav-group" };
+
   return (
     <header className={css["header"]}>
       <h1>
@@ -38,18 +40,16 @@ export default function NavBar({ user, setUser }: Auth) {
             <IconButton
                   icon="rss"
               isActive={isActivePath(["feed", "post"])}
-              layoutId="nav-group"
                onClick={() => navTo("/feed")}
-              {...{ deferring }}
+              {...navProps}
             >
               Feed
             </IconButton>
             <IconButton
                   icon="users"
               isActive={isActivePath(["social", "user"])}
-              layoutId="nav-group"
                onClick={() => navTo("/social")}
-              {...{ deferring }}
+              {...navProps}
             >
               Social
             </IconButton>
@@ -60,11 +60,10 @@ export default function NavBar({ user, setUser }: Auth) {
               <ChatMenu />
             </ChatProvider>
             <IconButton
-              isActive={pathname === "/"}
                   icon="user"
-              layoutId="nav-group"
+              isActive={pathname === "/"}
                onClick={() => navTo("/")}
-              {...{ deferring }}
+              {...navProps}
             >
               {user.name}
             </IconButton>

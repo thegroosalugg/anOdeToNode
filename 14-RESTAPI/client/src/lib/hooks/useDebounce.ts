@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-type DeferFn = (callback: () => void | Promise<void>, timeout: number) => void;
+export type DeferFn = (callback: () => void, timeout: number) => void;
 
 export type Debounce = {
   deferring: boolean;
@@ -10,15 +10,13 @@ export type Debounce = {
 export function useDebounce() {
   const [deferring, setDeferring] = useState(false);
 
-  const deferFn: DeferFn = async (callback, timeout) => {
-    if (!deferring) {
-      setDeferring(true);
-      await callback();
-
-      setTimeout(() => {
-        setDeferring(false);
-      }, timeout);
-    }
+  const deferFn = async (callback: () => void, timeout: number) => {
+    if (deferring) return;
+    setDeferring(true);
+    callback();
+    setTimeout(() => {
+      setDeferring(false);
+    }, timeout);
   };
 
   return { deferring, deferFn };

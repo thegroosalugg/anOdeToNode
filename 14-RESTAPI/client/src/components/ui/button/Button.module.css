@@ -7,6 +7,11 @@
   background: var(--accent);
   box-shadow: var(--shadow-pop);
   font-weight: 600;
+  transition: filter 0.5s ease; /* framer badly handles disabled & hover together, set as CSS */
 
-  &:disabled { pointer-events: none; }
+  &:disabled { cursor: wait; filter: brightness(0.75); }
+}
+
+@media screen and (hover: hover) and (pointer: fine) {
+  .button:hover { filter: brightness(0.75); }
 }

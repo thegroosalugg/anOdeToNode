@@ -24,7 +24,7 @@
     background: var(--color);
   }
 
-  &:disabled { pointer-events: none; }
+  &:disabled { cursor: wait; filter: brightness(0.75); }
   &.active   { color: var(--color);  }
 }
 

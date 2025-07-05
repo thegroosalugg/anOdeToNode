@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { motion, HTMLMotionProps, TargetAndTransition } from "motion/react";
-import { isMobile } from "react-device-detect";
 import css from "./Button.module.css";
 
 export default function Button({
@@ -24,7 +23,6 @@ export default function Button({
        className={css["button"]}
          initial={{ opacity: 0 }}
          animate={{ opacity: 1, color, background, borderColor, ...animations }}
-      whileHover={!isMobile ? { filter: "brightness(0.75)" } : {}}
         whileTap={{ scale: 0.9 }}
       transition={{ background: { duration: 0.5 } }}
       {...props}

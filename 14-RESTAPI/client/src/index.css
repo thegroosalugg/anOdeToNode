@@ -11,6 +11,7 @@
   --text: var(--gray-600);
   --box: var(--gray-100);
   --error: var(--rust-600);
+  --accept: var(--lime-700);
   --transparent: #ffffff00;
 
   --border-accent: 1px solid var(--accent);
@@ -29,6 +30,7 @@
     --text: var(--gray-300);
     --box: var(--gray-700);
     --error: var(--rust-500);
+    --accept: var(--lime-400);
     --transparent: #00000000;
   }
 }
