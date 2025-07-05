@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { usePages } from "@/lib/hooks/usePages";
 import User from "@/models/User";
 import Friend from "@/models/Friend";
-import PagedList from "../pagination/PagedList";
-import UserItem from "../social/UserItem";
-import css from "../social/UserItem.module.css";
+import PagedList from "../../pagination/PagedList";
+import UserItem from "./UserItem";
+import css from "./UserItem.module.css";
 
 function paginate<T>(arr: T[], page: number, limit: number): T[] {
   const start = (page - 1) * limit;

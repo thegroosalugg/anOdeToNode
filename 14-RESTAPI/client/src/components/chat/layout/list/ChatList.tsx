@@ -24,7 +24,13 @@ export default function ChatList() {
                 activeChat && (
                   <>
                     <Messages {...{ chat }} />
-                    <ChatBox {...{ setUser, url: sendTo(recipient._id) }} />
+                    <ChatBox
+                      {...{
+                           setUser,
+                               url: sendTo(recipient._id),
+                        animations: { transition: { delay: 1 } },
+                      }}
+                    />
                   </>
                 )
               }

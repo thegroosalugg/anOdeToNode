@@ -7,9 +7,9 @@ import ProfileHeader from "./ProfileHeader";
 import Button from "../ui/button/Button";
 import ConfirmDialog from "../ui/modal/ConfirmDialog";
 import AsyncAwait from "../ui/boundary/AsyncAwait";
-import FriendsList from "./FriendsList";
+import FriendsList from "../list/user/FriendsList";
 import PagedList from "../pagination/PagedList";
-import PostItem from "../post/PostItem";
+import PostItem from "../list/post/PostItem";
 import css from "./UserProfile.module.css";
 
 export default function UserProfile({ user, setUser }: Authorized) {

@@ -12,8 +12,7 @@ import Logger from "@/models/Logger";
 import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
 import PostContent from "@/components/post/PostContent";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
-import ChatBox from "@/components/form/layout/ChatBox";
-import ReplyItem from "@/components/post/ReplyItem";
+import ReplyItem from "@/components/list/reply/ReplyItem";
 import PagedList from "@/components/pagination/PagedList";
 import PostFormSideBar from "@/components/form/forms/post/PostFormSideBar";
 
@@ -31,11 +30,11 @@ export default function PostPage({ user, setUser }: Authorized) {
     fetcher: { setData: setReplies },
     ...rest
   } = usePagedFetch<Reply>(`post/replies/${postId}`, 5, !!postId);
-  const [modalState, setModalState] = useState("");
+  const [modalState, setModal] = useState("");
   const   navigate = useNavigate();
   const  socketRef = useSocket("post");
   const  isInitial = useRef(true);
-  const closeModal = () => setModalState("");
+  const closeModal = () => setModal("");
 
   useDepedencyTracker("post", { socketRef, reqUser: user._id, postId });
 
@@ -132,10 +131,10 @@ export default function PostPage({ user, setUser }: Authorized) {
       <AsyncAwait {...{ isLoading, error }}>
         {post && (
           <>
-            <PostContent {...{ post, user }} setModal={setModalState} />
-            <ChatBox {...{ url: `post/reply/${post._id}`, setUser, isPost: true }} />
+            <PostContent {...{ post, user, setUser, setModal }} />
             <PagedList<Reply>
               header={{ fallback: ["Reply to this post", "end"] }}
+              delay={2.5}
               {...rest}
             >
               {(reply) => <ReplyItem {...reply } userId={user._id} />}

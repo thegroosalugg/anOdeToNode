@@ -1,5 +1,5 @@
 import User from "@/models/User";
-import ProfilePic from "../ui/image/ProfilePic";
+import ProfilePic from "../../ui/image/ProfilePic";
 import Friend from "@/models/Friend";
 import css from "./UserItem.module.css";
 

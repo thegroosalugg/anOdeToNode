@@ -1,9 +1,9 @@
 import { HTMLMotionProps, motion } from "motion/react";
+import { Align } from "@/lib/types/common";
 import User from "@/models/User";
 import ProfilePic from "../image/ProfilePic";
-import css from "./NameTag.module.css";
-import { Align } from "@/lib/types/common";
 import Truncate from "./Truncate";
+import css from "./NameTag.module.css";
 
 interface NameTag extends HTMLMotionProps<"h2"> {
        user: User;

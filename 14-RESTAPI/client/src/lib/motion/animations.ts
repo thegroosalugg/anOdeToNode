@@ -4,10 +4,10 @@ const  opacity = 0;
 const duration = 0.5;
 const     ease = "easeInOut"
 
-interface Animations {
-     initial: Target
-     animate: Variant
-  transition: Transition
+export interface Animations {
+     initial?: Target
+     animate?: Variant
+  transition?: Transition
 }
 
 export const createAnimations = ({

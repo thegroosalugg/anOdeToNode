@@ -1,9 +1,8 @@
-import { motion } from "motion/react";
 import { useChat } from "../context/ChatContext";
 import AsyncAwait from "../../ui/boundary/AsyncAwait";
 import ChatActions from "./actions/ChatActions";
 import ChatList from "./list/ChatList";
-import { createAnimations } from "@/lib/motion/animations";
+import Heading from "@/components/ui/layout/Heading";
 import css from "./ChatBody.module.css";
 
 export default function ChatBody() {
@@ -14,9 +13,9 @@ export default function ChatBody() {
       <ChatActions />
       <AsyncAwait {...{ isLoading, error }}>
         {!chats.length && !activeChat ? (
-          <motion.h2 className={css["fallback"]} {...createAnimations()}>
+          <Heading className={css["fallback"]}>
             You haven't started any chats
-          </motion.h2>
+          </Heading>
         ) : (
           <ChatList />
         )}

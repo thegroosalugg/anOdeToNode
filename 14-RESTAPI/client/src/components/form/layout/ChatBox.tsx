@@ -5,17 +5,20 @@ import { FetchError } from "@/lib/types/common";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import Loader from "../../ui/boundary/loader/Loader";
-import { createAnimations } from "@/lib/motion/animations";
+import { Animations, createAnimations } from "@/lib/motion/animations";
 import css from "./ChatBox.module.css";
 
 export default function ChatBox({
-      url,
-  setUser,
-     rows = 3,
+         url,
+     setUser,
+        rows = 3,
+  animations = {},
+   ...props
 }: {
-      url: string;
-  setUser: Auth["setUser"];
-    rows?: number;
+          url: string;
+      setUser: Auth["setUser"];
+        rows?: number;
+  animations?: Animations
 }) {
   const { reqData, isLoading, error, setError } = useFetch();
   const [scope,       animate] = useAnimate();
@@ -64,11 +67,12 @@ export default function ChatBox({
     <motion.form
             ref={scope}
       className={css["chat-box"]}
-      {...createAnimations({ transition: { delay: 1, duration: 0.5 } })}
+      {...createAnimations({...animations})}
       onSubmit={(e) => {
         e.preventDefault();
         deferFn(() => submitHandler(e), 1500);
       }}
+      {...props}
     >
       <textarea name="content" {...{ rows }} />
       <motion.button disabled={deferring}>

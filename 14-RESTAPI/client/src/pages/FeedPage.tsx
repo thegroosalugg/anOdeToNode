@@ -7,7 +7,7 @@ import Logger from '@/models/Logger';
 import Button from '@/components/ui/button/Button';
 import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
 import PagedList from '@/components/pagination/PagedList';
-import PostItem from '@/components/post/PostItem';
+import PostItem from '@/components/list/post/PostItem';
 import PostFormSideBar from '@/components/form/forms/post/PostFormSideBar';
 
 export default function FeedPage({ setUser }: Authorized) {

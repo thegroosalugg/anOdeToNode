@@ -6,9 +6,9 @@ import User from "@/models/User";
 import Logger from "@/models/Logger";
 import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
 import PagedList from "@/components/pagination/PagedList";
-import UserItem from "@/components/social/UserItem";
-import css from "@/components/social/UserItem.module.css";
+import UserItem from "@/components/list/user/UserItem";
 import { Authorized } from "@/lib/types/auth";
+import css from "@/components/list/user/UserItem.module.css";
 
 export default function SocialPage({ user }: Authorized) {
   const {

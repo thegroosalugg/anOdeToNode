@@ -96,6 +96,12 @@
   line-clamp: 2; /* not widely supported - set only to silence linter */
 }
 
+.underline {
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
 .floating-box {
  border: var(--border-text);
  background: var(--box);

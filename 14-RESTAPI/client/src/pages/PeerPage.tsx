@@ -10,9 +10,9 @@ import Post from '@/models/Post';
 import Logger from '@/models/Logger';
 import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
 import PeerProfile from '@/components/social/PeerProfile';
-import FriendsList from '@/components/profile/FriendsList';
+import FriendsList from '@/components/list/user/FriendsList';
 import PagedList from '@/components/pagination/PagedList';
-import PostItem from '@/components/post/PostItem';
+import PostItem from '@/components/list/post/PostItem';
 
 export default function PeerPage({ user, setUser }: Authorized) {
   const { data: peer, isLoading, error, reqData } = useFetch<User | null>();

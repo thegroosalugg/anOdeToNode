@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import Reply from "@/models/Reply";
-import ConfirmDialog from "../ui/modal/ConfirmDialog";
-import Button from "../ui/button/Button";
+import ConfirmDialog from "../../ui/modal/ConfirmDialog";
+import Button from "../../ui/button/Button";
+import NameTag from "../../ui/tags/NameTag";
+import Time from "../../ui/tags/Time";
 import css from "./ReplyItem.module.css";
-import NameTag from "../ui/tags/NameTag";
-import Time from "../ui/tags/Time";
 
 export default function ReplyItem({
   _id,

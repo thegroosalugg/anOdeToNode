@@ -67,6 +67,7 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
       <Heading
         className={`${css["header"]} ${hasItems ? css["title"] : ""}`}
             style={{ textAlign: hasItems && title ? title[1] : fallback[1] }}
+       transition={{ delay }}
       >
         {hasItems ? title[0] : `${fallback[0]}...`}
       </Heading>

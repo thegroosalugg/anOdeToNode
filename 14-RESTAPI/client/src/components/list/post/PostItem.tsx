@@ -1,6 +1,6 @@
 import Post from "@/models/Post";
-import NameTag from "../ui/tags/NameTag";
-import Time from "../ui/tags/Time";
+import NameTag from "../../ui/tags/NameTag";
+import Time from "../../ui/tags/Time";
 import css from "./PostItem.module.css";
 
 export default function PostItem({
