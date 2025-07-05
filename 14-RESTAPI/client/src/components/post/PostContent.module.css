@@ -20,14 +20,17 @@
     justify-content: space-between;
     padding-left: 1rem;
   }
+}
 
-  > p {
-    overflow-y: scroll;
-    max-height: 300px;
-    font-weight: 300;
-    text-align: center;
-    padding: 1rem;
-  }
+.content {
+  overflow-y: scroll;
+  max-height: 300px;
+  font-weight: 300;
+  text-align: center;
+  padding: 0 1rem;
+  margin: 0.5rem 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
 
 .actions {

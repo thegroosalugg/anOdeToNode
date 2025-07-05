@@ -8,12 +8,12 @@ import ChatBox from "../form/layout/ChatBox";
 import NameTag from "../ui/tags/NameTag";
 import Time from "../ui/tags/Time";
 import Truncate from "../ui/tags/Truncate";
+import ResizeDiv from "../ui/layout/ResizeDiv";
 import { createVariants } from "@/lib/motion/animations";
 import css from "./PostContent.module.css";
 
 const variants = createVariants();
 const bodyVariants = createVariants({ transition: { staggerChildren: 0.3 } });
-const contentVariants = createVariants({ initial: { x: -200 }, animate: { x: 0 } });
 
 export default function PostContent({
       post,
@@ -55,11 +55,9 @@ export default function PostContent({
             </Truncate>
             <Time time={updatedAt} />
           </motion.h2>
-          <AnimatePresence mode="popLayout">
-            <motion.p key={content} variants={contentVariants} exit={{ x: 200, opacity: 0 }}>
-              {content}
-            </motion.p>
-          </AnimatePresence>
+          <ResizeDiv className={css["content"]} {...{ variants }}>
+            {content}
+          </ResizeDiv>
           {isOp && (
             <motion.div className={css["actions"]} {...{ variants }}>
               <Button onClick={() => setModal("edit")}>Edit</Button>
@@ -75,11 +73,11 @@ export default function PostContent({
         {imgURL && (
           <motion.div className={`floating-box ${css["image"]}`} {...{ variants }}>
             <motion.img
-              key={imgURL}
-              src={BASE_URL + imgURL}
-              alt={title}
+                  key={imgURL}
+                  src={BASE_URL + imgURL}
+                  alt={title}
               loading="eager"
-              exit={variants.hidden}
+                 exit={variants.hidden}
               onError={(e) => {
                 const img = e.target as HTMLImageElement;
                 img.src = "/notFound.png";
