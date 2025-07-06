@@ -19,7 +19,9 @@ export default function ReplyItem({
   const { reqData } = useFetch();
   const navigate = useNavigate();
   const closeModal = () => setShowModal(false);
+  let classes = css["reply"];
   const isOp = userId === creator._id;
+  if (isOp) classes += ` ${css["reverse"]}`;
 
   const deleteReply = async () => {
     await reqData({ url: `post/delete-reply/${_id}`, method: "DELETE" });
@@ -27,7 +29,7 @@ export default function ReplyItem({
   };
 
   return (
-    <div className={`${css["reply"]} ${isOp ? css["reverse"] : ""}`}>
+    <div className={classes}>
       <ConfirmDialog open={showModal} onCancel={closeModal} onConfirm={deleteReply} />
       <header onClick={() => navigate("/user/" + creator._id)}>
         <NameTag user={creator} bold reverse={isOp} />

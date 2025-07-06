@@ -5,7 +5,7 @@ import css from "./UserItem.module.css";
 
 interface UserItem {
       target: User;
-     watcher: User;
+    watcher?: User;
   className?: string;
        font?: "truncate" | "line-clamp";
 }
@@ -17,14 +17,10 @@ export default function UserItem({
   className = "",
        font = "truncate",
 }: UserItem) {
-  const { name, surname, friends } = target;
+  const { name, surname } = target;
 
-  const count = watcher.friends.filter((your) =>
-    friends.some(
-      (their) =>
-        Friend.getId(your) === Friend.getId(their) && your.accepted && their.accepted
-    )
-  ).length;
+  let count = 0;
+  if (watcher) count = Friend.getMutuals(target, watcher).length;
 
   return (
     <article className={`${css["user-item"]} ${className}`}>

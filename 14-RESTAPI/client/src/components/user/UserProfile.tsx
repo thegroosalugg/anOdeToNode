@@ -34,7 +34,7 @@ export default function UserProfile({ user, setUser }: Authorized) {
         className={css["user-profile"]}
              exit={{ opacity: 0, transition: { duration: 0.5 } }}
       >
-        <UserDashboard {...{ user, peer: user }}>
+        <UserDashboard target={user}>
           {null}
         </UserDashboard>
         <FriendsList target={user} />

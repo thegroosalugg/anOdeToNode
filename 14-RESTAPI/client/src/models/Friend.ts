@@ -16,4 +16,14 @@ export default class Friend {
 
   static getConnection = (user: User, peer: User) =>
     user.friends.find((friend) => Friend.getId(friend) === peer._id);
+
+  static getMutuals = (target: User, watcher: User) =>
+    target.friends.filter(
+      (their) =>
+        Friend.getId(their) !== watcher._id &&
+        watcher.friends.some(
+          (your) =>
+            Friend.getId(your) === Friend.getId(their) && your.accepted && their.accepted
+        )
+    );
 }

@@ -93,7 +93,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
     <AsyncAwait {...{ isLoading, error }}>
       {peer && (
         <>
-          <UserDashboard {...{ user, peer }}>
+          <UserDashboard {...{ target: peer, watcher: user }}>
             <SocialActions {...{ user, setUser, peer }} />
           </UserDashboard>
           <FriendsList target={peer} watcher={user} />
