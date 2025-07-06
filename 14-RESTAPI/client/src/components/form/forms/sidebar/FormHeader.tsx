@@ -1,12 +1,12 @@
 import CloseButton from "@/components/ui/button/CloseButton";
 import Heading from "@/components/ui/layout/Heading";
-import css from "./PostFormHeader.module.css";
+import css from "./FormHeader.module.css";
 
-export default function PostFormHeader({ close }: { close: () => void }) {
+export default function FormHeader({ close, text }: { close: () => void, text: string }) {
   return (
-    <header className={css["post-form-header"]}>
+    <header className={css["form-header"]}>
       <CloseButton onClick={close} background="var(--bg)" color="var(--fg)" />
-      <Heading>Make a Post!</Heading>
+      <Heading>{text}</Heading>
     </header>
   );
 }

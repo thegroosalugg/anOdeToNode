@@ -1,22 +1,23 @@
-import { AnimatePresence } from 'motion/react';
-import { FetchError } from '@/lib/types/common';
-import Error from './error/Error';
-import Loader from './loader/Loader';
-import { Fragment } from 'react/jsx-runtime';
+import { AnimatePresence } from "motion/react";
+import { Fragment } from "react/jsx-runtime";
+import { ReactNode } from "react";
+import { FetchError } from "@/lib/types/common";
+import Error from "./error/Error";
+import Loader from "./loader/Loader";
 
 interface AsyncAwait {
   isLoading: boolean;
-      error: FetchError | null;
-   children: React.ReactNode;
+     error?: FetchError | null;
+   children: ReactNode;
 }
 
 export default function AsyncAwait({ isLoading, error, children }: AsyncAwait) {
   return (
-    <AnimatePresence mode='wait'>
+    <AnimatePresence mode="wait">
       {isLoading ? (
-        <Loader key='loader' />
+        <Loader key="loader" />
       ) : error ? (
-        <Error key='error' error={error} />
+        <Error key="error" {...{ error }} />
       ) : (
         <Fragment key="children">{children}</Fragment>
       )}

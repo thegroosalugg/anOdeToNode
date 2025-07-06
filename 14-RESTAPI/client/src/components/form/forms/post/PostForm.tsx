@@ -11,7 +11,7 @@ import Error from "@/components/ui/boundary/error/Error";
 import Loader from "@/components/ui/boundary/loader/Loader";
 import css from "./PostForm.module.css";
 
-export interface PostFormProps {
+interface PostForm {
   onSuccess?: () => void;
      setUser: Auth["setUser"];
        post?: Post | null;
@@ -21,7 +21,7 @@ export default function PostForm({
   onSuccess = () => console.log("Posted!"),
     setUser,
        post,
-}: PostFormProps) {
+}: PostForm) {
   const { isLoading, error, reqData, setError } = useFetch<Post | null>();
   const [scope,       animate] = useAnimate();
   const { deferring, deferFn } = useDebounce();

@@ -14,7 +14,8 @@ import PostContent from "@/components/post/PostContent";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import ReplyItem from "@/components/list/reply/ReplyItem";
 import PagedList from "@/components/pagination/PagedList";
-import PostFormSideBar from "@/components/form/forms/post/PostFormSideBar";
+import FormSideBar from "@/components/form/forms/sidebar/FormSideBar";
+import PostForm from "@/components/form/forms/post/PostForm";
 
 export default function PostPage({ user, setUser }: Authorized) {
   const {
@@ -118,11 +119,9 @@ export default function PostPage({ user, setUser }: Authorized) {
 
   return (
     <>
-      <PostFormSideBar
-             open={modalState === "edit"}
-            close={closeModal}
-        formProps={{ setUser, post }}
-      />
+      <FormSideBar open={modalState === "edit"} close={closeModal} text="Edit your post...">
+        <PostForm {...{ setUser, post }} />
+      </FormSideBar>
       <ConfirmDialog
              open={modalState === "delete"}
         onConfirm={deletePost}

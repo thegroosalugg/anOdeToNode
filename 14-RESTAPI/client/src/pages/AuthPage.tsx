@@ -14,7 +14,7 @@ export default function AuthPage({ auth }: { auth: Auth }) {
   }, [isInitial, isLoading]);
 
   return (
-    <AsyncAwait {...{ isLoading: isInitial, error: null }}>
+    <AsyncAwait {...{ isLoading: isInitial }}>
       {user ? (
         <UserProfile key='profile' {...auth as Authorized} />
       ) : (
