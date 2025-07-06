@@ -1,6 +1,5 @@
 import { HTMLMotionProps, motion } from 'motion/react';
 import { ReactNode } from 'react';
-import { Debounce } from '@/lib/hooks/useDebounce';
 import { isMobile } from 'react-device-detect';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
@@ -12,7 +11,6 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
    isActive?: boolean;
    layoutId?: string;
        size?: SizeProp;
-  deferring?: Debounce['deferring'];
     children: ReactNode;
 }
 

@@ -16,7 +16,7 @@ export default function ChatMenu() {
       <SideBar onRight open={isOpen} close={closeMenu}>
         <ChatBody />
       </SideBar>
-      <IconButton icon="comments" onClick={openMenu} {...{ deferring }}>
+      <IconButton icon="comments" onClick={openMenu} disabled={deferring}>
         <Counter count={alerts} />
         Chat
       </IconButton>

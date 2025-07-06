@@ -14,7 +14,7 @@ export default function Notifications() {
       <SideBar open={isOpen} close={closeMenu}>
         <NotifsBody />
       </SideBar>
-      <IconButton icon="bell" onClick={openMenu} {...{ deferring }}>
+      <IconButton icon="bell" onClick={openMenu} disabled={deferring}>
         <Counter {...{ count }} />
         Alerts
       </IconButton>
