@@ -1,20 +1,22 @@
 import { formatDate } from "@/lib/util/timeStamps";
-import User from "@/models/User";
 import InfoTag from "@/components/ui/tags/InfoTag";
 import css from "./UserAbout.module.css";
+import { UserPair } from "@/lib/types/interface";
 
 export default function UserAbout({
-        user,
+      target,
+     watcher,
   acceptedAt,
-}: {
-         user: User;
+}: UserPair & {
   acceptedAt?: string;
 }) {
-  const { createdAt, about } = user;
+  const { createdAt, about } = target;
   const { bio, home, study, work } = about ?? {};
+  let classes = css["user-about"];
+  if (!watcher || acceptedAt) classes +=  " floating-box";
 
   return (
-    <section className={css["user-about"]}>
+    <section className={classes}>
       <h2>
         Joined on <strong>{formatDate(createdAt, ["year"])}</strong>
       </h2>

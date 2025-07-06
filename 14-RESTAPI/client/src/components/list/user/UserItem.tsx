@@ -1,11 +1,9 @@
-import User from "@/models/User";
-import ProfilePic from "../../ui/image/ProfilePic";
+import { UserPair } from "@/lib/types/interface";
 import Friend from "@/models/Friend";
+import ProfilePic from "../../ui/image/ProfilePic";
 import css from "./UserItem.module.css";
 
-interface UserItem {
-      target: User;
-    watcher?: User;
+interface UserItem extends UserPair {
   className?: string;
        font?: "truncate" | "line-clamp";
 }

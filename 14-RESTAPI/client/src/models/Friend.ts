@@ -14,8 +14,8 @@ export default class Friend {
     return typeof user === "object" && "_id" in user ? user._id : user;
   };
 
-  static getConnection = (user: User, peer: User) =>
-    user.friends.find((friend) => Friend.getId(friend) === peer._id);
+  static getConnection = (target: User, watcher: User) =>
+    target.friends.find((friend) => Friend.getId(friend) === watcher._id);
 
   static getMutuals = (target: User, watcher: User) =>
     target.friends.filter(

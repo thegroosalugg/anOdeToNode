@@ -1,15 +1,13 @@
 import { ReactNode } from "react";
 import { motion } from "motion/react";
-import User from "@/models/User";
+import { UserPair } from "@/lib/types/interface";
 import Friend from "@/models/Friend";
 import UserItem from "@/components/list/user/UserItem";
 import UserAbout from "./UserAbout";
 import { createAnimations } from "@/lib/motion/animations";
 import css from "./UserDashboard.module.css";
 
-interface UserDashboard {
-     target: User;
-   watcher?: User;
+interface UserDashboard extends UserPair {
    children: ReactNode;
 }
 
@@ -32,7 +30,7 @@ export default function UserDashboard({ target, watcher, children }: UserDashboa
         />
         {children}
       </section>
-      <UserAbout {...{ user: target, acceptedAt }} />
+      <UserAbout {...{ target, watcher, acceptedAt }} />
     </motion.article>
   );
 }

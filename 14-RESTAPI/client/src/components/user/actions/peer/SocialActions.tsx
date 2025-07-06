@@ -1,3 +1,4 @@
+import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
@@ -77,17 +78,19 @@ export default function SocialActions({ user, setUser, peer }: UserState & { pee
           )}
         </Button>
 
-        {(accepted || (connection && !initiated)) && (
-          <Button onClick={deleteFriend} background="var(--error)">
-            {accepted ? (
-              "Remove Friend"
-            ) : (
-              <span>
-                Decline <FontAwesomeIcon icon="rectangle-xmark" size="xs" />
-              </span>
-            )}
-          </Button>
-        )}
+        <AnimatePresence>
+          {(accepted || (connection && !initiated)) && (
+            <Button onClick={deleteFriend} background="var(--error)" exit={{ opacity: 0 }}>
+              {accepted ? (
+                "Remove Friend"
+              ) : (
+                <span>
+                  Decline <FontAwesomeIcon icon="rectangle-xmark" size="xs" />
+                </span>
+              )}
+            </Button>
+          )}
+        </AnimatePresence>
       </div>
     </>
   );
