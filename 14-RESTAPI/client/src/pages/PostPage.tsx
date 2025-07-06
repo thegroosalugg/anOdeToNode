@@ -1,5 +1,5 @@
 import { useFetch } from "@/lib/hooks/useFetch";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { usePagedFetch } from "@/components/pagination/usePagedFetch";
 import { useSocket } from "@/lib/hooks/useSocket";
@@ -32,25 +32,26 @@ export default function PostPage({ user, setUser }: Authorized) {
     ...rest
   } = usePagedFetch<Reply>(`post/replies/${postId}`, 5, !!postId);
   const [modalState, setModal] = useState("");
+  const [hasLoaded, setHasLoaded] = useState(false);
   const   navigate = useNavigate();
   const  socketRef = useSocket("post");
-  const  isInitial = useRef(true);
   const closeModal = () => setModal("");
 
-  useDepedencyTracker("post", { socketRef, reqUser: user._id, postId });
+  useDepedencyTracker("post", { reqUser: user._id, postId });
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      if (!postId || hasLoaded) return;
+      await reqPost({ url: `feed/find/${postId}` });
+      setTimeout(() => setHasLoaded(true), 1000); // *TEMP FIX FOR STAGGER
+    };
+
+    fetchPost();
+  }, [postId, hasLoaded, reqPost]);
 
   useEffect(() => {
     const socket = socketRef.current;
     if (!socket || !postId) return;
-
-    const fetchPost = async () => {
-      if (postId && isInitial.current) {
-        await reqPost({ url: `feed/find/${postId}` });
-        isInitial.current = false;
-      }
-    };
-
-    fetchPost();
 
     const logger = new Logger("post");
     socket.on("connect", () => logger.connect());
@@ -133,7 +134,7 @@ export default function PostPage({ user, setUser }: Authorized) {
             <PostContent {...{ post, user, setUser, setModal }} />
             <PagedList<Reply>
               header={{ fallback: ["Reply to this post", "end"] }}
-              delay={2.5}
+               delay={hasLoaded ? 0 : 2.5} // *TEMP FIX FOR STAGGER
               {...rest}
             >
               {(reply) => <ReplyItem {...reply } userId={user._id} />}
