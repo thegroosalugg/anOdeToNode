@@ -1,0 +1,19 @@
+.edit-image {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  padding: 0.5rem;
+
+  > div {
+    position: relative; /* to error-pop-up */
+    flex: 0 0;
+    > button {
+      align-self: start;
+      margin: 0.5rem;
+      margin-left: 0;
+    }
+  }
+
+  > label {
+    flex: 1 1 60%;
+  }
+}

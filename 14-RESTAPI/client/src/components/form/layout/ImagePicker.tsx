@@ -4,7 +4,13 @@ import css from "./ImagePicker.module.css";
 
 const fileTypes = ["image/png", "image/jpeg", "image/jpg"];
 
-export default function ImagePicker({ imgURL }: { imgURL?: string }) {
+export default function ImagePicker({
+  imgURL,
+   label = "Image (Optional)",
+}: {
+  imgURL?: string;
+   label?: string;
+}) {
   const initialImg = imgURL ? BASE_URL + imgURL : "";
   const [image, setImage] = useState(initialImg);
   const [error, setError] = useState("");
@@ -41,13 +47,9 @@ export default function ImagePicker({ imgURL }: { imgURL?: string }) {
            name="image"
       />
       {image ? (
-        <img
-          src={image}
-          alt="preview"
-          onError={(e) => ((e.target as HTMLImageElement).src = "/notFound.png")}
-        />
+        <img src={image} alt="preview" onError={() => setImage("")} />
       ) : (
-        <span style={{ color }}>{error ? error : "Image (Optional)"}</span>
+        <span style={{ color }}>{error ? error : label}</span>
       )}
     </label>
   );

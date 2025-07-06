@@ -1,17 +1,17 @@
 import { motion, HTMLMotionProps } from "framer-motion";
-import css from "./ErrorPopUp.module.css";
 import { createAnimations } from "@/lib/motion/animations";
+import css from "./ErrorPopUp.module.css";
 
-interface ErrorPopUpProps extends HTMLMotionProps<"p"> {
+interface ErrorPopUp extends HTMLMotionProps<"p"> {
    error: string;
   delay?: number;
 }
 
-const ErrorPopUp: React.FC<ErrorPopUpProps> = ({ error, delay, ...props }) => {
+const ErrorPopUp: React.FC<ErrorPopUp> = ({ error, delay = 0, ...props }) => {
   const animations = createAnimations({
        initial: { scale: 0.5 },
-       animate: { scale: 1 },
-    transition: { delay },
+       animate: { scale:   1 },
+    transition: { delay      },
   });
 
   return (

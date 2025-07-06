@@ -42,7 +42,8 @@ export default function Input({
         {error && (
           <ErrorPopUp
             error={capitalize(control) + " " + error}
-            style={{ bottom: "-1.3rem", left: "50%", translate: "-50%" }}
+            // framer scale animation prevents other transformations with CSS. Must set as style
+            style={{ bottom: "-1.35rem", left: "50%", translate: "-50%" }}
             {...{ delay }}
           />
         )}

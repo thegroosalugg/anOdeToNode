@@ -18,9 +18,9 @@ interface PostForm {
 }
 
 export default function PostForm({
-  onSuccess = () => console.log("Posted!"),
-    setUser,
-       post,
+   onSuccess: closeModal = () => console.log("Posted!"),
+     setUser,
+        post,
 }: PostForm) {
   const { isLoading, error, reqData, setError } = useFetch<Post | null>();
   const [scope,       animate] = useAnimate();
@@ -28,7 +28,6 @@ export default function PostForm({
   const { _id = "", title = "", content = "", imgURL = "" } = post || {};
   const    url = `post/${_id ? `edit/${_id}` : "new"}`;
   const method = _id ? "PUT" : "POST";
-  const filter = `brightness(${deferring ? 0.8 : 1})`;
 
   const onError = (err: FetchError) => {
     if (error && !error.message) {
@@ -50,7 +49,7 @@ export default function PostForm({
         {
           onError,
           onSuccess: () => {
-            onSuccess();
+            closeModal();
             scope.current.reset();
             setError(null);
           },
@@ -74,7 +73,6 @@ export default function PostForm({
           <Button
               disabled={deferring}
               whileTap={{ scale: deferring ? 1 : 0.9 }} // overwrites default
-            animations={{ filter }} // additional animate props without overwriting default
           >
             {isLoading ? <Loader size="xs" color="bg" /> : "Post"}
           </Button>

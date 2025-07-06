@@ -12,6 +12,7 @@ import ResizeDiv from "../ui/layout/ResizeDiv";
 import { createVariants } from "@/lib/motion/animations";
 import css from "./PostContent.module.css";
 
+const fallback = "/notFound.png";
 const variants = createVariants();
 const bodyVariants = createVariants({ transition: { staggerChildren: 0.3 } });
 
@@ -78,10 +79,7 @@ export default function PostContent({
                   alt={title}
               loading="eager"
                  exit={variants.hidden}
-              onError={(e) => {
-                const img = e.target as HTMLImageElement;
-                img.src = "/notFound.png";
-              }}
+              onError={(e) => ((e.target as HTMLImageElement).src = fallback)}
             />
           </motion.div>
         )}

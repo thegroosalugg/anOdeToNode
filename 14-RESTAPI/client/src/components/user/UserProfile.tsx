@@ -7,22 +7,22 @@ import FriendsList from "../list/user/FriendsList";
 import PagedList from "../pagination/PagedList";
 import PostItem from "../list/post/PostItem";
 import UserLogout from "./actions/user/UserLogout";
+import ProfileActions from "./actions/user/ProfileActions";
 
 export default function UserProfile({ user, setUser }: Authorized) {
-  const {
-    fetcher: { isLoading, error },
-    ...rest
-  } = usePagedFetch<Post>("profile/posts", 4);
+  const { fetcher: { isLoading, error }, ...rest } = usePagedFetch<Post>("profile/posts", 4);
 
   return (
     <>
-      <UserDashboard target={user}>{null}</UserDashboard>
+      <UserDashboard target={user}>
+        <ProfileActions {...{ user, setUser }} />
+      </UserDashboard>
       <FriendsList target={user} />
       <AsyncAwait {...{ isLoading, error }}>
         <PagedList<Post>
-          path="post"
+            path="post"
           header={{
-            title: ["Your Posts", "end"],
+               title: ["Your Posts",                  "end"],
             fallback: ["You haven't posted anything", "end"],
           }}
           {...rest}
