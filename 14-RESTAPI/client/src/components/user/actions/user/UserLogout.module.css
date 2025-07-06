@@ -1,0 +1,11 @@
+.user-logout {
+  margin: 0 auto;
+  max-width: var(--screen-sm);
+  width: 100%;
+
+  > button {
+    display: block;
+    margin-left: auto;
+    margin-right: 0.5rem;
+  }
+}

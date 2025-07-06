@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { AnimatePresence } from 'motion/react';
 import { Auth, Authorized } from '@/lib/types/auth';
-import Loader from '@/components/ui/boundary/loader/Loader';
 import UserProfile from '@/components/user/UserProfile';
 import AuthForm from '@/components/form/forms/auth/AuthForm';
+import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
 
 export default function AuthPage({ auth }: { auth: Auth }) {
-  const { user,       isLoading } = auth;
+  const { user, isLoading } = auth;
   const [isInitial, setIsInitial] = useState(true);
 
   useEffect(() => {
@@ -15,14 +14,12 @@ export default function AuthPage({ auth }: { auth: Auth }) {
   }, [isInitial, isLoading]);
 
   return (
-    <AnimatePresence mode='wait'>
-      {isInitial ? (
-        <Loader      key='loader' />
-      ) : user ? (
+    <AsyncAwait {...{ isLoading: isInitial, error: null }}>
+      {user ? (
         <UserProfile key='profile' {...auth as Authorized} />
       ) : (
         <AuthForm   key='form'    {...auth} />
       )}
-    </AnimatePresence>
+    </AsyncAwait>
   );
 }
