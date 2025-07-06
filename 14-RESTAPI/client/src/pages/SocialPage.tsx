@@ -8,7 +8,7 @@ import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
 import PagedList from "@/components/pagination/PagedList";
 import UserItem from "@/components/list/user/UserItem";
 import { Authorized } from "@/lib/types/auth";
-import css from "@/components/list/user/UserItem.module.css";
+import css from "@/components/list/user/FriendsList.module.css";
 
 export default function SocialPage({ user }: Authorized) {
   const {

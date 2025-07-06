@@ -3,7 +3,7 @@ import { useState } from "react";
 import { usePagedFetch } from "../pagination/usePagedFetch";
 import { Authorized } from "@/lib/types/auth";
 import Post from "@/models/Post";
-import ProfileHeader from "./ProfileHeader";
+import UserDashboard from "./dashboard/UserDashboard";
 import Button from "../ui/button/Button";
 import ConfirmDialog from "../ui/modal/ConfirmDialog";
 import AsyncAwait from "../ui/boundary/AsyncAwait";
@@ -34,7 +34,9 @@ export default function UserProfile({ user, setUser }: Authorized) {
         className={css["user-profile"]}
              exit={{ opacity: 0, transition: { duration: 0.5 } }}
       >
-        <ProfileHeader {...{ user, setUser }} />
+        <UserDashboard {...{ user, peer: user }}>
+          {null}
+        </UserDashboard>
         <FriendsList target={user} />
         <AsyncAwait {...{ isLoading, error }}>
           <PagedList<Post>

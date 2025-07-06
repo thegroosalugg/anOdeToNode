@@ -22,21 +22,3 @@
   > h2 { font-size: var(--text-2xl); }
   > p  { font-size: var(--text-xl);  }
 }
-
-.actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-
-  > button {
-    width: 145px;
-    > span {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.2rem;
-    }
-  }
-}

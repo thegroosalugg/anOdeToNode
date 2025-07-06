@@ -1,0 +1,13 @@
+/* element.class increases specificity to override defaults */
+.user-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  align-items: start; /* not required, however will overwrite Default's center alignement */
+  align-content: start; /* forces rows to stack at top */
+}
+
+@media screen and (pointer: coarse) {
+  .user-list {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+}

@@ -5,7 +5,7 @@ import User from "@/models/User";
 import Friend from "@/models/Friend";
 import PagedList from "../../pagination/PagedList";
 import UserItem from "./UserItem";
-import css from "./UserItem.module.css";
+import css from "./FriendsList.module.css";
 
 function paginate<T>(arr: T[], page: number, limit: number): T[] {
   const start = (page - 1) * limit;

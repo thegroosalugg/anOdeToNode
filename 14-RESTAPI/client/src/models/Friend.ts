@@ -1,5 +1,5 @@
-import { Meta } from '@/lib/types/common';
-import User from './User';
+import { Meta } from "@/lib/types/common";
+import User from "./User";
 export default class Friend {
          _id!: string;
    createdAt!: string;
@@ -13,4 +13,7 @@ export default class Friend {
     const { user = "" } = friend;
     return typeof user === "object" && "_id" in user ? user._id : user;
   };
+
+  static getConnection = (user: User, peer: User) =>
+    user.friends.find((friend) => Friend.getId(friend) === peer._id);
 }

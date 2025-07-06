@@ -13,6 +13,7 @@ import UserDashboard from '@/components/user/dashboard/UserDashboard';
 import FriendsList from '@/components/list/user/FriendsList';
 import PagedList from '@/components/pagination/PagedList';
 import PostItem from '@/components/list/post/PostItem';
+import SocialActions from '@/components/user/actions/peer/SocialActions';
 
 export default function PeerPage({ user, setUser }: Authorized) {
   const { data: peer, isLoading, error, reqData } = useFetch<User | null>();
@@ -92,7 +93,9 @@ export default function PeerPage({ user, setUser }: Authorized) {
     <AsyncAwait {...{ isLoading, error }}>
       {peer && (
         <>
-          <UserDashboard {...{ user, setUser, peer }} />
+          <UserDashboard {...{ user, peer }}>
+            <SocialActions {...{ user, setUser, peer }} />
+          </UserDashboard>
           <FriendsList target={peer} watcher={user} />
           <PagedList<Post>
               path="post"
