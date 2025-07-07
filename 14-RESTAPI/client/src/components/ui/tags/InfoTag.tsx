@@ -18,7 +18,7 @@ export default function InfoTag({
     children && (
       <p className={css["info-tag"]}>
         <FontAwesomeIcon {...{ icon }} />
-        {text}{" "}
+        {text && `${text} `}
         <strong>{children}</strong>
       </p>
     )

@@ -59,7 +59,7 @@ export default function SocialActions({ user, setUser, peer }: UserState & { pee
   return (
     <>
       <ConfirmDialog
-        open={showModal}
+             open={showModal}
         onConfirm={async () => {
           await friendRequest("delete");
           closeModal();

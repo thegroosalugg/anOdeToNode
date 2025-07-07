@@ -29,12 +29,17 @@ const postLogin: RequestHandler = async (req, res, next) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return next(new AppError(401, { email: 'is incorrect', password: 'is incorrect' }));
+      return next(
+        new AppError(401, {
+             email: "Email is incorrect",
+          password: "Password is incorrect",
+        })
+      );
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return next(new AppError(401, { password: 'is incorrect' }));
+      return next(new AppError(401, { password: 'Password is incorrect' }));
     }
 
     const userId = user._id;

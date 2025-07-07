@@ -23,30 +23,30 @@ export const validateField = (field: string, [min, max]: [number, number]) =>
           .replace(/\s+/g, ' ') // collapse multiple whitespaces
     )
     .isLength({ min })
-    .withMessage(`requires at least ${min} character${min > 1 ? 's' : ''}`)
+    .withMessage(`${field} requires at least ${min} character${min > 1 ? 's' : ''}`)
     .isLength({ max })
-    .withMessage(`should not exceed ${max} characters`);
+    .withMessage(`${field} should not exceed ${max} characters`);
 
 export const validateEmail = check('email')
   .isEmail()
-  .withMessage('is invalid')
+  .withMessage('Email is invalid')
   .toLowerCase()
   .custom(async (email, { req }) => {
     const duplicate = await User.findOne({ email });
     if (duplicate) {
-      throw new Error('already registered');
+      throw new Error('Email already registered');
     }
     return true;
   });
 
 export const validatePassword = body('password')
   .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]+$/)
-  .withMessage('must contain 1 letter, 1 number & no invalid chars')
+  .withMessage('Password must contain 1 letter, 1 number')
   .isLength({ min: 6 })
-  .withMessage('requires at least 6 characters')
+  .withMessage('Password requires at least 6 characters')
   .custom((password, { req }) => {
     if (password !== req.body.confirm_password) {
-      throw new Error("doesn't match");
+      throw new Error("Passwords do not match");
     }
     return true;
   });
@@ -63,23 +63,9 @@ export const validatePost = [
   validateField('content', [20, 1000])
 ];
 
-// .body with no arg gets the entire req.body object
-export const validateUserInfo = body().custom((body, { req }) => {
-  const fields = ['home', 'work', 'study', 'bio'];
-  const  [key] = Object.keys(body);
-
-  if (!fields.includes(key)) throw new Error('Invalid profile field');
-
-  // due to 0 arg .body(), chaining methods doesn't work & logic is handled inside custom
-  const     value = body[key];
-  const sanitized = value.trim().replace(/\s+/g, ' ').replace(/<|>/g, '');
-  const     isBio = key === 'bio';
-
-  if ((!isBio && sanitized.length > 50) || (isBio && sanitized.length > 100)) {
-    throw new Error(`should not exceed ${isBio ? 100 : 50} characters`);
-  }
-
-  req.body[key] = sanitized || ''; // Converts whitespace-only to empty string
-
-  return true;
-});
+export const validateUserInfo = [
+  validateField('home',  [0,  50]),
+  validateField('work',  [0,  50]),
+  validateField('study', [0,  50]),
+  validateField('bio',   [0, 100])
+];

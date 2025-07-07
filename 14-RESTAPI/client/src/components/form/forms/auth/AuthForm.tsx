@@ -77,14 +77,16 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
       </motion.h2>
       {!isLogin && (
         <motion.section {...{ variants }}>
-          <Input control="name"     errors={error} />
-          <Input control="surname"  errors={error} />
+          <Input control="name"     errors={error}>Name</Input>
+          <Input control="surname"  errors={error}>Surname</Input>
         </motion.section>
       )}
-      <Input     control="email"    errors={error} {...{ variants }} />
-      <Input     control="password" errors={error} {...{ variants }} />
+      <Input     control="email"    errors={error} {...{ variants }}>Email</Input>
+      <Input     control="password" errors={error} {...{ variants }}>Password</Input>
       {!isLogin &&
-        <Input   control="password" errors={error} {...{ variants }} confirm />
+        <Input   control="password" errors={error} {...{ variants }} confirm>
+          Confirm Password
+        </Input>
       }
       <motion.button
         {...{ variants }}

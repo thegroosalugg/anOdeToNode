@@ -76,8 +76,8 @@ export default function PostForm({
           >
             {isLoading ? <Loader size="xs" color="bg" /> : "Post"}
           </Button>
-          <Input control="title"   errors={error} defaultValue={title} />
-          <Input control="content" errors={error} defaultValue={content} rows={5} />
+          <Input control="title"   errors={error} defaultValue={title}>Title</Input>
+          <Input control="content" errors={error} defaultValue={content} rows={5}>Post</Input>
           <ImagePicker {...{ imgURL }} />
         </motion.form>
       )}

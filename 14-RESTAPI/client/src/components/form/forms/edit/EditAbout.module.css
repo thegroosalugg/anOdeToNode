@@ -1,0 +1,11 @@
+.edit-about {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+
+  > button {
+    align-self: end;
+    margin-bottom: -2rem;
+  }
+}

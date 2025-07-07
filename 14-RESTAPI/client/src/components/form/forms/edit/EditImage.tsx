@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { UserState } from "@/lib/types/auth";
 import ImagePicker from "../../layout/ImagePicker";
 import Button from "@/components/ui/button/Button";
-import ErrorPopUp from "@/components/ui/boundary/error/ErrorPopUp";
 import css from "./EditImage.module.css";
 
 interface EditImage extends UserState {
@@ -22,20 +21,20 @@ export default function EditImage({ user, setUser, isOpen, onSuccess: closeModal
   useEffect(() => {
     if (isOpen) return;
     setTimeout(() => {
-      setError(null); // clear error images when sidebar closed
+      setError(null); // clear error when sidebar closed
     }, 500);
   }, [isOpen, imgURL, setError]);
 
   const onError = (err: FetchError) => {
-    // checks state to prevent animation running on initial submit
+    // uses state to animate: avoids trigger on first submit before component renders
     if (error) {
       animate(
-        "p",
+        "button",
         { x: [null, 10, 0, 10, 0] },
         { repeat: 1, duration: 0.3, delay: stagger(0.1) }
       );
     }
-    // checks immediate value from catch block to logout
+    // uses reqData immediate return value for user logout
     if (err.status === 401) {
       setTimeout(() => {
         setUser(null);
@@ -59,11 +58,10 @@ export default function EditImage({ user, setUser, isOpen, onSuccess: closeModal
 
   return (
     <form className={css["edit-image"]} ref={scope} onSubmit={submitHandler}>
-      <div>
-        <Button>Upload</Button> {/* overwrite default no-wrap */}
-        {error && <ErrorPopUp error={error.message} style={{ textWrap: "wrap" }} />}
-      </div>
-      <ImagePicker key={displayPic} imgURL={displayPic} label="Upload a profile picture" />
+      <ImagePicker imgURL={displayPic} label="Upload a profile picture" />
+      <Button background={`var(--${error ? "error" : "accent"})`}>
+        {error ? error.message : "Upload"}
+      </Button>
     </form>
   );
 }

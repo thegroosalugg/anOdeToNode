@@ -1,6 +1,7 @@
 .info-tag {
   color: var(--text);
   font-size: var(--text-sm);
+  overflow-wrap: break-word;
 
   > svg {
     width: 20px;
