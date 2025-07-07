@@ -9,14 +9,13 @@ import User from "@/models/User";
 import Button from "@/components/ui/button/Button";
 import Input from "../../layout/Input";
 import Loader from "@/components/ui/boundary/loader/Loader";
+import { getEntry } from "@/lib/util/common";
 import css from "./EditAbout.module.css";
 
 interface EditAbout extends UserState {
      isOpen: boolean;
   onSuccess: () => void;
 }
-
-const getEntry = (data: FormData, name: string) => data.get(name)?.toString().trim();
 
 export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal }: EditAbout) {
   const { reqData, error: errors, setError } = useFetch<User["about"]>();
@@ -73,6 +72,7 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
         }
       );
     };
+
     deferFn(request, 1000);
   }
 

@@ -29,24 +29,23 @@ export default function ChatBox({
     setError(null);
     animate(
       scope.current, // form must match textarea bg on success, and button bg on error
-      { background: "var(--bg)", scale: [1, 1.05, 1] },
+      { background: "var(--bg)", scale: [1, 1.01, 1] },
       {
         background: { duration: 0 }, // ensures animation instant
-             scale: { duration: 0.4, delay: 0.3 },
+             scale: { duration: 0.2, delay: 0.2 },
       }
     );
-
     animate(
       "textarea",
       { opacity: [null, 0, 0, 1], y: [null, -10, 0, 0] },
-      { duration: 1.2, times: [0, 0.2, 0.9, 1] }
+      { duration: 0.8, times: [0, 0.2, 0.5, 1] }
     );
     animate(
       "button", // animate colors must be manually reset to default end of animation
-      { background: [null, "var(--accent)", "var(--text)"] },
+      { background: [null, "var(--accept)", "var(--text)"] },
       { duration: 1, times: [0, 0.1, 0.85, 1] }
     );
-    setTimeout(() => scope.current?.reset(), 800);
+    setTimeout(() => scope.current?.reset(), 100);
   };
 
   const onError = (err: FetchError) => {

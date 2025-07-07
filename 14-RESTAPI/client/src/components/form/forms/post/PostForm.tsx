@@ -11,6 +11,7 @@ import ImagePicker from "../../layout/ImagePicker";
 import Button from "@/components/ui/button/Button";
 import Error from "@/components/ui/boundary/error/Error";
 import Loader from "@/components/ui/boundary/loader/Loader";
+import { getEntry } from "@/lib/util/common";
 import css from "./PostForm.module.css";
 
 interface PostForm {
@@ -48,10 +49,25 @@ export default function PostForm({
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    deferFn(async () => {
-      const data = new FormData(e.currentTarget); // multipart/form-data
+    
+    const request = async () => {
+      const data = new FormData(scope.current);
+
+      if (_id) {
+        const titleEntry = getEntry(data, "title");
+        const contentEntry = getEntry(data, "content");
+        const file = data.get("image") as File | null;
+
+        const isSame =
+          titleEntry === title && contentEntry === content && (!file || file.size === 0);
+
+        if (isSame) return;
+      }
+
       await reqData({ url, method, data }, { onError, onSuccess: closeModal });
-    }, 1200);
+    };
+
+    deferFn(request, 1000);
   }
 
   return (
