@@ -53,8 +53,7 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
           onError,
           onSuccess: (about) => {
             setUser((prev) => ({ ...prev!, about }));
-            setError(null);
-            closeModal();
+            closeModal(); // triggers effect cleanup
           },
         }
       );

@@ -121,7 +121,7 @@ export default function PostPage({ user, setUser }: Authorized) {
   return (
     <>
       <FormSideBar open={modalState === "edit"} close={closeModal} text="Edit your post...">
-        <PostForm {...{ setUser, post }} />
+        <PostForm {...{ isOpen: modalState === "edit", setUser, post }} />
       </FormSideBar>
       <ConfirmDialog
              open={modalState === "delete"}

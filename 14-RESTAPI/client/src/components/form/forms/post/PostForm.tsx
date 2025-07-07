@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useDebounce } from "@/lib/hooks/useDebounce";
@@ -13,12 +14,14 @@ import Loader from "@/components/ui/boundary/loader/Loader";
 import css from "./PostForm.module.css";
 
 interface PostForm {
+      isOpen: boolean;
   onSuccess?: () => void;
      setUser: Auth["setUser"];
        post?: Post | null;
 }
 
 export default function PostForm({
+      isOpen,
    onSuccess: closeModal = () => console.log("Posted!"),
      setUser,
         post,
@@ -30,22 +33,24 @@ export default function PostForm({
   const    url = `post/${_id ? `edit/${_id}` : "new"}`;
   const method = _id ? "PUT" : "POST";
 
+  useEffect(() => {
+    if (isOpen) return;
+    setTimeout(() => {
+      setError(null);
+      scope?.current.reset();
+    }, 500);
+  }, [isOpen, scope, setError]);
+
   const onError = (err: FetchError) => {
     if (error && !error.message) shake("p");
     if (err.status === 401) setUser(null);
-  };
-
-  const onSuccess = () => {
-    closeModal();
-    scope.current.reset();
-    setError(null);
   };
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     deferFn(async () => {
       const data = new FormData(e.currentTarget); // multipart/form-data
-      await reqData({ url, method, data }, { onError, onSuccess });
+      await reqData({ url, method, data }, { onError, onSuccess: closeModal });
     }, 1200);
   }
 

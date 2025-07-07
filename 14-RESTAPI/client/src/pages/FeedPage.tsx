@@ -17,8 +17,8 @@ export default function FeedPage({ setUser }: Authorized) {
     ...rest
   } = usePagedFetch<Post>("feed/posts", 3);
   const socketRef = useSocket("feed");
-  const [showModal, setShowModal] = useState(false);
-  const closeModal = () => setShowModal(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -57,11 +57,11 @@ export default function FeedPage({ setUser }: Authorized) {
 
   return (
     <>
-      <FormSideBar open={showModal} close={closeModal} text="Make a post!">
-        <PostForm {...{ setUser, onSuccess: closeModal }} />
+      <FormSideBar open={isOpen} close={closeModal} text="Make a post!">
+        <PostForm {...{ isOpen, setUser, onSuccess: closeModal }} />
       </FormSideBar>
       <Button
-           onClick={() => setShowModal(true)}
+           onClick={() => setIsOpen(true)}
              style={{ margin: "0 auto 0.5rem" }}
         animations={{ transition: { opacity: { delay: 0.5 } } }}
       >

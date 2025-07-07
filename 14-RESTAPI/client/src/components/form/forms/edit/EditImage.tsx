@@ -22,8 +22,9 @@ export default function EditImage({ user, setUser, isOpen, onSuccess: closeModal
     if (isOpen) return;
     setTimeout(() => {
       setError(null); // clear error when sidebar closed
+      scope?.current.reset();
     }, 500);
-  }, [isOpen, imgURL, setError]);
+  }, [isOpen, imgURL, scope, setError]);
 
   const onError = (err: FetchError) => {
     // uses state to animate: avoids trigger on first submit before component renders
@@ -40,8 +41,7 @@ export default function EditImage({ user, setUser, isOpen, onSuccess: closeModal
     setDisplayPic(imgURL);
     // user cannot be null - component tree collapses on !user and returns to <AuthPage>
     setUser((user) => ({ ...user!, imgURL }));
-    setError(null);
-    closeModal();
+    closeModal(); // triggers effect cleanup
   };
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {

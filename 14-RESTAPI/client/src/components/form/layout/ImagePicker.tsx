@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BASE_URL } from "@/lib/util/fetchData";
 import css from "./ImagePicker.module.css";
 
@@ -14,11 +14,17 @@ export default function ImagePicker({
   const initialImg = imgURL ? BASE_URL + imgURL : "";
   const [image, setImage] = useState(initialImg);
   const [error, setError] = useState("");
+  const imagePicker = useRef<HTMLInputElement>(null);
+  const file = imagePicker.current?.files?.[0];
   const       color = error ? "var(--error)" : "";
   const borderColor = color;
 
-  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  useEffect(() => {
+    if (!file) setImage(initialImg);
+  }, [initialImg, file])
+
+  const changeHandler = () => {
+    const file = imagePicker.current?.files?.[0];
     if (file) {
       if (fileTypes.includes(file.type)) {
         setImage(URL.createObjectURL(file));
@@ -40,6 +46,7 @@ export default function ImagePicker({
           style={{ borderColor }}
     >
       <input
+             ref={imagePicker}
         onChange={changeHandler}
           accept={fileTypes.join(', ')}
            type="file"
