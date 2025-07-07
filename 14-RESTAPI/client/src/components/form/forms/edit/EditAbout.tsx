@@ -8,12 +8,15 @@ import { UserState } from "@/lib/types/auth";
 import User from "@/models/User";
 import Button from "@/components/ui/button/Button";
 import Input from "../../layout/Input";
+import Loader from "@/components/ui/boundary/loader/Loader";
 import css from "./EditAbout.module.css";
 
 interface EditAbout extends UserState {
      isOpen: boolean;
   onSuccess: () => void;
 }
+
+const getEntry = (data: FormData, name: string) => data.get(name)?.toString().trim();
 
 export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal }: EditAbout) {
   const { reqData, error: errors, setError } = useFetch<User["about"]>();
@@ -47,6 +50,18 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
     const request = async () => {
       const data = new FormData(scope.current);
 
+      const entries = {
+         home: getEntry(data, "home"),
+         work: getEntry(data, "work"),
+        study: getEntry(data, "study"),
+          bio: getEntry(data, "bio"),
+      };
+
+      const isSame = Object.entries(entries).every(
+        ([key, val]) => val === (about?.[key as keyof typeof about] ?? "")
+      );
+      if (isSame) return;
+
       await reqData(
         { url: "profile/info", method: "POST", data },
         {
@@ -63,8 +78,8 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
 
   return (
     <form className={css["edit-about"]} ref={scope} onSubmit={submitHandler}>
-      <Button disabled={deferring} background={errors ? "var(--error)" : "var(--accent)"}>
-        Update
+      <Button disabled={deferring} background={`var(--${errors ? "error" : "accent"})`}>
+        {deferring ? <Loader size="xs" color="bg" /> : "Update"}
       </Button>
       <Input control="home" {...{ errors }} defaultValue={home}>
         <FontAwesomeIcon icon="house" /> Home

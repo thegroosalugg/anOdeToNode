@@ -34,7 +34,7 @@ const updateInfo: RequestHandler = async (req, res, next) => {
     const { home, study, work, bio } = req.body;
 
     for (const [key, value] of Object.entries({ home, work, study, bio })) {
-      if (value) user.set(`about.${key}`, value);
+      user.set(`about.${key}`, value); // accepts empty strings as deletion of field
     }
 
     await user.save();
