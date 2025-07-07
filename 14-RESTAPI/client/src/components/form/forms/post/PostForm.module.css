@@ -4,11 +4,27 @@
   gap: 1.5rem;
   flex: 1;
   overflow-y: scroll;
-  padding: 1rem 2rem;
+  padding: 1rem 2rem 2rem;
 
-  > button {
-    display: block;
-    align-self: end;
-    min-width: 56px;
+  > section {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+
+    > label {
+      max-width: 200px;
+    }
+
+    > button {
+      display: block;
+      align-self: start;
+      min-width: 56px;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .post-form > section > label {
+    max-width: 280px;
   }
 }

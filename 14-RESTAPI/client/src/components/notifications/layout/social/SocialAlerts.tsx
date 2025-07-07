@@ -58,7 +58,8 @@ export default function SocialAlerts({
       <AnimatePresence mode='popLayout'>
         {connections.length > 0 ? (
           connections.map((connection) => {
-            const { _id: alertId, accepted, initiated, user: peer, createdAt } = connection;
+            const { _id: alertId, accepted, initiated, user, createdAt } = connection;
+            const peer = typeof user === "object" ? user : {} as User; // user should be populated
             const { _id, name, surname } = peer;
             const path = '/user/' + _id;
             return (

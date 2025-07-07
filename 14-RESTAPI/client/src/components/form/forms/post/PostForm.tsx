@@ -1,4 +1,5 @@
-import { useAnimate, stagger, AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { Auth } from "@/lib/types/auth";
@@ -23,45 +24,35 @@ export default function PostForm({
         post,
 }: PostForm) {
   const { isLoading, error, reqData, setError } = useFetch<Post | null>();
-  const [scope,       animate] = useAnimate();
+  const { scope,       shake } = useAnimations();
   const { deferring, deferFn } = useDebounce();
   const { _id = "", title = "", content = "", imgURL = "" } = post || {};
   const    url = `post/${_id ? `edit/${_id}` : "new"}`;
   const method = _id ? "PUT" : "POST";
 
   const onError = (err: FetchError) => {
-    if (error && !error.message) {
-      animate(
-        "p",
-        { x: [null, 10, 0, 10, 0] },
-        { repeat: 1, duration: 0.3, delay: stagger(0.1) }
-      );
-    }
+    if (error && !error.message) shake("p");
     if (err.status === 401) setUser(null);
+  };
+
+  const onSuccess = () => {
+    closeModal();
+    scope.current.reset();
+    setError(null);
   };
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     deferFn(async () => {
       const data = new FormData(e.currentTarget); // multipart/form-data
-      await reqData(
-        { url, method, data },
-        {
-          onError,
-          onSuccess: () => {
-            closeModal();
-            scope.current.reset();
-            setError(null);
-          },
-        }
-      );
+      await reqData({ url, method, data }, { onError, onSuccess });
     }, 1200);
   }
 
   return (
     <AnimatePresence mode="wait">
       {error?.message ? (
-        <Error key="error" error={error} />
+        <Error key="error" {...{ error }} />
       ) : (
         <motion.form
                 key="form"
@@ -70,15 +61,14 @@ export default function PostForm({
            onSubmit={submitHandler}
                exit={{ opacity: 0, scale: 0.8 }}
         >
-          <Button
-              disabled={deferring}
-              whileTap={{ scale: deferring ? 1 : 0.9 }} // overwrites default
-          >
-            {isLoading ? <Loader size="xs" color="bg" /> : "Post"}
-          </Button>
+          <section>
+            <ImagePicker {...{ imgURL }} />
+            <Button disabled={deferring} whileTap={{ scale: deferring ? 1 : 0.9 }}>
+              {isLoading ? <Loader size="xs" color="bg" /> : "Post"}
+            </Button>
+          </section>
           <Input control="title"   errors={error} defaultValue={title}>Title</Input>
           <Input control="content" errors={error} defaultValue={content} rows={5}>Post</Input>
-          <ImagePicker {...{ imgURL }} />
         </motion.form>
       )}
     </AnimatePresence>

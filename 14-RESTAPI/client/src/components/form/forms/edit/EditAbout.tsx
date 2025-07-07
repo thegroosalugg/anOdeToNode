@@ -1,6 +1,6 @@
 import { FormEvent, useEffect } from "react";
-import { stagger, useAnimate } from "motion/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { FetchError } from "@/lib/types/common";
@@ -17,7 +17,7 @@ interface EditAbout extends UserState {
 
 export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal }: EditAbout) {
   const { reqData, error: errors, setError } = useFetch<User["about"]>();
-  const [scope, animate] = useAnimate();
+  const { scope,       shake } = useAnimations();
   const { deferring, deferFn } = useDebounce();
   const { about } = user;
   const { home, work, study, bio } = about ?? {};
@@ -26,19 +26,13 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
     if (isOpen) return;
     setTimeout(() => {
       setError(null); // clear error when sidebar closed
-      scope.current.reset();
+      scope?.current.reset();
     }, 500);
   }, [isOpen, scope, setError]);
 
   const onError = (err: FetchError) => {
     // uses state to animate: avoids trigger on first submit before component renders
-    if (errors) {
-      animate(
-        "p",
-        { x: [null, 10, 0, 10, 0] },
-        { repeat: 1, duration: 0.3, delay: stagger(0.1) }
-      );
-    }
+    if (errors) shake("p");
     // uses reqData immediate return value for user logout
     if (err.status === 401) {
       setTimeout(() => {

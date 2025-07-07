@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Auth } from "@/lib/types/auth";
-import { motion, useAnimate, stagger } from "motion/react";
+import { motion } from "motion/react";
 import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useAnimations } from "@/lib/hooks/useAnimations";
 import Input from "../../layout/Input";
 import Button from "@/components/ui/button/Button";
 import Loader from "@/components/ui/boundary/loader/Loader";
@@ -9,16 +10,15 @@ import { createVariants } from "@/lib/motion/animations";
 import css from "./AuthForm.module.css";
 
 export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) {
-  const { deferring, deferFn } = useDebounce();
-  const [isLogin,  setIsLogin] = useState(true);
-  const [scope,       animate] = useAnimate();
+  const { deferring,    deferFn } = useDebounce();
+  const [isLogin,     setIsLogin] = useState(true);
+  const { scope, animate, shake } = useAnimations();
   const label = isLogin ? "Login" : "Sign Up";
   const variants = createVariants({ transition: { duration: 0.2 } });
 
   function switchForm() {
     deferFn(() => {
       animate(scope.current, { opacity: [1, 0, 1] }, { duration: 1 });
-
       setTimeout(() => {
         setError(null);
         setIsLogin((prev) => !prev);
@@ -36,13 +36,7 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
   };
 
   const onError = () => {
-    if (error && !error.message) {
-      animate(
-        "p",
-        { x: [null, 10, 0, 10, 0] },
-        { repeat: 1, duration: 0.3, delay: stagger(0.1) }
-      );
-    }
+    if (error && !error.message) shake("p");
   };
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {

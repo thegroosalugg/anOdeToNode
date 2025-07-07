@@ -1,5 +1,6 @@
 import { FormEvent } from "react";
-import { motion, useAnimate, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import { useAnimations } from "@/lib/hooks/useAnimations";
 import { Auth } from "@/lib/types/auth";
 import { FetchError } from "@/lib/types/common";
 import { useFetch } from "@/lib/hooks/useFetch";
@@ -21,7 +22,7 @@ export default function ChatBox({
   animations?: Animations
 }) {
   const { reqData, isLoading, error, setError } = useFetch();
-  const [scope,       animate] = useAnimate();
+  const { scope, animate, shake } = useAnimations();
   const { deferring, deferFn } = useDebounce();
 
   const onSuccess = () => {
@@ -50,11 +51,8 @@ export default function ChatBox({
 
   const onError = (err: FetchError) => {
     animate(scope.current, { background: "var(--error)" }, { duration: 0 });
-    animate(
-      "button",
-      { background: "var(--error)", x: [null, 5, 0, 5, 0] },
-      { x: { repeat: 1, duration: 0.3 } }
-    );
+    animate("button", { background: "var(--error)" });
+    shake("button");
     if (err.status === 401) setUser(null);
   };
 
