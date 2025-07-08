@@ -17,7 +17,7 @@ const animations = createAnimations();
 export default function UserDashboard({ target, watcher, children }: UserDashboard) {
   let classes = css["user-dashboard"];
   let acceptedAt;
-  if (watcher) acceptedAt = Friend.getConnection(target, watcher)?.acceptedAt;
+  if (watcher) acceptedAt = Friend.getConnection({ target, watcher })?.acceptedAt;
   else classes += ` ${css["reverse"]}`;
 
   return (

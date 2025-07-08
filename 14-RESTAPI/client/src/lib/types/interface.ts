@@ -1,3 +1,3 @@
 import User from "@/models/User";
 
-export interface UserPair { target: User; watcher?: User; }
+export interface UserPair { target: User; watcher: User; }

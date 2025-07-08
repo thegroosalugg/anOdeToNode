@@ -18,7 +18,7 @@ export default function UserItem({
   const { name, surname } = target;
 
   let count = 0;
-  if (watcher) count = Friend.getMutuals(target, watcher).length;
+  if (watcher) count = Friend.getMutuals({ target, watcher }).length;
 
   return (
     <article className={`${css["user-item"]} ${className}`}>

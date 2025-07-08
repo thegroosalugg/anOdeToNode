@@ -20,7 +20,7 @@ export default function SocialActions({ user, setUser, peer }: UserState & { pee
   const navigate = useNavigate();
   const { _id } = peer;
 
-  const connection = Friend.getConnection(user, peer);
+  const connection = Friend.getConnection({ target: user, watcher: peer});
   const { accepted, initiated } = connection ?? {};
   const { text, icon, action, background } = actionsConfig(connection);
   const closeModal = () => setShowModal(false);

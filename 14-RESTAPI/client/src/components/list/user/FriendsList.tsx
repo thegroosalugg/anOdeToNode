@@ -16,7 +16,7 @@ export default function FriendsList({ target, watcher }: { target: User; watcher
   const { deferring, current, direction, changePage: setPage } = usePages();
 
   if (!watcher) watcher = target;
-  const friendsList = Friend.getMutuals(target, watcher);
+  const friendsList = Friend.getMutuals({ target, watcher });
 
   const limit = isMobile ? 4 : 5;
   const [pagedData, setPagedData] = useState(paginate(friendsList, current, limit));
