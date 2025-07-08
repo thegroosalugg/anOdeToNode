@@ -28,8 +28,8 @@ export default function PostForm({
         post,
 }: PostForm) {
   const { isLoading, error, reqData, setError } = useFetch<Post | null>();
-  const { scope,       shake } = useAnimations();
-  const { deferring, deferFn } = useDebounce();
+  const { scope, shake, shoot } = useAnimations();
+  const { deferring,  deferFn } = useDebounce();
   const { _id = "", title = "", content = "", imgURL = "" } = post || {};
   const    url = `post/${_id ? `edit/${_id}` : "new"}`;
   const method = _id ? "PUT" : "POST";
@@ -49,7 +49,7 @@ export default function PostForm({
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    
+
     const request = async () => {
       const data = new FormData(scope.current);
 
@@ -61,7 +61,10 @@ export default function PostForm({
         const isSame =
           titleEntry === title && contentEntry === content && (!file || file.size === 0);
 
-        if (isSame) return;
+        if (isSame) {
+          shoot(".fleeting-pop-up");
+          return;
+        }
       }
 
       await reqData({ url, method, data }, { onError, onSuccess: closeModal });
@@ -82,6 +85,9 @@ export default function PostForm({
            onSubmit={submitHandler}
                exit={{ opacity: 0, scale: 0.8 }}
         >
+          <p className="fleeting-pop-up" style={{ top: "17rem", left: "7rem" }}>
+            No changes
+          </p>
           <section>
             <ImagePicker {...{ imgURL }} />
             <Button disabled={deferring} whileTap={{ scale: deferring ? 1 : 0.9 }}>

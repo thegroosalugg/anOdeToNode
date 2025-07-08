@@ -19,7 +19,7 @@ interface EditAbout extends UserState {
 
 export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal }: EditAbout) {
   const { reqData, error: errors, setError } = useFetch<User["about"]>();
-  const { scope,       shake } = useAnimations();
+  const { scope, shake, shoot } = useAnimations();
   const { deferring, deferFn } = useDebounce();
   const { about } = user;
   const { home, work, study, bio } = about ?? {};
@@ -59,7 +59,10 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
       const isSame = Object.entries(entries).every(
         ([key, val]) => val === (about?.[key as keyof typeof about] ?? "")
       );
-      if (isSame) return;
+      if (isSame) {
+        shoot(".fleeting-pop-up");
+        return;
+      }
 
       await reqData(
         { url: "profile/info", method: "POST", data },
@@ -78,6 +81,9 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
 
   return (
     <form className={css["edit-about"]} ref={scope} onSubmit={submitHandler}>
+      <p className="fleeting-pop-up" style={{ top: "1rem", left: "0.5rem" }}>
+        No changes
+      </p>
       <Button disabled={deferring} background={`var(--${errors ? "error" : "accent"})`}>
         {deferring ? <Loader size="xs" color="bg" /> : "Update"}
       </Button>
