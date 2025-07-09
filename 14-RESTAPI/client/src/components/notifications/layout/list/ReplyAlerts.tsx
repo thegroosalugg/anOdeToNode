@@ -17,19 +17,30 @@ export default function ReplyAlerts() {
       {replies.length > 0 ? (
         replies.map(({ _id, creator, content, post, createdAt }) => (
           <motion.li
-            layout
-            key={_id}
+               layout
+                  key={_id}
             className={`floating-box ${css["reply-alert"]}`}
             {...animations}
           >
             <Time time={createdAt} />
-            <section>
-              <NameTag user={creator} onClick={() => navTo("/user/" + creator._id)} />
-              {" replied to your post "}
-              <strong onClick={() => navTo("/post/" + post._id)}>{post.title}</strong>
-              <p>{content}</p>
-            </section>
-            <XButton onClick={() => clearReply(_id)} />
+            <div>
+              <div className={css["content"]}>
+                <NameTag user={creator} align="center" overflow="line-clamp">
+                  <strong onClick={() => navTo("/user/" + creator._id)}>
+                    {creator.name}
+                  </strong>
+                  {" replied to your post "}
+                  <strong
+                    className={`truncate ${css["post"]}`}
+                      onClick={() => navTo("/post/" + post._id)}
+                  >
+                    {post.title}
+                  </strong>
+                </NameTag>
+                <XButton onClick={() => clearReply(_id)} />
+              </div>
+              <p className={`truncate ${css["reply"]}`}>{content}</p>
+            </div>
           </motion.li>
         ))
       ) : (

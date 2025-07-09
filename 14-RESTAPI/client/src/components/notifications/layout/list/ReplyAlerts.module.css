@@ -1,0 +1,31 @@
+.reply-alert {
+  > time {
+    display: block;
+    text-align: end;
+    margin-top: -0.25rem;
+  }
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.375rem;
+  padding: 0.5rem;
+  padding-top: 0.25rem;
+
+  > h2     { cursor: auto;       } /* default override */
+  strong   { cursor: pointer;    }
+  > button { align-self: center; }
+}
+
+.post {
+  display: inline-block;
+  max-width: 50%;
+  vertical-align: bottom;
+}
+
+.reply {
+  text-align: center;
+  padding: 0 2rem;
+  color: var(--text);
+}

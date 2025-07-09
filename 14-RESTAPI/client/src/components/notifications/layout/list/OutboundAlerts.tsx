@@ -38,8 +38,8 @@ export default function OutboundAlerts() {
               {...animations}
             >
               <Time time={createdAt} />
-              <div className={`no-scrollbar-x ${css["content"]}`}>
-                <NameTag user={peer} align="center" overflow="line-clamp" {...{ onClick }}>
+              <div className={css["content"]}>
+                <NameTag user={peer} align="center" overflow="line-clamp">
                   {text}
                 </NameTag>
                 {!accepted ? (

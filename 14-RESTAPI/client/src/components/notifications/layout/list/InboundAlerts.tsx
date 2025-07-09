@@ -39,7 +39,7 @@ export default function InboundAlerts() {
               {...animations}
             >
               <Time time={createdAt} />
-              <div className={`no-scrollbar-x ${css["content"]}`}>
+              <div className={css["content"]}>
                 <NameTag
                     layout
                        key={accepted + ""}
