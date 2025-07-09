@@ -25,8 +25,7 @@ export default function UserDashboard({ target, watcher, children }: UserDashboa
       <section>
         <UserItem
           className={css["user-photo"]}
-             {...{ target, watcher }}
-               font="line-clamp"
+          {...{ target, watcher, overflow: "line-clamp" }}
         />
         {children}
       </section>

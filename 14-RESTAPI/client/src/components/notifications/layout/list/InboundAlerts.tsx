@@ -5,13 +5,14 @@ import Time from "@/components/ui/tags/Time";
 import Button from "@/components/ui/button/Button";
 import NameTag from "@/components/ui/tags/NameTag";
 import CloseButton from "@/components/ui/button/CloseButton";
+import Heading from "@/components/ui/layout/Heading";
 import { createAnimations } from "@/lib/motion/animations";
 import css from "./InboundAlerts.module.css";
 
 const animations = createAnimations({ initial: { x: -20 }, animate: { x: 0 } });
 
 export default function InboundAlerts() {
-  const { inboundReqs, clearSocial, friendRequest, activeTab, navTo } = useAlerts();
+  const { inboundReqs, clearSocial, friendRequest, navTo } = useAlerts();
 
   return (
     <AnimatePresence mode="popLayout">
@@ -21,6 +22,9 @@ export default function InboundAlerts() {
           const peer = typeof user === "object" ? user : ({} as User); // user should be populated
           const { _id } = peer;
           const onClick = () => navTo("/user/" + _id);
+          const text = accepted
+            ? " accepted your friend request"
+            : " sent you a friend request";
 
           return (
             <motion.li
@@ -30,29 +34,47 @@ export default function InboundAlerts() {
               {...animations}
             >
               <Time time={createdAt} />
-              {!accepted && !initiated ? (
-                <div>
-                  <NameTag user={peer} {...{ onClick }} />
-                  {" sent you a friend request"}
-                  <div className={css["buttons"]}>
-                    <Button onClick={() => friendRequest(_id, "accept")}>Accept</Button>
-                    <Button onClick={() => friendRequest(_id, "delete")}>Decline</Button>
-                  </div>
+              <div className={`no-scrollbar-x ${css["content"]}`}>
+                <NameTag
+                      user={peer}
+                      bold
+                     align="center"
+                  overflow="line-clamp"
+                  {...{ onClick }}
+                >
+                  {text}
+                </NameTag>
+                {accepted && (
+                  <CloseButton
+                    background="var(--bg)"
+                         color="var(--fg)"
+                       onClick={() => clearSocial(alertId)}
+                  />
+                )}
+              </div>
+              {!accepted && (
+                <div className={css["actions"]}>
+                  <Button
+                    background="var(--accept)"
+                       onClick={() => friendRequest(_id, "accept")}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    background="var(--error)"
+                       onClick={() => friendRequest(_id, "delete")}
+                  >
+                    Decline
+                  </Button>
                 </div>
-              ) : (
-                <>
-                  <NameTag user={peer} {...{ onClick }} />
-                  {" accepted your friend request"}
-                  <CloseButton onClick={() => clearSocial(alertId)} />
-                </>
               )}
             </motion.li>
           );
         })
       ) : (
-        <motion.p key={activeTab} className={css["fallback"]}>
-          {activeTab === 1 ? "No sent requests" : "You have no new notifications"}
-        </motion.p>
+        <motion.li key="fallback">
+          <Heading>You have no new notifications</Heading>
+        </motion.li>
       )}
     </AnimatePresence>
   );

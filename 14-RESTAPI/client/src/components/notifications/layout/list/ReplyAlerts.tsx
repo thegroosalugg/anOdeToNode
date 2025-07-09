@@ -3,6 +3,7 @@ import { useAlerts } from "../../context/AlertsContext";
 import Time from "@/components/ui/tags/Time";
 import CloseButton from "@/components/ui/button/CloseButton";
 import NameTag from "@/components/ui/tags/NameTag";
+import Heading from "@/components/ui/layout/Heading";
 import { createAnimations } from "@/lib/motion/animations";
 import css from "./ReplyAlerts.module.css";
 
@@ -16,8 +17,8 @@ export default function ReplyAlerts() {
       {replies.length > 0 ? (
         replies.map(({ _id, creator, content, post, createdAt }) => (
           <motion.li
-               layout
-                  key={_id}
+            layout
+            key={_id}
             className={`floating-box ${css["reply-alert"]}`}
             {...animations}
           >
@@ -32,9 +33,9 @@ export default function ReplyAlerts() {
           </motion.li>
         ))
       ) : (
-        <motion.p key="fallback" className={css["fallback"]}>
-          No new replies
-        </motion.p>
+        <motion.li key="fallback">
+          <Heading>No new replies</Heading>
+        </motion.li>
       )}
     </AnimatePresence>
   );

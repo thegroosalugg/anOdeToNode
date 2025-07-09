@@ -5,6 +5,7 @@ import Button from "@/components/ui/button/Button";
 import Time from "@/components/ui/tags/Time";
 import NameTag from "@/components/ui/tags/NameTag";
 import CloseButton from "@/components/ui/button/CloseButton";
+import Heading from "@/components/ui/layout/Heading";
 import { createAnimations } from "@/lib/motion/animations";
 import css from "./OutboundAlerts.module.css";
 
@@ -24,8 +25,8 @@ export default function OutboundAlerts() {
 
           return (
             <motion.li
-                 layout
-                    key={alertId + accepted + initiated}
+              layout
+              key={alertId + accepted + initiated}
               className={`floating-box ${css["outbound-alert"]}`}
               {...animations}
             >
@@ -51,9 +52,9 @@ export default function OutboundAlerts() {
           );
         })
       ) : (
-        <motion.p key={activeTab} className={css["fallback"]}>
-          {activeTab === 1 ? "No sent requests" : "You have no new notifications"}
-        </motion.p>
+        <motion.li key="fallback">
+          <Heading>No sent requests</Heading>
+        </motion.li>
       )}
     </AnimatePresence>
   );

@@ -7,13 +7,15 @@
 }
 
 .bold {
-  font-weight: 900;
-  text-decoration: underline;
-  text-underline-offset: 0.2rem;
+  .name {
+    font-weight: 900;
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+  }
 
   > img { border: 1.5px solid var(--fg); }
 }
 
-.reverse { > img { order: 1; } }
-.start  { align-items: start;  }
-.center { align-items: center; }
+.reverse { > img { order: 1; }  }
+.start   { align-items: start;  }
+.center  { align-items: center; }

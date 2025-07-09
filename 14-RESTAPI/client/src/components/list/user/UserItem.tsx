@@ -5,7 +5,7 @@ import css from "./UserItem.module.css";
 
 interface UserItem extends UserPair {
   className?: string;
-       font?: "truncate" | "line-clamp";
+   overflow?: "truncate" | "line-clamp";
 }
 
 // user = the one being viewed | peer = the comparison filter
@@ -13,7 +13,7 @@ export default function UserItem({
      target,
     watcher,
   className = "",
-       font = "truncate",
+   overflow = "truncate",
 }: UserItem) {
   const { name, surname } = target;
 
@@ -23,7 +23,7 @@ export default function UserItem({
   return (
     <article className={`${css["user-item"]} ${className}`}>
       <ProfilePic user={target} />
-      <h2 className={font}>
+      <h2 className={overflow}>
         {name} {surname}
       </h2>
       {count > 0 && (
