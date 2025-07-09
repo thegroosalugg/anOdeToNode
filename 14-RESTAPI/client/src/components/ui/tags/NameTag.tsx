@@ -36,10 +36,7 @@ export default function NameTag({
     <motion.h2 className={classes} {...props}>
       <ProfilePic {...{ user }} />
       <motion.span {...tagProps} className={overflow}>
-        <span className={css["name"]}>
-          {name} {surname}
-        </span>
-        {children}
+        {children ? children : <>{name} {surname}</>}
       </motion.span>
     </motion.h2>
   );

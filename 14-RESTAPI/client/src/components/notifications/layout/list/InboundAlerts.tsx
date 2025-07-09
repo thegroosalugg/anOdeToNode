@@ -20,27 +20,32 @@ export default function InboundAlerts() {
         inboundReqs.map((connection) => {
           const { _id: alertId, accepted, initiated, user, createdAt } = connection;
           const peer = typeof user === "object" ? user : ({} as User); // user should be populated
-          const { _id } = peer;
+          const { _id, name, surname } = peer;
           const onClick = () => navTo("/user/" + _id);
-          const text = accepted
-            ? " accepted your friend request"
-            : " sent you a friend request";
+          const text = accepted ? (
+            <>You accepted <strong {...{ onClick }}>{name}'s</strong> friend request</>
+          ) : (
+            <>
+              <strong {...{ onClick }}>{name} {surname} </strong>
+              sent you a friend request
+            </>
+          );
 
           return (
             <motion.li
                  layout
-                    key={alertId + accepted + initiated}
+                    key={alertId + initiated}
               className={`floating-box ${css["inbound-alert"]}`}
               {...animations}
             >
               <Time time={createdAt} />
               <div className={`no-scrollbar-x ${css["content"]}`}>
                 <NameTag
+                    layout
+                       key={accepted + ""}
                       user={peer}
-                      bold
                      align="center"
                   overflow="line-clamp"
-                  {...{ onClick }}
                 >
                   {text}
                 </NameTag>

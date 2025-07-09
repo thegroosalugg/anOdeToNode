@@ -7,11 +7,9 @@
 }
 
 .bold {
-  .name {
-    font-weight: 900;
-    text-decoration: underline;
-    text-underline-offset: 0.2rem;
-  }
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
 
   > img { border: 1.5px solid var(--fg); }
 }

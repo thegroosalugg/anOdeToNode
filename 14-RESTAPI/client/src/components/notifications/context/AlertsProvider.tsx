@@ -51,10 +51,12 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     };
   }, [user.friends]);
 
-  const newReplies = replies.reduce((total, { meta }) => {
-    if (!meta.read) total += 1;
-    return total;
-  }, 0);
+  const newReplies = useMemo(() => {
+    return replies.reduce((total, { meta }) => {
+      if (!meta.read) total += 1;
+      return total;
+    }, 0);
+  }, [replies]);
 
   const  count = inboundCount + outboundCount + newReplies;
   const alerts = [inboundCount, outboundCount,  newReplies] as AlertCounts;
