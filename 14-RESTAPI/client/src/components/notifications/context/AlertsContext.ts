@@ -1,36 +1,38 @@
 import { createContext, useContext } from "react";
 import { Debounce } from "@/lib/hooks/useDebounce";
-import { FetchError } from "@/lib/types/common";
 import { Authorized } from "@/lib/types/auth";
 import { FetchState } from "@/lib/types/fetch";
+import { Direction } from "@/lib/types/common";
 import Reply from "@/models/Reply";
 import User from "@/models/User";
+import Friend from "@/models/Friend";
 
-type UserControl = Pick<Authorized, "user" | "setUser" | "error"> & {
-  onError: (err: FetchError) => void;
-};
+type UserControl = Pick<Authorized, "user" | "setUser" | "error">;
 
-type ReplyData = Pick<
-  FetchState<Reply[], "replies">,
-  "replies" | "setReplies" | "reqReplies"
->;
+type ReplyData = Pick<FetchState<Reply[], "replies">, "replies" | "setReplies" | "reqReplies">;
 
 type MenuControl = {
      isOpen: boolean;
    openMenu: () => void;
   closeMenu: () => void;
   activeTab: number;
+  direction: Direction;
   changeTab: (index: number) => void;
 };
 
-export type AlertCounts = [inbound: number, outbound: number, newReplies: number];
+export type AlertCounts = [inboundCount: number, outboundCount: number, newReplies: number];
 
 type AlertsContext = {
-         count: number;
-        alerts: AlertCounts;
-         navTo: (path:   string) => void;
-   markSocials: (              ) => Promise<User    | void>;
-   markReplies: (index?: number) => Promise<Reply[] | void>;
+    inboundReqs: Friend[];
+   outboundReqs: Friend[];
+          count: number;
+         alerts: AlertCounts;
+          navTo: (path:   string) => void;
+    markSocials: (              ) => Promise<User    | void>;
+    markReplies: (index?: number) => Promise<Reply[] | void>;
+    clearSocial: (_id:    string) => void;
+     clearReply: (_id:    string) => void;
+  friendRequest: (_id: string, action: "accept" | "delete") => void;
 } & UserControl &
       ReplyData &
     MenuControl &

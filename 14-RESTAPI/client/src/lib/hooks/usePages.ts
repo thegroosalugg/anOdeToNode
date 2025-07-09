@@ -17,7 +17,7 @@ export function usePages() {
     deferFn(() => {
       setPage(page);
       setDirection(page > current ? 1 : -1);
-    }, 600);
+    }, 500);
   };
 
   return { current, direction, changePage, deferring };

@@ -1,57 +1,71 @@
-import { useState, ReactNode, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, ReactNode, useCallback, useMemo } from "react";
 import { AlertCounts, AlertsContext } from "./AlertsContext";
+import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
+import { usePages } from "@/lib/hooks/usePages";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
 import { UserState } from "@/lib/types/auth";
 import { FetchError } from "@/lib/types/common";
 import User from "@/models/User";
 import Reply from "@/models/Reply";
+import Friend from "@/models/Friend";
 
 interface AlertsProvider extends UserState {
   children: ReactNode;
 }
 
 export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
-  const { error, reqData: reqSocials } = useFetch<User>();
-  const {
-         data: replies,
-      setData: setReplies,
-      reqData: reqReplies,
-  } = useFetch<Reply[]>([]);
-  const [isOpen,       setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
-  const { deferring,    deferFn } = useDebounce();
-  const   navigate  = useNavigate();
-  const { friends } = user;
+  const { data: replies, setData: setReplies, reqData: reqReplies } = useFetch<Reply[]>([]);
+  const {            reqData: reqReply   } = useFetch<Reply | null>();
+  const { error,     reqData: reqSocials } = useFetch<User>();
+  const { deferring,             deferFn } = useDebounce();
+  const { current, direction, changePage } = usePages();
+  const [isOpen,                setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const [inbound, outbound] = friends.reduce(
-    ([inTotal, outTotal], { initiated, accepted, meta }) => {
+  const { inboundReqs, outboundReqs, inboundCount, outboundCount } = useMemo(() => {
+    const  inboundReqs: Friend[] = [];
+    const outboundReqs: Friend[] = [];
+    let  inboundCount = 0;
+    let outboundCount = 0;
+
+    user.friends.forEach((friend) => {
+      const { initiated, accepted, meta } = friend;
+      if (!meta.show) return;
+
+      if (!initiated) inboundReqs.push(friend);
+      else outboundReqs.push(friend);
+
       if (!meta.read) {
-        if (     !initiated      )  inTotal += 1;
-        if (accepted && initiated) outTotal += 1;
+        if (    !initiated       ) inboundCount++;
+        if (accepted && initiated) outboundCount++;
       }
-      return [inTotal, outTotal];
-    },
-    [0, 0]
-  );
+    });
+
+    return {
+        inboundReqs:  inboundReqs.reverse(),
+       outboundReqs: outboundReqs.reverse(),
+       inboundCount,
+      outboundCount,
+    };
+  }, [user.friends]);
 
   const newReplies = replies.reduce((total, { meta }) => {
     if (!meta.read) total += 1;
     return total;
   }, 0);
 
-  const  count = inbound + outbound + newReplies;
-  const alerts = [inbound, outbound, newReplies] as AlertCounts;
+  const  count = inboundCount + outboundCount + newReplies;
+  const alerts = [inboundCount, outboundCount,  newReplies] as AlertCounts;
 
   const markSocials = useCallback(
-    async (index = activeTab) =>
+    async (index = current) =>
       await reqSocials(
         { url: `alerts/social?type=${["inbound", "outbound"][index]}` },
         { onSuccess: (updated) => setUser(updated) }
       ),
-    [activeTab, reqSocials, setUser]
+    [current, reqSocials, setUser]
   );
 
   const markReplies = useCallback(
@@ -59,7 +73,7 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     [reqReplies]
   );
 
-  const handleAlerts = async (index = activeTab) => {
+  const handleAlerts = async (index = current) => {
     if (alerts[index] > 0) {
       if (index < 2) {
         await markSocials(index);
@@ -73,13 +87,13 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     deferFn(async () => {
       setIsOpen(true);
       await handleAlerts();
-    }, 1500);
+    }, 1000);
   };
 
   const closeMenu = () => setIsOpen(false);
 
   const changeTab = async (index: number) => {
-    setActiveTab(index);
+    changePage(((index % 3) + 3) % 3); // clamps between 0-2
     await handleAlerts(index);
   };
 
@@ -92,29 +106,66 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     if (err.status === 401) setUser(null);
   };
 
+  const friendRequest = async (_id: string, action: "accept" | "delete") => {
+    deferFn(async () => {
+      await reqSocials({ url: `social/${_id}/${action}`, method: "POST" }, { onError });
+    }, 1000);
+  };
+
+  const clearSocial = async (_id: string) => {
+    deferFn(async () => {
+      await reqSocials(
+        { url: `alerts/social/hide/${_id}` },
+        { onError, onSuccess: (updated) => setUser(updated) }
+      );
+    }, 1000);
+  };
+
+  const clearReply = async (_id: string) => {
+    deferFn(async () => {
+      await reqReply(
+        { url: `alerts/reply/hide/${_id}` },
+        {
+          onError,
+          onSuccess: (updated) =>
+            setReplies((prev) => prev.filter(({ _id }) => updated?._id !== _id)),
+        }
+      );
+    }, 1000);
+  };
+
   useDepedencyTracker("alerts", {
-       isOpen,
-    activeTab,
-       alerts,
-      reqUser: user._id,
+           isOpen,
+          current,
+      inboundReqs,
+     outboundReqs,
+     inboundCount,
+    outboundCount,
+       newReplies,
+          reqUser: user._id,
   });
 
   const ctxValue = {
     user,
     setUser,
-    onError,
+    inboundReqs,
+    outboundReqs,
     replies,
     setReplies,
     reqReplies,
     markReplies,
     markSocials,
+    clearSocial,
+    clearReply,
+    friendRequest,
     error,
     count,
     alerts,
     isOpen,
     openMenu,
     closeMenu,
-    activeTab,
+    activeTab: current,
+    direction,
     changeTab,
     navTo,
     deferring,
