@@ -2,7 +2,7 @@ import { AnimatePresence } from "motion/react";
 import { useChat } from "../../context/ChatContext";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import Button from "@/components/ui/button/Button";
-import CloseButton from "@/components/ui/button/CloseButton";
+import XButton from "@/components/ui/button/XButton";
 import css from "./ChatActions.module.css";
 
 export default function ChatActions() {
@@ -36,7 +36,7 @@ export default function ChatActions() {
             )}
           </AnimatePresence>
         </div>
-        <CloseButton onClick={closeMenu} />
+        <XButton onClick={closeMenu} />
       </header>
     </>
   );

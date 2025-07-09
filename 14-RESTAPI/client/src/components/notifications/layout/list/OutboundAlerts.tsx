@@ -4,7 +4,7 @@ import User from "@/models/User";
 import Button from "@/components/ui/button/Button";
 import Time from "@/components/ui/tags/Time";
 import NameTag from "@/components/ui/tags/NameTag";
-import CloseButton from "@/components/ui/button/CloseButton";
+import XButton from "@/components/ui/button/XButton";
 import Heading from "@/components/ui/layout/Heading";
 import { createAnimations } from "@/lib/motion/animations";
 import css from "./OutboundAlerts.module.css";
@@ -12,7 +12,7 @@ import css from "./OutboundAlerts.module.css";
 const animations = createAnimations({ initial: { x: -20 }, animate: { x: 0 } });
 
 export default function OutboundAlerts() {
-  const { outboundReqs, clearSocial, friendRequest, activeTab, navTo } = useAlerts();
+  const { outboundReqs, clearSocial, friendRequest, navTo } = useAlerts();
 
   return (
     <AnimatePresence mode="popLayout">
@@ -45,7 +45,7 @@ export default function OutboundAlerts() {
                 <>
                   <NameTag user={peer} {...{ onClick }} />
                   {" accepted your friend request"}
-                  <CloseButton onClick={() => clearSocial(alertId)} />
+                  <XButton onClick={() => clearSocial(alertId)} />
                 </>
               )}
             </motion.li>

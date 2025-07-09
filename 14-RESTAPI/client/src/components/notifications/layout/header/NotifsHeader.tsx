@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { useAlerts } from "../../context/AlertsContext";
 import Counter from "@/components/ui/tags/Counter";
-import CloseButton from "@/components/ui/button/CloseButton";
+import XButton from "@/components/ui/button/XButton";
 import IconButton from "@/components/ui/button/IconButton";
 import css from "./NotifsHeader.module.css";
 
@@ -16,7 +16,7 @@ export default function NotifsHeader() {
 
   return (
     <header className={css["header"]}>
-      <CloseButton onClick={closeMenu} />
+      <XButton onClick={closeMenu} />
       <nav className="floating-box no-scrollbar-x">
         {alerts.map((count, i) => {
           const [line1, line2] = labels[i].split(" ");

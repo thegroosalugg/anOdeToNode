@@ -4,7 +4,7 @@ import User from "@/models/User";
 import Time from "@/components/ui/tags/Time";
 import Button from "@/components/ui/button/Button";
 import NameTag from "@/components/ui/tags/NameTag";
-import CloseButton from "@/components/ui/button/CloseButton";
+import XButton from "@/components/ui/button/XButton";
 import Heading from "@/components/ui/layout/Heading";
 import { createAnimations } from "@/lib/motion/animations";
 import css from "./InboundAlerts.module.css";
@@ -44,13 +44,7 @@ export default function InboundAlerts() {
                 >
                   {text}
                 </NameTag>
-                {accepted && (
-                  <CloseButton
-                    background="var(--bg)"
-                         color="var(--fg)"
-                       onClick={() => clearSocial(alertId)}
-                  />
-                )}
+                {accepted && <XButton light onClick={() => clearSocial(alertId)} />}
               </div>
               {!accepted && (
                 <div className={css["actions"]}>

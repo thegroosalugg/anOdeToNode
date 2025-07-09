@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useAlerts } from "../../context/AlertsContext";
 import Time from "@/components/ui/tags/Time";
-import CloseButton from "@/components/ui/button/CloseButton";
+import XButton from "@/components/ui/button/XButton";
 import NameTag from "@/components/ui/tags/NameTag";
 import Heading from "@/components/ui/layout/Heading";
 import { createAnimations } from "@/lib/motion/animations";
@@ -29,7 +29,7 @@ export default function ReplyAlerts() {
               <strong onClick={() => navTo("/post/" + post._id)}>{post.title}</strong>
               <p>{content}</p>
             </section>
-            <CloseButton onClick={() => clearReply(_id)} />
+            <XButton onClick={() => clearReply(_id)} />
           </motion.li>
         ))
       ) : (
