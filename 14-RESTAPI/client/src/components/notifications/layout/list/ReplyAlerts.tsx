@@ -33,7 +33,7 @@ export default function ReplyAlerts() {
           </motion.li>
         ))
       ) : (
-        <motion.li key="fallback">
+        <motion.li key="fallback" style={{ textAlign: "center" }}>
           <Heading>No new replies</Heading>
         </motion.li>
       )}

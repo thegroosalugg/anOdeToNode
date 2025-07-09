@@ -20,39 +20,44 @@ export default function OutboundAlerts() {
         outboundReqs.map((connection) => {
           const { _id: alertId, accepted, initiated, user, createdAt } = connection;
           const peer = typeof user === "object" ? user : ({} as User); // user should be populated
-          const { _id } = peer;
+          const { _id, name, surname } = peer;
           const onClick = () => navTo("/user/" + _id);
+          const text = !accepted ? (
+            <strong {...{ onClick }}>{name} {surname}</strong>
+          ) : (
+            <>
+              <strong {...{ onClick }}>{name}</strong> accepted your friend request
+            </>
+          );
 
           return (
             <motion.li
-              layout
-              key={alertId + accepted + initiated}
+                 layout
+                    key={alertId + initiated}
               className={`floating-box ${css["outbound-alert"]}`}
               {...animations}
             >
               <Time time={createdAt} />
-              {!accepted && initiated ? (
-                <>
-                  <NameTag user={peer} {...{ onClick }} />
+              <div className={`no-scrollbar-x ${css["content"]}`}>
+                <NameTag user={peer} align="center" overflow="line-clamp" {...{ onClick }}>
+                  {text}
+                </NameTag>
+                {!accepted ? (
                   <Button
-                    className={css["cancel-btn"]}
-                    onClick={() => friendRequest(_id, "delete")}
+                    background="var(--error)"
+                       onClick={() => friendRequest(_id, "delete")}
                   >
                     Cancel
                   </Button>
-                </>
-              ) : (
-                <>
-                  <NameTag user={peer} {...{ onClick }} />
-                  {" accepted your friend request"}
-                  <XButton onClick={() => clearSocial(alertId)} />
-                </>
-              )}
+                ) : (
+                  <XButton light onClick={() => clearSocial(alertId)} />
+                )}
+              </div>
             </motion.li>
           );
         })
       ) : (
-        <motion.li key="fallback">
+        <motion.li key="fallback" style={{ textAlign: "center" }}>
           <Heading>No sent requests</Heading>
         </motion.li>
       )}

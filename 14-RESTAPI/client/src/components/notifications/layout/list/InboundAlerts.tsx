@@ -71,7 +71,7 @@ export default function InboundAlerts() {
           );
         })
       ) : (
-        <motion.li key="fallback">
+        <motion.li key="fallback" style={{ textAlign: "center" }}>
           <Heading>You have no new notifications</Heading>
         </motion.li>
       )}
