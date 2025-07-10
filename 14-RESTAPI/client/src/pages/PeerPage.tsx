@@ -1,67 +1,65 @@
-import { useEffect, useRef } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useFetch } from '@/lib/hooks/useFetch';
-import { useSocket } from '@/lib/hooks/useSocket';
-import { usePagedFetch } from '@/components/pagination/usePagedFetch';
-import { useDepedencyTracker } from '@/lib/hooks/useDepedencyTracker';
-import { Authorized } from '@/lib/types/auth';
-import User from '@/models/User';
-import Post from '@/models/Post';
-import Logger from '@/models/Logger';
-import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
-import UserDashboard from '@/components/user/dashboard/UserDashboard';
-import FriendsList from '@/components/list/user/FriendsList';
-import PagedList from '@/components/pagination/PagedList';
-import PostItem from '@/components/list/post/PostItem';
-import SocialActions from '@/components/user/actions/peer/SocialActions';
+import { useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useFetch } from "@/lib/hooks/useFetch";
+import { useSocket } from "@/lib/hooks/useSocket";
+import { usePagedFetch } from "@/components/pagination/usePagedFetch";
+import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
+import { Authorized } from "@/lib/types/auth";
+import User from "@/models/User";
+import Post from "@/models/Post";
+import Logger from "@/models/Logger";
+import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
+import UserDashboard from "@/components/user/dashboard/UserDashboard";
+import FriendsList from "@/components/list/user/FriendsList";
+import PagedList from "@/components/pagination/PagedList";
+import PostItem from "@/components/list/post/PostItem";
+import SocialActions from "@/components/user/actions/peer/SocialActions";
 
 export default function PeerPage({ user, setUser }: Authorized) {
   const { data: peer, isLoading, error, reqData } = useFetch<User | null>();
   const { userId } = useParams();
   const {
     fetcher: { setData },
-   ...rest
+    ...rest
   } = usePagedFetch<Post>(`social/posts/${userId}`, 4, !!userId);
-  const   navigate   = useNavigate();
-  const  isInitial   = useRef(true);
-  const  socketRef   = useSocket('peer');
+  const navigate = useNavigate();
+  const socketRef = useSocket("peer");
   const { pathname } = useLocation();
+  const isWrongPath = !pathname.startsWith("/user"); // <AnimatePresence> dismounts
 
-  useDepedencyTracker('peer', {
-     pathname,
-    socketRef,
-       userId,
-      reqUser: user._id,
-         peer: peer?._id,
+  useDepedencyTracker("peer", {
+    pathname,
+      userId,
+     reqUser: user._id,
+        peer: peer?._id,
   });
 
   useEffect(() => {
-    if (!pathname.startsWith('/user')) return; // cancel effects on dismount (AnimatePresense)
-
+    if (isWrongPath) return;
     if (userId === user._id) {
-      navigate('/');
+      navigate("/");
       return;
     }
+
+    if (userId) {
+      reqData({ url: `social/find/${userId}` });
+    }
+  }, [isWrongPath, userId, user._id, navigate, reqData]);
+
+  useEffect(() => {
+    if (isWrongPath || !peer?._id) return; // cancel effects on dismount (AnimatePresense)
 
     const socket = socketRef.current;
     if (!socket) return;
 
-    const fetchPeer = async () => {
-      if (userId) await reqData({ url: `social/find/${userId}` });
-    };
-
-    if (isInitial.current) {
-      fetchPeer();
-      isInitial.current = false;
-    }
-
-    if (!peer?._id) return;
-
-    const logger = new Logger('peer');
+    const logger = new Logger("peer");
     if (socket.connected) logger.connect();
 
-    socket.on(`post:${peer?._id}:update`, ({ post, isNew }) => {
-      logger.event(`update, action: ${isNew ? 'New' : 'Edit'}`, post);
+    const updateChannel = `post:${peer._id}:update`;
+    const deleteChannel = `post:${peer._id}:delete`;
+
+    socket.on(updateChannel, ({ post, isNew }) => {
+      logger.event(`update, action: ${isNew ? "New" : "Edit"}`, post);
       setData(({ docCount: prevCount, items: prevPosts }) => {
         const items = isNew
           ? [post, ...prevPosts]
@@ -72,10 +70,10 @@ export default function PeerPage({ user, setUser }: Authorized) {
       });
     });
 
-    socket.on(`post:${peer?._id}:delete`, (deleted) => {
-      logger.event('delete', deleted);
+    socket.on(deleteChannel, (deleted) => {
+      logger.event("delete", deleted);
       setData(({ docCount: prevCount, items: prevPosts }) => {
-        const    items = prevPosts.filter(({ _id }) => _id !== deleted._id);
+        const items = prevPosts.filter(({ _id }) => _id !== deleted._id);
         const docCount = prevCount - 1;
         return { docCount, items };
       });
@@ -83,11 +81,11 @@ export default function PeerPage({ user, setUser }: Authorized) {
 
     return () => {
       if (socket.connected) {
-        socket.off(`post:${peer?._id}:update`);
-        socket.off(`post:${peer?._id}:delete`);
+        socket.off(updateChannel);
+        socket.off(deleteChannel);
       }
-    }
-  }, [pathname, socketRef, userId, user._id, peer?._id, setData, reqData, navigate]);
+    };
+  }, [isWrongPath, socketRef, peer?._id, setData]);
 
   return (
     <AsyncAwait {...{ isLoading, error }}>
