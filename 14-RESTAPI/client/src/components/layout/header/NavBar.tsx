@@ -24,7 +24,7 @@ export default function NavBar({ user, setUser }: Auth) {
 
   return (
     <header className={css["header"]}>
-      <h1>
+      <h1 onClick={() => navTo("/")}>
         <span>Friendface</span> {/* large display swap */}
         <span>F</span>
       </h1>
