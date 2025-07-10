@@ -22,7 +22,7 @@ export default function PostContent({
    setUser,
   setModal,
 }: UserState & {
-  post: Post;
+      post: Post;
   setModal: (modal: string) => void;
 }) {
   const { title, content, imgURL, creator, updatedAt } = post;
@@ -50,8 +50,8 @@ export default function PostContent({
            variants={bodyVariants}
               style={{ marginBottom: imgURL ? "" : "1rem" }}
         >
-          <motion.h2 {...{ variants }}>
-            <Truncate key={title} className="underline">
+          <motion.h2 key={title} {...{ variants }}>
+            <Truncate className="underline">
               {title}
             </Truncate>
             <Time time={updatedAt} />

@@ -45,7 +45,11 @@ export const useChatSocket = () => {
     const logger = new Logger(config);
     socket.on("connect", () => logger.connect());
 
-    socket.on(`chat:${user._id}:update`, async ({ chat, isNew, msg }) => {
+    const updateChannel = `chat:${user._id}:update`;
+    const deleteChannel = `chat:${user._id}:delete`;
+    const  alertChannel = `chat:${user._id}:alerts`;
+
+    socket.on(updateChannel, async ({ chat, isNew, msg }) => {
       logger.event(`update, ChatIsNew? ${isNew}`, chat);
 
       const  isSender = user._id === msg.sender;
@@ -71,7 +75,7 @@ export const useChatSocket = () => {
       });
     });
 
-    socket.on(`chat:${user._id}:delete`, (deletedChats: Chat[]) => {
+    socket.on(deleteChannel, (deletedChats: Chat[]) => {
       logger.event("delete", deletedChats);
       const isDeleted = (id?: string) => deletedChats.some((chat) => chat._id === id);
 
@@ -94,7 +98,7 @@ export const useChatSocket = () => {
         setMsgs((state) => cleanState(state));
     });
 
-    socket.on(`chat:${user._id}:alerts`, (chat) => {
+    socket.on(alertChannel, (chat) => {
       logger.event("alerts", chat);
       // prevents socket updates from replacing temp chat => no component dismount
       if (chat._id === activeId) setActiveChat(chat);
@@ -103,9 +107,9 @@ export const useChatSocket = () => {
 
     return () => {
       socket.off("connect");
-      socket.off(`chat:${user._id}:update`);
-      socket.off(`chat:${user._id}:delete`);
-      socket.off(`chat:${user._id}:alerts`);
+      socket.off(updateChannel);
+      socket.off(deleteChannel);
+      socket.off(alertChannel);
     };
   }, [
     socketRef,

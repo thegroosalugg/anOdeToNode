@@ -21,7 +21,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
   const {
     fetcher: { setData },
     ...rest
-  } = usePagedFetch<Post>(`social/posts/${userId}`, 4, !!userId);
+  } = usePagedFetch<Post>(`social/posts/${userId}`, 4, !!userId); // refetches only if userId exists
   const navigate = useNavigate();
   const socketRef = useSocket("peer");
   const { pathname } = useLocation();
@@ -41,9 +41,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
       return;
     }
 
-    if (userId) {
-      reqData({ url: `social/find/${userId}` });
-    }
+    if (userId) reqData({ url: `social/find/${userId}` });
   }, [isWrongPath, userId, user._id, navigate, reqData]);
 
   useEffect(() => {

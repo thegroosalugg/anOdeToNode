@@ -31,7 +31,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     fetcher: { setData: setReplies },
     ...rest
   } = usePagedFetch<Reply>(`post/replies/${postId}`, 5, !!postId);
-  const [modalState, setModal] = useState("");
+  const [modalState,    setModal] = useState("");
   const [hasLoaded, setHasLoaded] = useState(false);
   const   navigate = useNavigate();
   const  socketRef = useSocket("post");
@@ -56,16 +56,21 @@ export default function PostPage({ user, setUser }: Authorized) {
     const logger = new Logger("post");
     socket.on("connect", () => logger.connect());
 
-    socket.on(`post:${postId}:reply:new`, (reply) => {
+    const    newReplyChannel = `post:${postId}:reply:new`;
+    const deleteReplyChannel = `post:${postId}:reply:delete`;
+    const  updatePostChannel = `post:${postId}:update`;
+    const  deletePostChannel = `post:${postId}:delete`;
+
+    socket.on(newReplyChannel, (reply) => {
       logger.event("reply:new", reply);
       setTimeout(() => {
         setReplies(({ docCount, items }) => {
           return { docCount: docCount + 1, items: [reply, ...items] };
         });
-      }, 1200); // delay for other animations to act first
+      }, 500); // delay so the <ChatBox> animates first, then this.
     });
 
-    socket.on(`post:${postId}:reply:delete`, (deleted) => {
+    socket.on(deleteReplyChannel, (deleted) => {
       logger.event("reply:delete", deleted);
       setReplies(({ docCount: prevCount, items: prevReplies }) => {
         const items = prevReplies.filter(({ _id }) => _id !== deleted._id);
@@ -74,7 +79,7 @@ export default function PostPage({ user, setUser }: Authorized) {
       });
     });
 
-    socket.on(`post:${postId}:update`, (post) => {
+    socket.on(updatePostChannel, (post) => {
       logger.event("post:update", post);
       setPost((prevPost) => {
         if (post) return { ...prevPost, ...post };
@@ -83,7 +88,7 @@ export default function PostPage({ user, setUser }: Authorized) {
       closeModal(); // viewers cannot open modals on this page
     });
 
-    socket.on(`post:${postId}:delete`, (deleted) => {
+    socket.on(deletePostChannel, (deleted) => {
       logger.event("post:delete", deleted);
       if (deleted.creator !== user._id) {
         setPost(null); // delete actions for viewers. Creator's state automatically set to null
@@ -93,10 +98,10 @@ export default function PostPage({ user, setUser }: Authorized) {
 
     return () => {
       socket.off("connect");
-      socket.off(`post:${postId}:reply:new`);
-      socket.off(`post:${postId}:reply:delete`); // deletes a reply to post
-      socket.off(`post:${postId}:update`);
-      socket.off(`post:${postId}:delete`); // deletes the post (& all replies)
+      socket.off(newReplyChannel);
+      socket.off(deleteReplyChannel); // deletes a reply to post
+      socket.off(updatePostChannel);
+      socket.off(deletePostChannel); // deletes the post (& all replies)
     };
   }, [socketRef, user._id, postId, setError, setPost, reqPost, setReplies]);
 
