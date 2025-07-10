@@ -2,6 +2,10 @@ import { Meta } from "@/lib/types/common";
 import { UserPair } from "@/lib/types/interface";
 import User from "./User";
 
+interface UserPairExt extends UserPair {
+  watcher: User; // remove optional here
+}
+
 export default class Friend {
          _id!: string;
    createdAt!: string;
@@ -16,10 +20,10 @@ export default class Friend {
     return typeof user === "object" && "_id" in user ? user._id : user;
   };
 
-  static getConnection = ({ target, watcher } : UserPair) =>
+  static getConnection = ({ target, watcher } : UserPairExt) =>
     target.friends.find((friend) => Friend.getId(friend) === watcher._id);
 
-  static getMutuals = ({ target, watcher } : UserPair) =>
+  static getMutuals = ({ target, watcher } : UserPairExt) =>
     target.friends.filter(
       (their) =>
         Friend.getId(their) !== watcher._id &&
@@ -28,11 +32,4 @@ export default class Friend {
             Friend.getId(your) === Friend.getId(their) && your.accepted && their.accepted
         )
     );
-
-  static getAlertsByType = ({ user, hasSent = false }: { user: User; hasSent?: boolean }) =>
-    user.friends
-      .filter(({ initiated, meta }) => {
-        return (hasSent ? initiated : !initiated) && meta.show;
-      })
-      .reverse();
 }

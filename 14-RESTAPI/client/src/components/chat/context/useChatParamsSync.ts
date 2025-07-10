@@ -1,4 +1,5 @@
 import Chat from "@/models/Chat";
+import Friend from "@/models/Friend";
 import { useChat } from "./ChatContext";
 import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -45,7 +46,8 @@ export const useChatParamsSync = () => {
 
     let chat = chats.find(({ guest, host }) => [host._id, guest._id].includes(peerId));
     if (!chat) {
-      const peer = user.friends.find(({ user }) => user._id === peerId)?.user;
+      const peer = user.friends.find((friend) => Friend.getId(friend) === peerId)?.user;
+      if (typeof peer === "string") return;
       if (peer) chat = new Chat(user, peer);
     }
     // !chat = new Chat(dummy) => send 1st msg => socket updates chats & retriggers this effect
