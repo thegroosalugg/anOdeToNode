@@ -1,0 +1,166 @@
+:root {
+  --gray-100: #f5f5f5;
+  --gray-200: #e5e5e5;
+  --gray-300: #d4d4d4;
+  --gray-400: #a3a3a3;
+  --gray-500: #808080;
+  --gray-600: #666666;
+  --gray-700: #4d4d4d;
+  --gray-800: #333333;
+  --gray-900: #1a1a1a;
+
+  --rust-100: #e0875a;
+  --rust-200: #e4804d;
+  --rust-300: #e07037;
+  --rust-400: #df6629;
+  --rust-500: #f9572a;
+  --rust-600: #c65740;
+  --rust-700: #994820;
+  --rust-800: #6f3315;
+  --rust-900: #5c290f;
+
+  --lime-100: #ecfcca;
+  --lime-200: #d8f999;
+  --lime-300: #bbf451;
+  --lime-400: #9ae600;
+  --lime-500: #7ccf00;
+  --lime-600: #5ea500;
+  --lime-700: #497d00;
+  --lime-800: #3d6300;
+  --lime-900: #35530e;
+
+  --steel-100: #a3cce6;
+  --steel-200: #8abce0;
+  --steel-300: #6faad7;
+  --steel-400: #4c94c9;
+  --steel-500: #367ab2;
+  --steel-600: #356a94;
+  --steel-700: #325068;
+  --steel-800: #23394a;
+  --steel-900: #182732;
+
+  --purple-100: #e4d4f4;
+  --purple-200: #c6a8e7;
+  --purple-300: #a77cda;
+  --purple-400: #925ecf;
+  --purple-500: #7f40c3;
+  --purple-600: #791eb6;
+  --purple-700: #5e0e94;
+  --purple-800: #570c89;
+  --purple-900: #430969;
+
+  --radius-xs:  0.125rem;
+  --radius-sm:  0.25rem;
+  --radius-md:  0.375rem;
+  --radius-lg:  0.5rem;
+  --radius-xl:  0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
+
+  --text-xs:  0.75rem;
+  --text-sm:  0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+  --text-7xl: 4.5rem;
+  --text-8xl: 6rem;
+  --text-9xl: 8rem;
+
+  --text-shadow-2xs: 0px 1px 0px rgb(0 0 0 / 0.15);
+  --text-shadow-xs:  0px 1px 1px rgb(0 0 0 / 0.2);
+  --text-shadow-sm:
+    0px 1px 0px rgb(0 0 0 / 0.075),
+    0px 1px 1px rgb(0 0 0 / 0.075),
+    0px 2px 2px rgb(0 0 0 / 0.075);
+  --text-shadow-md:
+    0px 1px 1px rgb(0 0 0 / 0.1),
+    0px 1px 2px rgb(0 0 0 / 0.1),
+    0px 2px 4px rgb(0 0 0 / 0.1);
+  --text-shadow-lg:
+    0px 1px 2px rgb(0 0 0 / 0.1),
+    0px 3px 2px rgb(0 0 0 / 0.1),
+    0px 4px 8px rgb(0 0 0 / 0.1);
+
+  --shadow-xs:  0  1px  2px   0   rgb(0 0 0 / 0.05);
+  --shadow-sm:  0  1px  3px   0   rgb(0 0 0 / 0.1), 0 1px  2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md:  0  4px  6px  -1px rgb(0 0 0 / 0.1), 0 2px  4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:  0 10px 15px  -3px rgb(0 0 0 / 0.1), 0 4px  6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl:  0 20px 25px  -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-pop: 0  2px  4px   0   rgb(0 0 0 / 0.3), 0 4px 6px -1px rgb(0 0 0 / 0.3);
+
+  --screen-sm: 640px;
+  --screen-md: 768px;
+  --screen-lg: 1024px;
+  --screen-xl: 1280px;
+  --screen-2xl: 1536px;
+  --screen-3xl: 1792px;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line-clamp {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Real McCoy */
+  -webkit-box-orient: vertical;
+  line-clamp: 2; /* not widely supported - set only to silence linter */
+}
+
+.underline {
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+.floating-box {
+ border: var(--border-text);
+ background: var(--box);
+ box-shadow: var(--shadow-lg);
+ border-radius: var(--radius-2xl);
+}
+
+.fleeting-pop-up {
+  position: absolute; /* set position per component */
+  z-index: 2;
+  opacity: 0;
+  padding: 0.125rem 0.5rem;
+  height: fit-content;
+  width: fit-content;
+  background: var(--text);
+  color: var(--bg);
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-pop);
+}
+
+
+.no-scrollbars {
+  &::-webkit-scrollbar { height: 0px !important; width: 0px !important; }
+}
+
+.no-scrollbar-x {
+  &::-webkit-scrollbar { height: 0px !important; }
+}
+
+.no-scrollbar-y {
+  &::-webkit-scrollbar { width: 0px !important; }
+}
+
+.scrollbar-bg {
+  &::-webkit-scrollbar-thumb { background: var(--bg) !important; }
+}
+
+.scrollbar-accent {
+  &::-webkit-scrollbar-thumb { background: var(--accent) !important; }
+}

@@ -4,7 +4,7 @@ import AppError from '../models/Error';
 import Post from '../models/Post';
 import Reply from '../models/Reply';
 import Chat from '../models/Chat';
-import { _public } from '../models/User';
+import { _basic, _friends } from '../models/User';
 
 const readSocials: RequestHandler = async (req, res, next) => {
   const user = req.user;
@@ -21,7 +21,7 @@ const readSocials: RequestHandler = async (req, res, next) => {
       }
     });
     await user.save();
-    await user.populate('friends.user', _public);
+    await user.populate('friends.user', _friends);
     res.status(200).json(user);
   } catch (error) {
     next(new AppError(500, 'unable to update notifications', error));
@@ -38,7 +38,7 @@ const clearSocials: RequestHandler = async (req, res, next) => {
       if (_id.toString() === alertId) meta.show = false;
     });
     await user.save();
-    await user.populate('friends.user', _public);
+    await user.populate('friends.user', _friends);
     res.status(200).json(user);
   } catch (error) {
     next(new AppError(500, 'unable to remove notification', error));
@@ -57,7 +57,7 @@ const readReplies: RequestHandler = async (req, res, next) => {
           creator: { $ne: user._id },
       'meta.show': true,
     })
-      .populate('creator', _public)
+      .populate('creator', _basic)
       .populate('post', 'title creator')
       .sort({ createdAt: -1 });
 
@@ -94,7 +94,7 @@ const clearMsgs: RequestHandler = async (req, res, next) => {
 
   try {
     const { chatId } = req.params;
-    const chat = await Chat.findById(chatId).populate('host guest', _public);
+    const chat = await Chat.findById(chatId).populate('host guest', _basic);
     if (!chat) return next(new AppError(404, 'Chat not found'));
 
     const userId = user._id.toString();

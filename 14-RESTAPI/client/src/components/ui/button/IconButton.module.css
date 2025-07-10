@@ -1,0 +1,33 @@
+.icon-button {
+  --color: var(--rust-300);
+  position: relative;
+  padding: 0.25rem;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--accent);
+  border: none;
+  background: none;
+  transition: 0.5s ease-in-out;
+
+  > svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .active-tab {
+    position: absolute;
+    left: 0;
+    bottom: 0.1rem;
+    height: 2px;
+    width: 100%;
+    border-radius: 3px;
+    background: var(--color);
+  }
+
+  &:disabled { cursor: wait; filter: brightness(0.75); }
+  &.active   { color: var(--color);  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .icon-button { --color: var(--gray-100); }
+}

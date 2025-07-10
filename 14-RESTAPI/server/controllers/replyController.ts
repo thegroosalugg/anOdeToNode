@@ -4,7 +4,7 @@ import Post, { IPost } from '../models/Post';
 import Reply from '../models/Reply';
 import AppError from '../models/Error';
 import { getErrors, hasErrors } from '../validation/validators';
-import { _public } from '../models/User';
+import { _basic } from '../models/User';
 
 const getReplies: RequestHandler = async (req, res, next) => {
   const { postId: post } = req.params;
@@ -16,7 +16,7 @@ const getReplies: RequestHandler = async (req, res, next) => {
     const    items = await Reply.find({ post })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate('creator', _public)
+      .populate('creator', _basic)
       .sort({ createdAt: -1 });
 
     res.status(200).json({ items, docCount });

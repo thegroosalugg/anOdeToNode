@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import socket from '../socket';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User, { _public } from '../models/User';
+import User, { _friends } from '../models/User';
 import AppError from '../models/Error';
 import { getErrors, hasErrors } from '../validation/validators';
 
@@ -15,7 +15,7 @@ const getUser: RequestHandler = async (req, res, next) => {
   if (!user) return next(AppError.devErr());
 
   try {
-    await user.populate('friends.user', _public);
+    await user.populate('friends.user', _friends);
     res.status(200).json({ ...user.toObject() });
   } catch (error) {
     // returns unpopulated data
@@ -29,12 +29,17 @@ const postLogin: RequestHandler = async (req, res, next) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return next(new AppError(401, { email: 'is incorrect', password: 'is incorrect' }));
+      return next(
+        new AppError(401, {
+             email: "Email is incorrect",
+          password: "Password is incorrect",
+        })
+      );
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return next(new AppError(401, { password: 'is incorrect' }));
+      return next(new AppError(401, { password: 'Password is incorrect' }));
     }
 
     const userId = user._id;
@@ -46,7 +51,7 @@ const postLogin: RequestHandler = async (req, res, next) => {
       expiresIn: days,
     });
 
-    await user.populate('friends.user', _public);
+    await user.populate('friends.user', _friends);
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
     res.status(200).json({ JWTaccess, JWTrefresh, ...userDets });
   } catch (error) {

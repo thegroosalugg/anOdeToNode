@@ -1,7 +1,9 @@
 import { Model, model, Types, Schema } from 'mongoose';
 
 // centralised filter for search queries
-export const _public = '-email -password -friends -about';
+export const _full    = '-email -password';
+export const _friends = _full + ' -about';
+export const _basic   = _friends + ' -friends';
 
 const required = true;
 

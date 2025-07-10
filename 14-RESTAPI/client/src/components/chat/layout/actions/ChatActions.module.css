@@ -1,0 +1,19 @@
+.chat-actions {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: flex-end;
+  align-items: start;
+  gap: 0.5rem;
+
+  > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding-left: 1rem;
+
+    button:first-child { width: 125px; }
+  }
+
+  > button { margin-left: auto;}
+}

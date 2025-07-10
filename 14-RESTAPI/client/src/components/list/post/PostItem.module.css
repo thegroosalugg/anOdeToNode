@@ -1,0 +1,20 @@
+.post {
+  cursor: pointer;
+  padding: 1rem;
+
+  > hr {
+    border: none;
+    height: 1px;
+    margin-top: 2px;
+    background-color: var(--text);
+  }
+
+  > header {
+    display: flex;
+    justify-content: space-between;
+  }
+  > p {
+    margin-top: 0.2rem;
+    color: var(--text);
+  }
+}

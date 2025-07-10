@@ -1,0 +1,11 @@
+.post {
+  display: inline-block;
+  max-width: 50%;
+  vertical-align: bottom;
+}
+
+.reply {
+  text-align: center;
+  padding: 0 2rem;
+  color: var(--text);
+}

@@ -1,0 +1,59 @@
+.auth-form {
+  --color: var(--accent-hover);
+  --background: var(--box);
+  align-self: center;
+  max-width: 250px;
+  width: 100%;
+  overflow-x: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  padding: 0.5rem;
+
+  &.is-login {
+    --color: var(--box);
+    --background: var(--accent-hover);
+  }
+
+  /* override functional component CSS */
+  input {
+    width: 100%;
+    font-size: var(--text-sm);
+  }
+
+  > h2 {
+    text-align: center;
+    text-transform: capitalize;
+    text-wrap: nowrap;
+    font-weight: 900;
+    font-size: var(--text-3xl);
+    margin-bottom: -0.5rem;
+    padding: 0.25rem 0.5rem;
+    color: var(--color);
+    border: 2px solid var(--color);
+    background: var(--background);
+    box-shadow: var(--shadow-xl);
+    border-radius: var(--radius-xl);
+  }
+
+  > section {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .form-link {
+    font-size: var(--text-sm);
+    font-weight: 900;
+    margin-top: 0.2rem;
+    margin-bottom: -0.8rem;
+    background: none;
+    border: none;
+    color: var(--accent-hover);
+    text-decoration: underline;
+  }
+
+  > button:last-of-type {
+    align-self: end;
+    width: 84px;
+  }
+}

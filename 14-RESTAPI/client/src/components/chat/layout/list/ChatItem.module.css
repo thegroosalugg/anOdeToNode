@@ -1,0 +1,85 @@
+/* uses .floating-box */
+.chat-item {
+  --color: var(--text);
+  --background: var(--box);
+  --header: var(--fg);
+  --counter: var(--accent);
+  --img: var(--text);
+
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  background: var(--background);
+  border-color: var(--color);
+  transition: background 0.5s ease, border 0.5s ease;
+  /* flex: 1; */ /* set via Framer 0 | 1 */
+
+  /* all <spans> use .truncate */
+  span, time {
+    transition: color 0.5s ease, background 0.5s ease;
+  }
+
+  > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem;
+
+    /* Recipient Name */
+    > h2 {
+      min-width: 0;
+      > img {
+        border-color: var(--img);
+        transition: border-color 0.3s ease;
+      }
+      > span { color: var(--header); }
+    }
+
+    /* Last Message info (Collapsed): timestamp, sender/counter & lastMsg */
+    > p {
+      display: flex;
+      flex-direction: column;
+      align-items: end;
+      min-width: 0;
+      flex: 0 1 50%;
+
+      > span, time {
+        max-width: 100%;
+        color: var(--color);
+      }
+    }
+  }
+}
+
+/* Recipient name & counter */
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-weight: 700;
+
+  > span {
+    /* Counter override - remove absolute positioning */
+    &:last-of-type {
+      position: static;
+      color: var(--background);
+      background: var(--counter);
+      min-width: 20px;
+    }
+
+    /* first-of-type loads last & overwrites background when only 1 child span */
+    &:first-of-type {
+      color: var(--counter);
+      background: none;
+    }
+  }
+}
+
+.marked {
+  --background: var(--error);
+  --img: var(--error);
+  --color:   var(--bg);
+  --header:  var(--bg);
+  --counter: var(--bg);
+}

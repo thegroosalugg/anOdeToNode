@@ -1,0 +1,27 @@
+.control {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+
+  label {
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: capitalize;
+    margin-left: 0.5rem;
+    transition: color 0.5s ease;
+  }
+
+  /* uses .floating-box */
+  input, textarea {
+    padding: 0.25rem 0.5rem;
+    font-size: var(--text-xl);
+    resize: none;
+    transition: color 0.5s ease, border-color 0.5s ease;
+  }
+}
+
+.error {
+  input, textarea, label { color: var(--error); }
+  input, textarea { border-color: var(--error); }
+}

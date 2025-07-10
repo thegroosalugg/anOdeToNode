@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { Types } from 'mongoose';
 import Post from '../models/Post';
 import AppError from '../models/Error';
-import { _public } from '../models/User';
+import { _basic } from '../models/User';
 
 // default route for all posts is /feed/posts. Accessed by /profile & /social too
 const getPosts: RequestHandler = async (req, res, next) => {
@@ -24,7 +24,7 @@ const getPosts: RequestHandler = async (req, res, next) => {
     const    items = await Post.find(query)
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate('creator', _public)
+      .populate('creator', _basic)
       .sort({ createdAt: -1 });
 
     if (!items) return next(new AppError(404, 'Nothing posted yet'));
@@ -38,7 +38,7 @@ const getPosts: RequestHandler = async (req, res, next) => {
 const getPostById: RequestHandler = async (req, res, next) => {
   try {
     const { postId } = req.params;
-    const post = await Post.findById(postId).populate('creator', _public);
+    const post = await Post.findById(postId).populate('creator', _basic);
     if (!post) return next(new AppError(404, 'Post not found'));
 
     res.status(200).json(post);

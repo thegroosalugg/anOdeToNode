@@ -1,0 +1,17 @@
+.button {
+  padding: 0.25rem 0.5rem;
+  width: fit-content;
+  border: var(--border-transparent);
+  border-radius: var(--radius-lg);
+  color: var(--bg);
+  background: var(--accent);
+  box-shadow: var(--shadow-pop);
+  font-weight: 600;
+  transition: filter 0.5s ease; /* framer badly handles disabled & hover together, set as CSS */
+
+  &:disabled { cursor: wait; filter: brightness(0.75); }
+}
+
+@media screen and (hover: hover) and (pointer: fine) {
+  .button:hover { filter: brightness(0.75); }
+}

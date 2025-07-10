@@ -1,42 +1,25 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import useChatListener from '@/hooks/useChatListener';
-import { Auth } from '@/pages/RootLayout';
-import User from '@/models/User';
-import PortalMenu from '@/components/panel/PortalMenu';
-import ChatList from './ChatList';
-import NavButton from '@/components/navigation/NavButton';
-import Counter from '@/components/notifications/Counter';
-import css from './ChatMenu.module.css';
+import { useChat } from './context/ChatContext';
+import { useChatSocket } from './context/useChatSocket';
+import { useChatParamsSync } from './context/useChatParamsSync';
+import SideBar from '@/components/ui/menu/SideBar';
+import ChatBody from './layout/ChatBody';
+import IconButton from '@/components/ui/button/IconButton';
+import Counter from '@/components/ui/tags/Counter';
 
-export default function ChatMenu({ user, setUser }: { user: User, setUser: Auth['setUser'] }) {
-  const [menu, showMenu] = useState(false);
-  const     navigate     = useNavigate();
-  const    chatProps     = useChatListener(user, { isMenu: true, show: menu });
-  const { alerts, deferring, deferFn } = chatProps;
-
-  const openMenu = async () => {
-    deferFn(async () => showMenu(true), 1500);
-  };
-
-  const navTo = () => {
-    showMenu(false);
-    navigate('/inbox');
-  };
+export default function ChatMenu() {
+  useChatParamsSync(); // alters context values
+  useChatSocket();
+  const { alerts, deferring, isOpen, openMenu, closeMenu } = useChat();
 
   return (
     <>
-      <PortalMenu show={menu} close={() => showMenu(false)}>
-        <h2 className={css['header']} onClick={navTo}>
-          Go to Inbox
-          <FontAwesomeIcon icon='envelope-open-text' />
-        </h2>
-        <ChatList {...{ ...chatProps, user, setUser }} />
-      </PortalMenu>
-      <NavButton {...{ index: 3, deferring, callback: openMenu }}>
+      <SideBar onRight open={isOpen} close={closeMenu}>
+        <ChatBody />
+      </SideBar>
+      <IconButton icon="comments" onClick={openMenu} disabled={deferring}>
         <Counter count={alerts} />
-      </NavButton>
+        Chat
+      </IconButton>
     </>
   );
 }

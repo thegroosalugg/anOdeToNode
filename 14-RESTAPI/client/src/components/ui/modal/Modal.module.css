@@ -1,0 +1,13 @@
+.modal {
+  z-index: 30;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  max-height: 85%;
+  max-width: 90%;
+  overflow: auto;
+  border: none;
+  background: none;
+  /* Set as inline style. Framer motion disables transform with x/y animations */
+  /* transform: translate(-50%, -50%); */
+}

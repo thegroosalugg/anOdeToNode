@@ -8,10 +8,7 @@ export interface IReply {
   content: string;
   creator: Types.ObjectId | IUser;
      post: Types.ObjectId | IPost;
-     meta: {
-      read: boolean;
-      show: boolean;
-  };
+     meta: { read: boolean; show: boolean };
 }
 
 interface IReplyMethods {

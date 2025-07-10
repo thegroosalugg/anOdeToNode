@@ -1,0 +1,35 @@
+.user-dashboard {
+  --basis-left: 50%;
+  --basis-right: 40%;
+  align-self: center;
+  max-width: var(--screen-sm);
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  padding: 0.5rem;
+  overflow: auto;
+
+  > section {
+    flex: 1 1;
+    flex-basis: var(--basis-left);
+
+    &:last-child { flex-basis: var(--basis-right); }
+  }
+}
+
+.reverse {
+  --basis-left: 40%;
+  --basis-right: 50%;
+  > section:first-child {
+    order: 1;
+    .user-photo h2 { text-align: end };
+  }
+}
+
+.user-photo {
+  cursor: auto; /* overwrite default */
+
+  > h2 { font-size: var(--text-2xl); }
+  > p  { font-size: var(--text-xl);  }
+}

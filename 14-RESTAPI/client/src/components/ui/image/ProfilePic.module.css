@@ -1,0 +1,7 @@
+.profile-pic {
+  width: 28px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: var(--border-text);
+  border-radius: 50%;
+}

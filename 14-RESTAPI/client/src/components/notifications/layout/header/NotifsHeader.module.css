@@ -1,0 +1,31 @@
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-right: 2.25rem;
+
+  /* uses floating-box class & no-scrollbar-x */
+  > nav {
+    margin: 0 auto;
+    padding: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: scroll;
+
+    > button {
+      padding: 0.75rem;
+
+      &:nth-of-type(1) > svg { transform: translateX(0.3rem); } /* user-plus svg is poorly centered by default when above text */
+      &:nth-of-type(2) > svg { transform: translateX(0.2rem); } /* envelope-circle-check => same */
+    }
+  }
+}
+
+.label {
+  display: block;
+  font-size: var(--text-xs);
+}
+
+@media screen and (max-width: 640px) {
+  .label { display: none; }
+}

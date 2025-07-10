@@ -1,26 +1,27 @@
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import useFetch from '@/hooks/useFetch';
-import useSocket from '@/hooks/useSocket';
-import usePagination from '@/hooks/usePagination';
-import useDepedencyTracker from '@/hooks/useDepedencyTracker';
-import { Authorized } from './RootLayout';
+import { useFetch } from '@/lib/hooks/useFetch';
+import { useSocket } from '@/lib/hooks/useSocket';
+import { usePagedFetch } from '@/components/pagination/usePagedFetch';
+import { useDepedencyTracker } from '@/lib/hooks/useDepedencyTracker';
+import { Authorized } from '@/lib/types/auth';
 import User from '@/models/User';
 import Post from '@/models/Post';
 import Logger from '@/models/Logger';
-import AsyncAwait from '@/components/panel/AsyncAwait';
-import PeerProfile from '@/components/social/PeerProfile';
-import FriendsList from '@/components/profile/FriendsList';
+import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
+import UserDashboard from '@/components/user/dashboard/UserDashboard';
+import FriendsList from '@/components/list/user/FriendsList';
 import PagedList from '@/components/pagination/PagedList';
-import PostItem from '@/components/post/PostItem';
+import PostItem from '@/components/list/post/PostItem';
+import SocialActions from '@/components/user/actions/peer/SocialActions';
 
 export default function PeerPage({ user, setUser }: Authorized) {
-  const { data: peer, isLoading, error, reqHandler } = useFetch<User | null>();
+  const { data: peer, isLoading, error, reqData } = useFetch<User | null>();
   const { userId } = useParams();
   const {
     fetcher: { setData },
    ...rest
-  } = usePagination<Post>(`social/posts/${userId}`, 4, !!userId);
+  } = usePagedFetch<Post>(`social/posts/${userId}`, 4, !!userId);
   const   navigate   = useNavigate();
   const  isInitial   = useRef(true);
   const  socketRef   = useSocket('peer');
@@ -46,7 +47,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
     if (!socket) return;
 
     const fetchPeer = async () => {
-      if (userId) await reqHandler({ url: `social/find/${userId}` });
+      if (userId) await reqData({ url: `social/find/${userId}` });
     };
 
     if (isInitial.current) {
@@ -86,15 +87,24 @@ export default function PeerPage({ user, setUser }: Authorized) {
         socket.off(`post:${peer?._id}:delete`);
       }
     }
-  }, [pathname, socketRef, userId, user._id, peer?._id, setData, reqHandler, navigate]);
+  }, [pathname, socketRef, userId, user._id, peer?._id, setData, reqData, navigate]);
 
   return (
     <AsyncAwait {...{ isLoading, error }}>
       {peer && (
         <>
-          <PeerProfile {...{ user, setUser, peer }} />
-          <FriendsList friends={peer.friends} mutual />
-          <PagedList<Post> {...{ ...rest, config: 'feed' }}>
+          <UserDashboard {...{ target: peer, watcher: user }}>
+            <SocialActions {...{ user, setUser, peer }} />
+          </UserDashboard>
+          <FriendsList target={peer} watcher={user} />
+          <PagedList<Post>
+              path="post"
+            header={{
+                 title: [`${peer.name}'s posts`,                    "end"],
+              fallback: [`${peer.name} hasn't posted anything yet`, "end"],
+            }}
+            {...rest}
+          >
             {(post) => <PostItem {...post} />}
           </PagedList>
         </>

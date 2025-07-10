@@ -1,0 +1,5 @@
+  .heading {
+    font-family: var(--font-minor);
+    font-weight: 300;
+    font-size: var(--text-xl);
+  }

@@ -1,0 +1,23 @@
+.confirm-dialog {
+  padding: 0.5rem;
+  background: var(--bg);
+  overflow-x: scroll;
+  width: 280px;
+  border-radius: var(--radius-lg);
+
+  > h2 {
+    text-align: center;
+    font-size: var(--text-xl);
+    margin-bottom: 0.5rem;
+  }
+
+  > section {
+    display: flex;
+    gap: 0.5rem;
+
+    > button {
+      width: 128px;
+      border: var(--border-transparent);
+    }
+  }
+}

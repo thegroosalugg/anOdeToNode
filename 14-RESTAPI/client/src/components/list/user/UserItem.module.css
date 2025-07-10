@@ -1,0 +1,29 @@
+.user-item {
+  cursor: pointer;
+
+  /* uses .truncate class */
+  > h2 {
+    padding: 0.1rem 0.2rem 0;
+    font-size: 90%;
+    font-weight: 600;
+  }
+
+  > img {
+    width: 100%;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+  }
+
+  > p {
+    padding-left: 0.1rem;
+    font-size: var(--text-xs);
+    color: var(--text);
+  }
+}
+
+@media screen and (pointer: coarse) {
+  .user-item {
+    > h2 { font-size: 60%; }
+    > p  { font-size: 50%; }
+  }
+}

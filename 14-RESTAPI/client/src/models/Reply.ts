@@ -1,3 +1,4 @@
+import { Meta } from '@/lib/types/common';
 import Post from './Post';
 import User from './User';
 
@@ -7,7 +8,7 @@ type Reply = {
   createdAt: string;
        post: Post;
     creator: User;
-       meta: { read: boolean, show: boolean }
+       meta: Meta;
 };
 
 export default Reply;

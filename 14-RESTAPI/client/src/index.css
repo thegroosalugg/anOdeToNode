@@ -1,27 +1,79 @@
-@import './reset.css';
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
+@import "./variables.css";
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900");
 
 :root {
-  --team-green: #12a1a1;
-  --error-red: #c65740;
-  --text-grey: #818181;
-  --dark-grey: #454545;
-  --main-gradient: linear-gradient(to right, #dbd9d9, #fff);
-  --box-gradient: linear-gradient(to right, #ededed, #fff);
-  --text-small: 0.9rem;
+  --font-major: "Montserrat", serif;
+  --font-minor: "Lato", sans-serif;
+  --bg: var(--gray-200);
+  --fg: var(--gray-900);
+  --accent: var(--steel-600);
+  --accent-hover: var(--steel-700);
+  --text: var(--gray-600);
+  --box: var(--gray-100);
+  --error: var(--rust-600);
+  --accept: var(--lime-700);
+  --transparent: #ffffff00;
+
+  --border-accent: 1px solid var(--accent);
+  --border-text: 1px solid var(--text);
+  --border-transparent: 1px solid var(--transparent);
+  --nav-size: 68px;
 }
 
+@media (prefers-color-scheme: dark) {
+  html { color-scheme: dark; }
+  :root {
+    --bg: var(--gray-800);
+    --fg: var(--gray-100);
+    --accent: var(--steel-300);
+    --accent-hover: var(--steel-200);
+    --text: var(--gray-300);
+    --box: var(--gray-700);
+    --error: var(--rust-500);
+    --accept: var(--lime-400);
+    --transparent: #00000000;
+  }
+}
+
+/* CSSReset */
+*, *::before, *::after { box-sizing: border-box; }
+*                      { margin: 0;  padding: 0; }
+
+body {
+  color: var(--fg);
+  background: var(--bg);
+  line-height: 1.2;
+  font-family: var(--font-major);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh; /* overlays stretch to screen height */
+}
+
+input, textarea, select          { outline: none; border-radius: 0; }
+a                                { text-decoration: none;           }
+ul, ol                           {      list-style: none;           }
+img, picture, video, canvas, svg {         display: block;          }
+button                           {          cursor: pointer;        }
+
+a, p, h1, h2, h3, h4, h5, h6, button, label, input, textarea, select, option {
+  overflow-wrap: break-word; /* only works when element has width */
+           font: inherit;
+          color: inherit;
+}
+
+::-webkit-scrollbar       { width: 1px; height: 1px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--fg); border-radius: 5px; }
+/* END */
+
 #root {
-  display: flex;
+  display: flex; /* Flex set on first available wrapper around header/main/footer */
   flex-direction: column;
-  min-height: 100vh;
-  font-family: "Montserrat", serif;
-  color: #272727;
-  background: var(--main-gradient);
+  min-height: 100dvh; /* content fits between browser UI elements */
 }
 
 #main {
-  flex: 1;
+  flex: 1; /* push footer to bottom */
   display: flex;
   flex-direction: column;
   padding: 1rem;
@@ -29,12 +81,7 @@
 
 /* side navbar on mobile landscape */
 @media screen and (pointer: coarse) and (orientation: landscape) {
-  #root {
-    flex-direction: row;
-  }
-
-  #main {
-    /* align main content by width of nav bar (position fixed, not in element flow) */
-    margin-left: 60px;
-  }
+  #root { flex-direction: row; }
+  /* align main content by width of nav bar (position fixed, not in element flow) */
+  #main { margin-left: var(--nav-size); }
 }
