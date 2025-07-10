@@ -8,6 +8,10 @@ import XButton from "@/components/ui/button/XButton";
 import Heading from "@/components/ui/layout/Heading";
 import { createAnimations } from "@/lib/motion/animations";
 import css from "./InboundAlerts.module.css";
+import shared from "./Shared.module.css";
+
+// popLayout breaks if I abstract logic anymore
+// such as outsourcing li{...props} | li>Heading to a smaller reusable component
 
 const animations = createAnimations({ initial: { x: -20 }, animate: { x: 0 } });
 
@@ -35,11 +39,11 @@ export default function InboundAlerts() {
             <motion.li
                  layout
                     key={alertId + initiated}
-              className={`floating-box ${css["inbound-alert"]}`}
+              className={`floating-box ${shared["alert"]}`}
               {...animations}
             >
               <Time time={createdAt} />
-              <div className={css["content"]}>
+              <div className={shared["content"]}>
                 <NameTag
                     layout
                        key={accepted + ""}

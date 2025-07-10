@@ -6,6 +6,7 @@ import NameTag from "@/components/ui/tags/NameTag";
 import Heading from "@/components/ui/layout/Heading";
 import { createAnimations } from "@/lib/motion/animations";
 import css from "./ReplyAlerts.module.css";
+import shared from "./Shared.module.css";
 
 const animations = createAnimations({ initial: { x: -20 }, animate: { x: 0 } });
 
@@ -19,12 +20,12 @@ export default function ReplyAlerts() {
           <motion.li
                layout
                   key={_id}
-            className={`floating-box ${css["reply-alert"]}`}
+            className={`floating-box ${shared["alert"]}`}
             {...animations}
           >
             <Time time={createdAt} />
             <div>
-              <div className={css["content"]}>
+              <div className={shared["content"]}>
                 <NameTag user={creator} align="center" overflow="line-clamp">
                   <strong onClick={() => navTo("/user/" + creator._id)}>
                     {creator.name}

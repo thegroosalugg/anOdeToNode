@@ -7,7 +7,7 @@ import NameTag from "@/components/ui/tags/NameTag";
 import XButton from "@/components/ui/button/XButton";
 import Heading from "@/components/ui/layout/Heading";
 import { createAnimations } from "@/lib/motion/animations";
-import css from "./OutboundAlerts.module.css";
+import shared from "./Shared.module.css";
 
 const animations = createAnimations({ initial: { x: -20 }, animate: { x: 0 } });
 
@@ -34,12 +34,18 @@ export default function OutboundAlerts() {
             <motion.li
                  layout
                     key={alertId + initiated}
-              className={`floating-box ${css["outbound-alert"]}`}
+              className={`floating-box ${shared["alert"]}`}
               {...animations}
             >
               <Time time={createdAt} />
-              <div className={css["content"]}>
-                <NameTag user={peer} align="center" overflow="line-clamp">
+              <div className={shared["content"]}>
+                <NameTag
+                       key={accepted + ""}
+                    layout
+                      user={peer}
+                     align="center"
+                  overflow="line-clamp"
+                >
                   {text}
                 </NameTag>
                 {!accepted ? (

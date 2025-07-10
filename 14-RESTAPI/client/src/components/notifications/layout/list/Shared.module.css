@@ -1,4 +1,4 @@
-.outbound-alert {
+.alert {
   > time {
     display: block;
     text-align: end;
