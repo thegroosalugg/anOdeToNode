@@ -1,8 +1,68 @@
 .footer {
-  background: var(--accent-hover);
-  color: var(--bg);
+  margin-top: 0.5rem;
   text-align: center;
-  padding: 1rem;
+  overflow-x: auto;
+  background: var(--accent);
+  color: var(--bg);
+
+  a {
+    transition: 0.5s ease;
+    &:hover {
+      color: var(--rust-300);
+
+      @media (prefers-color-scheme: dark) { color: var(--gray-100); }
+    }
+  }
+
+  hr {
+    border: 1px solid var(--text);
+    box-shadow: var(--shadow-xl);
+  }
+
+  > section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem 1rem;
+    font-size: 0.875rem;
+
+    &:nth-of-type(1) {
+      @media (min-width: 768px) {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 3rem;
+        text-align: start;
+      }
+
+      h1 {
+        font-size: var(--text-xl);
+        font-weight: 900;
+        overflow-wrap: break-word;
+        max-width: 100%;
+
+        &:last-of-type {
+          font-weight: 500;
+          @media (min-width: 768px) { margin-left: auto; }
+        }
+      }
+
+      nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        @media (min-width: 768px) { gap: 1rem; }
+      }
+    }
+
+    &:nth-of-type(2) {
+      justify-content: space-between;
+      font-size: 0.75rem;
+
+      @media (min-width: 768px) { flex-direction: row; }
+    }
+  }
 }
 
 @media screen and (pointer: coarse) and (orientation: landscape) {

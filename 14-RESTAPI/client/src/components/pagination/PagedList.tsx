@@ -43,10 +43,8 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   const       listRef = useRef<HTMLUListElement | null>(null);
   const        height = useRef<number | "auto">("auto");
   const shouldRecount = docCount < limit && items.length < limit;
-  const       opacity = 0;
-  const      duration = 0.5;
   const        cursor = deferring ? "wait" : "";
-  const       stagger = (index: number) => ({ duration, delay: 0.05 * index });
+  const       stagger = (index: number) => ({ duration: 0.5, delay: delay + 0.05 * index });
   const { title = ["", "start"], fallback = ["No results found", "start"] } = header ?? {};
 
   useEffect(() => {
@@ -80,12 +78,6 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
                   ref={listRef}
             className={classes}
                 style={{ height: height.current }}
-             variants={{
-               enter: { opacity    },
-              center: { opacity: 1 },
-                exit: { opacity    },
-            }}
-            transition={{ duration, ease: "easeInOut", opacity: { delay } }}
           >
             <AnimatePresence mode="popLayout" custom={direction}>
               {items.map((item, i) => (

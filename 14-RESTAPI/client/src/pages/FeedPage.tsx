@@ -27,7 +27,10 @@ export default function FeedPage({ setUser }: Authorized) {
     const logger = new Logger("feed");
     socket.on("connect", () => logger.connect());
 
-    socket.on("post:update", ({ post, isNew }) => {
+    const updateChannel = "post:update";
+    const deleteChannel = "post:delete";
+
+    socket.on(updateChannel, ({ post, isNew }) => {
       logger.event(`update, action: ${isNew ? "New" : "Edit"}`, post);
       setData(({ docCount: prevCount, items: prevPosts }) => {
         const items = isNew
@@ -39,7 +42,7 @@ export default function FeedPage({ setUser }: Authorized) {
       });
     });
 
-    socket.on("post:delete", (deleted) => {
+    socket.on(deleteChannel, (deleted) => {
       logger.event("delete", deleted);
       setData(({ docCount: prevCount, items: prevPosts }) => {
         const items = prevPosts.filter(({ _id }) => _id !== deleted._id);
@@ -50,8 +53,8 @@ export default function FeedPage({ setUser }: Authorized) {
 
     return () => {
       socket.off("connect");
-      socket.off("post:update");
-      socket.off("post:delete");
+      socket.off(updateChannel);
+      socket.off(deleteChannel);
     };
   }, [socketRef, setData]);
 

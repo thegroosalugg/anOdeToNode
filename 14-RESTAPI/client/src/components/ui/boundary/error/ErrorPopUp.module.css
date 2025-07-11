@@ -2,15 +2,14 @@
   position: absolute;
   padding: 0.125rem 0.5rem;
   font-size: 80%;
-  text-wrap: nowrap;
   text-align: center;
   text-transform: capitalize;
-  overflow-x: scroll;
   max-width: 95%;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-2xl);
   background: var(--error);
   color: var(--bg);
+  cursor: pointer;
 
   &::-webkit-scrollbar-thumb { background: var(--box); }
 }

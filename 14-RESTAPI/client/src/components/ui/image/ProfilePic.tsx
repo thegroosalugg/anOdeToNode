@@ -3,7 +3,7 @@ import { BASE_URL } from '@/lib/util/fetchData';
 import User from '@/models/User';
 import css from './ProfilePic.module.css';
 
-const fallback = '/fallback_user.png';
+const fallback = '/fallback-user.png';
 
 export default function ProfilePic({
      user,

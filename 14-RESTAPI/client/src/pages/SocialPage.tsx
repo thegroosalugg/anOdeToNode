@@ -24,8 +24,10 @@ export default function SocialPage({ user }: Authorized) {
     const logger = new Logger("social");
     socket.on("connect", () => logger.connect());
 
-    socket.on("user:new", (newUser) => {
-      logger.event("user:new", newUser);
+    const newChannel = "user:new";
+    
+    socket.on(newChannel, (newUser) => {
+      logger.event(newChannel, newUser);
       setData(({ docCount, items }) => ({
         docCount: docCount + 1,
         items: [newUser, ...items],
@@ -34,7 +36,7 @@ export default function SocialPage({ user }: Authorized) {
 
     return () => {
       socket.off("connect");
-      socket.off("user:new");
+      socket.off(newChannel);
     };
   }, [socketRef, setData]);
 

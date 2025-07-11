@@ -27,7 +27,10 @@ export const useAlertSocket = () => {
     const logger = new Logger("alerts");
     socket.on("connect", () => logger.connect());
 
-    socket.on(`peer:${user._id}:update`, async (updated) => {
+    const socialChannel = `peer:${user._id}:update`;
+    const  replyChannel =  `nav:${user._id}:reply`;
+
+    socket.on(socialChannel, async (updated) => {
       logger.event("peer:update", updated);
       if (isOpen && activeTab < 2) {
         await markSocials();
@@ -36,7 +39,7 @@ export const useAlertSocket = () => {
       }
     });
 
-    socket.on(`nav:${user._id}:reply`, async ({ action, reply }) => {
+    socket.on(replyChannel, async ({ action, reply }) => {
       logger.event(`reply, action: ${action}`, reply);
       if (isOpen && activeTab === 2) {
         await markReplies();
@@ -51,8 +54,8 @@ export const useAlertSocket = () => {
 
     return () => {
       socket.off("connect");
-      socket.off(`peer:${user._id}:update`);
-      socket.off(`nav:${user._id}:reply`);
+      socket.off(socialChannel);
+      socket.off(replyChannel);
     };
   }, [
       socketRef,
