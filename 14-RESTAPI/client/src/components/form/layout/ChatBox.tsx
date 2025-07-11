@@ -71,7 +71,7 @@ export default function ChatBox({
       }}
       {...props}
     >
-      <textarea name="content" {...{ rows }} />
+      <textarea name="content" aria-label="Chat message" {...{ rows }} />
       <motion.button disabled={deferring}>
         <AnimatePresence mode="wait">
           {isLoading ? (

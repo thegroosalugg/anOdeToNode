@@ -9,6 +9,7 @@ import { Authorized } from "@/lib/types/auth";
 import Post from "@/models/Post";
 import Reply from "@/models/Reply";
 import Logger from "@/models/Logger";
+import Meta from "@/components/meta/Meta";
 import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
 import PostContent from "@/components/post/PostContent";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
@@ -16,6 +17,7 @@ import ReplyItem from "@/components/list/reply/ReplyItem";
 import PagedList from "@/components/pagination/PagedList";
 import FormSideBar from "@/components/form/forms/sidebar/FormSideBar";
 import PostForm from "@/components/form/forms/post/PostForm";
+import { getMeta } from "@/lib/util/getMeta";
 
 export default function PostPage({ user, setUser }: Authorized) {
   const {
@@ -123,8 +125,16 @@ export default function PostPage({ user, setUser }: Authorized) {
     );
   }
 
+  const { title, description } = getMeta(
+    isLoading,
+    post,
+    (post) => ({ title: post.title, description: post.title }),
+    "Post"
+  );
+
   return (
     <>
+      <Meta {...{ description }}>{title}</Meta>
       <FormSideBar open={modalState === "edit"} close={closeModal} text="Edit your post...">
         <PostForm {...{ isOpen: modalState === "edit", setUser, post }} />
       </FormSideBar>

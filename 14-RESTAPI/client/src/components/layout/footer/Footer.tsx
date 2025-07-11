@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import css from "./Footer.module.css";
 
 export default function Footer() {
@@ -7,9 +8,9 @@ export default function Footer() {
       <section>
         <h1>FriendFace</h1>
         <nav>
-          <a href="/">Home</a>
-          <a href="/">About</a>
-          <a href="/">Terms & Conditions</a>
+          <Link to="/">Home</Link>
+          <Link to="/about">About</Link>
+          <Link to="/terms">Terms & Conditions</Link>
         </nav>
         <h1>M.E.R.N.</h1>
       </section>
@@ -17,7 +18,7 @@ export default function Footer() {
       <section>
         <p>© 2025 Social Media Demo. All rights reserved.</p>
         <a
-           href="/https://github.com/thegroosalugg/anOdeToNode/tree/main/14-RESTAPI"
+            href="https://github.com/thegroosalugg/anOdeToNode/tree/main/14-RESTAPI"
           target="_blank"
         >
           View Source Code
