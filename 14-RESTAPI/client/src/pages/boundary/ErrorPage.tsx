@@ -5,7 +5,7 @@ export default function ErrorPage() {
   return (
     <>
       <Meta description="Page not found.">Not Found!</Meta>
-      <Heading style={{ fontSize: "var(--text-4xl)", textAlign: "center" }}>
+      <Heading style={{ fontSize: "var(--text-4xl)", textAlign: "center", margin: "1rem auto" }}>
         Page Not Found!
       </Heading>
     </>

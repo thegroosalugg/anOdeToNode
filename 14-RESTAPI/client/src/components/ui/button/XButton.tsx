@@ -15,7 +15,7 @@ export default function XButton({
   }
 
   return (
-    <Button {...{ background, color }} {...props}>
+    <Button aria-label="hide" {...{ background, color }} {...props}>
       <FontAwesomeIcon icon="x" />
     </Button>
   );

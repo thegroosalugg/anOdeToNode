@@ -9,8 +9,10 @@ import { Auth } from "@/lib/types/auth";
 import { Dict } from "@/lib/types/common";
 
 const staticMeta: Dict<{ title: string; description: string }> = {
-    "/feed": { title: "Feed",   description: "All user posts" },
-  "/social": { title: "Social", description: "List of users"  },
+    "/feed": { title:               "Feed", description: "All user posts"          },
+  "/social": { title:             "Social", description: "List of users"           },
+   "/about": { title:              "About", description: "About page"              },
+   "/terms": { title: "Terms & Conditions", description: "Terms & conditions page" },
 };
 
 const metadata = (path: string, user: Auth["user"]) => {
