@@ -8,12 +8,14 @@ import { Authorized } from "@/lib/types/auth";
 import User from "@/models/User";
 import Post from "@/models/Post";
 import Logger from "@/models/Logger";
+import Meta from "@/components/meta/Meta";
 import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
 import UserDashboard from "@/components/user/dashboard/UserDashboard";
 import FriendsList from "@/components/list/user/FriendsList";
 import PagedList from "@/components/pagination/PagedList";
 import PostItem from "@/components/list/post/PostItem";
 import SocialActions from "@/components/user/actions/peer/SocialActions";
+import { getMeta } from "@/lib/util/getMeta";
 
 export default function PeerPage({ user, setUser }: Authorized) {
   const { data: peer, isLoading, error, reqData } = useFetch<User | null>();
@@ -85,26 +87,36 @@ export default function PeerPage({ user, setUser }: Authorized) {
     };
   }, [isWrongPath, socketRef, peer?._id, setData]);
 
+  const { title, description } = getMeta(
+    isLoading,
+    peer,
+    (peer) => ({ title: peer.name, description: `${peer.name}'s profile` }),
+    "User"
+  );
+
   return (
-    <AsyncAwait {...{ isLoading, error }}>
-      {peer && (
-        <>
-          <UserDashboard {...{ target: peer, watcher: user }}>
-            <SocialActions {...{ user, setUser, peer }} />
-          </UserDashboard>
-          <FriendsList target={peer} watcher={user} />
-          <PagedList<Post>
+    <>
+      <Meta {...{ description }}>{title}</Meta>
+      <AsyncAwait {...{ isLoading, error }}>
+        {peer && (
+          <>
+            <UserDashboard {...{ target: peer, watcher: user }}>
+              <SocialActions {...{ user, setUser, peer }} />
+            </UserDashboard>
+            <FriendsList target={peer} watcher={user} />
+            <PagedList<Post>
               path="post"
-            header={{
-                 title: [`${peer.name}'s posts`,                    "end"],
-              fallback: [`${peer.name} hasn't posted anything yet`, "end"],
-            }}
-            {...rest}
-          >
-            {(post) => <PostItem {...post} />}
-          </PagedList>
-        </>
-      )}
-    </AsyncAwait>
+              header={{
+                title: [`${peer.name}'s posts`, "end"],
+                fallback: [`${peer.name} hasn't posted anything yet`, "end"],
+              }}
+              {...rest}
+            >
+              {(post) => <PostItem {...post} />}
+            </PagedList>
+          </>
+        )}
+      </AsyncAwait>
+    </>
   );
 }

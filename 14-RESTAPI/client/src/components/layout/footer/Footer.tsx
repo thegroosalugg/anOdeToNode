@@ -17,7 +17,7 @@ export default function Footer() {
       <section>
         <p>© 2025 Social Media Demo. All rights reserved.</p>
         <a
-           href="/https://github.com/thegroosalugg/anOdeToNode/tree/main/14-RESTAPI"
+            href="https://github.com/thegroosalugg/anOdeToNode/tree/main/14-RESTAPI"
           target="_blank"
         >
           View Source Code
