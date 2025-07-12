@@ -102,7 +102,7 @@ const postCheckout: RequestHandler = async (req, res, next) => {
         quantity, // require & reserved stripe props
       price_data: {
             currency: 'usd',
-         unit_amount: price * 100, // price must be in cents in STRIPE
+         unit_amount: Math.round(price * 100), // price must be in cents in STRIPE
         product_data: { name, description: desc },
       },
     }));
