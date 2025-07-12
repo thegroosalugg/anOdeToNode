@@ -37,8 +37,8 @@ const getLogin: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: titles[state],
       isActive: '/login',
-          view:  'login',
-        styles: ['login'],
+          view:  'user/login',
+        styles: ['user/login'],
         locals: { state },
     })
   } else {

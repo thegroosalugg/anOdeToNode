@@ -25,8 +25,8 @@ const getUserItems: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: 'Dashboard',
       isActive: '/admin/items',
-          view:  'itemList',
-        styles: ['itemList', 'dashboard', 'userInfo', 'pagination'],
+          view:  'store/list',
+        styles: ['store/list', 'user/details', 'includes/dashboard', 'includes/pagination'],
         locals: { items, isAdmin: true, pagination },
     });
   } catch (error) {
@@ -54,8 +54,8 @@ const getItemForm: RequestHandler = async (req, res, next) => {
   res.render('body', {
        title: 'New Listing',
     isActive: '/admin/items',
-        view:  'itemForm',
-      styles: ['itemForm', 'dashboard'],
+        view:  'user/listing',
+      styles: ['user/listing', 'includes/dashboard'],
       locals: { item, filename },
   });
 };

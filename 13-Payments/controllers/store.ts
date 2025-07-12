@@ -25,8 +25,8 @@ const getItems: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: 'Home',
       isActive: '/',
-          view: 'itemList',
-        styles: ['itemList', 'pagination'],
+          view: 'store/list',
+        styles: ['store/list', 'includes/pagination'],
         locals: { items, isAdmin: false, pagination },
     });
   } catch (error) {
@@ -42,8 +42,8 @@ const getItemById: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: item?.name || 'Not Found',
       isActive: '/',
-          view:  'itemView',
-        styles: ['itemView'],
+          view:  'store/item',
+        styles: ['store/item'],
         locals: { item },
     });
   } catch (error) {
@@ -59,8 +59,8 @@ const getCart: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: 'Your Cart',
       isActive: '/cart',
-          view:  'cart',
-        styles: ['cart', 'dashboard'],
+          view:  'store/cart',
+        styles: ['store/cart', 'includes/dashboard'],
         locals: { items },
     });
   } catch (error) {
@@ -138,8 +138,8 @@ const getOrders: RequestHandler = async (req, res, next) => {
     res.render('body', {
           title: 'Your Orders',
       isActive: '/admin/items',
-          view:  'orders',
-        styles: ['orders', 'dashboard', 'userInfo', 'pagination'],
+          view:  'user/orders',
+        styles: ['user/orders', 'user/details', 'includes/dashboard', 'includes/pagination'],
         locals: { orders, formatDate, pagination },
     });
   } catch (error) {

@@ -1,5 +1,5 @@
-<%- include('includes/dashboard') %>
-<%- include('userInfo') %>
+<%- include('../includes/dashboard') %>
+<%- include('../user/details') %>
 
 <% const detailRow = (text, value, css = '') => { %>
   <p class="detail-row <%= css %>">
@@ -38,4 +38,4 @@
   <% }) %>
 </ul>
 
-<%- include('includes/pagination') %>
+<%- include('../includes/pagination') %>

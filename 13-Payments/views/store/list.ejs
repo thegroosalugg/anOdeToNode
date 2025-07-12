@@ -1,6 +1,6 @@
 <% if (isAdmin) { %>
-  <%- include('includes/dashboard') %>
-  <%- include('userInfo') %>
+  <%- include('../includes/dashboard') %>
+  <%- include('../user/details') %>
 <% } %>
 
 <section class="store">
@@ -41,7 +41,7 @@
   </ul>
 </section>
 
-<%- include('includes/pagination') %>
+<%- include('../includes/pagination') %>
 
 <script src="/script/deleteItem.js"></script>
 <script>
