@@ -1,5 +1,11 @@
-<div class="dashboard">
-  <a href="/orders">Orders</a>
-  <a href="/admin/items">Listings</a>
-  <a href="/admin/item-form">New Listing</a>
+<% const activeTab = (href) => href === dash ? 'active' : '' %>
+
+<div class="dashboard scrollbar-bg">
+  <a href="/orders" class="<%= activeTab('orders') %>">Orders</a>
+  <a href="/admin/items" class="<%= activeTab('items') %>">Listings</a>
+  <a href="/admin/item-form" class="<%= activeTab('form') %>">Post an ad</a>
+  <form action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrf %>" />
+    <button class="logout">Logout</button>
+  </form>
 </div>

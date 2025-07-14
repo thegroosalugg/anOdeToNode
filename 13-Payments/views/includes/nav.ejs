@@ -1,26 +1,17 @@
 <% const activeTab = (href) => href === isActive ? 'active' : '' %>
 
-<nav class="nav">
-  <h1>D-Bay</h1>
-  <a href="/"              class="<%= activeTab('/')           %>">
-    <i class="fa-solid fa-mountain-sun"></i> Home
-  </a>
+<nav class="nav scrollbar-bg">
+  <h1>Digital Bay</h1>
+  <a href="/" class="<%= activeTab('/') %>">Home</a>
+
   <% if (user) { %>
-  <a href="/admin/items"   class="<%= activeTab('/admin/items') %>">
-    <i class="fa-solid fa-user">        </i> User
-  </a>
-  <a href="/cart"           class="<%= activeTab('/cart')       %>">
-    <i class="fa-solid fa-cart-shopping"></i> Cart
-  </a>
-  <form action="/logout" method="post" class="nav-login">
-    <input type="hidden" name="_csrf" value="<%= csrf %>" />
-    <button>
-      <i class="fa-solid fa-user-minus"></i> Logout
-    </button>
-  </form>
+    <a href="/admin/items" class="<%= activeTab('/admin/items') %>">
+      <%= user.name.split(' ')[0] %>
+    </a>
+    <a href="/cart" class="<%= activeTab('/cart') %>" aria-label="cart">
+      <i class="fa-solid fa-cart-shopping"></i>
+    </a>
   <% } else { %>
-  <a href="/login" class="nav-login <%= activeTab('/login') %>">
-    <i class="fa-solid fa-user-plus"></i> Login
-  </a>
+    <a href="/login" class="<%= activeTab('/login') %>">Login</a>
   <% } %>
 </nav>

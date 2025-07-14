@@ -25,6 +25,7 @@ const getUserItems: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: 'Dashboard',
       isActive: '/admin/items',
+          dash: 'items',
           view:  'store/list',
         styles: ['store/list', 'user/details', 'includes/dashboard', 'includes/pagination'],
         locals: { items, isAdmin: true, pagination },
@@ -54,6 +55,7 @@ const getItemForm: RequestHandler = async (req, res, next) => {
   res.render('body', {
        title: 'New Listing',
     isActive: '/admin/items',
+        dash: 'form',
         view:  'user/listing',
       styles: ['user/listing', 'includes/dashboard'],
       locals: { item, filename },

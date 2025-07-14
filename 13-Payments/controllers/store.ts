@@ -59,6 +59,7 @@ const getCart: RequestHandler = async (req, res, next) => {
     res.render('body', {
          title: 'Your Cart',
       isActive: '/cart',
+          dash: '',
           view:  'store/cart',
         styles: ['store/cart', 'includes/dashboard'],
         locals: { items },
@@ -138,6 +139,7 @@ const getOrders: RequestHandler = async (req, res, next) => {
     res.render('body', {
           title: 'Your Orders',
       isActive: '/admin/items',
+          dash: 'orders',
           view:  'user/orders',
         styles: ['user/orders', 'user/details', 'includes/dashboard', 'includes/pagination'],
         locals: { orders, formatDate, pagination },
