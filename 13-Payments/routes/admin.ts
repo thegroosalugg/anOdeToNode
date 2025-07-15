@@ -6,7 +6,7 @@ const router = express.Router();
 
 // all routes prepend with /admin
 router.get('/items', getUserItems);
-router.get('/item-form/:itemId?', getItemForm);
+router.get('/form/:itemId?', getItemForm);
 router.post('/add-item', validateItem, postAddItem);
 router.post('/edit-item', validateItem, postEditItem);
 router.delete('/item/:itemId', deleteItem);

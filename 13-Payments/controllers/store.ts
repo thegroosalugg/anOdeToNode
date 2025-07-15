@@ -23,11 +23,11 @@ const getItems: RequestHandler = async (req, res, next) => {
     const pagination = { active: page, docsPerPage, docCount };
 
     res.render('body', {
-         title: 'Home',
-      isActive: '/',
-          view: 'store/list',
-        styles: ['store/list', 'includes/pagination'],
-        locals: { items, isAdmin: false, pagination },
+          title: 'Home',
+      activeNav: '/',
+           view: 'store/list',
+         styles: ['store/list', 'includes/pagination'],
+         locals: { items, isAdmin: false, pagination },
     });
   } catch (error) {
     const err = new Error(error as string);
@@ -40,11 +40,11 @@ const getItemById: RequestHandler = async (req, res, next) => {
   try {
     const item = await Item.findById(itemId).populate('userId', 'name');
     res.render('body', {
-         title: item?.name || 'Not Found',
-      isActive: '/',
-          view:  'store/item',
-        styles: ['store/item'],
-        locals: { item },
+          title: item?.name || 'Not Found',
+      activeNav: '/',
+           view:  'store/item',
+         styles: ['store/item'],
+         locals: { item },
     });
   } catch (error) {
     errorMsg({ error, where: 'getItemById' });
@@ -57,12 +57,12 @@ const getCart: RequestHandler = async (req, res, next) => {
   try {
     const items = await req.user?.getCart();
     res.render('body', {
-         title: 'Your Cart',
-      isActive: '/cart',
-          dash: '',
-          view:  'store/cart',
-        styles: ['store/cart', 'includes/dashboard'],
-        locals: { items },
+           title: 'Your Cart',
+       activeNav: '/cart',
+      activeDash: '',
+            view:  'store/cart',
+          styles: ['store/cart', 'includes/dashboard'],
+          locals: { items },
     });
   } catch (error) {
     errorMsg({ error, where: 'getCart' });
@@ -80,7 +80,7 @@ const postUpdateCart: RequestHandler = async (req, res, next) => {
 
     if (item && item.userId.toString() === req.user?._id.toString()) {
       // do not allow to add own items to cart
-      return res.redirect('/admin/item-form/' + item._id);
+      return res.redirect('/admin/form/' + item._id);
     }
 
     if (item && req.user && (quantity === 1 || quantity === -1)) {
@@ -137,12 +137,12 @@ const getOrders: RequestHandler = async (req, res, next) => {
     const pagination = { active: page, docsPerPage, docCount };
 
     res.render('body', {
-          title: 'Your Orders',
-      isActive: '/admin/items',
-          dash: 'orders',
-          view:  'user/orders',
-        styles: ['user/orders', 'user/details', 'includes/dashboard', 'includes/pagination'],
-        locals: { orders, formatDate, pagination },
+           title: 'Your Orders',
+       activeNav: '/admin/items',
+      activeDash: 'orders',
+            view:  'user/orders',
+          styles: ['user/orders', 'user/details', 'includes/dashboard', 'includes/pagination'],
+          locals: { orders, formatDate, pagination },
     });
   } catch (error) {
     errorMsg({ error, where: 'getOrders' });

@@ -32,7 +32,7 @@
           <p><%= desc %></p>
         <% } else { %>
           <div class="admin-controls">
-            <a href="/admin/item-form/<%= _id %>">EDIT</a>
+            <a href="/admin/form/<%= _id %>">EDIT</a>
             <button onclick="openModal('<%= csrf %>', '<%= _id %>')">DELETE</button>
           </div>
         <% } %>

@@ -23,12 +23,12 @@ const getUserItems: RequestHandler = async (req, res, next) => {
     const pagination = { active: page, docsPerPage, docCount };
 
     res.render('body', {
-         title: 'Dashboard',
-      isActive: '/admin/items',
-          dash: 'items',
-          view:  'store/list',
-        styles: ['store/list', 'user/details', 'includes/dashboard', 'includes/pagination'],
-        locals: { items, isAdmin: true, pagination },
+           title: 'Dashboard',
+       activeNav: '/admin/items',
+      activeDash: 'items',
+            view:  'store/list',
+          styles: ['store/list', 'user/details', 'includes/dashboard', 'includes/pagination'],
+          locals: { items, isAdmin: true, pagination },
     });
   } catch (error) {
     errorMsg({ error, where: 'getUserItems' });
@@ -53,12 +53,12 @@ const getItemForm: RequestHandler = async (req, res, next) => {
   }
 
   res.render('body', {
-       title: 'New Listing',
-    isActive: '/admin/items',
-        dash: 'form',
-        view:  'user/listing',
-      styles: ['user/listing', 'includes/dashboard'],
-      locals: { item, filename },
+         title: 'New Listing',
+     activeNav: '/admin/items',
+    activeDash: 'form',
+          view:  'user/listing',
+        styles: ['user/listing', 'includes/dashboard'],
+        locals: { item, filename },
   });
 };
 
@@ -78,7 +78,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
     } else {
       req.session.errors.image = 'must be .jpg, .jpeg or .png';
     }
-    req.session.save(() => res.redirect('/admin/item-form'));
+    req.session.save(() => res.redirect('/admin/form'));
     return;
   }
 
@@ -99,7 +99,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
     } else {
       req.session.errors.image = 'must be .jpg, .jpeg or .png';
     }
-    req.session.save(() => res.redirect('/admin/item-form'));
+    req.session.save(() => res.redirect('/admin/form'));
   }
 };
 
@@ -119,7 +119,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
       req.session.dataRoute = true;
     }
     if (req.fileError) req.session.errors.image = req.fileError;
-    req.session.save(() => res.redirect('/admin/item-form/' + _id));
+    req.session.save(() => res.redirect('/admin/form/' + _id));
     return;
   }
 
@@ -154,7 +154,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
       req.session.dataRoute = true;
     }
     if (req.fileError) req.session.errors.image = req.fileError;
-    req.session.save(() => res.redirect('/admin/item-form/' + _id));
+    req.session.save(() => res.redirect('/admin/form/' + _id));
   }
 };
 

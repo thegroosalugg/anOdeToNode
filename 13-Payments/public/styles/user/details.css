@@ -1,32 +1,17 @@
-.user-info {
+.details {
   padding: 1rem;
-  padding-bottom: 0;
-  display: flex;
-  align-items: center;
+  margin: 1rem auto;
+  width: 80%;
+  overflow-x: auto;
 
-  > section {
-    padding: 1rem;
-    margin: 0 auto;
-    border: 1px solid #000;
-    overflow-x: auto;
-    background: linear-gradient(to right, #dedddd, #fcfcfc);
+  p {
+    display: grid;
+    grid-template-columns: 60px 200px;
+    gap: 0.5rem;
+    text-transform: capitalize;
+    font-size: var(--text-xs);
 
-    p {
-      display: grid;
-      grid-template-columns: 60px 200px;
-      gap: 0.5rem;
-
-      span {
-        &:first-of-type {
-          text-align: end;
-          line-height: 1.4;
-        }
-
-        &:last-of-type {
-          font-family: 'Oswald', sans-serif;
-          text-align: start;
-        }
-      }
-    }
+    strong { text-align: end;   }
+    span   { text-align: start; }
   }
 }
