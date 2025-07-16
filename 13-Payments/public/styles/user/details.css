@@ -6,12 +6,13 @@
 
   p {
     display: grid;
-    grid-template-columns: 60px 200px;
+    grid-template-columns: 50px 1fr;
     gap: 0.5rem;
     text-transform: capitalize;
     font-size: var(--text-xs);
 
-    strong { text-align: end;   }
-    span   { text-align: start; }
+    strong, span { min-width: 0; }
+    strong { text-align: end;    }
+    span   { text-align: start;  }
   }
 }

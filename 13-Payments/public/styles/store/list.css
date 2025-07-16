@@ -1,20 +1,19 @@
 .store {
   display: flex;
   flex-direction: column;
-  color: #000000;
 
   h1 {
     text-align: center;
-    text-shadow: 0.5px 0.5px 1px #000;
-    font-size: 1.5rem;
-    padding: 1rem;
-    background: #ba6247;
+    font-size: var(--text-xl);
+    font-weight: 900;
+    padding: 0.5rem 1rem;
+    background: var(--box);
+    color: var(--accent);
+    box-shadow: var(--shadow-lg);
   }
 
   > button {
     width: fit-content;
-    color: #efefef;
-    background: linear-gradient(to right, #000000, #434343);
     align-self: flex-end;
     padding: 0.5rem;
     margin: 1rem 1rem 0;
