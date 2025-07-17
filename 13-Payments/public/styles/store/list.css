@@ -12,25 +12,13 @@
     box-shadow: var(--shadow-lg);
   }
 
-  > button {
-    width: fit-content;
-    align-self: flex-end;
-    padding: 0.5rem;
-    margin: 1rem 1rem 0;
-    font-size: 1.2rem;
-    transition: 0.2s ease-in-out;
-
-    &:hover {
-      transform: scale(0.95);
-    }
-  }
-
   ul {
     display: grid;
     gap: 1rem;
     padding: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(200px, max-content));
     justify-content: center;
+    overflow-x: scroll;
 
     li {
       display: flex;
@@ -75,55 +63,55 @@
         padding: 0 0.5rem 0.5rem;
         color: #878787;
       }
+    }
+  }
+}
 
-      .name-and-price {
-        display: flex;
-        justify-content: space-between;
-        align-items: end;
-        padding: 0.5rem;
+.name-and-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  padding: 0.5rem;
 
-        > p {
-          &:first-child {
-            max-width: 65%;
-            font-weight: 500;
-            font-size: 1.2rem;
-            font-family: 'Oswald', sans-serif;
-          }
-          &:last-child {
-            color: #3b3b3b;
-          }
-        }
-      }
+  > p {
+    &:first-child {
+      max-width: 65%;
+      font-weight: 500;
+      font-size: 1.2rem;
+    }
+    &:last-child {
+      color: #3b3b3b;
+    }
+  }
+}
 
-      .admin-controls {
-        display: flex;
+.admin-controls {
+  display: flex;
 
-        a, button {
-          flex-basis: 50%;
-          padding: 0.2rem;
-          background: transparent;
-          border: none;
-          border-top: 1px solid #474747;
-          text-align: center;
-          font-size: 1rem;
-          color: #000;
-          cursor: pointer;
-          transition: 0.5s ease-in-out;
+  a,
+  button {
+    flex-basis: 50%;
+    padding: 0.2rem;
+    background: transparent;
+    border: none;
+    border-top: 1px solid #474747;
+    text-align: center;
+    font-size: 1rem;
+    color: #000;
+    cursor: pointer;
+    transition: 0.5s ease-in-out;
 
-          &:first-child {
-            border-right: 0.5px solid #474747;
-          }
+    &:first-child {
+      border-right: 0.5px solid #474747;
+    }
 
-          &:last-child {
-            border-left: 0.5px solid #474747;
-          }
+    &:last-child {
+      border-left: 0.5px solid #474747;
+    }
 
-          &:hover {
-            color: #fff3f3;
-            background: #363535;
-          }
-        }
-      }
+    &:hover {
+      color: #fff3f3;
+      background: #363535;
     }
   }
 }
@@ -156,7 +144,7 @@
 
   button {
     padding: 0.5rem 0.2rem;
-    width: 7rem;
+    width: 120px;
     background: #e3dede;
     transition: 0.8s ease-in-out;
 
@@ -213,18 +201,18 @@
           font-size: 0.8rem;
           padding: 0 0.25rem 0.25rem;
         }
+      }
+    }
+  }
 
-        .name-and-price {
-          padding: 0.25rem;
-          > p {
-            &:first-child {
-              font-size: 0.9rem;
-            }
-            &:last-child {
-              font-size: 0.8rem;
-            }
-          }
-        }
+  .name-and-price {
+    padding: 0.25rem;
+    > p {
+      &:first-child {
+        font-size: 0.9rem;
+      }
+      &:last-child {
+        font-size: 0.8rem;
       }
     }
   }

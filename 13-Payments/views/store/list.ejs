@@ -43,8 +43,9 @@
   <% } %>
 </section>
 
-
-<%- include('../includes/pagination') %>
+<% if (pagination.docCount > pagination.docsPerPage) { %>
+  <%- include('../includes/pagination') %>
+<% } %>
 
 <script src="/script/modal.js"></script>
 

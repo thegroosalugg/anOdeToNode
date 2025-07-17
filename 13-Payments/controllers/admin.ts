@@ -11,7 +11,7 @@ import { join } from 'path';
 // /admin/items - prepended by authenticate middleware
 const getUserItems: RequestHandler = async (req, res, next) => {
   const page = +(req.query.page || 1);
-  const docsPerPage = 2;
+  const docsPerPage = 4;
   const userId = req.user?._id
 
   try {
