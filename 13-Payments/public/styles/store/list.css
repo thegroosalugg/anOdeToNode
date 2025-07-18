@@ -24,7 +24,6 @@
       display: flex;
       flex-direction: column;
       width: 200px;
-      background: linear-gradient(to right, #f3f2f2, #fcfcfc);
       box-shadow: 1px 1px 2px #474747;
       transition: 0.5s ease-in-out;
 
@@ -120,11 +119,14 @@
   > div {
     display: flex;
     gap: 1rem;
+    padding: 0.1rem;
+    overflow-x: scroll;
   }
 
   button:first-of-type {
-    color: #ffffff;
-    background: #ba4747;
+    color: var(--bg);
+    border-color: var(--bg);
+    background: var(--error);
   }
 }
 
@@ -135,50 +137,31 @@
   transform: translate(-50%, -50%);
   padding: 1rem;
   text-align: center;
-  background: #e7e4e4;
   animation: fadeIn 0.3s ease forwards;
 
-  &[closing] {
-    animation: fadeOut 0.3s ease forwards;
-  }
+  &[closing] { animation: fadeOut 0.3s ease forwards; }
+  > p {  margin-bottom: 1rem; }
 
   button {
-    padding: 0.5rem 0.2rem;
-    width: 120px;
-    background: #e3dede;
-    transition: 0.8s ease-in-out;
+    padding: 0.25rem;
+    width: 130px;
+    background: var(--bg);
+    border: var(--border-fg);
+    border-radius: var(--radius-md);
+    transition: 0.5s ease-in-out;
 
-    &:hover {
-      color: #ffffff;
-      background: #1b1b1b;
-    }
-  }
-
-  > p {
-    margin-bottom: 1rem;
+    &:hover { filter: brightness(0.75);  }
   }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -60%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
+  from { opacity: 0; transform: translate(-50%, -60%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
 }
 
 @keyframes fadeOut {
-  from {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-  to {
-    opacity: 0;
-    transform: translate(-50%, -60%);
-  }
+  from { opacity: 1; transform: translate(-50%, -50%); }
+  to   { opacity: 0; transform: translate(-50%, -60%); }
 }
 
 @media screen and (pointer: coarse) and (max-width: 960px) {

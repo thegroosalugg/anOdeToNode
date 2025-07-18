@@ -2,24 +2,27 @@
   display: flex;
   gap: 0.5rem;
   margin: 0 auto 1rem;
+  padding: 0.2rem;
+  overflow-x: scroll;
+  max-width: 100%;
 
   > a {
-    font-size: 1.8rem;
-    color: #ba6247;
-    background: #e0dddb;
+    font-size: var(--text-lg);
+    color: var(--accent);
     text-align: center;
-    width: 2.2rem;
-    border: 1.5px solid #ba6247;
+    min-width: 2rem;
+    border: var(--border-accent);
     border-radius: 3px;
+    transition: 0.5s ease;
 
     &:hover, &.active {
-      color: #1b1b1b;
-      border-color: #1b1b1b;
+      background-color: var(--accent);
+      color: var(--bg);
     }
   }
 
   > span {
-    color: #ba6247;
+    color: var(--accent);
     align-self: end;
   }
 }

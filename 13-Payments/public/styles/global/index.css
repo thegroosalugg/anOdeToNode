@@ -3,10 +3,18 @@
   --font-minor: "Lato", sans-serif;
   --bg: var(--gray-200);
   --fg: var(--gray-900);
-  --box: var(--gray-100);
   --accent: var(--lime-800);
   --accent-2: var(--lime-700);
   --text: var(--gray-600);
+  --box: var(--gray-100);
+  --error: var(--rust-600);
+  --transparent: #ffffff00;
+  --border: 1px solid;
+  --border-bg: var(--border) var(--bg);
+  --border-fg: var(--border) var(--fg);
+  --border-accent: var(--border) var(--accent);
+  --border-text: var(--border) var(--text);
+  --border-transparent: var(--border) var(--transparent);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,10 +22,12 @@
   :root {
     --bg: var(--gray-800);
     --fg: var(--gray-100);
-    --box: var(--gray-700);
     --accent: var(--lime-500);
     --accent-2: var(--lime-400);
     --text: var(--gray-300);
+    --box: var(--gray-700);
+    --error: var(--rust-500);
+    --transparent: #00000000;
   }
 }
 
