@@ -11,26 +11,28 @@
   <% if (items.length === 0) { %>
     <h2>Whoops, looks like there is nothing here</h2>
   <% } else { %>
-    <ul>
+    <ul class="list">
       <% items.forEach(({ _id, name, desc, imgURL, price, userId }) => { %>
-        <li id="<%= _id %>">
+        <li id="<%= _id %>" class="floating-box">
           <input type="hidden" name="_csrf" value="<%= csrf %>" />
           <input type="hidden" name="itemId" value="<%= _id %>" />
 
           <a href="/store/<%= _id %>">
             <img src="/<%= imgURL %>" alt="<%= name %>" />
             <% if (!isAdmin) { %>
-              <span>Sold By: <%= userId.name.toUpperCase() %></span>
+              <p class="sold-by">Sold by:
+                <strong><%= userId.name %></strong>
+              </p>
             <% } %>
           </a>
 
-          <div class="name-and-price">
-            <p><%= name %></p>
-            <p>$<%= price.toFixed(2) %></p>
-          </div>
+          <p class="truncate name-and-price">
+            <strong><%= name %></strong>
+            <span>$<%= price.toFixed(2) %></span>
+          </p>
 
           <% if (!isAdmin) { %>
-            <p><%= desc %></p>
+            <p class="truncate description"><%= desc %></p>
           <% } else { %>
             <div class="admin-controls">
               <a href="/admin/form/<%= _id %>">EDIT</a>

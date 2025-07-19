@@ -11,106 +11,82 @@
     color: var(--accent);
     box-shadow: var(--shadow-lg);
   }
+}
 
-  ul {
-    display: grid;
-    gap: 1rem;
-    padding: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(200px, max-content));
-    justify-content: center;
-    overflow-x: scroll;
+.list {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, max-content));
+  justify-content: center;
+  overflow-x: scroll;
 
-    li {
-      display: flex;
-      flex-direction: column;
-      width: 200px;
-      box-shadow: 1px 1px 2px #474747;
-      transition: 0.5s ease-in-out;
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    width: 200px;
+    overflow: hidden;
+    transition: 0.5s ease-in-out;
 
-      &:hover {
-        box-shadow: 2px 2px 4px #474747;
-      }
+    &:hover { box-shadow: var(--shadow-pop); }
 
-      a {
-        width: inherit;
-        position: relative;
-        > img {
-          height: 200px;
-          width: 100%;
-          object-fit: cover;
-        }
-
-        > span {
-          position: absolute;
-          bottom: 0.4rem;
-          padding: 0.1rem 0.2rem;
-          font-size: 0.8rem;
-          color: #2e2e2e;
-          background: #f4efef;
-          border: 1px solid #000;
-          border-left: 0;
-        }
-      }
-
-      p {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      > p {
-        padding: 0 0.5rem 0.5rem;
-        color: #878787;
+    a {
+      position: relative;
+      > img {
+        height: 200px;
+        width: 100%;
+        object-fit: cover;
       }
     }
   }
+}
+
+.sold-by {
+  position: absolute;
+  bottom: 0.4rem;
+  padding: 0.125rem 0.25rem;
+  font-size: var(--text-sm);
+  background: var(--box);
+  border: var(--border-fg);
+  border-left: none;
+  border-top-right-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+
+  > strong { text-transform: capitalize; }
 }
 
 .name-and-price {
   display: flex;
   justify-content: space-between;
-  align-items: end;
-  padding: 0.5rem;
+  padding: 0 0.75rem;
+  text-transform: capitalize;
 
-  > p {
-    &:first-child {
-      max-width: 65%;
-      font-weight: 500;
-      font-size: 1.2rem;
-    }
-    &:last-child {
-      color: #3b3b3b;
-    }
-  }
+  strong { max-width: 65%; }
+}
+
+.description {
+  padding: 0 0.75rem;
+  padding-bottom: 0.25rem !important; /* allows single line @media p-l/r overwrites */
 }
 
 .admin-controls {
   display: flex;
 
-  a,
-  button {
+  a, button {
     flex-basis: 50%;
-    padding: 0.2rem;
+    padding: 0.25rem;
     background: transparent;
     border: none;
-    border-top: 1px solid #474747;
+    border-top: var(--border-fg);
     text-align: center;
-    font-size: 1rem;
-    color: #000;
-    cursor: pointer;
     transition: 0.5s ease-in-out;
 
-    &:first-child {
-      border-right: 0.5px solid #474747;
-    }
-
-    &:last-child {
-      border-left: 0.5px solid #474747;
-    }
+    &:first-child { border-right: var(--border-fg); }
 
     &:hover {
-      color: #fff3f3;
-      background: #363535;
+      background: var(--accent);
+      color: var(--bg);
     }
   }
 }
@@ -140,7 +116,8 @@
   animation: fadeIn 0.3s ease forwards;
 
   &[closing] { animation: fadeOut 0.3s ease forwards; }
-  > p {  margin-bottom: 1rem; }
+
+  > p { margin-bottom: 1rem; }
 
   button {
     padding: 0.25rem;
@@ -150,7 +127,7 @@
     border-radius: var(--radius-md);
     transition: 0.5s ease-in-out;
 
-    &:hover { filter: brightness(0.75);  }
+    &:hover { filter: brightness(0.75); }
   }
 }
 
@@ -165,38 +142,17 @@
 }
 
 @media screen and (pointer: coarse) and (max-width: 960px) {
-  .store {
-    ul {
-      grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
-      li {
-        width: 120px;
-        a {
-          > img {
-            height: 120px;
-          }
-
-          > span {
-            font-size: 0.5rem;
-          }
-        }
-
-        > p {
-          font-size: 0.8rem;
-          padding: 0 0.25rem 0.25rem;
-        }
-      }
+  .list {
+    grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
+    li {
+      width: 120px;
+      a > img  { height: 120px; }
     }
   }
 
-  .name-and-price {
-    padding: 0.25rem;
-    > p {
-      &:first-child {
-        font-size: 0.9rem;
-      }
-      &:last-child {
-        font-size: 0.8rem;
-      }
-    }
+  .sold-by, .name-and-price, .description, .admin-controls { font-size: 50%; }
+  .name-and-price, .description { padding: 0 0.5rem; }
+  .admin-controls {
+    a, button { padding: 0.125rem; }
   }
 }
