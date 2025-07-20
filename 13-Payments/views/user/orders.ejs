@@ -8,34 +8,35 @@
   </p>
 <% } %>
 
-<ul class="orders">
-  <% if (orders.length === 0) { %>
-  <h1>You have no orders</h1>
-  <% } else { %>
-  <% } orders.forEach((order) => { %>
-    <% const { _id, createdAt, user, items } = order; %>
-    <li>
-      <h2><%= formatDate(createdAt, true) %></h2>
-      <h2>
-        <span>Order ID: </span>
-        <span><%= _id %></span>
-      </h2>
-      <ul>
-        <% items.forEach(({ name, price, imgURL, quantity }, index) => { %>
-        <li>
-          <img src="/<%= imgURL %>" alt="<%= name %>" />
-          <section>
-            <%= detailRow('Article:',                 name             ) %>
-            <%= detailRow('Seller:',             user.name             ) %>
-            <%= detailRow('Price:', '$' +             price.toFixed(2) ) %>
-            <%= detailRow('Quantity:',     quantity,                   ) %>
-            <%= detailRow('Total:', '$' + (quantity * price).toFixed(2)) %>
-          </section>
-        </li>
-        <% }) %>
-      </ul>
-    </li>
-  <% }) %>
-</ul>
+<% if (orders.length === 0) { %>
+  <h1 class="fallback">You have no orders</h1>
+<% } else { %>
+  <ul class="orders">
+    <% orders.forEach((order) => { %>
+      <% const { _id, createdAt, user, items } = order; %>
+      <li class="floating-box">
+        <time><%= formatDate(createdAt, true) %></time>
+        <h2>
+          <strong>Order ID: </strong>
+          <span><%= _id %></span>
+        </h2>
+        <ul class="items">
+          <% items.forEach(({ name, price, imgURL, quantity }) => { %>
+          <li>
+            <img src="/<%= imgURL %>" alt="<%= name %>" />
+            <section>
+              <%= detailRow('Article:',                 name             ) %>
+              <%= detailRow('Seller:',             user.name             ) %>
+              <%= detailRow('Price:', '$' +             price.toFixed(2) ) %>
+              <%= detailRow('Quantity:',     quantity,                   ) %>
+              <%= detailRow('Total:', '$' + (quantity * price).toFixed(2)) %>
+            </section>
+          </li>
+          <% }) %>
+        </ul>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
 
 <%- include('../includes/pagination') %>
