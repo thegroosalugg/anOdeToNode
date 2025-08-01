@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import { isValidObjectId } from 'mongoose';
 import Item from '../models/Item';
 import Order from '../models/Order';
 import errorMsg from '../util/errorMsg';
@@ -37,8 +38,11 @@ const getItems: RequestHandler = async (req, res, next) => {
 
 const getItemById: RequestHandler = async (req, res, next) => {
   const { itemId } = req.params;
+
   try {
-    const item = await Item.findById(itemId).populate('userId', 'name');
+    let item;
+    if (isValidObjectId(itemId)) item = await Item.findById(itemId).populate('userId', 'name');
+
     res.render('body', {
           title: item?.name || 'Not Found',
       activeNav: '/',
