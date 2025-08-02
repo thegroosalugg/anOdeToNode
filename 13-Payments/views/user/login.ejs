@@ -6,33 +6,34 @@
 
 <% const input = (props) => { %>
   <%
-    const [id, txt] = props;
-    const     label = txt ? txt + '_' + id : id;
-    const   content =
-      (errors[id] && txt ? id : label).replaceAll('_', ' ') + ' ' + (errors[id] || '');
+    const [control, confirm] = props;
+    const    name = confirm ? confirm + '_' + control : control;
+    const   error = errors[control];
+    const content =
+      (error && confirm ? control : name).replaceAll('_', ' ') + ' ' + (error || '');
   %>
-  <section>
+  <p class="control">
     <label
-        for="<%= label %>"
-      class="<%= errors[id] ? 'error' : '' %>"
+        for="<%= name %>"
+      class="<%= error ? 'error' : '' %>"
     >
        <%= content %>
     </label>
     <input
-         id="<%= label %>"
-       name="<%= label %>"
-       type="<%= ['email', 'password'].includes(id) ? id : 'text' %>"
-      value="<%= formData[id] || '' %>"
+         id="<%= name %>"
+       name="<%= name %>"
+       type="<%= ['email', 'password'].includes(control) ? control : 'text' %>"
+      value="<%= formData[control] || '' %>"
       autocomplete="off"
     />
-  </section>
+  </p>
 <% } %>
 
-<form action="/<%= state %>" method="post" class="login-form" novalidate>
+<form action="/<%= state %>" method="post" class="floating-box auth-form" novalidate>
   <input type="hidden" name="_csrf" value="<%= csrf %>" />
 
-  <h2>
-    <%= signup ? 'WELCOME' : reset ? 'NEW PASSWORD' : password ? 'SET PASSWORD' : 'LOGIN' %>
+  <h2 class="<%= state %>">
+    <%= signup ? 'REGISTER' : reset ? 'NEW PASSWORD' : password ? 'SET PASSWORD' : 'LOGIN' %>
   </h2>
 
   <% if (['signup'].includes(state)) { %>
@@ -40,7 +41,7 @@
   <% } %>
 
   <% if (['login', 'signup', 'reset'].includes(state)) { %>
-  <%= input(['email']) %>
+    <%= input(['email']) %>
   <% } %>
 
   <% if (['login', 'signup', 'password'].includes(state)) { %>
@@ -53,22 +54,22 @@
 
   <% if (['login', 'signup'].includes(state)) { %>
     <a
-      href="/login<%= signup ? '' : '/?signup=true' %>"
-      class="<%= signup ?  'signup' : '' %>"
+       href="/login<%= signup ? '' : '/?signup=true' %>"
+      class="form-link <%= state %>"
     >
-      <span> <%= signup ? 'Already' : 'Don\'t'   %> have an account?</span>
-      <span> <%= signup ? 'Login!'  : 'Sign up!' %></span>
+      <span><%= signup ? 'Already' : 'Don\'t'   %> have an account?</span>
+      <span><%= signup ? 'Login!'  : 'Sign up!' %></span>
     </a>
   <% } %>
 
-  <button class="<%= state %>">
+  <button class="submit <%= state %>">
     <%= signup ? 'Sign Up' : reset ? 'Request Link' : password ? 'Change Password' : 'Login' %>
   </button>
 
   <% if (['login', 'reset'].includes(state)) { %>
     <a
-      class="<%= state %>"
-      href="/login<%= reset ? '' : '/?reset=true' %>"
+      class="password-link <%= state %>"
+       href="/login<%= reset ? '' : '/?reset=true' %>"
     >
       <%= reset ? 'Go Back' : 'Reset Password' %>
     </a>
