@@ -33,39 +33,6 @@
       font-size: 1.8rem;
     }
 
-    > section {
-      display: flex;
-      flex-direction: column;
-
-      label, input, textarea {
-        text-shadow: 1px 1px 2px #8c8c8c;
-        font-size: 1.2rem;
-        overflow-x: scroll;
-      }
-
-      label {
-        padding: 0.2rem;
-        text-transform: capitalize;
-
-        &.error {
-          color: #a02b11;
-          text-shadow: 0.5px 0.5px 1px #000;
-          text-wrap: nowrap;
-        }
-      }
-
-      input {
-        height: 2rem;
-      }
-
-      input, textarea {
-        padding: 0.1rem 0.3rem;
-        border: 1px solid #000;
-        border-radius: 2px;
-        resize: none;
-      }
-    }
-
     button {
       padding: 0.2rem 0.3rem;
       font-size: 1.2rem;
@@ -88,12 +55,33 @@
 }
 
 #image-file {
-  background: #ffffff;
-  border: 1px solid #000;
-  border-radius: 2px;
-  font-family: 'Segoe UI', sans-serif;
-  cursor: pointer;
+  /* background: #ffffff; */
+  /* border: 1px solid #000; */
+  /* border-radius: 2px; */
+  /* cursor: pointer; */
+
   > input {
     display: none;
+  }
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    padding-left: 0.5rem;
+    color: var(--text);
+    font-size: var(--text-sm);
+
+    &.error { color: var(--error); }
+  }
+
+  input, textarea {
+    padding: 0.25rem 0.5rem;
+    border: var(--border-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    resize: none;
   }
 }

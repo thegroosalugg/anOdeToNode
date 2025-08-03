@@ -1,42 +1,45 @@
 <%
   const {
        _id = '',
-      name = '...',
+      name = '',
      price = '0.00',
-      desc = 'This item is...',
+      desc = '',
     imgURL = ''
   } = item || {};
 
   const data = { name, price };
 
-  const input = (id) => { %>
-  <section>
-    <label for="<%= id %>" class="<%= errors[id] ? 'error' : '' %>">
-      <%= id + ' ' + (errors[id] || '') %>
-    </label>
+  const input = (control) => {
+    const error = errors[control] %>
 
-    <% if (id === 'image') { %>
-      <% const defaultText = filename || 'No File Selected' %>
-      <label for="image" id="image-file">
-        <input id="image" name="image" type="file" accept="image/*" />
-        <%= defaultText %>
+    <p class="control">
+      <label for="<%= control %>" class="<%= error ? 'error' : '' %>">
+        <%= control + ' ' + (error || '') %>
       </label>
-      <script>
-        document.getElementById("image").addEventListener("change", function () {
-          const label   = document.getElementById("image-file");
-          const content = this.files[0]?.name || "<%= defaultText %>";
-          label.lastChild.textContent = content;
-        });
-      </script>
-    <% } else { %>
-      <input
-          id="<%= id %>"
-        name="<%= id %>"
-        value="<%= formData[id] || data[id] %>"
-        autocomplete="off"
-      />
-    <% } %>
-  </section>
+
+      <% if (control === 'image') {
+        const defaultText = filename || 'No File Selected' %>
+
+        <label for="image" id="image-file">
+          <input id="image" name="image" type="file" accept="image/*" />
+          <%= defaultText %>
+        </label>
+        <script>
+          document.getElementById("image").addEventListener("change", function () {
+            const   label = document.getElementById("image-file");
+            const content = this.files[0]?.name || "<%= defaultText %>";
+            label.lastChild.textContent = content;
+          });
+        </script>
+      <% } else { %>
+        <input
+             id="<%= control %>"
+           name="<%= control %>"
+          value="<%= formData[control] || data[control] %>"
+          autocomplete="off"
+        />
+      <% } %>
+    </p>
 <% } %>
 
 <%- include('../includes/dashboard') %>
@@ -44,7 +47,7 @@
 <section class="edit-form-wrapper">
   <% if (item) { %>
     <img src="/<%= imgURL %>" alt="<%= name %>" />
-  <% }  %>
+  <% } %>
 
   <form
      action="/admin/<%= item ? 'edit' : 'add' %>-item"
@@ -52,10 +55,10 @@
       class="item-form"
     enctype="multipart/form-data"
   >
-    <input   type="hidden" name="_csrf" value="<%= csrf %>" />
+    <input type="hidden" name="_csrf" value="<%= csrf %>" />
 
     <% if (item) { %>
-      <input type="hidden" name="_id"   value="<%= _id  %>" />
+      <input type="hidden" name="_id" value="<%= _id  %>" />
     <% } else { %>
       <h1>Post a new listing</h1>
     <% } %>
@@ -64,20 +67,18 @@
     <%= input('price') %>
     <%= input('image') %>
 
-    <section>
+    <p class="control">
       <label for="desc" class="<%= errors.desc ? 'error' : '' %>">
         <%= 'description ' + (errors.desc || '') %>
       </label>
-      <textarea rows="4" id="desc" name="desc"><%=
-        formData.desc || desc
-      %></textarea>
-    </section>
+      <textarea rows="4" id="desc" name="desc"><%= formData.desc || desc %></textarea>
+    </p>
 
     <button class="<%= item ? 'update' : '' %>">
       <% if (item) { %>
         Update <i class="fa-solid fa-check"></i>
       <% } else { %>
-        Add <i class="fa-solid fa-plus"></i>
+           Add <i class="fa-solid fa-plus"></i>
       <% } %>
     </button>
   </form>

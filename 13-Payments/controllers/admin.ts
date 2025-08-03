@@ -36,7 +36,7 @@ const getUserItems: RequestHandler = async (req, res, next) => {
   }
 };
 
-// /admin/item-form - prepended by authenticate middleware
+// /admin/form - prepended by authenticate middleware
 const getItemForm: RequestHandler = async (req, res, next) => {
   const { itemId } = req.params;
   const filename   = req.session.file?.originalname;
