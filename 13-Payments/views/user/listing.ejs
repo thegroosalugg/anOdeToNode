@@ -44,7 +44,7 @@
 
 <%- include('../includes/dashboard') %>
 
-<section class="edit-form-wrapper">
+<div class="floating-box container <%= item ? 'expanded' : '' %>">
   <% if (item) { %>
     <img src="/<%= imgURL %>" alt="<%= name %>" />
   <% } %>
@@ -82,4 +82,4 @@
       <% } %>
     </button>
   </form>
-</section>
+</div>
