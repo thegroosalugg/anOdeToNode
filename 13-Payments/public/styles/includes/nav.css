@@ -1,0 +1,28 @@
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  overflow: auto;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-minor);
+  font-weight: 300;
+
+  h1 {
+    font-size: var(--text-lg);
+    font-weight: 900;
+    margin-right: 1rem;
+    text-wrap: nowrap;
+  }
+
+  a {
+    text-underline-offset: 2px;
+    transition: 0.25s ease-in;
+
+    &.active, &:hover { text-decoration: underline; }
+    &:hover { filter: brightness(0.75); }
+    &:last-of-type { margin-left: auto; }
+    i { font-size: var(text-lg); }
+  }
+}

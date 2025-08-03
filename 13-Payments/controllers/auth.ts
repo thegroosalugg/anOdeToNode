@@ -35,11 +35,11 @@ const getLogin: RequestHandler = async (req, res, next) => {
     if (reset  === 'true') state = 'reset';
 
     res.render('body', {
-         title: titles[state],
-      isActive: '/login',
-          view:  'login',
-        styles: ['login'],
-        locals: { state },
+          title: titles[state],
+      activeNav: '/login',
+           view:  'user/login',
+         styles: ['user/login'],
+         locals: { state },
     })
   } else {
     res.redirect('/admin/items');

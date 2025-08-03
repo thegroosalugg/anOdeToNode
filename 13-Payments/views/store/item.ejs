@@ -1,0 +1,38 @@
+<% const { _id, name, desc, imgURL, price, userId: seller } = item || {} %>
+<% const isSeller = seller?._id.toString() === user?._id.toString() %>
+
+<div class="banner">
+  <img src="/assets/snowboarder.png" alt="snowboarder" />
+  <img src="/assets/mountain.png"    alt="mountain"    />
+</div>
+
+<% if (!item) { %>
+  <h1 class="not-found">The Item Doesn't Exist</h1>
+<% } else { %>
+  <div class="floating-box item">
+    <img src="/<%= imgURL %>" alt="<%= name %>" />
+    <div class="info">
+      <h1>
+        <span class="truncate"><%= name %></span>
+        <span class="truncate">
+          <%= isSeller ? "Your Listing" : `Sold by ${seller.name}` %>
+        </span>
+      </h1>
+      <p><%= desc %></p>
+      <h2>Ultra deals</h2>
+      <div class="icons">
+        <i class="fa-regular fa-calendar"></i>
+        <i class="fa-solid fa-shield"></i>
+        <i class="fa-solid fa-truck-fast"></i>
+        <i class="fa-solid fa-users-between-lines"></i>
+      </div>
+      <form class="actions" action="/cart/<%= _id %>/add" method="post">
+        <p>$<%= price.toFixed(2) %></p>
+        <button>
+          <%= isSeller ? 'Edit Listing' : 'Add to Cart' %>
+        </button>
+        <input type="hidden" name="_csrf" value="<%= csrf %>" />
+      </form>
+    </div>
+  </div>
+<% } %>

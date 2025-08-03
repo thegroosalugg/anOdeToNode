@@ -1,0 +1,158 @@
+.store {
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    text-align: center;
+    font-size: var(--text-xl);
+    font-weight: 900;
+    padding: 0.5rem 1rem;
+    background: var(--box);
+    color: var(--accent);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+.list {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, max-content));
+  justify-content: center;
+  overflow-x: scroll;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    width: 200px;
+    overflow: hidden;
+    transition: 0.5s ease-in-out;
+
+    &:hover { box-shadow: var(--shadow-pop); }
+
+    a {
+      position: relative;
+      > img {
+        height: 200px;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+.sold-by {
+  position: absolute;
+  bottom: 0.4rem;
+  padding: 0.125rem 0.25rem;
+  font-size: var(--text-sm);
+  background: var(--box);
+  border: var(--border-fg);
+  border-left: none;
+  border-top-right-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+
+  > strong { text-transform: capitalize; }
+}
+
+.name-and-price {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.75rem;
+  text-transform: capitalize;
+
+  strong { max-width: 65%; }
+}
+
+.description {
+  padding: 0 0.75rem;
+  padding-bottom: 0.25rem !important; /* allows single line @media p-l/r overwrites */
+}
+
+.admin-controls {
+  display: flex;
+
+  a, button {
+    flex-basis: 50%;
+    padding: 0.25rem;
+    background: transparent;
+    border: none;
+    border-top: var(--border-fg);
+    text-align: center;
+    transition: 0.5s ease-in-out;
+
+    &:first-child { border-right: var(--border-fg); }
+
+    &:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+  }
+}
+
+.modal-confirm {
+  > div {
+    display: flex;
+    gap: 1rem;
+    padding: 0.1rem;
+    overflow-x: scroll;
+  }
+
+  button:first-of-type {
+    color: var(--bg);
+    border-color: var(--bg);
+    background: var(--error);
+  }
+}
+
+.modal-confirm, .modal-error {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem;
+  text-align: center;
+  animation: fadeIn 0.3s ease forwards;
+
+  &[closing] { animation: fadeOut 0.3s ease forwards; }
+
+  > p { margin-bottom: 1rem; }
+
+  button {
+    padding: 0.25rem;
+    width: 130px;
+    background: var(--bg);
+    border: var(--border-fg);
+    border-radius: var(--radius-md);
+    transition: 0.5s ease-in-out;
+
+    &:hover { filter: brightness(0.75); }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -60%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translate(-50%, -50%); }
+  to   { opacity: 0; transform: translate(-50%, -60%); }
+}
+
+@media screen and (pointer: coarse) and (max-width: 960px) {
+  .list {
+    grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
+    li {
+      width: 120px;
+      a > img  { height: 120px; }
+    }
+  }
+
+  .sold-by, .name-and-price, .description, .admin-controls { font-size: 50%; }
+  .name-and-price, .description { padding: 0 0.5rem; }
+  .admin-controls {
+    a, button { padding: 0.125rem; }
+  }
+}

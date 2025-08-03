@@ -1,23 +1,21 @@
 <% const dataRow = (key) => { %>
   <%
     const { _id, name, email } = user;
-    const userData = { ID: _id, name, email, };
+    const userData = { ID: _id, name, email };
     const content = userData[key];
   %>
   <p>
-    <span>
+    <strong>
       <%= key %>:
-    </span>
+    </strong>
     <span>
       <%= content %>
     </span>
   </p>
 <% } %>
 
-<div class="user-info">
-  <section>
+<div class="floating-box details">
     <%= dataRow('ID') %>
     <%= dataRow('name') %>
     <%= dataRow('email') %>
-  </section>
 </div>

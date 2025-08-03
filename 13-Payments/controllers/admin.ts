@@ -11,7 +11,7 @@ import { join } from 'path';
 // /admin/items - prepended by authenticate middleware
 const getUserItems: RequestHandler = async (req, res, next) => {
   const page = +(req.query.page || 1);
-  const docsPerPage = 2;
+  const docsPerPage = 4;
   const userId = req.user?._id
 
   try {
@@ -23,11 +23,12 @@ const getUserItems: RequestHandler = async (req, res, next) => {
     const pagination = { active: page, docsPerPage, docCount };
 
     res.render('body', {
-         title: 'Dashboard',
-      isActive: '/admin/items',
-          view:  'itemList',
-        styles: ['itemList', 'dashboard', 'userInfo', 'pagination'],
-        locals: { items, isAdmin: true, pagination },
+           title: 'Dashboard',
+       activeNav: '/admin/items',
+      activeDash: 'items',
+            view:  'store/list',
+          styles: ['store/list', 'user/details', 'includes/dashboard', 'includes/pagination'],
+          locals: { items, isAdmin: true, pagination },
     });
   } catch (error) {
     errorMsg({ error, where: 'getUserItems' });
@@ -35,7 +36,7 @@ const getUserItems: RequestHandler = async (req, res, next) => {
   }
 };
 
-// /admin/item-form - prepended by authenticate middleware
+// /admin/form - prepended by authenticate middleware
 const getItemForm: RequestHandler = async (req, res, next) => {
   const { itemId } = req.params;
   const filename   = req.session.file?.originalname;
@@ -52,11 +53,12 @@ const getItemForm: RequestHandler = async (req, res, next) => {
   }
 
   res.render('body', {
-       title: 'New Listing',
-    isActive: '/admin/items',
-        view:  'itemForm',
-      styles: ['itemForm', 'dashboard'],
-      locals: { item, filename },
+         title: 'New Listing',
+     activeNav: '/admin/items',
+    activeDash: 'form',
+          view:  'user/listing',
+        styles: ['user/listing', 'includes/dashboard'],
+        locals: { item, filename },
   });
 };
 
@@ -76,7 +78,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
     } else {
       req.session.errors.image = 'must be .jpg, .jpeg or .png';
     }
-    req.session.save(() => res.redirect('/admin/item-form'));
+    req.session.save(() => res.redirect('/admin/form'));
     return;
   }
 
@@ -97,7 +99,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
     } else {
       req.session.errors.image = 'must be .jpg, .jpeg or .png';
     }
-    req.session.save(() => res.redirect('/admin/item-form'));
+    req.session.save(() => res.redirect('/admin/form'));
   }
 };
 
@@ -117,7 +119,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
       req.session.dataRoute = true;
     }
     if (req.fileError) req.session.errors.image = req.fileError;
-    req.session.save(() => res.redirect('/admin/item-form/' + _id));
+    req.session.save(() => res.redirect('/admin/form/' + _id));
     return;
   }
 
@@ -152,7 +154,7 @@ const postEditItem: RequestHandler = async (req, res, next) => {
       req.session.dataRoute = true;
     }
     if (req.fileError) req.session.errors.image = req.fileError;
-    req.session.save(() => res.redirect('/admin/item-form/' + _id));
+    req.session.save(() => res.redirect('/admin/form/' + _id));
   }
 };
 

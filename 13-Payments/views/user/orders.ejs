@@ -1,0 +1,42 @@
+<%- include('../includes/dashboard') %>
+<%- include('../user/details') %>
+
+<% const detailRow = (text, value) => { %>
+  <p class="detail-row truncate">
+    <span><%= text %></span>
+    <span><%= value %></span>
+  </p>
+<% } %>
+
+<% if (orders.length === 0) { %>
+  <h1 class="fallback">You have no orders</h1>
+<% } else { %>
+  <ul class="orders">
+    <% orders.forEach((order) => { %>
+      <% const { _id, createdAt, user, items } = order; %>
+      <li class="floating-box">
+        <time><%= formatDate(createdAt, true) %></time>
+        <h2>
+          <strong>Order ID: </strong>
+          <span><%= _id %></span>
+        </h2>
+        <ul class="order-items">
+          <% items.forEach(({ name, price, imgURL, quantity }) => { %>
+            <li>
+              <img src="/<%= imgURL %>" alt="<%= name %>" />
+              <section class="order-details">
+                <%= detailRow('Article:',                 name             ) %>
+                <%= detailRow('Seller:',             user.name             ) %>
+                <%= detailRow('Price:', '$' +             price.toFixed(2) ) %>
+                <%= detailRow('Quantity:',     quantity,                   ) %>
+                <%= detailRow('Total:', '$' + (quantity * price).toFixed(2)) %>
+              </section>
+            </li>
+          <% }) %>
+        </ul>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<%- include('../includes/pagination') %>

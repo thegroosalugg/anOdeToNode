@@ -1,0 +1,17 @@
+.details {
+  padding: 0.5rem 1rem;
+  margin: 1rem auto 0;
+  width: 80%;
+  overflow-x: auto;
+
+  p {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 0.5rem;
+    text-transform: capitalize;
+
+    strong, span { min-width: 0; }
+    strong { text-align: end;    }
+    span   { text-align: start;  }
+  }
+}

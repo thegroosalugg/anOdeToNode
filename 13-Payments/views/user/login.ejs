@@ -1,0 +1,77 @@
+<%
+  const   signup = state === 'signup';
+  const    reset = state === 'reset';
+  const password = state === 'password';
+%>
+
+<% const input = (props) => { %>
+  <%
+    const [control, confirm] = props;
+    const    name = confirm ? confirm + '_' + control : control;
+    const   error = errors[control];
+    const content =
+      (error && confirm ? control : name).replaceAll('_', ' ') + ' ' + (error || '');
+  %>
+  <p class="control">
+    <label
+        for="<%= name %>"
+      class="<%= error ? 'error' : '' %>"
+    >
+       <%= content %>
+    </label>
+    <input
+         id="<%= name %>"
+       name="<%= name %>"
+       type="<%= ['email', 'password'].includes(control) ? control : 'text' %>"
+      value="<%= formData[control] || '' %>"
+      autocomplete="off"
+    />
+  </p>
+<% } %>
+
+<form action="/<%= state %>" method="post" class="floating-box auth-form" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrf %>" />
+
+  <h2 class="<%= state %>">
+    <%= signup ? 'REGISTER' : reset ? 'NEW PASSWORD' : password ? 'SET PASSWORD' : 'LOGIN' %>
+  </h2>
+
+  <% if (['signup'].includes(state)) { %>
+    <%= input(['name']) %>
+  <% } %>
+
+  <% if (['login', 'signup', 'reset'].includes(state)) { %>
+    <%= input(['email']) %>
+  <% } %>
+
+  <% if (['login', 'signup', 'password'].includes(state)) { %>
+    <%= input(['password']) %>
+  <% } %>
+
+  <% if (['signup', 'password'].includes(state)) { %>
+    <%= input(['password', 'confirm']) %>
+  <% } %>
+
+  <% if (['login', 'signup'].includes(state)) { %>
+    <a
+       href="/login<%= signup ? '' : '/?signup=true' %>"
+      class="form-link <%= state %>"
+    >
+      <span><%= signup ? 'Already' : 'Don\'t'   %> have an account?</span>
+      <span><%= signup ? 'Login!'  : 'Sign up!' %></span>
+    </a>
+  <% } %>
+
+  <button class="submit <%= state %>">
+    <%= signup ? 'Sign Up' : reset ? 'Request Link' : password ? 'Change Password' : 'Login' %>
+  </button>
+
+  <% if (['login', 'reset'].includes(state)) { %>
+    <a
+      class="password-link <%= state %>"
+       href="/login<%= reset ? '' : '/?reset=true' %>"
+    >
+      <%= reset ? 'Go Back' : 'Reset Password' %>
+    </a>
+  <% } %>
+</form>

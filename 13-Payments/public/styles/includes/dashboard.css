@@ -1,0 +1,37 @@
+.dashboard {
+  display: flex;
+  overflow-x: scroll;
+  padding: 0.25rem 0.5rem;
+  border-top: 1px solid var(--bg);
+  background: var(--accent-2);
+  font-size: var(--font-minor);
+  font-weight: 300;
+  text-wrap: nowrap;
+  box-shadow: var(--shadow-lg);
+
+  form {
+    margin-left: auto;
+    border-left: 1px solid var(--bg);
+
+    button {
+      background: none;
+      border: none;
+    }
+  }
+
+  form button, a {
+    color: var(--bg);
+    padding: 0 0.5rem;
+    text-underline-offset: 2px;
+    transition: 0.25s ease-in;
+
+    &.active, &:hover { text-decoration: underline; }
+    &:hover { filter: brightness(0.75); }
+  }
+
+  a {
+    border-right: 1px solid var(--bg);
+    &:first-of-type { margin-left: 0.5rem; }
+    &:last-of-type  { border-right: none;  }
+  }
+}

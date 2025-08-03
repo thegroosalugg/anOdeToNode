@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import { isValidObjectId } from 'mongoose';
 import Item from '../models/Item';
 import Order from '../models/Order';
 import errorMsg from '../util/errorMsg';
@@ -11,7 +12,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
 const getItems: RequestHandler = async (req, res, next) => {
   const page = +(req.query.page || 1);
-  const docsPerPage = 3;
+  const docsPerPage = 4;
 
   try {
     const docCount = await Item.find().countDocuments(); // returns only no. of DB entries
@@ -23,11 +24,11 @@ const getItems: RequestHandler = async (req, res, next) => {
     const pagination = { active: page, docsPerPage, docCount };
 
     res.render('body', {
-         title: 'Home',
-      isActive: '/',
-          view: 'itemList',
-        styles: ['itemList', 'pagination'],
-        locals: { items, isAdmin: false, pagination },
+          title: 'Home',
+      activeNav: '/',
+           view: 'store/list',
+         styles: ['store/list', 'includes/pagination'],
+         locals: { items, isAdmin: false, pagination },
     });
   } catch (error) {
     const err = new Error(error as string);
@@ -37,14 +38,17 @@ const getItems: RequestHandler = async (req, res, next) => {
 
 const getItemById: RequestHandler = async (req, res, next) => {
   const { itemId } = req.params;
+
   try {
-    const item = await Item.findById(itemId).populate('userId', 'name');
+    let item;
+    if (isValidObjectId(itemId)) item = await Item.findById(itemId).populate('userId', 'name');
+
     res.render('body', {
-         title: item?.name || 'Not Found',
-      isActive: '/',
-          view:  'itemView',
-        styles: ['itemView'],
-        locals: { item },
+          title: item?.name || 'Not Found',
+      activeNav: '/',
+           view:  'store/item',
+         styles: ['store/item'],
+         locals: { item },
     });
   } catch (error) {
     errorMsg({ error, where: 'getItemById' });
@@ -57,11 +61,12 @@ const getCart: RequestHandler = async (req, res, next) => {
   try {
     const items = await req.user?.getCart();
     res.render('body', {
-         title: 'Your Cart',
-      isActive: '/cart',
-          view:  'cart',
-        styles: ['cart', 'dashboard'],
-        locals: { items },
+           title: 'Your Cart',
+       activeNav: '/cart',
+      activeDash: '',
+            view:  'store/cart',
+          styles: ['store/cart', 'includes/dashboard'],
+          locals: { items },
     });
   } catch (error) {
     errorMsg({ error, where: 'getCart' });
@@ -79,7 +84,7 @@ const postUpdateCart: RequestHandler = async (req, res, next) => {
 
     if (item && item.userId.toString() === req.user?._id.toString()) {
       // do not allow to add own items to cart
-      return res.redirect('/admin/item-form/' + item._id);
+      return res.redirect('/admin/form/' + item._id);
     }
 
     if (item && req.user && (quantity === 1 || quantity === -1)) {
@@ -102,7 +107,7 @@ const postCheckout: RequestHandler = async (req, res, next) => {
         quantity, // require & reserved stripe props
       price_data: {
             currency: 'usd',
-         unit_amount: price * 100, // price must be in cents in STRIPE
+         unit_amount: Math.round(price * 100), // price must be in cents in STRIPE
         product_data: { name, description: desc },
       },
     }));
@@ -136,11 +141,12 @@ const getOrders: RequestHandler = async (req, res, next) => {
     const pagination = { active: page, docsPerPage, docCount };
 
     res.render('body', {
-          title: 'Your Orders',
-      isActive: '/admin/items',
-          view:  'orders',
-        styles: ['orders', 'dashboard', 'userInfo', 'pagination'],
-        locals: { orders, formatDate, pagination },
+           title: 'Your Orders',
+       activeNav: '/admin/items',
+      activeDash: 'orders',
+            view:  'user/orders',
+          styles: ['user/orders', 'user/details', 'includes/dashboard', 'includes/pagination'],
+          locals: { orders, formatDate, pagination },
     });
   } catch (error) {
     errorMsg({ error, where: 'getOrders' });
