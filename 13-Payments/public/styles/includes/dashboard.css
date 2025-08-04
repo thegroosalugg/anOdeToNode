@@ -1,7 +1,7 @@
 .dashboard {
   display: flex;
   overflow-x: scroll;
-  padding: 0.25rem 0.5rem;
+  padding: 0 0.5rem;
   border-top: 1px solid var(--bg);
   background: var(--accent-2);
   font-size: var(--font-minor);
@@ -21,7 +21,7 @@
 
   form button, a {
     color: var(--bg);
-    padding: 0 0.5rem;
+    padding: 0.25rem 0.5rem;
     text-underline-offset: 2px;
     transition: 0.25s ease-in;
 
