@@ -4,8 +4,20 @@
   <a href="/orders" class="<%= activeTab('orders') %>">Orders</a>
   <a href="/admin/items" class="<%= activeTab('items') %>">Listings</a>
   <a href="/admin/form" class="<%= activeTab('form') %>">Post an ad</a>
-  <form action="/logout" method="post">
-    <input type="hidden" name="_csrf" value="<%= csrf %>" />
-    <button class="logout">Logout</button>
-  </form>
+  <p>
+    <button onclick="showModal('.modal-logout')">Logout</button>
+  </p>
 </div>
+
+<script src="/script/modal.js"></script>
+
+<dialog class="modal-logout floating-box">
+  <p>Are you sure?</p>
+  <div>
+    <form action="/logout" method="post">
+      <input type="hidden" name="_csrf" value="<%= csrf %>" />
+      <button class="logout">Probably</button>
+    </form>
+    <button onclick="closeModal('.modal-logout')">Probably Not</button>
+  </div>
+</dialog>

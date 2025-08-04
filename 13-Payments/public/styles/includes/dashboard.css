@@ -9,7 +9,7 @@
   text-wrap: nowrap;
   box-shadow: var(--shadow-lg);
 
-  form {
+  p {
     margin-left: auto;
     border-left: 1px solid var(--bg);
 
@@ -19,7 +19,8 @@
     }
   }
 
-  form button, a {
+
+  p button, a {
     color: var(--bg);
     padding: 0.25rem 0.5rem;
     text-underline-offset: 2px;
@@ -31,7 +32,45 @@
 
   a {
     border-right: 1px solid var(--bg);
+
     &:first-of-type { margin-left: 0.5rem; }
-    &:last-of-type  { border-right: none;  }
+    &:last-of-type { border-right: none; }
+  }
+}
+
+.modal-logout {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem;
+  text-align: center;
+  animation: fadeIn 0.3s ease forwards;
+
+  &[closing] { animation: fadeOut 0.3s ease forwards; }
+
+  > p { margin-bottom: 1rem; }
+  > div {
+    display: flex;
+    gap: 1rem;
+    padding: 0.1rem;
+    overflow-x: scroll;
+  }
+
+  button, form button {
+    padding: 0.25rem;
+    width: 130px;
+    background: var(--bg);
+    border: var(--border-fg);
+    border-radius: var(--radius-md);
+    transition: 0.5s ease-in-out;
+
+    &:hover { filter: brightness(0.75); }
+  }
+
+  form button {
+    color: var(--bg);
+    border-color: var(--bg);
+    background: var(--error);
   }
 }

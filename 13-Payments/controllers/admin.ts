@@ -18,7 +18,8 @@ const getUserItems: RequestHandler = async (req, res, next) => {
     const docCount = await Item.find({ userId }).countDocuments();
     const items    = await Item.find({ userId })
       .skip((page - 1) * docsPerPage)
-      .limit(docsPerPage);
+      .limit(docsPerPage)
+      .sort({ updatedAt: -1 });
 
     const pagination = { active: page, docsPerPage, docCount };
 
