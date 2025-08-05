@@ -76,16 +76,13 @@
   }
 
   > h2 {
-    --shadow: rgb(0 0 0 / 0.3);
     padding: 0.5rem 1rem;
     font-size: var(--text-xl);
     font-weight: 700;
     color: var(--bg);
     background: var(--accent);
     text-align: center;
-    box-shadow: 0 -2px 4px 0 var(--shadow), 0 -4px 6px -1px var(--shadow);
-
-    @media (prefers-color-scheme: dark) { --shadow: rgb(0 0 0 / 0.05); }
+    box-shadow: var(--shadow-top);
   }
 }
 

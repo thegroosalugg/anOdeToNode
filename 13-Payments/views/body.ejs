@@ -3,6 +3,9 @@
   <%- include('includes/head', { title, styles }) %>
   <body>
     <%- include('includes/nav') %>
-    <%- include(view, locals) %>
+    <main id="main">
+      <%- include(view, locals) %>
+    </main>
+    <%- include('includes/footer') %>
   </body>
 </html>

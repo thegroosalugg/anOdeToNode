@@ -90,12 +90,20 @@
     0px 4px 8px rgb(0 0 0 / 0.1);
 
   --shadow-xs:  0  1px  2px   0   rgb(0 0 0 / 0.05);
-  --shadow-sm:  0  1px  3px   0   rgb(0 0 0 / 0.1), 0 1px  2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md:  0  4px  6px  -1px rgb(0 0 0 / 0.1), 0 2px  4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg:  0 10px 15px  -3px rgb(0 0 0 / 0.1), 0 4px  6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl:  0 20px 25px  -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-sm:  0  1px  3px   0   rgb(0 0 0 / 0.1),
+                0  1px  2px  -1px rgb(0 0 0 / 0.1);
+  --shadow-md:  0  4px  6px  -1px rgb(0 0 0 / 0.1),
+                0  2px  4px  -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:  0 10px 15px  -3px rgb(0 0 0 / 0.1),
+                0  4px  6px  -4px rgb(0 0 0 / 0.1);
+  --shadow-xl:  0 20px 25px  -5px rgb(0 0 0 / 0.1),
+                0  8px 10px  -6px rgb(0 0 0 / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  --shadow-pop: 0  2px  4px   0   rgb(0 0 0 / 0.3), 0 4px 6px -1px rgb(0 0 0 / 0.3);
+  --shadow-pop: 0  2px  4px   0   rgb(0 0 0 / 0.3),
+                0  4px  6px  -1px rgb(0 0 0 / 0.3);
+  --shadow-top: 0 -2px  4px  -1px rgb(0 0 0 / 0.15),
+                0 -6px 12px  -4px rgb(0 0 0 / 0.15),
+                0 -12px 24px -8px rgb(0 0 0 / 0.15);
   --shadow-inset: inset 0 -20px 20px -20px rgb(0 0 0 / 0.3);
 
   --screen-sm: 640px;
@@ -186,25 +194,21 @@
     padding: 0.25rem;
     width: 130px;
     background: var(--background);
-    border: var(--border);
     color: var(--color);
+    border: var(--border);
     border-radius: var(--radius-md);
     transition: 0.5s ease-in-out;
 
     &:hover {
-      --background: var(--bg);
-      --color: var(--fg);
+      background: var(--color);
+      color: var(--background);
+      border-color: var(--background);
     }
   }
 
   .danger-btn {
     --color: var(--bg);
     --background: var(--error);
-
-    &:hover {
-      --color: var(--error);
-      --background: var(--bg);
-    }
   }
 }
 
