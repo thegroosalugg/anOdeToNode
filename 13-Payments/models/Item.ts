@@ -17,13 +17,17 @@ interface IItemMethods {
 
 type ItemModel = Model<IItem, {}, IItemMethods>;
 
-export const itemSchema = new Schema<IItem, ItemModel, IItemMethods>({
-    name: { type: String, required },
-    desc: { type: String, required },
-  imgURL: { type: String, required },
-   price: { type: Number, required },
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required },
-});
+export const itemSchema = new Schema<IItem, ItemModel, IItemMethods>(
+  {
+      name: { type: String, required },
+      desc: { type: String, required },
+    imgURL: { type: String, required },
+     price: { type: Number, required },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required },
+  },
+  { timestamps: true }
+);
+
 
 itemSchema.pre('save', function(next) {
   if (this.price) {

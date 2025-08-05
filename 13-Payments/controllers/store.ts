@@ -19,6 +19,7 @@ const getItems: RequestHandler = async (req, res, next) => {
     const items    = await Item.find()
       .skip((page - 1) * docsPerPage) // skips first amount of results, so page * limit
       .limit(docsPerPage) // limits results to how many you want on the page
+      .sort({ updatedAt: -1 })
       .populate('userId', 'name'); // skip + limit = clamp(min, max)
 
     const pagination = { active: page, docsPerPage, docCount };
@@ -136,7 +137,8 @@ const getOrders: RequestHandler = async (req, res, next) => {
     const docCount = await Order.find({ 'user._id': req.user?._id }).countDocuments();
     const orders   = await Order.find({ 'user._id': req.user?._id })
       .skip((page -1) * docsPerPage)
-      .limit(docsPerPage);
+      .limit(docsPerPage)
+      .sort({ createdAt: -1 });
 
     const pagination = { active: page, docsPerPage, docCount };
 

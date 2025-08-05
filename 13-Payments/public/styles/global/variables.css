@@ -1,4 +1,5 @@
 :root {
+  --gray-50:  #ffffff;
   --gray-100: #f5f5f5;
   --gray-200: #e5e5e5;
   --gray-300: #d4d4d4;
@@ -8,6 +9,7 @@
   --gray-700: #4d4d4d;
   --gray-800: #333333;
   --gray-900: #1a1a1a;
+  --gray-950: #000000;
 
   --rust-100: #e0875a;
   --rust-200: #e4804d;
@@ -94,6 +96,7 @@
   --shadow-xl:  0 20px 25px  -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --shadow-pop: 0  2px  4px   0   rgb(0 0 0 / 0.3), 0 4px 6px -1px rgb(0 0 0 / 0.3);
+  --shadow-inset: inset 0 -20px 20px -20px rgb(0 0 0 / 0.3);
 
   --screen-sm: 640px;
   --screen-md: 768px;
@@ -148,4 +151,69 @@
 
 .scrollbar-accent {
   &::-webkit-scrollbar-thumb { background: var(--accent) !important; }
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem;
+  text-align: center;
+  border: var(--border-text);
+  background: var(--box);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-xl);
+  animation: fadeIn 0.3s ease forwards;
+
+  &[closing] { animation: fadeOut 0.3s ease forwards; }
+
+  > p { margin-bottom: 1rem; }
+
+  > div {
+    display: flex;
+    gap: 1rem;
+    padding: 0.1rem;
+    overflow-x: scroll;
+
+    @media (max-width: 320px) { flex-direction: column; }
+  }
+
+  button {
+    --background: var(--text);
+    --color: var(--box);
+    --border: 1px solid var(--color);
+    padding: 0.25rem;
+    width: 130px;
+    background: var(--background);
+    border: var(--border);
+    color: var(--color);
+    border-radius: var(--radius-md);
+    transition: 0.5s ease-in-out;
+
+    &:hover {
+      --background: var(--bg);
+      --color: var(--fg);
+    }
+  }
+
+  .danger-btn {
+    --color: var(--bg);
+    --background: var(--error);
+
+    &:hover {
+      --color: var(--error);
+      --background: var(--bg);
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -60%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translate(-50%, -50%); }
+  to   { opacity: 0; transform: translate(-50%, -60%); }
 }

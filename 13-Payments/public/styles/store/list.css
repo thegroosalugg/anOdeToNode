@@ -91,56 +91,6 @@
   }
 }
 
-.modal-confirm {
-  > div {
-    display: flex;
-    gap: 1rem;
-    padding: 0.1rem;
-    overflow-x: scroll;
-  }
-
-  button:first-of-type {
-    color: var(--bg);
-    border-color: var(--bg);
-    background: var(--error);
-  }
-}
-
-.modal-confirm, .modal-error {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 1rem;
-  text-align: center;
-  animation: fadeIn 0.3s ease forwards;
-
-  &[closing] { animation: fadeOut 0.3s ease forwards; }
-
-  > p { margin-bottom: 1rem; }
-
-  button {
-    padding: 0.25rem;
-    width: 130px;
-    background: var(--bg);
-    border: var(--border-fg);
-    border-radius: var(--radius-md);
-    transition: 0.5s ease-in-out;
-
-    &:hover { filter: brightness(0.75); }
-  }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -60%); }
-  to   { opacity: 1; transform: translate(-50%, -50%); }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; transform: translate(-50%, -50%); }
-  to   { opacity: 0; transform: translate(-50%, -60%); }
-}
-
 @media screen and (pointer: coarse) and (max-width: 960px) {
   .list {
     grid-template-columns: repeat(auto-fit, minmax(120px, max-content));

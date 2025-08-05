@@ -26,6 +26,7 @@
   flex-direction: column;
   gap: 1rem;
   padding: 0.2rem;
+  box-shadow: var(--shadow-inset);
 
   > li {
     display: flex;

@@ -35,7 +35,6 @@
   margin: 1rem auto;
   width: var(--screen-md);
   max-width: 95%;
-  background: var(--box);
   overflow: hidden;
 
   > img {
@@ -70,7 +69,7 @@
   > p {
     max-height: 100px;
     overflow-y: auto;
-    padding: 0 1rem;
+    padding: 0 1rem 0.5rem;
     line-height: 1.45;
     text-align: justify;
     text-align-last: center;
