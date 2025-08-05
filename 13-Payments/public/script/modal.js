@@ -1,7 +1,7 @@
-const showModal = (className) => document.querySelector(className).showModal();
+const showModal = (query) => document.querySelector(query).showModal();
 
-const closeModal = (className) => {
-  const modal = document.querySelector(className);
+const closeModal = (query) => {
+  const modal = document.querySelector(query);
   modal.setAttribute("closing", "");
   modal.addEventListener(
     "animationend",

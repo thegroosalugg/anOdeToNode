@@ -3,7 +3,7 @@
 <% const cartButton = (id, action) => { %>
   <form class="cart-button" action="/cart/<%= id + '/' + action %>" method="post">
     <input type="hidden" name="_csrf" value="<%= csrf %>" />
-    <button>
+    <button aria-label="<%= action %>-to-cart">
       <i class="fa-solid fa-<%= action === 'add' ? 'plus' : 'minus' %>"></i>
     </button>
   </form>

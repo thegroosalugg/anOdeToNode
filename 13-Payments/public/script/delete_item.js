@@ -5,11 +5,11 @@ let itemId;
 const confirmDeletion = (csrf, _id) => {
   token  = csrf;
   itemId = _id;
-  showModal(".modal-delete");
+  showModal("#modal-delete");
 };
 
 const deleteItem = async () => {
-  const error = () => showModal(".modal-error");
+  const error = () => showModal("#modal-error");
 
   try {
     const response = await fetch("/admin/item/" + itemId, {
@@ -30,6 +30,6 @@ const deleteItem = async () => {
     console.log("deleteItem error", error);
     error();
   } finally {
-    closeModal(".modal-delete");
+    closeModal("#modal-delete");
   }
 };

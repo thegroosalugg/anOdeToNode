@@ -53,15 +53,15 @@
 <!-- <script src="/script/modal.js"></script> -->
 <script src="/script/delete_item.js"></script>
 
-<dialog class="modal-delete floating-box">
+<dialog id="modal-delete" class="modal">
   <p>Are you sure?</p>
   <div>
-    <button onclick="deleteItem()">Probably</button>
-    <button onclick="closeModal('.modal-delete')">Probably Not</button>
+    <button onclick="deleteItem()" class="danger-btn">Probably</button>
+    <button onclick="closeModal('#modal-delete')">Probably Not</button>
   </div>
 </dialog>
 
-<dialog class="modal-error floating-box">
+<dialog id="modal-error" class="modal">
   <p>An Error Has Occured!</p>
-  <button onclick="closeModal('.modal-error')">Sure Thing!</button>
+  <button onclick="closeModal('#modal-error')">Sure Thing!</button>
 </dialog>

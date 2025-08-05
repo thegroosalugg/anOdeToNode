@@ -5,19 +5,19 @@
   <a href="/admin/items" class="<%= activeTab('items') %>">Listings</a>
   <a href="/admin/form" class="<%= activeTab('form') %>">Post an ad</a>
   <p>
-    <button onclick="showModal('.modal-logout')">Logout</button>
+    <button onclick="showModal('#modal-logout')">Logout</button>
   </p>
 </div>
 
 <script src="/script/modal.js"></script>
 
-<dialog class="modal-logout floating-box">
+<dialog id="modal-logout" class="modal">
   <p>Are you sure?</p>
   <div>
     <form action="/logout" method="post">
       <input type="hidden" name="_csrf" value="<%= csrf %>" />
-      <button class="logout">Probably</button>
+      <button class="danger-btn">Probably</button>
     </form>
-    <button onclick="closeModal('.modal-logout')">Probably Not</button>
+    <button onclick="closeModal('#modal-logout')">Probably Not</button>
   </div>
 </dialog>

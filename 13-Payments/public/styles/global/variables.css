@@ -153,6 +153,61 @@
   &::-webkit-scrollbar-thumb { background: var(--accent) !important; }
 }
 
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem;
+  text-align: center;
+  border: var(--border-text);
+  background: var(--box);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-xl);
+  animation: fadeIn 0.3s ease forwards;
+
+  &[closing] { animation: fadeOut 0.3s ease forwards; }
+
+  > p { margin-bottom: 1rem; }
+
+  > div {
+    display: flex;
+    gap: 1rem;
+    padding: 0.1rem;
+    overflow-x: scroll;
+
+    @media (max-width: 320px) { flex-direction: column; }
+  }
+
+  button {
+    --background: var(--text);
+    --color: var(--box);
+    --border: 1px solid var(--color);
+    padding: 0.25rem;
+    width: 130px;
+    background: var(--background);
+    border: var(--border);
+    color: var(--color);
+    border-radius: var(--radius-md);
+    transition: 0.5s ease-in-out;
+
+    &:hover {
+      --background: var(--bg);
+      --color: var(--fg);
+    }
+  }
+
+  .danger-btn {
+    --color: var(--bg);
+    --background: var(--error);
+
+    &:hover {
+      --color: var(--error);
+      --background: var(--bg);
+    }
+  }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translate(-50%, -60%); }
   to   { opacity: 1; transform: translate(-50%, -50%); }
