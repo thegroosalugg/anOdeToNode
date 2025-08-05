@@ -11,7 +11,7 @@ const Label = ({ children }: { children: ReactNode }) => (
 
 export default function NotifsHeader() {
   const { alerts, activeTab, changeTab, closeMenu } = useAlerts();
-  const labels = ["Friend requests",          "Sent requests", "Post replies"];
+  const labels = ["Friend-requests",          "Sent-requests", "Post-replies"];
   const  icons = [      "user-plus",  "envelope-circle-check",        "reply"] as const;
 
   return (
@@ -19,14 +19,15 @@ export default function NotifsHeader() {
       <XButton onClick={closeMenu} />
       <nav className="floating-box no-scrollbar-x">
         {alerts.map((count, i) => {
-          const [line1, line2] = labels[i].split(" ");
+          const [line1, line2] = labels[i].split("-");
           return (
             <IconButton
-                   key={i}
-                  icon={icons[i]}
-                  size="2xl"
-               onClick={() => changeTab(i)}
-              isActive={i === activeTab}
+                     key={i}
+                    icon={icons[i]}
+                    size="2xl"
+                 onClick={() => changeTab(i)}
+                isActive={i === activeTab}
+              aria-label={labels[i]}
             >
               <Counter {...{ count }} />
               <Label>{line1}</Label>

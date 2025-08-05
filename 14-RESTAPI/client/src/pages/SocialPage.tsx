@@ -43,7 +43,7 @@ export default function SocialPage({ user }: Authorized) {
   return (
     <AsyncAwait {...{ isLoading, error }}>
       <PagedList<User>
-        className={`${css["user-list"]} no-scrollbar-y`}
+        className={css["user-list"]}
              path="user"
            header={{ title: ["Users"], fallback: ["Nobody here", "center"] }}
         {...rest}

@@ -1,5 +1,4 @@
 .icon-button {
-  --color: var(--rust-300);
   position: relative;
   padding: 0.25rem;
   font-weight: 700;
@@ -21,13 +20,9 @@
     height: 2px;
     width: 100%;
     border-radius: 3px;
-    background: var(--color);
+    background: var(--hover);
   }
 
   &:disabled { cursor: wait; filter: brightness(0.75); }
-  &.active   { color: var(--color);  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .icon-button { --color: var(--gray-100); }
+  &.active   { color: var(--hover);  }
 }
