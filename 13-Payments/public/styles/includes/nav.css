@@ -20,8 +20,7 @@
     text-underline-offset: 2px;
     transition: 0.25s ease-in;
 
-    &.active, &:hover { text-decoration: underline; }
-    &:hover { filter: brightness(0.75); }
+    &.active, &:hover { text-decoration: underline; color: var(--hover); }
     &:last-of-type { margin-left: auto; }
     i { font-size: var(text-lg); }
   }

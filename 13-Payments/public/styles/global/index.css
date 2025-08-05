@@ -8,6 +8,7 @@
   --text: var(--gray-600);
   --box: var(--gray-100);
   --error: var(--rust-600);
+  --hover: var(--rust-200);
   --transparent: #ffffff00;
   --border: 1px solid;
   --border-bg: var(--border) var(--bg);
@@ -27,6 +28,7 @@
     --text: var(--gray-300);
     --box: var(--gray-700);
     --error: var(--rust-500);
+    --hover: var(--gray-100);
     --transparent: #00000000;
   }
 }
@@ -63,3 +65,9 @@ a, p, h1, h2, h3, h4, h5, h6, button, label, input, textarea, select, option {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--fg); border-radius: 5px; }
 /* END */
+
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
