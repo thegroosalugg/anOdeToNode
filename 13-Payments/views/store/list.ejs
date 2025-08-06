@@ -9,7 +9,7 @@
   <% } %>
 
   <% if (items.length === 0) { %>
-    <h2>Whoops, looks like there is nothing here</h2>
+    <h2 class="empty-list">Whoops, looks like there is nothing here</h2>
   <% } else { %>
     <ul class="list">
       <% items.forEach(({ _id, name, desc, imgURL, price, userId }) => { %>
@@ -17,7 +17,7 @@
           <input type="hidden" name="_csrf" value="<%= csrf %>" />
           <input type="hidden" name="itemId" value="<%= _id %>" />
 
-          <a href="/store/<%= _id %>">
+          <a class="item-img" href="/store/<%= _id %>">
             <img src="/<%= imgURL %>" alt="<%= name %>" />
             <% if (!isAdmin) { %>
               <p class="sold-by">Sold by:

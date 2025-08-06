@@ -31,14 +31,15 @@
 
     &:hover { box-shadow: var(--shadow-pop); }
 
-    a {
-      position: relative;
-      > img {
-        height: 200px;
-        width: 100%;
-        object-fit: cover;
-      }
-    }
+  }
+}
+
+.item-img {
+  position: relative;
+  > img {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
   }
 }
 
