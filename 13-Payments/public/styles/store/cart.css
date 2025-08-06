@@ -77,18 +77,17 @@
 
 .cart-total {
   text-align: end;
-  margin-top: 0.25rem;
-  margin-right: 1rem;
+  margin: 0.25rem 1rem 0.25rem auto;
   font-weight: 300;
 }
 
 .cart-empty {
   font-size: var(--text-xl);
   font-weight: 300;
+  text-align: center;
   padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: inherit;
+  max-width: inherit;
 }
 
 .cart-buttons {
