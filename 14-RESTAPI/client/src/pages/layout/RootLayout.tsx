@@ -7,7 +7,6 @@ import Footer from "@/components/layout/footer/Footer";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { Auth } from "@/lib/types/auth";
 import { Dict } from "@/lib/types/common";
-import { getAnalytics } from "@/lib/util/getAnalytics";
 
 const staticMeta: Dict<{ title: string; description: string }> = {
     "/feed": { title:               "Feed", description: "All user posts"          },
@@ -36,15 +35,12 @@ export default function RootLayout({ children }: { children: (props: Auth) => Re
         error,
      setError,
   } = useFetch<Auth["user"]>(null, true); // null initial, true loading before useEffect
-  const { reqData: postAnalytics } = useFetch();
   const props = { user, setUser, reqUser, isLoading, error, setError };
   const { title, description } = metadata(pathname, user);
 
   useEffect(() => {
     reqUser({ url: "user" }, { onError: () => setUser(null) });
-    const data = getAnalytics();
-    if (data) postAnalytics({ url: "analytics", method: "POST", data });
-  }, [reqUser, setUser, postAnalytics]);
+  }, [reqUser, setUser]);
 
   return (
     <>
