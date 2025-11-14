@@ -2,10 +2,14 @@ import Logger from '@/models/Logger';
 import refreshToken from './refreshToken';
 import { FetchError } from '../types/common';
 
+type JSONbody =
+  | FormData
+  | { [k: string]: FormDataEntryValue | boolean | number | Record<string, unknown> };
+
 export interface Fetch {
       url: string;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-    data?: FormData | { [k: string]: FormDataEntryValue | boolean | number };
+    data?: JSONbody;
 }
 
 export const BASE_URL = import.meta.env.VITE_SERVER_URL;
