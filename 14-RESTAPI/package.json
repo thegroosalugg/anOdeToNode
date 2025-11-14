@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "client": "cd client && npm run dev",
+    "client": "cd client && vite -- --host",
     "server": "cd server && npm run dev",
     "build": "concurrently \"npm run server-build\" \"npm run client-build\"",
     "client-build": "cd client && npm run build",
