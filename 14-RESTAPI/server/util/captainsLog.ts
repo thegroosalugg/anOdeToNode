@@ -47,3 +47,4 @@ const captainsLog = (status: number, title: string, log?: unknown[]) => {
 };
 
 export default captainsLog;
+
