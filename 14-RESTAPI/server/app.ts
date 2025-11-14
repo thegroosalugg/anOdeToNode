@@ -1,26 +1,27 @@
 import       express, { ErrorRequestHandler }
-                     from 'express';
-import      mongoose from 'mongoose';
-import        multer from 'multer';
-import {    join   } from 'path';
+                         from 'express';
+import      mongoose     from 'mongoose';
+import        multer     from 'multer';
+import {      join     } from 'path';
 import {
-         storage,
-        fileFilter
-                   } from './middleware/multerConfig';
-import {   authJWT } from './middleware/auth.JWT';
-import    authRoutes from './routes/auth';
-import    postRoutes from './routes/post';
-import    feedRoutes from './routes/feed';
-import   replyRoutes from './routes/reply';
-import profileRoutes from './routes/profile';
-import  socialRoutes from './routes/social';
-import    chatRoutes from './routes/chat';
-import     msgRoutes from './routes/message';
-import   alertRoutes from './routes/alert';
-import   captainsLog from './util/captainsLog';
-import        socket from './socket';
-import        dotenv from 'dotenv';
-              dotenv.config();
+            storage,
+          fileFilter
+                       } from './middleware/multerConfig';
+import {     authJWT   } from './middleware/auth.JWT';
+import { postAnalytics } from './controllers/analyticsController';
+import      authRoutes   from './routes/auth';
+import      postRoutes   from './routes/post';
+import      feedRoutes   from './routes/feed';
+import     replyRoutes   from './routes/reply';
+import   profileRoutes   from './routes/profile';
+import    socialRoutes   from './routes/social';
+import      chatRoutes   from './routes/chat';
+import       msgRoutes   from './routes/message';
+import     alertRoutes   from './routes/alert';
+import     captainsLog   from './util/captainsLog';
+import          socket   from './socket';
+import          dotenv   from 'dotenv';
+                dotenv.config();
 
 // re-route FS location to parent folder in production
 const rootDir = process.env.NODE_ENV === 'production' ? '../' : '';
@@ -51,6 +52,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.post('/analytics',       postAnalytics);
 app.use(                        authRoutes);
 app.use('/feed',    authJWT,    feedRoutes);
 app.use('/post',    authJWT,   [postRoutes, replyRoutes]);
