@@ -34,10 +34,16 @@ app.use('/uploads', express.static(join(import.meta.dirname, rootDir, 'uploads')
 app.use(express.json()); // parse application/json
 app.use(multer({ storage, fileFilter }).single('image')); // multipart/form-data
 
+const allowedOrigins = [process.env.CLIENT_URL, process.env.CLIENT_MOBILE_URL];
+
 // allows cross origin requests
 app.use((req, res, next) => {
   // sets allowd URLS. * = all
-  res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_URL!);
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    // allow multiple ENV origins
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   // sets allowed methods
   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
   // sets allowed headers, content-type for req body
