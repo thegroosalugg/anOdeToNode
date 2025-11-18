@@ -1,0 +1,14 @@
+.header {
+  margin-bottom: 0.25rem;
+  font-size: var(--text-lg);
+  font-weight: bolder;
+  color: var(--text);
+}
+
+.list {
+  list-style-type: disc;
+  list-style-position: inside;
+  margin-bottom: 0.25rem;
+
+  > li { overflow-wrap: break-word; }
+}

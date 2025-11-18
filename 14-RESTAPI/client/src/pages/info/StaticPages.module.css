@@ -1,0 +1,15 @@
+.header {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  font-size: var(--text-4xl);
+}
+
+.paragraph { margin-bottom: 0.5rem; }
+
+.link a {
+  font-weight: 700;
+  text-decoration: underline;
+  transition: 0.5s ease;
+
+  &:hover { font-weight: 900; }
+}
