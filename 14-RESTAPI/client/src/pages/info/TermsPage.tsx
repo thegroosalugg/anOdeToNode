@@ -23,6 +23,7 @@ export default function TermsPage() {
           "Do not use real information, just make it up",
           "Passwords are hashed with bcrypt",
           "Live message function is not hashed; do not write anything sensitive",
+          "Image uploads are stored on the file system with Multer and are automatically removed when the server sleeps."
         ]}
       >
         How to use
