@@ -1,6 +1,4 @@
-import express,
-  { ErrorRequestHandler }
-                     from 'express';
+import express, { ErrorRequestHandler } from 'express';
 import        multer from 'multer';
 import          path from 'path';
 import       session from 'express-session';
@@ -9,13 +7,13 @@ import    MongoStore from 'connect-mongo';
 import    authRoutes from './routes/auth';
 import   adminRoutes from './routes/admin';
 import   storeRoutes from './routes/store';
-import { error404,
-         error500  } from './controllers/error';
+import  staticRoutes from './routes/static';
+import {  error404, error500  } from './controllers/error';
+import {    postAnalytics     } from './controllers/analytics';
+import {  storage, fileFilter } from './middleware/multerConfig';
 import    csrfShield from './middleware/csrf';
 import handleSession from './middleware/session';
 import  authenticate from './middleware/authenticate';
-import {  storage,
-        fileFilter } from './middleware/multerConfig';
 import      errorMsg from './util/errorMsg';
 import        dotenv from 'dotenv';
               dotenv.config();
@@ -34,7 +32,8 @@ app.use('/uploads', express.static(path.join(import.meta.dirname, rootDir, 'uplo
 app.set('view engine', 'ejs');
 
 // allows parsing of data into req.body with simple key value pairs
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false })); // parses x-www-form-urlencoded <form action="POST">
+app.use(express.json()); // parses JSON request bodies, sent with Content-Type: application/json
 
 app.set('trust proxy', 1); // trust first proxy. Required to work on Render.com
 app.use(
@@ -63,11 +62,13 @@ app.use(handleSession); // handles sessions data on each cycle
 app.use(multer({ storage, fileFilter }).single('image')); // allows storing of files
 // multer is run after handleSession so that user data is available in storare
 // CSRF runs after multer, as it relies on form data. Multer configures ENCTYPE
+app.post('/analytics', postAnalytics); // No CSRF required for analytics requests
 app.use(csrfShield); // protects sessions from request forgery via tokens. Initialise after sessions
 
 app.use('/admin', authenticate, adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
 app.use(authRoutes);
+app.use(staticRoutes);
 app.get('/500', error500); // 500 errors route - must be defined before the get all errors route
 app.use(error404); // will catch all other URLS, defined last
 

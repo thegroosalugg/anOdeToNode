@@ -15,7 +15,7 @@ const deleteItem = async () => {
     const response = await fetch("/admin/item/" + itemId, {
        method: "DELETE",
       headers: {
-                Accept: "application/json", // indicates its a fetch request
+                Accept: "application/json", // tells server that client wants a JSON response
         "x-csrf-token": token,
       },
     });
