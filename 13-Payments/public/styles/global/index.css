@@ -42,11 +42,9 @@ body {
   background: var(--bg);
   line-height: 1.2;
   font-family: var(--font-major);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* overlays stretch to screen height */
+  min-height: 100dvh;
 }
 
 input, textarea, select          { outline: none; border-radius: 0; }

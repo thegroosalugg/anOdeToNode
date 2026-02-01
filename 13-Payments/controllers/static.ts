@@ -22,4 +22,15 @@ const getTerms: RequestHandler = (req, res, next) => {
   });
 }
 
-export { getAbout, getTerms };
+const getPrivacy: RequestHandler = (req, res, next) => {
+  res.render('body', {
+         title: 'Privacy Policy',
+     activeNav: '',
+    activeDash: '',
+          view:  'static/privacy',
+        styles: ['static/static'],
+        locals: {},
+  });
+}
+
+export { getAbout, getTerms, getPrivacy };

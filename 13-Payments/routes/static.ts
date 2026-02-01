@@ -1,9 +1,10 @@
 import express from 'express';
-import { getAbout, getTerms } from '../controllers/static';
+import { getAbout, getTerms, getPrivacy } from '../controllers/static';
 
 const router = express.Router();
 
 router.get('/about', getAbout);
 router.get('/terms', getTerms);
+router.get('/privacy', getPrivacy);
 
 export default router;
