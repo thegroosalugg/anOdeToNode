@@ -7,6 +7,9 @@
       <%- include(view, locals) %>
     </main>
     <%- include('includes/footer') %>
+    <script>
+      window.ANALYTICS_URL = "<%= ANALYTICS_URL %>"
+    </script>
     <script src="/script/analytics.js"></script>
   </body>
 </html>

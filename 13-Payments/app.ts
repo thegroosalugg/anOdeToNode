@@ -9,7 +9,6 @@ import   adminRoutes from './routes/admin';
 import   storeRoutes from './routes/store';
 import  staticRoutes from './routes/static';
 import {  error404, error500  } from './controllers/error';
-import {    postAnalytics     } from './controllers/analytics';
 import {  storage, fileFilter } from './middleware/multerConfig';
 import    csrfShield from './middleware/csrf';
 import handleSession from './middleware/session';
@@ -62,8 +61,9 @@ app.use(handleSession); // handles sessions data on each cycle
 app.use(multer({ storage, fileFilter }).single('image')); // allows storing of files
 // multer is run after handleSession so that user data is available in storare
 // CSRF runs after multer, as it relies on form data. Multer configures ENCTYPE
-app.post('/analytics', postAnalytics); // No CSRF required for analytics requests
 app.use(csrfShield); // protects sessions from request forgery via tokens. Initialise after sessions
+
+app.locals.ANALYTICS_URL = process.env.ANALYTICS_URL; // provide to client
 
 app.use('/admin', authenticate, adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
