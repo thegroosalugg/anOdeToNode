@@ -1,4 +1,3 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
-  "ignoredBuildStep": "git diff HEAD^ HEAD --quiet ./"
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
 }
