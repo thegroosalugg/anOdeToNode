@@ -16,7 +16,7 @@
     <% if (last > 5 && page === last && pages[3] !== last - 1) { %>
       <span>...</span>
     <% } %>
-    <a href="?page=<%= page %>" class="<%= page === active ? 'active' : '' %>">
+    <a href="?page=<%= page %>" class="button <%= page === active ? 'active' : '' %>">
       <%= page %>
     </a>
     <% if (last > 5 && page === 1 && pages[1] !== 2) { %>

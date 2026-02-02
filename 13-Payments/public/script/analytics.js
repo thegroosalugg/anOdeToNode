@@ -1,24 +1,36 @@
-const getAnalytics = async () => {
+async function postAnalytics() {
+  if (navigator.webdriver) return;
+  const localData = localStorage.getItem('analytics');
+
+  if (localData) {
+    const savedData = JSON.parse(localData);
+    const isLessThan24Hrs = Date.now() - new Date(savedData).getTime() < 24 * 60 * 60 * 1000;
+    if (isLessThan24Hrs) return;
+  }
+
+  const { width, height } = window.screen;
+  if (!width || !height) return;
+
+  const date = new Date().toISOString();
+  const body = JSON.stringify({
+         date,
+          url: location.href,
+       screen: { width, height },
+    userAgent: navigator.userAgent,
+  });
+
+  const headers = {
+    ['Content-Type']: 'application/json',
+     ['x-analytics']: 'true',
+  };
+
   try {
-    if (navigator.webdriver) return;
-    const last = localStorage.getItem("analytics");
-    const now = Date.now();
-    if (last && now - Number(last) < 24 * 60 * 60 * 1000) return;
+    await fetch(window.ANALYTICS_URL, { method: 'POST', headers, body });
 
-    const data = {
-        path: location.pathname,
-          ua: navigator.userAgent,
-      screen: { width: screen.width, height: screen.height },
-    };
+    localStorage.setItem('analytics', JSON.stringify(date));
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-    await fetch("/analytics", {
-       method: "POST",
-      headers: { "Content-Type": "application/json" }, // tells server request is sending JSON
-         body: JSON.stringify(data),
-    });
-
-    localStorage.setItem("analytics", String(now));
-  } catch {}
-};
-
-getAnalytics(); // calls function when script is loaded
+postAnalytics(); // calls function when script is loaded

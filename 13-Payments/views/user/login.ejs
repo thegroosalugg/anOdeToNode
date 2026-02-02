@@ -29,7 +29,7 @@
   </p>
 <% } %>
 
-<form action="/<%= state %>" method="post" class="floating-box auth-form" novalidate>
+<form action="/<%= state %>" method="post" class="box auth-form" novalidate>
   <input type="hidden" name="_csrf" value="<%= csrf %>" />
 
   <h2 class="<%= state %>">
@@ -62,7 +62,7 @@
     </a>
   <% } %>
 
-  <button class="submit <%= state %>">
+  <button class="button submit <%= state %>">
     <%= signup ? 'Sign Up' : reset ? 'Request Link' : password ? 'Change Password' : 'Login' %>
   </button>
 

@@ -117,8 +117,8 @@ const postReset: RequestHandler = async (req, res, next) => {
     const token = crypto.randomBytes(32).toString('hex');
     user.resetAuth = { token, expiry: Date.now() + 1000 * 60 * 60 };
     await user.save();
-    // sendMail(token, user.email);
-    res.redirect('/login/?token=' + token);
+    // sendMail(token, user.email); // disabled in production
+    res.redirect('/login/?token=' + token); // production: nav direct to link sent in email
   } else {
     req.session.errors = { email: 'invalid' };
     req.session.formData = { email };

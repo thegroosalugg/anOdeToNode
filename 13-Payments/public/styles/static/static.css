@@ -25,4 +25,11 @@
 
     > li { overflow-wrap: break-word; }
   }
+
+  > a {
+    font-weight: 700;
+    transition: 0.5s ease;
+
+    &:hover { font-weight: 900; }
+  }
 }

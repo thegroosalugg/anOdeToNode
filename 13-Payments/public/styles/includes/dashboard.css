@@ -22,7 +22,7 @@
 
   p button, a {
     color: var(--bg);
-    padding: 0.25rem 0.5rem;
+    padding: var(--padding-sm);
     text-underline-offset: 2px;
     transition: 0.25s ease-in;
 

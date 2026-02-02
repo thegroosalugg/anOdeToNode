@@ -16,8 +16,8 @@
   <div>
     <form action="/logout" method="post">
       <input type="hidden" name="_csrf" value="<%= csrf %>" />
-      <button class="danger-btn">Probably</button>
+      <button class="button danger">Probably</button>
     </form>
-    <button onclick="closeModal('#modal-logout')">Probably Not</button>
+    <button class="button" onclick="closeModal('#modal-logout')">Probably Not</button>
   </div>
 </dialog>

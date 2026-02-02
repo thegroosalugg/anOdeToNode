@@ -11,30 +11,30 @@
   <% if (items.length === 0) { %>
     <h2 class="empty-list">Whoops, looks like there is nothing here</h2>
   <% } else { %>
-    <ul class="list">
+    <ul class="item-list <%= !isAdmin ? 'hero' : '' %>">
       <% items.forEach(({ _id, name, desc, imgURL, price, userId }) => { %>
-        <li id="<%= _id %>" class="floating-box">
+        <li id="<%= _id %>" class="box">
           <input type="hidden" name="_csrf" value="<%= csrf %>" />
           <input type="hidden" name="itemId" value="<%= _id %>" />
 
           <a class="item-img" href="/store/<%= _id %>">
             <img src="/<%= imgURL %>" alt="<%= name %>" />
             <% if (!isAdmin) { %>
-              <p class="sold-by">Sold by:
+              <p class="item-img-seller">Sold by:
                 <strong><%= userId.name %></strong>
               </p>
             <% } %>
           </a>
 
-          <p class="name-and-price">
+          <p class="item-name-price">
             <strong class="truncate"><%= name %></strong>
             <span>$<%= price.toFixed(2) %></span>
           </p>
 
           <% if (!isAdmin) { %>
-            <p class="truncate description"><%= desc %></p>
+            <p class="item-description truncate"><%= desc %></p>
           <% } else { %>
-            <div class="admin-controls">
+            <div class="item-controls">
               <a href="/admin/form/<%= _id %>">EDIT</a>
               <button onclick="confirmDeletion('<%= csrf %>', '<%= _id %>')">DELETE</button>
             </div>
@@ -56,12 +56,12 @@
 <dialog id="modal-delete" class="modal">
   <p>Are you sure?</p>
   <div>
-    <button onclick="deleteItem()" class="danger-btn">Probably</button>
-    <button onclick="closeModal('#modal-delete')">Probably Not</button>
+    <button onclick="deleteItem()"                class="button danger">Probably</button>
+    <button onclick="closeModal('#modal-delete')" class="button">Probably Not</button>
   </div>
 </dialog>
 
 <dialog id="modal-error" class="modal">
   <p>An Error Has Occured!</p>
-  <button onclick="closeModal('#modal-error')">Sure Thing!</button>
+  <button onclick="closeModal('#modal-error')"   class="button">Sure Thing!</button>
 </dialog>

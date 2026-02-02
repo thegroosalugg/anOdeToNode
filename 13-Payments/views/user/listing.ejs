@@ -44,7 +44,7 @@
 
 <%- include('../includes/dashboard') %>
 
-<div class="floating-box container <%= item ? 'expanded' : '' %>">
+<div class="box container <%= item ? 'expanded' : '' %>">
   <% if (item) { %>
     <img src="/<%= imgURL %>" alt="<%= name %>" />
   <% } %>
@@ -74,7 +74,7 @@
       <textarea rows="4" id="desc" name="desc"><%= formData.desc || desc %></textarea>
     </p>
 
-    <button class="<%= item ? 'update' : '' %>">
+    <button class="button">
       <% if (item) { %>
         Update <i class="fa-solid fa-check"></i>
       <% } else { %>

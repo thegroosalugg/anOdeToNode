@@ -33,28 +33,7 @@
     font-size: var(--text-3xl);
   }
 
-  > button {
-    --background: var(--accent);
-    background: var(--background);
-    align-self: end;
-    padding: 0.25rem 0.5rem;
-    color: var(--bg);
-    border: var(--border-bg);
-    border-radius: var(--radius-sm);
-    transition: 0.5s ease-in-out;
-
-    &.update {
-      --background: var(--steel-400);
-
-      @media (prefers-color-scheme: dark) { --background: var(--steel-300); }
-    }
-
-    &:hover {
-      background: var(--bg);
-      color: var(--background);
-      border-color: var(--background);
-    }
-  }
+  button { align-self: end; }
 }
 
 #image-file {
@@ -79,9 +58,9 @@
   }
 
   input, textarea, #image-file {
-    padding: 0.25rem 0.5rem;
-    border: var(--border-bg);
-    border-radius: var(--radius-lg);
+    padding: var(--padding-sm);
+    border: var(--border) var(--bg);
+    border-radius: var(--rounded-lg);
     box-shadow: var(--shadow-lg);
     resize: none;
   }

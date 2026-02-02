@@ -3,7 +3,7 @@
   flex-direction: column;
   min-height: 280px;
   max-height: calc(100dvh - 100px);
-  max-width: 400px;
+  max-width: var(--screen-sm);
   width: 95%;
   margin: 0.5rem auto 1rem;
 
@@ -20,9 +20,12 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  padding: 1.5rem;
-  overflow-y: auto;
+  padding: 1rem;
+  overflow-y: scroll;
   box-shadow: var(--shadow-inset);
+  background-color: var(--stone-300); /* overwrites .box - one-off color scheme, not re-used */
+
+  @media (prefers-color-scheme: dark) { background-color: var(--stone-600); }
 
   li {
     display: flex;
@@ -30,24 +33,26 @@
     min-height: fit-content;
     max-width: 100%;
     overflow-y: hidden;
-    background: var(--bg);
+    background: var(--box);
   }
 }
 
 .item-img {
-  flex: 1 0 40%;
+  flex: 1 0;
   display: flex;
+
   img {
     flex: 1;
     width: 100%;
+    aspect-ratio: 1;
     object-fit: cover;
-    border-right: var(--border-fg);
+    border-right: var(--border) var(--fg);
     cursor: pointer;
   }
 }
 
 .item-info {
-  flex: 1 1 60%;
+  flex: 1 1 40%;
   max-width: 100%;
   display: flex;
   flex-direction: column;
@@ -69,7 +74,6 @@
 
   > p {
     margin-top: auto;
-    margin-bottom: -0.5rem;
     max-width: 100%;
     font-weight: 200;
   }
@@ -112,31 +116,18 @@
 
 .cart-button {
   button {
-    padding: 0.125rem;
+    padding: var(--padding-xs);
     border: none;
-    border-radius: var(--radius-xs);
+    border-radius: var(--rounded-xs);
     background: var(--text);
     transition: 0.9s step-start;
 
-    i { color: var(--bg); }
+    i { color: var(--box); }
     &:hover { transform: scale(0.9); }
   }
 }
 
 .checkout-button {
   align-self: end;
-  button {
-    padding: 0.25rem;
-    border: var(--border-accent);
-    border-radius: var(--radius-sm);
-    background: var(--accent);
-    color: var(--bg);
-    transition: 0.5s ease-in-out;
-
-    &:hover {
-      background: var(--bg);
-      color: var(--accent);
-      border-color: var(--accent);
-    }
-  }
+  .button { --color: var(--bg); } /* default .class overwrite */
 }

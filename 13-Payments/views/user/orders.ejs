@@ -14,7 +14,7 @@
   <ul class="orders">
     <% orders.forEach((order) => { %>
       <% const { _id, createdAt, user, items } = order; %>
-      <li class="floating-box">
+      <li class="box">
         <time><%= formatDate(createdAt, true) %></time>
         <h2>
           <strong>Order ID: </strong>

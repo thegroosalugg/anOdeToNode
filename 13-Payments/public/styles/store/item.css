@@ -76,7 +76,7 @@
   }
 
   > h2 {
-    padding: 0.5rem 1rem;
+    padding: var(--padding-md);
     font-size: var(--text-xl);
     font-weight: 700;
     color: var(--bg);
@@ -91,12 +91,12 @@
   justify-content: space-evenly;
 
   i {
-    width: 100%;
-    padding: 5%;
+    flex-basis: 25%;
+    padding: 2rem 0;
     text-align: center;
     color: var(--accent);
-    border-right: var(--border-accent);
-    font-size: clamp(0rem, 5vw, 1rem);
+    border-right: var(--border) var(--accent);
+    font-size: clamp(1rem, 5vw, 2rem);
 
     &:last-of-type { border: none; }
   }
@@ -116,18 +116,5 @@
     font-size: var(--text-2xl);
   }
 
-  > button {
-    padding: 1rem;
-    border: var(--border-text);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-xl);
-    color: var(--bg);
-    background: var(--accent);
-    transition: 0.5s ease-in-out;
-
-    &:hover {
-      color: var(--accent);
-      background: var(--bg);
-    }
-  }
+  > button { padding: 1rem; }
 }

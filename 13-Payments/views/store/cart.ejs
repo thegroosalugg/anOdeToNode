@@ -12,11 +12,11 @@
 <div class="cart">
   <h1>Your Cart</h1>
   <% if (items.length === 0) { %>
-    <p class="cart-empty floating-box">Your Cart is Empty</p>
+    <p class="cart-empty box">Your Cart is Empty</p>
   <% } else { %>
-    <ul class="cart-items floating-box no-scrollbar-y">
+    <ul class="cart-items box no-scrollbar-y">
       <% items.forEach(({ _id, name, imgURL, price, quantity, userId: seller }) => { %>
-        <li class="floating-box">
+        <li class="box">
           <a class="item-img" href="/store/<%= _id %>">
             <img src="/<%= imgURL %>" alt="<%= name %>" />
           </a>
@@ -45,7 +45,7 @@
   <% if (items.length > 0) { %>
     <form action="/checkout" method="post" class="checkout-button">
       <input type="hidden" name="_csrf" value="<%= csrf %>" />
-      <button>Proceed to Checkout</button>
+      <button class="button">Proceed to Checkout</button>
     </form>
   <% } %>
 </div>
