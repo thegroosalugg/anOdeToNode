@@ -17,15 +17,20 @@ import      errorMsg from './util/errorMsg';
 import        dotenv from 'dotenv';
               dotenv.config();
 
-const inProduction = process.env.NODE_ENV === 'production';
+const { NODE_ENV, SESSION_SECRET, MONGO_URI, ANALYTICS_URL } = process.env
+if (!SESSION_SECRET || !MONGO_URI)
+  throw new Error(`ENVs Missing: \n Mongo: ${Boolean(MONGO_URI)} \n Session: ${Boolean(SESSION_SECRET)}`)
+
+const inProduction = NODE_ENV === 'production'
 const rootDir = inProduction ? '../' : '';
 
 const app = express();
 
+const { dirname } = import.meta
 // public folder specific to project
-app.use(express.static(path.join(import.meta.dirname, rootDir, 'public')));
+app.use(express.static(path.join(dirname, rootDir, 'public')));
 // prepend uploads to ensure files routed to this folder not accessed at root level
-app.use('/uploads', express.static(path.join(import.meta.dirname, rootDir, 'uploads')));
+app.use('/uploads', express.static(path.join(dirname, rootDir, 'uploads')));
 
 // sets templating engine
 app.set('view engine', 'ejs');
@@ -37,11 +42,11 @@ app.use(express.json()); // parses JSON request bodies, sent with Content-Type: 
 app.set('trust proxy', 1); // trust first proxy. Required to work on Render.com
 app.use(
   session({
-    secret: process.env.SESSION_SECRET!,
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
      store: MongoStore.create({
-            mongoUrl: process.env.MONGO_URI,
+            mongoUrl: MONGO_URI,
       collectionName: 'sessions',
            serialize: (session) => session, // allows nested object structure in mongo
          unserialize: ( data  ) => data,    // reformats back to app readable format
@@ -63,7 +68,7 @@ app.use(multer({ storage, fileFilter }).single('image')); // allows storing of f
 // CSRF runs after multer, as it relies on form data. Multer configures ENCTYPE
 app.use(csrfShield); // protects sessions from request forgery via tokens. Initialise after sessions
 
-app.locals.ANALYTICS_URL = process.env.ANALYTICS_URL; // provide to client
+app.locals.ANALYTICS_URL = ANALYTICS_URL; // provide to client
 
 app.use('/admin', authenticate, adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
@@ -79,10 +84,12 @@ app.use(((error, req, res, next) => {
 }) as ErrorRequestHandler);
 
 mongoose
-  .connect(process.env.MONGO_URI!)
+  .connect(MONGO_URI)
   .then(() => {
+    const port = 3000
+
     app.listen(3000, () => {
-      console.log('Server is on track to port 3000');
+      console.log(`Server Online. Port: ${port}, Environment: ${NODE_ENV}`)
     });
   })
-  .catch((error) => errorMsg({ error, where: 'Mongoose connect'}));
+  .catch((error) => console.log('MONGO CONNECT ERROR', error));

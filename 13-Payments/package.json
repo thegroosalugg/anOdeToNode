@@ -9,7 +9,7 @@
     "start": "clear && tsx app.ts",
     "dev": "clear && nodemon -x tsx app.ts",
     "build": "tsc && tsc-alias",
-    "preview": "clear && node dist/app.js"
+    "preview": "clear && NODE_ENV=production node dist/app.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -23,8 +23,12 @@ import          socket   from './socket';
 import          dotenv   from 'dotenv';
                 dotenv.config();
 
+// const nodeEnv = process.env.NODE_ENV
+const { CLIENT_URL, CLIENT_MOBILE_URL, NODE_ENV, MONGO_URI } = process.env
+if (!MONGO_URI) throw new Error(`ENVs Missing: \n Mongo: ${Boolean(MONGO_URI)}`)
+
 // re-route FS location to parent folder in production
-const rootDir = process.env.NODE_ENV === 'production' ? '../' : '';
+const rootDir = NODE_ENV === 'production' ? '../' : ''
 
 const app = express();
 
@@ -35,7 +39,7 @@ app.use('/uploads', express.static(join(import.meta.dirname, rootDir, 'uploads')
 app.use(express.json()); // parse application/json
 app.use(multer({ storage, fileFilter }).single('image')); // multipart/form-data
 
-const allowedOrigins = [process.env.CLIENT_URL, process.env.CLIENT_MOBILE_URL];
+const allowedOrigins = [CLIENT_URL, CLIENT_MOBILE_URL];
 
 // allows cross origin requests
 app.use((req, res, next) => {
@@ -68,10 +72,11 @@ app.use(((appError, req, res, next) => {
 }) as ErrorRequestHandler);
 
 mongoose
-  .connect(process.env.MONGO_URI!)
+  .connect(MONGO_URI)
   .then(() => {
-    const server = app.listen(3000);
-    socket.init(server);
-    captainsLog(0, '<<Hudson River, 2 years ago>>');
+    const port = 3000
+    const server = app.listen(port)
+    socket.init(server)
+    captainsLog(0, `Server Online. Port: ${port}, Environment: ${NODE_ENV}`)
   })
-  .catch((error) => captainsLog(403, '<<Mongoose error>>', error));
+  .catch((error) => captainsLog(403,'<<Mongoose error>>', [error]))

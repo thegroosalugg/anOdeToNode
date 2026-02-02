@@ -2,13 +2,13 @@
   "name": "14-restapi",
   "version": "1.0.0",
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "client": "cd client && vite -- --host",
+    "dev": "clear && concurrently \"npm run server\" \"npm run client\"",
+    "client": "cd client && npm run dev",
     "server": "cd server && npm run dev",
-    "build": "concurrently \"npm run server-build\" \"npm run client-build\"",
+    "build": "clear && concurrently \"npm run server-build\" \"npm run client-build\"",
     "client-build": "cd client && npm run build",
     "server-build": "cd server && npm run build",
-    "preview": "concurrently \"npm run server-preview\" \"npm run client-preview\"",
+    "preview": "clear && concurrently \"npm run server-preview\" \"npm run client-preview\"",
     "client-preview": "cd client && npm run preview",
     "server-preview": "cd server && npm run preview"
   },
