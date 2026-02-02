@@ -2,25 +2,32 @@
   <h1>About</h1>
 
   <p>
-    I'm a junior web developer based in Berlin. This demo app is a full-stack project built with Express, Mongoose, and
-    EJS. It includes session management, form validation, file uploads and is deployed only for learning and
-    demonstration.
+    I’m a full-stack developer based in Berlin. This project is built around a session‑driven request pipeline that
+    keeps the app stateful across page loads. Form submissions persist their input, validation errors return cleanly
+    without losing user data, and file uploads move through a temporary staging area until the form is actually valid.
+    Anything abandoned gets cleaned up automatically. The session middleware coordinates all of this on every request:
+    merging errors and form data into res.locals, resetting state when the user leaves a data‑handling route, and
+    exposing the authenticated user to both controllers and templates. The client side is pure EJS, but structured
+    around small reusable components that generate dynamic markup for multiple flows without duplication. The result is
+    an SSR app that behaves like a small SPA without any client‑side framework.
   </p>
 
   <h2>Key Features:</h2>
   <ul>
-    <li>User accounts handled with express-session and connect-mongo</li>
-    <li>Validation with express-validator</li>
-    <li>Image upload using Multer</li>
-    <li>Stripe integration for test payments</li>
+    <li>Session-based form persistence and error handling across requests</li>
+    <li>Temporary file staging with automatic cleanup for abandoned uploads</li>
+    <li>Unified authentication flow with CSRF protection</li>
+    <li>Reusable EJS components that dynamically generate markup for multiple routes and states</li>
+    <li>Server-rendered UI that behaves like a stateful client app</li>
   </ul>
 
-  <h2>Built With:</h2>
+  <h2>Tech Stack:</h2>
   <ul>
-    <li>Express 4</li>
-    <li>Mongoose 8</li>
-    <li>EJS 3</li>
-    <li>Stripe</li>
+    <li>Express 4 with session-based state management</li>
+    <li>Mongoose 8 for data modeling</li>
+    <li>EJS 3 with component-style partials</li>
+    <li>Multer for staged uploads</li>
+    <li>Stripe for test payments</li>
   </ul>
 
   <a href="https://victor-loginov.vercel.app/" target="_blank"> More from me </a>

@@ -5,7 +5,7 @@
   --fg: var(--stone-900);
   --accent: var(--loam-800);
   --accent-2: var(--loam-950);
-  --text: var(--stone-600);
+  --text: var(--neutral-600);
   --box: var(--stone-200);
   --error: var(--rust-600);
   --hover: var(--amber-300);
@@ -19,7 +19,7 @@
     --fg: var(--stone-100);
     --accent: var(--loam-500);
     --accent-2: var(--loam-400);
-    --text: var(--stone-300);
+    --text: var(--neutral-400);
     --box: var(--stone-700);
     --error: var(--rust-500);
     --hover: var(--gray-50);
