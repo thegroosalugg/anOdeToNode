@@ -12,7 +12,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
 const getItems: RequestHandler = async (req, res, next) => {
   const page = +(req.query.page || 1);
-  const docsPerPage = 4;
+  const docsPerPage = 3;
 
   try {
     const docCount = await Item.find().countDocuments(); // returns only no. of DB entries
