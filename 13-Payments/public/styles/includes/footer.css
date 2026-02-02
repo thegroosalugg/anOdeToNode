@@ -10,7 +10,7 @@
     &:hover { color: var(--hover); }
   }
 
-  hr { border: var(--border-bg); }
+  hr { border: var(--border) var(--bg); }
 
   > section {
     display: flex;

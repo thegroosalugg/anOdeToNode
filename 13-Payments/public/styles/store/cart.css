@@ -20,9 +20,12 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  padding: 1.5rem;
+  padding: 1rem;
   overflow-y: auto;
   box-shadow: var(--shadow-inset);
+  background-color: var(--stone-300); /* overwrites .box - one-off color scheme, not re-used */
+
+  @media (prefers-color-scheme: dark) { background-color: var(--stone-600); }
 
   li {
     display: flex;
@@ -30,7 +33,7 @@
     min-height: fit-content;
     max-width: 100%;
     overflow-y: hidden;
-    background: var(--bg);
+    background: var(--box);
   }
 }
 
@@ -41,7 +44,7 @@
     flex: 1;
     width: 100%;
     object-fit: cover;
-    border-right: var(--border-fg);
+    border-right: var(--border) var(--fg);
     cursor: pointer;
   }
 }
@@ -112,9 +115,9 @@
 
 .cart-button {
   button {
-    padding: 0.125rem;
+    padding: var(--padding-xs);
     border: none;
-    border-radius: var(--radius-xs);
+    border-radius: var(--rounded-xs);
     background: var(--text);
     transition: 0.9s step-start;
 
@@ -123,20 +126,4 @@
   }
 }
 
-.checkout-button {
-  align-self: end;
-  button {
-    padding: 0.25rem;
-    border: var(--border-accent);
-    border-radius: var(--radius-sm);
-    background: var(--accent);
-    color: var(--bg);
-    transition: 0.5s ease-in-out;
-
-    &:hover {
-      background: var(--bg);
-      color: var(--accent);
-      border-color: var(--accent);
-    }
-  }
-}
+.checkout-button { align-self: end; }

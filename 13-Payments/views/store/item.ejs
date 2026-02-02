@@ -9,7 +9,7 @@
 <% if (!item) { %>
   <h1 class="not-found">The Item Doesn't Exist</h1>
 <% } else { %>
-  <div class="floating-box item">
+  <div class="box item">
     <img src="/<%= imgURL %>" alt="<%= name %>" />
     <div class="info">
       <h1>
@@ -28,7 +28,7 @@
       </div>
       <form class="actions" action="/cart/<%= _id %>/add" method="post">
         <p>$<%= price.toFixed(2) %></p>
-        <button>
+        <button class="button">
           <%= isSeller ? 'Edit Listing' : 'Add to Cart' %>
         </button>
         <input type="hidden" name="_csrf" value="<%= csrf %>" />

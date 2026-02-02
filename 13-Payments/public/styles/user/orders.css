@@ -34,7 +34,7 @@
     justify-content: center;
     gap: 0.5rem;
     padding-bottom: 1rem;
-    border-bottom: var(--border-fg);
+    border-bottom: var(--border) var(--fg);
 
     &:last-of-type {
       padding-bottom: 0;
@@ -46,8 +46,8 @@
       max-width: 200px;
       max-height: 128px;
       object-fit: cover;
-      border: var(--border-fg);
-      border-radius: var(--radius-sm);
+      border: var(--border) var(--fg);
+      border-radius: var(--rounded-sm);
     }
   }
 }
@@ -70,18 +70,18 @@
   }
 
   &:nth-of-type(1) {
-    border-top-left-radius: var(--radius-sm);
-    border-top-right-radius: var(--radius-sm);
+    border-top-left-radius: var(--rounded-sm);
+    border-top-right-radius: var(--rounded-sm);
   }
 
   &:nth-of-type(2) {
-    border-bottom-left-radius: var(--radius-sm);
-    border-bottom-right-radius: var(--radius-sm);
+    border-bottom-left-radius: var(--rounded-sm);
+    border-bottom-right-radius: var(--rounded-sm);
     margin-bottom: 0.2rem;
   }
 
   &:nth-of-type(5) {
-    border-top: var(--border-text);
+    border-top: var(--border) var(--text);
   }
 
   span {

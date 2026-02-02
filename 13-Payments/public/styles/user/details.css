@@ -1,5 +1,5 @@
 .details {
-  padding: 0.5rem 1rem;
+  padding: var(--padding-md);
   margin: 1rem auto 0;
   width: 80%;
   overflow-x: auto;
