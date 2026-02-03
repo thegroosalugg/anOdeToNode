@@ -1,50 +1,44 @@
-const coloredText = (n: number, text: string) => {
-  const lines = text.split('\n');
-  const  ANSI = (content: string) => `\x1b[3${n}m${content}\x1b[0m`;
+let hour, minute, second
+hour = minute = second = '2-digit' as const
 
-  if (lines.length === 1) return ANSI(text);
+const getTime = () => new Date().toLocaleTimeString([], { hour, minute, second, hour12: false })
 
-  const barrier = '\n' + ANSI('⇎'.repeat(40));
-  return lines.map((line) => ANSI(line)).join('\n') + barrier;
-};
+// (38|48) = (fore|back)ground; (2|5) = (R;G;B;|256)colorMode; 0-255 = color
+const ANSIstr = (n: number) => `\x1b[38;5;${n}m`
 
-const errors = [TypeError, RangeError] as const;
-const nonSerializable = (value: unknown): value is Error =>
-  errors.some((err) => value instanceof err);
+// \new lines must be wrapped per line with ANSI escape codes
+const toColor = (n: number, text: string) =>
+  text
+    .split('\n')
+    .map((line) => ANSIstr(n) + line)
+    .join('\n')
 
-const formatText = (value: unknown) => {
-  let content = '';
-  if (nonSerializable(value)) {
-    content = `<<${value.name}>> \n ${value.stack?.split('\n')[1].trim()}`;
-  } else if (typeof value === 'object' && value !== null) {
-    content = JSON.stringify(value, null, 1);
-  } else {
-    content = String(value);
+const publish = (value: unknown) => {
+  if (value instanceof Error) {
+    const { name = '', message = '', stack = '' } = value
+    const frame = stack.split('\n')[1]?.trim() ?? '' // 1st stack frame: line where error occured
+    return `${name}\n${message}\n${frame}`
   }
-  return content;
-};
 
-const captainsLog = (status: number, title: string, log?: unknown[]) => {
-  const time = new Date().toLocaleTimeString([], {
-      hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  });
+  if (typeof value === 'object' && value !== null) {
+    return JSON.stringify(value, null, 1)
+  }
 
-  const color = {
-    200: 2,       // green
-    401: 6,       // cyan
-    403: 1,       // red
-    404: 4,       // blue
-    422: 3,       // amber
-  }[status] || 5; // magenta
+  return String(value)
+}
 
-  let content = '';
-  if (log) content = log.map(item => formatText(item)).join('\n');
+const getColor = (status: number) => {
+  if (status >= 200 && status < 300) return 46  // green
+  if (status >= 400 && status < 500) return 208 // orange
+  if (status >= 500)                 return 196 // red
+  return 135  // violet
+}
 
-  console.log(coloredText(color, `${title.toUpperCase()} [${time}] ${content}`));
-};
+const captainsLog = (status: number, payload: object) => {
+  Object.entries(payload).forEach(([key, value]) => {
+    const message = publish(value)
+    console.log(toColor(getColor(status), `\n${getTime()} ${key}::: ${message}`))
+  })
+}
 
-export default captainsLog;
-
+export default captainsLog

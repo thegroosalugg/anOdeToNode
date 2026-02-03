@@ -16,8 +16,8 @@ const socket = {
     });
 
     io.on('connection', (socket) => {
-      captainsLog(200, '<App IO: <Client connected>>'); // status codes here refer to Fn colors
-      socket.on('disconnect', () => captainsLog(403, '<App IO: <Client disconnected>>'));
+      captainsLog(200, { socket: 'CONNECTED' }); // status codes here refer to Fn colors
+      socket.on('disconnect', () => captainsLog(500, { socket: 'DISCONNECTED' }))
     });
 
     return io;

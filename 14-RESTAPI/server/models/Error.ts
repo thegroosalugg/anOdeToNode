@@ -1,21 +1,23 @@
-type ClientRes = { message: string } | Record<string, string | boolean> | null;
+type ClientRes = { message: string } | Record<string, string | boolean> | null
+
 export default class AppError {
-   status: number;
-   client: ClientRes
-      dev: unknown;
-    where: string;
+    status: number
+  response: ClientRes
+       log: unknown
+    caller: string
 
-  constructor(status: number, client: string | ClientRes, dev?: unknown) {
-    this.status = status;
-    this.client = typeof client === 'string' ? { message: client } : client;
-    this.dev    = dev || "<<Server Error>> ";
+  constructor(status: number, response: string | ClientRes, log?: unknown) {
+    this.status   = status
+    this.response = typeof response === 'string' ? { message: response } : response
+    this.log      = log || ''
 
-    const stack = new Error().stack; // creates new stack of current calling function
-    const  line = stack?.split('\n')[2]; // [0] is Error, [1] is AppError constructor
-    this.where  =  line?.match(/at\s+(\S+)/)?.[1] || "<<Unknown Location>>";
+    const stack = new Error().stack // creates new stack of current calling function
+    const line  = stack?.split('\n')[2] // [0] is Error, [1] is AppError constructor
+    this.caller = line?.match(/at\s+(\S+)/)?.[1] || 'unknown'
   }
 
   static devErr() {
-    return new AppError(500, 'Something went wrong', 'Do not use without AuthJWT');
+    return new AppError(500, 'Something went wrong', 'Do not use without AuthJWT')
   }
 }
+

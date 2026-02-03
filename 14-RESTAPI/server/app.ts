@@ -66,10 +66,11 @@ app.use('/chat',    authJWT,   [chatRoutes,   msgRoutes]);
 app.use('/alerts',  authJWT,   alertRoutes);
 
 app.use(((appError, req, res, next) => {
-  const { status, client, dev, where } = appError;
-    captainsLog(status, `[status: ${status}] :::${where}:::`, [client, dev]);
-    res.status(status).json(client);
-}) as ErrorRequestHandler);
+  const { status, response, log } = appError
+  if (!log) delete appError.log
+  captainsLog(status, appError)
+  res.status(status).json(response)
+}) as ErrorRequestHandler)
 
 mongoose
   .connect(MONGO_URI)
@@ -77,6 +78,6 @@ mongoose
     const port = 3000
     const server = app.listen(port)
     socket.init(server)
-    captainsLog(0, `Server Online. Port: ${port}, Environment: ${NODE_ENV}`)
+    captainsLog(0, { server: true, port, environment: NODE_ENV })
   })
-  .catch((error) => captainsLog(403,'<<Mongoose error>>', [error]))
+  .catch((error) => captainsLog(400, { mongoose: error }))
