@@ -1,24 +1,21 @@
 import { RequestHandler } from 'express';
 
-const error404: RequestHandler = (req, res, next) => {
-  res.status(404).render('body', {
-        title: 'Not Found',
+export const errorPage: RequestHandler = (req, res, next) => {
+  let status = 404;
+  let  title = 'Not found'
+
+  if (req.path === '/500') {
+    status = 500;
+     title = 'Server Error';
+  }
+
+  res.status(status).render('body', {
+        title,
     activeNav: '',
          view: 'boundary/error',
        styles: ['boundary/error'],
-       locals: { error: '404' }
+       locals: { status }
   });
 };
 
-const error500: RequestHandler = (req, res, next) => {
-  res.status(500).render('body', {
-        title: 'Server Error',
-    activeNav: '',
-         view: 'boundary/error',
-       styles: ['boundary/error'],
-       locals: { error: '500' }
-  });
-};
-
-
-export { error404, error500 };
+export default errorPage;

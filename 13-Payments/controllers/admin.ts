@@ -1,8 +1,7 @@
 import { RequestHandler } from 'express';
 import Item from '../models/Item';
+import AppError from '../models/Error';
 import trimBody from '../util/trimBody';
-import errorMsg from '../util/errorMsg';
-import { MongooseErrors, mongooseErrors } from '../validation/mongooseErrors';
 import { getErrors, hasErrors } from '../validation/validators';
 import { deleteFile } from '../util/fileHelper';
 import { renameSync } from 'fs';
@@ -32,8 +31,7 @@ const getUserItems: RequestHandler = async (req, res, next) => {
           locals: { items, isAdmin: true, pagination },
     });
   } catch (error) {
-    errorMsg({ error, where: 'getUserItems' });
-    res.redirect('/');
+    return next(new AppError(404, error));
   }
 };
 
@@ -48,8 +46,7 @@ const getItemForm: RequestHandler = async (req, res, next) => {
     try {
       item = await Item.findOne({ _id: itemId, userId: req.user?._id });
     } catch (error) {
-      errorMsg({ error, where: 'getEditItem' });
-      return res.redirect('/login');
+      return next(new AppError(500, error));
     }
   }
 
@@ -70,7 +67,6 @@ const postAddItem: RequestHandler = async (req, res, next) => {
 
   const errors = getErrors(req);
   if (hasErrors(errors) || !image) {
-    errorMsg({ error: errors, where: 'postAddItem' });
     req.session.errors = errors;
     req.session.formData = { name, desc, price };
     if (image) {
@@ -79,7 +75,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
     } else {
       req.session.errors.image = 'must be .jpg, .jpeg or .png';
     }
-    req.session.save(() => res.redirect('/admin/form'));
+    req.session.save(() => next(new AppError(422, errors, '/admin/form')));
     return;
   }
 
@@ -91,16 +87,7 @@ const postAddItem: RequestHandler = async (req, res, next) => {
     renameSync(image.path, imgURL); // move file after mongoose schema validation
     res.redirect('/admin/items');
   } catch (error) {
-    errorMsg({ error, where: 'postAddItem' });
-    req.session.errors = mongooseErrors(error as MongooseErrors);
-    req.session.formData = { name, desc, price };
-    if (image) {
-      req.session.file      = image;
-      req.session.dataRoute = true;
-    } else {
-      req.session.errors.image = 'must be .jpg, .jpeg or .png';
-    }
-    req.session.save(() => res.redirect('/admin/form'));
+    return next(new AppError(500, error));
   }
 };
 
@@ -112,50 +99,40 @@ const postEditItem: RequestHandler = async (req, res, next) => {
 
   const errors = getErrors(req);
   if (hasErrors(errors)) {
-    errorMsg({ error: errors, where: 'postEditItem' });
     req.session.errors = errors;
     req.session.formData = { name, desc, price };
     if (image) {
-      req.session.file      = image;
+      req.session.file = image;
       req.session.dataRoute = true;
     }
-    if (req.fileError) req.session.errors.image = req.fileError;
-    req.session.save(() => res.redirect('/admin/form/' + _id));
+    if (req.fileError) req.session.errors.image = req.fileError; // fileError: set by Multer middleware
+    req.session.save(() => next(new AppError(422, errors, `/admin/form/${_id}`)));
     return;
   }
 
   try {
     const item = await Item.findOne({ _id, userId: req.user?._id });
-    if (item) {
-      let oldImgUrl = '';
-      let newImgUrl = '';
+    if (!item) return next(new AppError(404, 'item not found', '/admin/items'));
 
-      Object.assign(item, { name, price, desc });
+    let oldImgUrl = '';
+    let newImgUrl = '';
 
-      if (image) {
-        oldImgUrl = item.imgURL
-        newImgUrl = join('uploads', image.filename);
-        item.imgURL = newImgUrl;
-      }
+    Object.assign(item, { name, price, desc });
 
-      await item.save();
+    if (image) {
+      oldImgUrl = item.imgURL
+      newImgUrl = join('uploads', image.filename);
+      item.imgURL = newImgUrl;
+    }
 
-      if (image) {
-        deleteFile(oldImgUrl);
-        renameSync(image.path, newImgUrl);
-      }
+    await item.save();
+    if (image) {
+      deleteFile(oldImgUrl);
+      renameSync(image.path, newImgUrl);
     }
     res.redirect('/admin/items');
   } catch (error) {
-    errorMsg({ error, where: 'postEditItem' });
-    req.session.errors = mongooseErrors(error as MongooseErrors);
-    req.session.formData = { name, desc, price };
-    if (image) {
-      req.session.file      = image;
-      req.session.dataRoute = true;
-    }
-    if (req.fileError) req.session.errors.image = req.fileError;
-    req.session.save(() => res.redirect('/admin/form/' + _id));
+    return next(new AppError(500, error));
   }
 };
 
@@ -164,14 +141,15 @@ const deleteItem: RequestHandler = async (req, res, next) => {
   const { itemId: _id } = req.params;
   try {
     const item = await Item.findOne({ _id, userId: req.user?._id });
-    if (item) {
-      deleteFile(item.imgURL);
-      await Item.deleteOne({ _id });
+    if (!item) {
+      res.status(404).json({ message: 'Item not found' });
+      return
     }
+    deleteFile(item.imgURL);
+    await Item.deleteOne({ _id });
     res.status(200).json({ message: 'Deletion Success' });
   } catch (error) {
-    errorMsg({ error, where: 'postDeleteItem' });
-    res.status(500).json({ message: 'Deletion Failed' });
+    return next(new AppError(500, error));
   }
 };
 

@@ -1,6 +1,6 @@
 import express, { ErrorRequestHandler } from 'express';
+import {    join   } from 'path';
 import        multer from 'multer';
-import          path from 'path';
 import       session from 'express-session';
 import      mongoose from 'mongoose';
 import    MongoStore from 'connect-mongo';
@@ -8,12 +8,13 @@ import    authRoutes from './routes/auth';
 import   adminRoutes from './routes/admin';
 import   storeRoutes from './routes/store';
 import  staticRoutes from './routes/static';
-import {  error404, error500  } from './controllers/error';
+import     errorPage from './controllers/error';
 import {  storage, fileFilter } from './middleware/multerConfig';
 import    csrfShield from './middleware/csrf';
 import handleSession from './middleware/session';
 import  authenticate from './middleware/authenticate';
-import      errorMsg from './util/errorMsg';
+import      AppError from './models/Error';
+import        logger from './util/logger';
 import        dotenv from 'dotenv';
               dotenv.config();
 
@@ -28,9 +29,9 @@ const app = express();
 
 const { dirname } = import.meta
 // public folder specific to project
-app.use(express.static(path.join(dirname, rootDir, 'public')));
+app.use(express.static(join(dirname, rootDir, 'public')));
 // prepend uploads to ensure files routed to this folder not accessed at root level
-app.use('/uploads', express.static(path.join(dirname, rootDir, 'uploads')));
+app.use('/uploads', express.static(join(dirname, rootDir, 'uploads')));
 
 // sets templating engine
 app.set('view engine', 'ejs');
@@ -74,13 +75,13 @@ app.use('/admin', authenticate, adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
 app.use(authRoutes);
 app.use(staticRoutes);
-app.get('/500', error500); // 500 errors route - must be defined before the get all errors route
-app.use(error404); // will catch all other URLS, defined last
+app.use(errorPage); // will catch all other URLS, defined last
 
 // special 4 arg middleware that will catch next(withArgument)
-app.use(((error, req, res, next) => {
-  errorMsg({ error, where: 'App 500' });
-  res.redirect('/500');
+app.use(((appError, req, res, next) => {
+  const { status, redirect } = appError as AppError;
+  logger(status, appError);
+  res.redirect(redirect);
 }) as ErrorRequestHandler);
 
 mongoose
@@ -88,8 +89,6 @@ mongoose
   .then(() => {
     const port = 3000
 
-    app.listen(3000, () => {
-      console.log(`Server Online. Port: ${port}, Environment: ${NODE_ENV}`)
-    });
+    app.listen(3000, () => logger(0, { server: true, port, environment: NODE_ENV }));
   })
-  .catch((error) => console.log('MONGO CONNECT ERROR', error));
+  .catch((error) => logger(500, { mongoConnect: error }));

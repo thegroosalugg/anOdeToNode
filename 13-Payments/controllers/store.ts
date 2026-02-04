@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { isValidObjectId } from 'mongoose';
 import Item from '../models/Item';
 import Order from '../models/Order';
-import errorMsg from '../util/errorMsg';
+import AppError from '../models/Error';
 import formatDate from '../util/formateDate';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
@@ -32,8 +32,7 @@ const getItems: RequestHandler = async (req, res, next) => {
          locals: { items, isAdmin: false, pagination },
     });
   } catch (error) {
-    const err = new Error(error as string);
-    return next({ ...err, status: 500 }); // return next will reach special 500 middleware defined in app
+    return next(new AppError(500, error));
   }
 };
 
@@ -52,8 +51,7 @@ const getItemById: RequestHandler = async (req, res, next) => {
          locals: { item },
     });
   } catch (error) {
-    errorMsg({ error, where: 'getItemById' });
-    res.redirect('/');
+    return next(new AppError(500, error));
   }
 };
 
@@ -70,8 +68,7 @@ const getCart: RequestHandler = async (req, res, next) => {
           locals: { items },
     });
   } catch (error) {
-    errorMsg({ error, where: 'getCart' });
-    res.redirect('/');
+    return next(new AppError(500, error));
   }
 };
 
@@ -94,8 +91,7 @@ const postUpdateCart: RequestHandler = async (req, res, next) => {
 
     res.redirect('/cart');
   } catch (error) {
-    errorMsg({ error, where: 'postUpdateCart' });
-    res.redirect('/');
+    return next(new AppError(500, error));
   }
 };
 
@@ -121,10 +117,9 @@ const postCheckout: RequestHandler = async (req, res, next) => {
        cancel_url: req.protocol + '://' + req.get('host') + '/cart',
     });
 
-    res.redirect(303, session.url!);
+    res.redirect(303, session.url || '/');
   } catch (error) {
-    errorMsg({ error, where: 'getCart' });
-    res.redirect('/');
+    return next(new AppError(500, error));
   }
 };
 
@@ -151,8 +146,7 @@ const getOrders: RequestHandler = async (req, res, next) => {
           locals: { orders, formatDate, pagination },
     });
   } catch (error) {
-    errorMsg({ error, where: 'getOrders' });
-    res.redirect('/');
+    return next(new AppError(500, error));
   }
 };
 
@@ -168,17 +162,8 @@ const getNewOrder: RequestHandler = async (req, res, next) => {
     await user.save();
     res.redirect('/orders');
   } catch (error) {
-    errorMsg({ error, where: 'getNewOrder' });
-    res.redirect('/');
+    return next(new AppError(500, error));
   }
 };
 
-export {
-  getItems,
-  getItemById,
-  getCart,
-  postUpdateCart,
-  postCheckout,
-  getOrders,
-  getNewOrder,
-};
+export { getItems, getItemById, getCart, postUpdateCart, postCheckout, getOrders, getNewOrder };

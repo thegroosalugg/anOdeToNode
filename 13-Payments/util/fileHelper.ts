@@ -1,9 +1,9 @@
 import { unlink, renameSync, readdir } from 'fs';
 import { join } from 'path';
-import errorMsg from './errorMsg';
+import logger from './logger';
 
 const deleteFile = (path: string) => {
-  unlink(path, (error) => error && errorMsg({ error, where: 'deleteFile' }));
+  unlink(path, (error) => error && logger(500, { deleteFile: error }));
 };
 
 const clearTempFiles = (userID: string) => {
@@ -11,7 +11,7 @@ const clearTempFiles = (userID: string) => {
 
   readdir(tempDir, (error, files) => {
     if (error) {
-      errorMsg({ error, where: 'clearTempFiles' })
+      logger(500, { clearTempFiles: error });
       return;
     }
 
@@ -19,11 +19,8 @@ const clearTempFiles = (userID: string) => {
       if (file.startsWith(userID)) {
         const filePath = join(tempDir, file);
         unlink(filePath, (error) => {
-          if (error) {
-            errorMsg({ error, where: 'Unable to delete' + filePath });
-          } else {
-            console.log('Deleted file:', filePath);
-          }
+          if (error) logger(500, { UnableToDeleteFile: error, filePath });
+          else       logger(200, { DeletedFile: filePath });
         });
       }
     });

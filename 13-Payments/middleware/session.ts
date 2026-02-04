@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import User from "../models/User";
-import errorMsg from "../util/errorMsg";
 import { clearTempFiles } from "../util/fileHelper";
+import logger from "../util/logger";
 
 // middleware sets sessions user to req.user for easier access in controllers
 const handleSession: RequestHandler = ((req, res, next) => {
@@ -44,9 +44,7 @@ const handleSession: RequestHandler = ((req, res, next) => {
       locals.user = { _id, name, email }; // locals user set for all EJS responses
       next();
     })
-    .catch((error) => {
-      errorMsg({ error, where: 'App findById' });
-    });
+    .catch((error) => logger(500, { session: error }));
 });
 
 export default handleSession;
