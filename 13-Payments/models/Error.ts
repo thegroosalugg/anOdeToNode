@@ -1,5 +1,7 @@
 type Query = 'signup' | 'token' | 'reset';
-type Routes = '/' | '/login' | `/login/?${Query}=${string}` | '/admin/items' | '/500';
+type LoginRoute = `/login${`/?${Query}=${string}` | ''}`;
+type AdminRoute = `/admin${'/items' | `/form${`/${string}` | ''}` | ''}`;
+type Routes = '/' | LoginRoute | AdminRoute | '/500';
 
 export default class AppError {
   caller: string;
