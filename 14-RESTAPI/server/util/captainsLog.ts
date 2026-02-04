@@ -35,10 +35,14 @@ const getColor = (status: number) => {
 }
 
 const captainsLog = (status: number, payload: object) => {
-  Object.entries(payload).forEach(([key, value]) => {
+  const color = getColor(status)
+  const log = (text: string) => console.log(toColor(color, text))
+  log(`\n[${getTime()}]`)
+
+  for (const [key, value] of Object.entries(payload)) {
     const message = publish(value)
-    console.log(toColor(getColor(status), `\n${getTime()} ${key}::: ${message}`))
-  })
+    log(` ${key}::: ${message}`)
+  }
 }
 
 export default captainsLog
