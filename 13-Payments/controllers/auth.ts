@@ -3,7 +3,6 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import User from '../models/User';
 import AppError from '../models/Error';
-import { MongooseErrors, mongooseErrors } from '../validation/mongooseErrors';
 // import { sendMail } from '../util/sendmail';
 import { getErrors, hasErrors } from '../validation/validators';
 import logger from '../util/logger';
@@ -103,10 +102,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
     req.session.user = user;
     res.redirect('/admin/items');
   } catch (error) {
-    // will catch duplicate emails & all empty fields
-    req.session.formData = { name, email };
-    req.session.errors = mongooseErrors(error as MongooseErrors);
-    req.session.save(() => next(new AppError(422, error, redirect)));
+    return next(new AppError(500, error));
   }
 };
 

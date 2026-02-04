@@ -1,5 +1,6 @@
 import { body, check, FieldValidationError, validationResult } from 'express-validator';
 import { Request } from 'express';
+import User from '../models/User';
 
 const msg = (length: number) => `requires a minimum of ${length} characters.`;
 
@@ -21,7 +22,14 @@ export const validateName = body('name')
 export const validateEmail = check('email')
   .isEmail()
   .withMessage('is invalid')
-  .toLowerCase();
+  .toLowerCase()
+  .custom(async (email, { req }) => {
+    const duplicate = await User.findOne({ email });
+    if (duplicate) {
+      throw new Error('already registered');
+    }
+    return true;
+  });
 
 export const validatePassword = body('password')
   .isLength({ min: 6 })
