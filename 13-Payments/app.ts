@@ -8,7 +8,7 @@ import    authRoutes from './routes/auth';
 import   adminRoutes from './routes/admin';
 import   storeRoutes from './routes/store';
 import  staticRoutes from './routes/static';
-import {  error404, error500  } from './controllers/error';
+import     errorPage from './controllers/error';
 import {  storage, fileFilter } from './middleware/multerConfig';
 import    csrfShield from './middleware/csrf';
 import handleSession from './middleware/session';
@@ -75,8 +75,7 @@ app.use('/admin', authenticate, adminRoutes); // adds URL filter to all routes
 app.use(storeRoutes);
 app.use(authRoutes);
 app.use(staticRoutes);
-app.get('/500', error500); // 500 errors route - must be defined before the get all errors route
-app.use(error404); // will catch all other URLS, defined last
+app.use(errorPage); // will catch all other URLS, defined last
 
 // special 4 arg middleware that will catch next(withArgument)
 app.use(((appError, req, res, next) => {
