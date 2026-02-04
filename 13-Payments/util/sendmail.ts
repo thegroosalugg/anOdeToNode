@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
-import errorMsg from './errorMsg';
 import dotenv from 'dotenv';
+import logger from './logger';
        dotenv.config();
 
 const sender = process.env.SENDER_EMAIL;
@@ -16,10 +16,10 @@ const transporter = nodemailer.createTransport({
 export const sendMail = (token: string, recipient: string) => {
   transporter
     .sendMail({
-           to: sender,
-         from: sender,
+      to: sender,
+      from: sender,
       subject: 'An Ode to Node: Password Reset',
-         html: `
+      html: `
            <h1>D-Bay Express App Password Reset</h1>
            <a href="http://localhost:3000/login/?token=${token}">
              follow this link to reset your password
@@ -30,5 +30,5 @@ export const sendMail = (token: string, recipient: string) => {
            </p>
          `,
     })
-    .catch((error) => errorMsg({ error, where: 'sendMail' }));
+    .catch((error) => logger(500, { sendMail: error }));
 };

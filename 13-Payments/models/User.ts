@@ -1,6 +1,6 @@
 import { Model, model, Types, Schema } from 'mongoose';
 import Item, { IItem } from './Item';
-import errorMsg from '../util/errorMsg';
+import logger from '../util/logger';
 
 const required = true;
 const trim = true;
@@ -57,7 +57,7 @@ userSchema.methods.updateCart = async function(_id, quantity) {
   try {
     await this.save(); // mongoose function
   } catch (error) {
-    errorMsg({ error, where: 'userSchema updateCart'});
+    logger(500, { userSchemaUpdateCart: error });
   }
 };
 
@@ -86,7 +86,7 @@ userSchema.methods.getCart = async function() {
     await this.save();
     return cartItems;
   } catch (error) {
-    errorMsg({ error, where: 'userSchema getCart'});
+    logger(500, { userSchemaGetCart: error });
     return [];
   }
 };
