@@ -1,6 +1,6 @@
 import Button from "@/components/ui/button/Button";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
-import { Auth } from "@/lib/types/auth";
+import { Auth } from "@/lib/types/interface";
 import { useState } from "react";
 import { removeRefreshToken } from "@/lib/http/token";
 import css from "./UserLogout.module.css";

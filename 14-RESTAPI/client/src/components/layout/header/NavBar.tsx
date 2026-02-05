@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDebounce } from "@/lib/hooks/useDebounce";
-import { Auth } from "@/lib/types/auth";
+import { Auth } from "@/lib/types/interface";
 import { AlertsProvider } from "@/components/notifications/context/AlertsProvider";
 import { ChatProvider } from "@/components/chat/context/ChatProvider";
 import Notifications from "../../notifications/Notifications";

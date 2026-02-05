@@ -1,7 +1,7 @@
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useEffect, useState } from "react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
-import { UserState } from "@/lib/types/auth";
+import { UserState } from "@/lib/types/interface";
 import ImagePicker from "../../layout/ImagePicker";
 import Button from "@/components/ui/button/Button";
 import css from "./EditImage.module.css";

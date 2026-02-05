@@ -1,13 +1,12 @@
 import { createContext, useContext } from "react";
-import { Dict, SetData } from "@/lib/types/common";
-import { UserState } from "@/lib/types/auth";
+import { RecordMap, SetData } from "@/lib/types/common";
+import { UserState, FetchState } from "@/lib/types/interface";
 import { Debounce } from "@/lib/hooks/useDebounce";
-import { FetchState } from "@/lib/types/fetch";
 import Chat from "@/models/Chat";
 import Msg from "@/models/Message";
 
-export type   MsgsMap = Dict<Msg[]>;
-export type StatusMap = Dict<boolean>;
+export type   MsgsMap = RecordMap<Msg[]>;
+export type StatusMap = RecordMap<boolean>;
 
 type ChatData = Omit<FetchState<Chat[], "chats">, "setError">;
 

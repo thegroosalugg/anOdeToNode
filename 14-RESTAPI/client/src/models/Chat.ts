@@ -1,4 +1,4 @@
-import { Dict } from "@/lib/types/common";
+import { RecordMap } from "@/lib/types/common";
 import Msg from "./Message";
 import User from "./User";
 
@@ -9,8 +9,8 @@ class Chat {
      lastMsg: Msg = new Msg();
       isTemp: boolean = true;
      chatId?: string; // stores real chatID inside temp chat
-      alerts: Dict<number> = {};
-  deletedFor: Dict<boolean> = {};
+      alerts: RecordMap<number> = {};
+  deletedFor: RecordMap<boolean> = {};
 
   constructor(user: User, peer: User) {
     this.host  = user;

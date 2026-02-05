@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
-import { UserState } from "@/lib/types/auth";
+import { UserState } from "@/lib/types/interface";
 import Chat from "@/models/Chat";
 
 interface ChatProvider extends UserState {

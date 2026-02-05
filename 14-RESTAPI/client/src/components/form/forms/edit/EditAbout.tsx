@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
-import { UserState } from "@/lib/types/auth";
+import { UserState } from "@/lib/types/interface";
 import User from "@/models/User";
 import Button from "@/components/ui/button/Button";
 import Input from "../../layout/Input";

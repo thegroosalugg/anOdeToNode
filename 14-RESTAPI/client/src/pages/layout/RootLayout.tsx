@@ -9,10 +9,10 @@ import { eventBus } from "@/lib/util/eventBus";
 import { saveTokens } from "@/lib/http/token";
 import { postAnalytics } from "@/lib/http/analytics";
 import User from "@/models/User";
-import { Auth } from "@/lib/types/auth";
-import { Dict } from "@/lib/types/common";
+import { RecordMap } from "@/lib/types/common";
+import { Auth } from "@/lib/types/interface";
 
-const staticMeta: Dict<{ title: string; description: string }> = {
+const staticMeta: RecordMap<{ title: string; description: string }> = {
     "/feed": { title:               "Feed", description: "All user posts"          },
   "/social": { title:             "Social", description: "List of users"           },
    "/about": { title:              "About", description: "About page"              },

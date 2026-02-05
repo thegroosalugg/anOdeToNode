@@ -1,5 +1,5 @@
 import { usePagedFetch } from "../pagination/usePagedFetch";
-import { UserState } from "@/lib/types/auth";
+import { UserState } from "@/lib/types/interface";
 import Post from "@/models/Post";
 import UserDashboard from "./dashboard/UserDashboard";
 import AsyncAwait from "../ui/boundary/AsyncAwait";

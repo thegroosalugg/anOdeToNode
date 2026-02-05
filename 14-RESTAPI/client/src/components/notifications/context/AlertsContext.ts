@@ -1,8 +1,7 @@
 import { createContext, useContext } from "react";
 import { Debounce } from "@/lib/hooks/useDebounce";
-import { UserState } from "@/lib/types/auth";
 import { ApiError } from "@/lib/http/fetchData";
-import { FetchState } from "@/lib/types/fetch";
+import { FetchState, UserState } from "@/lib/types/interface";
 import { Direction } from "@/lib/types/common";
 import Reply from "@/models/Reply";
 import User from "@/models/User";

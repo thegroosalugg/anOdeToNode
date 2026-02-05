@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Auth } from '@/lib/types/auth';
+import { Auth } from "@/lib/types/interface";
 import UserProfile from '@/components/user/UserProfile';
 import AuthForm from '@/components/form/forms/auth/AuthForm';
 import AsyncAwait from '@/components/ui/boundary/AsyncAwait';

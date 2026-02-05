@@ -5,7 +5,7 @@ import { useFetch } from "@/lib/hooks/useFetch";
 import { usePages } from "@/lib/hooks/usePages";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
-import { UserState } from "@/lib/types/auth";
+import { UserState } from "@/lib/types/interface";
 import User from "@/models/User";
 import Reply from "@/models/Reply";
 import Friend from "@/models/Friend";

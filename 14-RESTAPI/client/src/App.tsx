@@ -10,7 +10,7 @@ import   AboutPage   from "./pages/info/AboutPage";
 import   ErrorPage   from "./pages/boundary/ErrorPage";
 import   TermsPage   from "./pages/info/TermsPage";
 import { captainsLog } from "./lib/util/captainsLog";
-import { Auth } from "./lib/types/auth";
+import { Auth } from "./lib/types/interface";
 
 const validate = (path: string, props: Auth) => {
   const { user } = props;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Auth } from "@/lib/types/auth";
+import { Auth } from "@/lib/types/interface";
 import { motion } from "motion/react";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useAnimations } from "@/lib/hooks/useAnimations";
