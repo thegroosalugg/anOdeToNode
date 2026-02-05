@@ -1,6 +1,7 @@
 import { captainsLog } from "../util/captainsLog";
 
 export async function postAnalytics() {
+  if (navigator.webdriver) return;
   const localData = localStorage.getItem("analytics");
 
   if (localData) {

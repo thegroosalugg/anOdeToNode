@@ -1,13 +1,12 @@
 import { createContext, useContext } from "react";
 import { Debounce } from "@/lib/hooks/useDebounce";
-import { Authorized } from "@/lib/types/auth";
+import { UserState } from "@/lib/types/auth";
+import { ApiError } from "@/lib/http/fetchData";
 import { FetchState } from "@/lib/types/fetch";
 import { Direction } from "@/lib/types/common";
 import Reply from "@/models/Reply";
 import User from "@/models/User";
 import Friend from "@/models/Friend";
-
-type UserControl = Pick<Authorized, "user" | "setUser" | "error">;
 
 type ReplyData = Pick<FetchState<Reply[], "replies">, "replies" | "setReplies" | "reqReplies">;
 
@@ -33,7 +32,8 @@ type AlertsContext = {
     clearSocial: (_id:    string) => void;
      clearReply: (_id:    string) => void;
   friendRequest: (_id: string, action: "accept" | "delete") => void;
-} & UserControl &
+          error: ApiError | null;
+} &   UserState &
       ReplyData &
     MenuControl &
     Pick<Debounce, "deferring">;

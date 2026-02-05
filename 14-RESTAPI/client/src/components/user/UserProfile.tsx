@@ -1,5 +1,5 @@
 import { usePagedFetch } from "../pagination/usePagedFetch";
-import { Authorized } from "@/lib/types/auth";
+import { UserState } from "@/lib/types/auth";
 import Post from "@/models/Post";
 import UserDashboard from "./dashboard/UserDashboard";
 import AsyncAwait from "../ui/boundary/AsyncAwait";
@@ -9,7 +9,7 @@ import PostItem from "../list/post/PostItem";
 import UserLogout from "./actions/user/UserLogout";
 import ProfileActions from "./actions/user/ProfileActions";
 
-export default function UserProfile({ user, setUser }: Authorized) {
+export default function UserProfile({ user, setUser }: UserState) {
   const { fetcher: { isLoading, error }, ...rest } = usePagedFetch<Post>("profile/posts", 4);
 
   return (

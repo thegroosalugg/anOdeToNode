@@ -13,9 +13,13 @@ export const setRefreshToken = (t: string) => {
 
 export const getRefreshToken = () => {
   const token = localStorage.getItem(storageKey);
-  localStorage.removeItem(storageKey);
+  removeRefreshToken();
   return token;
 };
+
+export const removeRefreshToken = () => {
+  localStorage.removeItem(storageKey);
+}
 
 export const saveTokens = (user: User) => {
   const { JWTaccess, JWTrefresh } = user;

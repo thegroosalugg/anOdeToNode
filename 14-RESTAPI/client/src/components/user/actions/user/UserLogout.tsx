@@ -2,6 +2,7 @@ import Button from "@/components/ui/button/Button";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import { Auth } from "@/lib/types/auth";
 import { useState } from "react";
+import { removeRefreshToken } from "@/lib/http/token";
 import css from "./UserLogout.module.css";
 
 export default function UserLogout({ setUser }: { setUser: Auth["setUser"] }) {
@@ -11,8 +12,7 @@ export default function UserLogout({ setUser }: { setUser: Auth["setUser"] }) {
   function logout() {
     closeModal();
     setUser(null);
-    localStorage.removeItem("jwt-access");
-    localStorage.removeItem("jwt-refresh");
+    removeRefreshToken();
   }
 
   return (

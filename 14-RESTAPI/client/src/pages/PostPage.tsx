@@ -5,7 +5,7 @@ import { usePagedFetch } from "@/components/pagination/usePagedFetch";
 import { useSocket } from "@/lib/hooks/useSocket";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
 import { ApiError } from "@/lib/http/fetchData";
-import { Authorized } from "@/lib/types/auth";
+import User from "@/models/User";
 import Post from "@/models/Post";
 import Reply from "@/models/Reply";
 import Logger from "@/models/Logger";
@@ -19,7 +19,7 @@ import FormSideBar from "@/components/form/forms/sidebar/FormSideBar";
 import PostForm from "@/components/form/forms/post/PostForm";
 import { getMeta } from "@/lib/util/getMeta";
 
-export default function PostPage({ user }: Authorized) {
+export default function PostPage({ user }: { user: User }) {
   const {
          data: post,
       setData: setPost,

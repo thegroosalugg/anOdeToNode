@@ -10,20 +10,18 @@ import   AboutPage   from "./pages/info/AboutPage";
 import   ErrorPage   from "./pages/boundary/ErrorPage";
 import   TermsPage   from "./pages/info/TermsPage";
 import { captainsLog } from "./lib/util/captainsLog";
-import { Auth, Authorized } from "./lib/types/auth";
+import { Auth } from "./lib/types/auth";
 
 const validate = (path: string, props: Auth) => {
   const { user } = props;
 
   if (!user) return <AuthPage {...props} />;
 
-  const authorized = props as Authorized;
-
   const elements = {
     "/feed":         <FeedPage />,
-    "/post/:postId": <PostPage   {...authorized} />,
-    "/social":       <SocialPage {...authorized} />,
-    "/user/:userId": <PeerPage   {...authorized} />,
+    "/post/:postId": <PostPage   {...{ user }} />,
+    "/social":       <SocialPage {...{ user }} />,
+    "/user/:userId": <PeerPage   {...{ user }} />,
   };
 
   return elements[path as keyof typeof elements];
