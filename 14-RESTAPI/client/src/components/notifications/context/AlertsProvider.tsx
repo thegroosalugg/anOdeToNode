@@ -6,7 +6,7 @@ import { usePages } from "@/lib/hooks/usePages";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
 import { UserState } from "@/lib/types/auth";
-import { FetchError } from "@/lib/types/common";
+import { ApiError } from "@/lib/http/fetchData";
 import User from "@/models/User";
 import Reply from "@/models/Reply";
 import Friend from "@/models/Friend";
@@ -104,7 +104,7 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     navigate(path);
   };
 
-  const onError = (err: FetchError) => {
+  const onError = (err: ApiError) => {
     if (err.status === 401) setUser(null);
   };
 

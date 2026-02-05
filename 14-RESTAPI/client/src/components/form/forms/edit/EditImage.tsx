@@ -1,11 +1,11 @@
 import { useFetch } from "@/lib/hooks/useFetch";
-import { FetchError } from "@/lib/types/common";
 import { useEffect, useState } from "react";
 import { UserState } from "@/lib/types/auth";
+import { ApiError } from "@/lib/http/fetchData";
 import ImagePicker from "../../layout/ImagePicker";
 import Button from "@/components/ui/button/Button";
-import css from "./EditImage.module.css";
 import { useAnimations } from "@/lib/hooks/useAnimations";
+import css from "./EditImage.module.css";
 
 interface EditImage extends UserState {
      isOpen: boolean;
@@ -26,7 +26,7 @@ export default function EditImage({ user, setUser, isOpen, onSuccess: closeModal
     }, 500);
   }, [isOpen, imgURL, scope, setError]);
 
-  const onError = (err: FetchError) => {
+  const onError = (err: ApiError) => {
     // uses state to animate: avoids trigger on first submit before component renders
     if (error) shake("button");
     // uses reqData immediate return value for user logout

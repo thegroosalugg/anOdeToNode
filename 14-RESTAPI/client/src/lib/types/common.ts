@@ -8,11 +8,4 @@ export type Direction = -1 | 1;
 
 export type Meta = { read: boolean; show: boolean };
 
-export type  Align = "start" | "center" | "end";
-
-export type FetchError = {
-  [key: string]: string;
-} & {
-  message: string;
-   status: number;
-};
+export type Align = "start" | "center" | "end";

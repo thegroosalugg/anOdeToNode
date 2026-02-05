@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { BASE_URL } from "@/lib/util/fetchData";
+import { API_URL } from "@/lib/http/fetchData";
 import css from "./ImagePicker.module.css";
 
 const fileTypes = ["image/png", "image/jpeg", "image/jpg"];
@@ -11,7 +11,7 @@ export default function ImagePicker({
   imgURL?: string;
    label?: string;
 }) {
-  const initialImg = imgURL ? BASE_URL + imgURL : "";
+  const initialImg = imgURL ? API_URL + imgURL : "";
   const [image, setImage] = useState(initialImg);
   const [error, setError] = useState("");
   const imagePicker = useRef<HTMLInputElement>(null);

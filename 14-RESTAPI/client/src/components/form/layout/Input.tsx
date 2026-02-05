@@ -1,6 +1,6 @@
 import { motion, AnimatePresence, Variants } from "motion/react";
 import { HTMLProps, ReactNode } from "react";
-import { FetchError } from "@/lib/types/common";
+import { ApiError } from "@/lib/http/fetchData";
 import ErrorPopUp from "../../ui/boundary/error/ErrorPopUp";
 import css from "./Input.module.css";
 
@@ -15,7 +15,7 @@ export default function Input({
 }: {
     control: string;
       rows?: number;
-     errors: FetchError | null;
+     errors: ApiError | null;
    confirm?: boolean;
   variants?: Variants;
    children: ReactNode;

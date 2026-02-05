@@ -7,6 +7,7 @@ import Input from "../../layout/Input";
 import Button from "@/components/ui/button/Button";
 import Loader from "@/components/ui/boundary/loader/Loader";
 import { createVariants } from "@/lib/motion/animations";
+import { saveTokens } from "@/lib/http/token";
 import css from "./AuthForm.module.css";
 
 export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) {
@@ -28,10 +29,8 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
 
   const onSuccess = (user: Auth["user"]) => {
     if (user) {
-      const { JWTaccess, JWTrefresh } = user;
+      saveTokens(user);
       setError(null);
-      localStorage.setItem("jwt-access", JWTaccess);
-      localStorage.setItem("jwt-refresh", JWTrefresh);
     }
   };
 

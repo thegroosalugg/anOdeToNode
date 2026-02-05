@@ -1,5 +1,6 @@
 import { ReqData } from "../hooks/useFetch";
-import { FetchError, SetData } from "./common";
+import { ApiError } from "../http/fetchData";
+import { SetData } from "./common";
 
 // constrains K to string so it can be used in template literals
 export type FetchState<T, K extends string = "data"> = {
@@ -10,6 +11,6 @@ export type FetchState<T, K extends string = "data"> = {
   [P in `req${Capitalize<K>}`]: ReqData<T>;
 } & {
   isLoading: boolean;
-      error: FetchError | null;
-   setError: SetData<FetchError | null>;
+      error: ApiError | null;
+   setError: SetData<ApiError | null>;
 };

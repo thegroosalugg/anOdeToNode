@@ -1,12 +1,9 @@
-import       express, { ErrorRequestHandler }
-                         from 'express';
+import { EXTERNAL_URL, CLIENT_URL, MONGO_URI, NODE_ENV } from './envs'; // must run first
+import express, { ErrorRequestHandler } from 'express';
 import      mongoose     from 'mongoose';
 import        multer     from 'multer';
 import {      join     } from 'path';
-import {
-            storage,
-          fileFilter
-                       } from './middleware/multerConfig';
+import { storage, fileFilter } from './middleware/multerConfig';
 import {     authJWT   } from './middleware/auth.JWT';
 import { postAnalytics } from './controllers/analyticsController';
 import      authRoutes   from './routes/auth';
@@ -20,12 +17,6 @@ import       msgRoutes   from './routes/message';
 import     alertRoutes   from './routes/alert';
 import     captainsLog   from './util/captainsLog';
 import          socket   from './socket';
-import          dotenv   from 'dotenv';
-                dotenv.config();
-
-// const nodeEnv = process.env.NODE_ENV
-const { CLIENT_URL, CLIENT_MOBILE_URL, NODE_ENV, MONGO_URI } = process.env
-if (!MONGO_URI) throw new Error(`ENVs Missing: \n Mongo: ${Boolean(MONGO_URI)}`)
 
 // re-route FS location to parent folder in production
 const rootDir = NODE_ENV === 'production' ? '../' : ''
@@ -39,7 +30,7 @@ app.use('/uploads', express.static(join(import.meta.dirname, rootDir, 'uploads')
 app.use(express.json()); // parse application/json
 app.use(multer({ storage, fileFilter }).single('image')); // multipart/form-data
 
-const allowedOrigins = [CLIENT_URL, CLIENT_MOBILE_URL];
+const allowedOrigins = [CLIENT_URL, EXTERNAL_URL];
 
 // allows cross origin requests
 app.use((req, res, next) => {

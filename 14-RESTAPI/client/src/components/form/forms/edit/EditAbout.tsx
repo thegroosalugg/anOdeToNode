@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
-import { FetchError } from "@/lib/types/common";
+import { ApiError } from "@/lib/http/fetchData";
 import { UserState } from "@/lib/types/auth";
 import User from "@/models/User";
 import Button from "@/components/ui/button/Button";
@@ -32,7 +32,7 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
     }, 500);
   }, [isOpen, scope, setError]);
 
-  const onError = (err: FetchError) => {
+  const onError = (err: ApiError) => {
     // uses state to animate: avoids trigger on first submit before component renders
     if (errors) shake("p");
     // uses reqData immediate return value for user logout

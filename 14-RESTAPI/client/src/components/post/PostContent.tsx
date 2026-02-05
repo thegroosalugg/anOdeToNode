@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "@/lib/util/fetchData";
+import { API_URL } from "@/lib/http/fetchData";
 import { UserState } from "@/lib/types/auth";
 import Post from "@/models/Post";
 import Button from "../ui/button/Button";
@@ -75,7 +75,7 @@ export default function PostContent({
           <motion.div className={`floating-box ${css["image"]}`} {...{ variants }}>
             <motion.img
                   key={imgURL}
-                  src={BASE_URL + imgURL}
+                  src={API_URL + imgURL}
                   alt={title}
               loading="eager"
                  exit={variants.hidden}

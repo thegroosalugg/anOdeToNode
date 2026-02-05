@@ -5,22 +5,16 @@ import jwt from 'jsonwebtoken';
 import User, { _friends } from '../models/User';
 import AppError from '../models/Error';
 import { getErrors, hasErrors } from '../validation/validators';
+import { JWT_SECRET, JWT_REFRESH } from '../envs';
+import { Types } from 'mongoose';
 
 const mins = '15m';
 const days = '7d';
 
-// verified by middleware, requires a endpoint to return user data
-const getUser: RequestHandler = async (req, res, next) => {
-  const user = req.user;
-  if (!user) return next(AppError.devErr());
-
-  try {
-    await user.populate('friends.user', _friends);
-    res.status(200).json({ ...user.toObject() });
-  } catch (error) {
-    // returns unpopulated data
-    res.status(200).json({ ...user.toObject(), message: 'unable to load friends' });
-  }
+const signJWT = (userId: string | Types.ObjectId) => {
+  const JWTaccess  = jwt.sign({ userId }, JWT_SECRET,  { expiresIn: mins });
+  const JWTrefresh = jwt.sign({ userId }, JWT_REFRESH, { expiresIn: days });
+  return { JWTaccess, JWTrefresh };
 };
 
 const postLogin: RequestHandler = async (req, res, next) => {
@@ -42,15 +36,7 @@ const postLogin: RequestHandler = async (req, res, next) => {
       return next(new AppError(401, { password: 'Password is incorrect' }));
     }
 
-    const userId = user._id;
-    const JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
-      expiresIn: mins,
-    });
-
-    const JWTrefresh = jwt.sign({ userId }, process.env.JWT_REFRESH!, {
-      expiresIn: days,
-    });
-
+    const { JWTaccess, JWTrefresh } = signJWT(user._id);
     await user.populate('friends.user', _friends);
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
     res.status(200).json({ JWTaccess, JWTrefresh, ...userDets });
@@ -70,15 +56,7 @@ const postSignup: RequestHandler = async (req, res, next) => {
     const user = new User({ name, surname, email, password: hashed });
     await user.save();
 
-    const userId = user._id;
-    const JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
-      expiresIn: mins,
-    });
-
-    const JWTrefresh = jwt.sign({ userId }, process.env.JWT_REFRESH!, {
-      expiresIn: days,
-    });
-
+    const { JWTaccess, JWTrefresh } = signJWT(user._id);
     const { password: _, ...userDets } = user.toObject(); // send non sensitive data
     socket.getIO().emit('user:new', userDets);
     res.status(201).json({ JWTaccess, JWTrefresh, ...userDets });
@@ -93,21 +71,20 @@ const refreshToken: RequestHandler = async (req, res, next) => {
   if (!token) return next(new AppError(401, 'No refresh token provided'));
 
   try {
-    const decodedTkn = jwt.verify(token, process.env.JWT_REFRESH!) as JwtPayload;
+    const decodedTkn = jwt.verify(token, JWT_REFRESH) as JwtPayload;
     const { userId } = decodedTkn;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select('-password');
     if (!user) return next(new AppError(404, 'User not found'));
 
-    const JWTaccess = jwt.sign({ userId }, process.env.JWT_SECRET!, {
-      expiresIn: mins,
-    });
-    const JWTrefresh = jwt.sign({ userId }, process.env.JWT_REFRESH!, {
-      expiresIn: days,
-    });
-    res.status(200).json({ JWTaccess, JWTrefresh });
+    const { JWTaccess, JWTrefresh } = signJWT(userId);
+    const { populate } = req.query;
+    if (populate === 'true') await user.populate('friends.user', _friends);
+
+    const resData = { JWTaccess, JWTrefresh, ...user.toObject() };
+    res.status(200).json(resData);
   } catch (error) {
     next(new AppError(401, null, error));
   }
 };
 
-export { getUser, postLogin, postSignup, refreshToken };
+export { postLogin, postSignup, refreshToken };

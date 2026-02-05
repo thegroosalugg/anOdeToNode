@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useFetch } from "@/lib/hooks/useFetch";
+import { ApiError } from "@/lib/http/fetchData";
 import { Auth } from "@/lib/types/auth";
-import { FetchError } from "@/lib/types/common";
 import Post from "@/models/Post";
 import Input from "../../layout/Input";
 import ImagePicker from "../../layout/ImagePicker";
@@ -42,7 +42,7 @@ export default function PostForm({
     }, 500);
   }, [isOpen, scope, setError]);
 
-  const onError = (err: FetchError) => {
+  const onError = (err: ApiError) => {
     if (error && !error.message) shake("p");
     if (err.status === 401) setUser(null);
   };

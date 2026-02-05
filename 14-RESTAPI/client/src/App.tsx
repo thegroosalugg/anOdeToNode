@@ -30,10 +30,8 @@ const validate = (path: string, props: Auth) => {
 };
 
 const createRoute = (path: string, Component?: () => JSX.Element) => ({
-     path,
-  element: (
-    <RootLayout children={(props) => (Component ? <Component /> : validate(path, props))} />
-  ),
+  path,
+  element: <RootLayout children={(props) => (Component ? <Component /> : validate(path, props))} />,
 });
 
 const routes = [
@@ -48,8 +46,8 @@ const routes = [
 ];
 
 export default function App() {
-  captainsLog(-1, ["⇚⇚⇚App⇛⇛⇛"]);
+  captainsLog(-1, { App: "new render cycle" });
 
-  const  element = useRoutes(routes);
+  const element = useRoutes(routes);
   return element || null;
 }

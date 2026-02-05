@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { usePagedFetch } from "@/components/pagination/usePagedFetch";
 import { useSocket } from "@/lib/hooks/useSocket";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
-import { FetchError } from "@/lib/types/common";
+import { ApiError } from "@/lib/http/fetchData";
 import { Authorized } from "@/lib/types/auth";
 import Post from "@/models/Post";
 import Reply from "@/models/Reply";
@@ -94,7 +94,7 @@ export default function PostPage({ user, setUser }: Authorized) {
       logger.event("post:delete", deleted);
       if (deleted.creator !== user._id) {
         setPost(null); // delete actions for viewers. Creator's state automatically set to null
-        setError({ message: "The post was deleted" } as FetchError); // creators redirected without msg
+        setError({ message: "The post was deleted" } as ApiError); // creators redirected without msg
       }
     });
 
@@ -116,9 +116,7 @@ export default function PostPage({ user, setUser }: Authorized) {
           navigate("/feed");
         },
         onError: (err) => {
-          if (err.status === 401) {
-            setUser(null);
-          }
+          if (err.status === 401) setUser(null);
           closeModal();
         },
       }

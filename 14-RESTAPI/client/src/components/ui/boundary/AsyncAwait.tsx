@@ -1,13 +1,13 @@
 import { AnimatePresence } from "motion/react";
 import { Fragment } from "react/jsx-runtime";
 import { ReactNode } from "react";
-import { FetchError } from "@/lib/types/common";
+import { ApiError } from "@/lib/http/fetchData";
 import Error from "./error/Error";
 import Loader from "./loader/Loader";
 
 interface AsyncAwait {
   isLoading: boolean;
-     error?: FetchError | null;
+     error?: ApiError | null;
    children: ReactNode;
 }
 

@@ -1,5 +1,5 @@
 import { HTMLMotionProps, motion } from 'motion/react';
-import { BASE_URL } from '@/lib/util/fetchData';
+import { API_URL } from '@/lib/http/fetchData';
 import User from '@/models/User';
 import css from './ProfilePic.module.css';
 
@@ -10,7 +10,7 @@ export default function ProfilePic({
   ...props
 }: { user: User } & HTMLMotionProps<'img'>) {
   const { name, imgURL } = user || {};
-  const src = imgURL ? BASE_URL + imgURL : fallback;
+  const src = imgURL ? API_URL + imgURL : fallback;
 
   return (
     <motion.img

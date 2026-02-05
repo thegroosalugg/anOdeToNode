@@ -1,42 +1,44 @@
-const getHSL = (hue: number) => {
-  const isGrey = hue < 0;
-  const h = isGrey ? 0 : hue % 360;
-  const s = isGrey ? 0 : 50;
-  const l = isGrey ? Math.min(Math.abs(hue), 100) : 50;
-  const color = isGrey && l > 50 ? "black" : "white";
-  const background = `hsl(${h}, ${s}%, ${l}%);`;
-  return { color, background };
-};
+// use negative hues for b/w bg: -1 black ... -100 white
+const getStyles = (hue: number) => {
+  const isGrey = hue < 0
+  const h = isGrey ? 0 : hue % 360
+  const s = isGrey ? 0 : 50
+  const l = isGrey ? Math.min(Math.abs(hue), 100) : 50
 
-export const captainsLog = (hue: number, data: unknown[]) => {
-  const { color, background } = getHSL(hue);
-  const style = `color: ${color}; background: ${background}; font-weight: bold;`;
-  const stack = new Error().stack?.split("\n") || [];
+  const color = isGrey && l > 50 ? 'black' : 'white'
+  const background = `hsl(${h}, ${s}%, ${l}%)`
+  return `color: ${color}; background: ${background}; padding: 2px 4px;`
+}
 
-  const rootComponent = stack
-    .map((line) => line.match(/\/([^/]+)\.tsx?/i)?.[1]) // Extract file names
-    .filter(Boolean) // Remove null values
-    .pop() || ""; // Get the earliest component in the stack
+let minute, second
+const hour = minute = second = '2-digit' as const
 
-  const time = new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  });
+const getTime = () => new Date().toLocaleTimeString([], { hour, minute, second, hour12: false })
 
-  const space = rootComponent ? ", " : "";
+const getRootComponent = () => {
+  const stack = new Error().stack?.split('\n') || []
 
-  data.forEach((item) => {
-    const type = Array.isArray(item) ? "Array" : typeof item;
-    if (typeof item === "object" && item !== null) {
-      console.groupCollapsed(`%c${type}`, style);
-      if (Array.isArray(item)) console.table(item);
-      else console.dir(item);
-      console.groupEnd();
+  return (
+    stack
+      .map((line) => line.match(/\/([^/]+)\.tsx?/i)?.[1]) // Extract file names
+      .filter(Boolean) // Remove null values
+      .pop() || ''
+  ) // Get the earliest component in the stack
+}
+
+export function captainsLog(hue: number, items: Record<string, unknown>) {
+  const style = getStyles(hue)
+  const time = getTime()
+  const root = getRootComponent()
+
+  Object.entries(items).forEach(([key, value]) => {
+    const message = `%c${key} @${time} ${root}`
+    const isObject = typeof value === 'object' && value !== null
+    if (isObject) {
+      console.log(message, style)
+      console.dir(value)
     } else {
-      const divider = "▿".repeat(15);
-      console.log(`%c${item}\n${divider}\n[${time}${space}${rootComponent}]`, style);
+      console.log(`${message}\n${value}`, style)
     }
-  });
-};
+  })
+}
