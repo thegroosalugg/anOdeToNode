@@ -107,19 +107,17 @@ export default function PostPage({ user }: { user: User }) {
     };
   }, [socketRef, user._id, postId, setError, setPost, reqPost, setReplies]);
 
+  const onSuccess = () => {
+    closeModal(); // delete actions for creator
+    navigate("/feed");
+  };
+
+  const onError = () => {
+    closeModal();
+  };
+
   async function deletePost() {
-    await reqPost(
-      { url: `post/delete/${postId}`, method: "DELETE" },
-      {
-        onSuccess: () => {
-          closeModal(); // delete actions for creator
-          navigate("/feed");
-        },
-        onError: () => {
-          closeModal();
-        },
-      }
-    );
+    await reqPost({ url: `post/delete/${postId}`, method: "DELETE", onSuccess, onError });
   }
 
   const { title, description } = getMeta(

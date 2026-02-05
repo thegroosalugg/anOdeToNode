@@ -9,7 +9,7 @@ import ChatMenu from "../../chat/ChatMenu";
 import IconButton from "../../ui/button/IconButton";
 import css from "./NavBar.module.css";
 
-export default function NavBar({ user, setUser }: Auth) {
+export default function NavBar({ user, setUser }: Pick<Auth, "user" | "setUser">) {
   const { deferring, deferFn } = useDebounce();
   const   navigate   = useNavigate();
   const { pathname } = useLocation();

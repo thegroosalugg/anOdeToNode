@@ -62,7 +62,7 @@ export default function PostForm({
         }
       }
 
-      await reqData({ url, method, data }, { onError, onSuccess: closeModal });
+      await reqData({ url, method, data, onError, onSuccess: closeModal });
     };
 
     deferFn(request, 1000);

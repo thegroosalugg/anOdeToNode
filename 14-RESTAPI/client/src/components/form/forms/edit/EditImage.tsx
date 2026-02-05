@@ -1,9 +1,9 @@
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useEffect, useState } from "react";
+import { useAnimations } from "@/lib/hooks/useAnimations";
 import { UserState } from "@/lib/types/auth";
 import ImagePicker from "../../layout/ImagePicker";
 import Button from "@/components/ui/button/Button";
-import { useAnimations } from "@/lib/hooks/useAnimations";
 import css from "./EditImage.module.css";
 
 interface EditImage extends UserState {
@@ -31,15 +31,14 @@ export default function EditImage({ user, setUser, isOpen, onSuccess: closeModal
 
   const onSuccess = ({ imgURL }: { imgURL: string }) => {
     setDisplayPic(imgURL);
-    // user cannot be null - component tree collapses on !user and returns to <AuthPage>
-    setUser((user) => ({ ...user!, imgURL }));
+    setUser((user) => (user ? { ...user, imgURL } : user));
     closeModal(); // triggers effect cleanup
   };
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    await reqData({ url: "profile/set-pic", method: "POST", data }, { onError, onSuccess });
+    await reqData({ url: "profile/set-pic", method: "POST", data, onError, onSuccess });
   }
 
   return (

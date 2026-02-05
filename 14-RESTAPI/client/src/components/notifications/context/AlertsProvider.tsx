@@ -62,11 +62,11 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
 
   const markSocials = useCallback(
     async (index = current) =>
-      await reqSocials(
-        { url: `alerts/social?type=${["inbound", "outbound"][index]}` },
-        { onSuccess: (updated) => setUser(updated) }
-      ),
-    [current, reqSocials, setUser]
+      await reqSocials({
+              url: `alerts/social?type=${["inbound", "outbound"][index]}`,
+        onSuccess: (updated) => setUser(updated),
+      }),
+    [current, reqSocials, setUser],
   );
 
   const markReplies = useCallback(
@@ -111,19 +111,16 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
 
   const clearSocial = async (_id: string) => {
     deferFn(async () => {
-      await reqSocials(
-        { url: `alerts/social/hide/${_id}` },
-        { onSuccess: (updated) => setUser(updated) }
-      );
+      await reqSocials({ url: `alerts/social/hide/${_id}`, onSuccess: (updated) => setUser(updated) });
     }, 1000);
   };
 
   const clearReply = async (_id: string) => {
     deferFn(async () => {
-      await reqReply(
-        { url: `alerts/reply/hide/${_id}` },
-        { onSuccess: (updated) => setReplies((prev) => prev.filter(({ _id }) => updated?._id !== _id)) }
-      );
+      await reqReply({
+              url: `alerts/reply/hide/${_id}`,
+        onSuccess: (updated) => setReplies((prev) => prev.filter(({ _id }) => updated?._id !== _id)),
+      });
     }, 1000);
   };
 

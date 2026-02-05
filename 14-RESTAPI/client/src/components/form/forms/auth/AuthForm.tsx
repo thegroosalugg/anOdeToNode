@@ -35,7 +35,7 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
   };
 
   const onError = () => {
-    if (error && !error.message) shake("p");
+    if (error && !error.message && scope.current) shake("p");
   };
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
@@ -43,14 +43,13 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
     deferFn(async () => {
       const data = new FormData(e.currentTarget); // data parsed by multer
       // const data = Object.fromEntries(formData.entries()); // if application/json
-      await reqUser(
-        {
-             url: isLogin ? "login" : "signup",
-          method: "POST",
-            data,
-        },
-        { onSuccess, onError }
-      );
+      await reqUser({
+              url: isLogin ? "login" : "signup",
+           method: "POST",
+             data,
+        onSuccess,
+          onError,
+      });
     }, 1000);
   }
 

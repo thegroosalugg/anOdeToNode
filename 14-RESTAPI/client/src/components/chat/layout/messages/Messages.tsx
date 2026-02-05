@@ -27,15 +27,13 @@ export default function Messages({ chat }: { chat: Chat }) {
   useEffect(() => {
     if (chat.isTemp || hasLoaded) return;
 
-    reqData(
-      { url: `chat/messages/${chat._id}` },
-      {
-        onSuccess: (msgs) => {
-            setMsgs((state) => ({ ...state, [chat._id]: msgs }));
-          setLoaded((state) => ({ ...state, [chat._id]: true }));
-        },
-      }
-    );
+    reqData({
+            url: `chat/messages/${chat._id}`,
+      onSuccess: (msgs) => {
+          setMsgs((state) => ({ ...state, [chat._id]: msgs }));
+        setLoaded((state) => ({ ...state, [chat._id]: true }));
+      },
+    });
   }, [chat._id, chat.isTemp, hasLoaded, loadedMap, reqData, setMsgs, setLoaded]);
 
   return (

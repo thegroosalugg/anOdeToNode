@@ -1,8 +1,8 @@
 .modal {
   z-index: 30;
   position: fixed;
-  top: 50%;
-  left: 50%;
+  inset: 0;
+  margin: auto;
   max-height: 85%;
   max-width: 90%;
   overflow: auto;

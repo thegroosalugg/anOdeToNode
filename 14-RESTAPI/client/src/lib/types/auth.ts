@@ -1,9 +1,10 @@
 import User from "@/models/User";
 import { FetchState } from "./fetch";
+import { SetData } from "./common";
 
 export type Auth = FetchState<User | null, "user">
-export interface Authorized extends Auth {
-  user: User;
-}
 
-export type UserState = Pick<Authorized, "user" | "setUser">;
+export interface UserState {
+     user: User;
+  setUser: SetData<User | null>
+};

@@ -35,6 +35,11 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
     if (errors && scope.current) shake("p");
   };
 
+  const onSuccess = (about: User["about"]) => {
+    setUser((prev) => (prev ? { ...prev, about } : prev));
+    closeModal();
+  }
+
   function submitHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -48,24 +53,13 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
           bio: getEntry(data, "bio"),
       };
 
-      const isSame = Object.entries(entries).every(
-        ([key, val]) => val === (about?.[key as keyof typeof about] ?? "")
-      );
+      const isSame = Object.entries(entries).every(([key, val]) => val === (about?.[key as keyof typeof about] ?? ""));
       if (isSame) {
         shoot(".fleeting-pop-up");
         return;
       }
 
-      await reqData(
-        { url: "profile/info", method: "POST", data },
-        {
-          onError,
-          onSuccess: (about) => {
-            setUser((prev) => ({ ...prev!, about }));
-            closeModal(); // triggers effect cleanup
-          },
-        }
-      );
+      await reqData({ url: "profile/info", method: "POST", data, onError, onSuccess });
     };
 
     deferFn(request, 1000);

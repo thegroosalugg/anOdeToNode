@@ -53,7 +53,7 @@ export default function ChatBox({
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     const data = new FormData(e.currentTarget);
-    await reqData({ url, method: "POST", data }, { onSuccess, onError });
+    await reqData({ url, method: "POST", data, onSuccess, onError });
   };
 
   return (
