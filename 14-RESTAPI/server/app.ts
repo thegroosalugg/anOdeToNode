@@ -5,7 +5,6 @@ import        multer     from 'multer';
 import {      join     } from 'path';
 import { storage, fileFilter } from './middleware/multerConfig';
 import {     authJWT   } from './middleware/auth.JWT';
-import { postAnalytics } from './controllers/analyticsController';
 import      authRoutes   from './routes/auth';
 import      postRoutes   from './routes/post';
 import      feedRoutes   from './routes/feed';
@@ -47,7 +46,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/analytics',       postAnalytics);
 app.use(                        authRoutes);
 app.use('/feed',    authJWT,    feedRoutes);
 app.use('/post',    authJWT,   [postRoutes, replyRoutes]);
