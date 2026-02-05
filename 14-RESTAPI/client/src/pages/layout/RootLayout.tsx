@@ -9,6 +9,7 @@ import { saveTokens } from "@/lib/http/token";
 import { postAnalytics } from "@/lib/http/analytics";
 import { Auth } from "@/lib/types/auth";
 import { Dict } from "@/lib/types/common";
+import { eventBus } from "@/lib/util/eventBus";
 
 const staticMeta: Dict<{ title: string; description: string }> = {
     "/feed": { title:               "Feed", description: "All user posts"          },
@@ -41,8 +42,13 @@ export default function RootLayout({ children }: { children: (props: Auth) => Re
   const { title, description } = metadata(pathname, user);
 
   useEffect(() => {
-    reqUser({ url: "refresh-token/?populate=true", method: "POST" }, { onSuccess: (user) => saveTokens(user!), onError: () => setUser(null) });
-    postAnalytics()
+    reqUser(
+      { url: "refresh-token/?populate=true", method: "POST" },
+      { onSuccess: (user) => saveTokens(user!) },
+    );
+    postAnalytics();
+    const unsubscribe = eventBus.on("logout", () => setUser(null));
+    return unsubscribe; // clean-uo - called on dismount
   }, [reqUser, setUser]);
 
   return (

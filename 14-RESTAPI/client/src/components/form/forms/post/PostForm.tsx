@@ -3,8 +3,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { ApiError } from "@/lib/http/fetchData";
-import { Auth } from "@/lib/types/auth";
 import Post from "@/models/Post";
 import Input from "../../layout/Input";
 import ImagePicker from "../../layout/ImagePicker";
@@ -17,14 +15,12 @@ import css from "./PostForm.module.css";
 interface PostForm {
       isOpen: boolean;
   onSuccess?: () => void;
-     setUser: Auth["setUser"];
        post?: Post | null;
 }
 
 export default function PostForm({
       isOpen,
    onSuccess: closeModal = () => console.log("Posted!"),
-     setUser,
         post,
 }: PostForm) {
   const { isLoading, error, reqData, setError } = useFetch<Post | null>();
@@ -42,9 +38,8 @@ export default function PostForm({
     }, 500);
   }, [isOpen, scope, setError]);
 
-  const onError = (err: ApiError) => {
-    if (error && !error.message) shake("p");
-    if (err.status === 401) setUser(null);
+  const onError = () => {
+    if (error && !error.message && scope.current) shake("p");
   };
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {

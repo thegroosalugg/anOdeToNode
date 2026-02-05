@@ -17,7 +17,7 @@ import PostItem from "@/components/list/post/PostItem";
 import SocialActions from "@/components/user/actions/peer/SocialActions";
 import { getMeta } from "@/lib/util/getMeta";
 
-export default function PeerPage({ user, setUser }: Authorized) {
+export default function PeerPage({ user }: Authorized) {
   const { data: peer, isLoading, error, reqData } = useFetch<User | null>();
   const { userId } = useParams();
   const {
@@ -101,7 +101,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
         {peer && (
           <>
             <UserDashboard {...{ target: peer, watcher: user }}>
-              <SocialActions {...{ user, setUser, peer }} />
+              <SocialActions {...{ user, peer }} />
             </UserDashboard>
             <FriendsList target={peer} watcher={user} />
             <PagedList<Post>

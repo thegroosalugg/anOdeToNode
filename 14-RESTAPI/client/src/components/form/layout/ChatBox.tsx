@@ -1,9 +1,7 @@
 import { FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
-import { Auth } from "@/lib/types/auth";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { ApiError } from "@/lib/http/fetchData";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import Loader from "../../ui/boundary/loader/Loader";
 import { Animations, createAnimations } from "@/lib/motion/animations";
@@ -11,13 +9,11 @@ import css from "./ChatBox.module.css";
 
 export default function ChatBox({
          url,
-     setUser,
         rows = 3,
   animations = {},
    ...props
 }: {
           url: string;
-      setUser: Auth["setUser"];
         rows?: number;
   animations?: Animations
 }) {
@@ -48,11 +44,11 @@ export default function ChatBox({
     setTimeout(() => scope.current?.reset(), 100);
   };
 
-  const onError = (err: ApiError) => {
+  const onError = () => {
+    if (!scope.current) return;
     animate(scope.current, { background: "var(--error)" }, { duration: 0 });
     animate("button", { background: "var(--error)" });
     shake("button");
-    if (err.status === 401) setUser(null);
   };
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {

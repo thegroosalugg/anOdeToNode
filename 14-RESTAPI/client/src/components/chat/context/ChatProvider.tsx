@@ -28,7 +28,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
   const [isMarking,   setIsMarking] = useState(false);
   const [markedMap,      setMarked] = useState<StatusMap>({});
   const [showModal,   setShowModal] = useState(false);
-  const [_,        setSearchParams] = useSearchParams();
+  const [,         setSearchParams] = useSearchParams();
   const { deferring,      deferFn } = useDebounce();
 
   const wasMarked = Object.keys(markedMap).some((key) => markedMap[key]);
@@ -142,7 +142,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
 
     let data;
     if (wasMarked) {
-      data = Object.fromEntries(Object.entries(markedMap).filter(([_, v]) => v));
+      data = Object.fromEntries(Object.entries(markedMap).filter(([, v]) => v));
     } else if (activeChat) {
       // if temp chat, it will have stored the newly created real chat's ID
       const _id = activeChat.isTemp ? activeChat.chatId : activeChat._id;

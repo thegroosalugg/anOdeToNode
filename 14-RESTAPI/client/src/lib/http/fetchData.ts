@@ -1,5 +1,6 @@
 import Logger from "@/models/Logger";
 import { getAccessToken, getRefreshToken, refreshToken } from "./token";
+import { eventBus } from "../util/eventBus";
 
 export type ApiError = {
   [key: string]: string;
@@ -33,6 +34,7 @@ const fetchData = async ({ url, method = "GET", data }: Fetch) => {
   if (response.status === 401 && headers.Authorization) {
     const newToken = await refreshToken();
     if (newToken) response = await makeRequest();
+    else eventBus.emit("logout");
   }
 
   const resData  = await response.json();

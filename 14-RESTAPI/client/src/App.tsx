@@ -20,7 +20,7 @@ const validate = (path: string, props: Auth) => {
   const authorized = props as Authorized;
 
   const elements = {
-    "/feed":         <FeedPage   {...authorized} />,
+    "/feed":         <FeedPage />,
     "/post/:postId": <PostPage   {...authorized} />,
     "/social":       <SocialPage {...authorized} />,
     "/user/:userId": <PeerPage   {...authorized} />,

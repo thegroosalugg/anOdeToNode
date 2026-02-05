@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "@/lib/http/fetchData";
-import { UserState } from "@/lib/types/auth";
+import User from "@/models/User";
 import Post from "@/models/Post";
 import Button from "../ui/button/Button";
 import ChatBox from "../form/layout/ChatBox";
@@ -19,9 +19,9 @@ const bodyVariants = createVariants({ transition: { staggerChildren: 0.3 } });
 export default function PostContent({
       post,
       user,
-   setUser,
   setModal,
-}: UserState & {
+}: {
+      user: User;
       post: Post;
   setModal: (modal: string) => void;
 }) {
@@ -88,7 +88,7 @@ export default function PostContent({
         )}
       </AnimatePresence>
 
-      <ChatBox {...{ url: `post/reply/${post._id}`, setUser, variants }} />
+      <ChatBox {...{ url: `post/reply/${post._id}`, variants }} />
     </motion.section>
   );
 }

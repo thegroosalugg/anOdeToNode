@@ -19,7 +19,7 @@ import FormSideBar from "@/components/form/forms/sidebar/FormSideBar";
 import PostForm from "@/components/form/forms/post/PostForm";
 import { getMeta } from "@/lib/util/getMeta";
 
-export default function PostPage({ user, setUser }: Authorized) {
+export default function PostPage({ user }: Authorized) {
   const {
          data: post,
       setData: setPost,
@@ -115,8 +115,7 @@ export default function PostPage({ user, setUser }: Authorized) {
           closeModal(); // delete actions for creator
           navigate("/feed");
         },
-        onError: (err) => {
-          if (err.status === 401) setUser(null);
+        onError: () => {
           closeModal();
         },
       }
@@ -134,7 +133,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     <>
       <Meta {...{ description }}>{title}</Meta>
       <FormSideBar open={modalState === "edit"} close={closeModal} text="Edit your post...">
-        <PostForm {...{ isOpen: modalState === "edit", setUser, post }} />
+        <PostForm {...{ isOpen: modalState === "edit", post }} />
       </FormSideBar>
       <ConfirmDialog
              open={modalState === "delete"}
@@ -144,7 +143,7 @@ export default function PostPage({ user, setUser }: Authorized) {
       <AsyncAwait {...{ isLoading, error }}>
         {post && (
           <>
-            <PostContent {...{ post, user, setUser, setModal }} />
+            <PostContent {...{ post, user, setModal }} />
             <PagedList<Reply>
               header={{ fallback: ["Reply to this post", "end"] }}
                delay={hasLoaded ? 0 : 2.5} // *TEMP FIX FOR STAGGER

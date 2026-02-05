@@ -6,7 +6,7 @@ import ChatBox from "@/components/form/layout/ChatBox";
 import css from "./ChatList.module.css";
 
 export default function ChatList() {
-  const { setUser, chats, activeChat } = useChat();
+  const { chats, activeChat } = useChat();
   const sendTo = (path: string) => `chat/new-msg/${path}`;
 
   return (
@@ -24,13 +24,7 @@ export default function ChatList() {
                 activeChat && (
                   <>
                     <Messages {...{ chat }} />
-                    <ChatBox
-                      {...{
-                           setUser,
-                               url: sendTo(recipient._id),
-                        animations: { transition: { delay: 1 } },
-                      }}
-                    />
+                    <ChatBox {...{ url: sendTo(recipient._id), animations: { transition: { delay: 1 } } }} />
                   </>
                 )
               }

@@ -1,7 +1,6 @@
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useEffect, useState } from "react";
 import { UserState } from "@/lib/types/auth";
-import { ApiError } from "@/lib/http/fetchData";
 import ImagePicker from "../../layout/ImagePicker";
 import Button from "@/components/ui/button/Button";
 import { useAnimations } from "@/lib/hooks/useAnimations";
@@ -26,15 +25,8 @@ export default function EditImage({ user, setUser, isOpen, onSuccess: closeModal
     }, 500);
   }, [isOpen, imgURL, scope, setError]);
 
-  const onError = (err: ApiError) => {
-    // uses state to animate: avoids trigger on first submit before component renders
-    if (error) shake("button");
-    // uses reqData immediate return value for user logout
-    if (err.status === 401) {
-      setTimeout(() => {
-        setUser(null);
-      }, 2000);
-    }
+  const onError = () => {
+    if (error && scope.current) shake("button");
   };
 
   const onSuccess = ({ imgURL }: { imgURL: string }) => {

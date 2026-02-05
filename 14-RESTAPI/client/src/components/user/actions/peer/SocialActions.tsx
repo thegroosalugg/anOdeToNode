@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { UserState } from "@/lib/types/auth";
 import User from "@/models/User";
 import Friend from "@/models/Friend";
 import Loader from "@/components/ui/boundary/loader/Loader";
@@ -13,7 +12,7 @@ import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import { actionsConfig } from "./actions_config";
 import css from "./SocialActions.module.css";
 
-export default function SocialActions({ user, setUser, peer }: UserState & { peer: User }) {
+export default function SocialActions({ user, peer }: { user: User; peer: User }) {
   const { isLoading,    reqData } = useFetch();
   const { deferring,    deferFn } = useDebounce();
   const [showModal, setShowModal] = useState(false);
@@ -29,14 +28,7 @@ export default function SocialActions({ user, setUser, peer }: UserState & { pee
     if (!reqAction) return; // action = undefined if connection accepted
     // in this case an argument must be passed
     const request = async () =>
-      await reqData(
-        { url: `social/${_id}/${reqAction}`, method: "POST" },
-        {
-          onError: (err) => {
-            if (err.status === 401) setUser(null);
-          },
-        }
-      );
+      await reqData({ url: `social/${_id}/${reqAction}`, method: "POST" });
     deferFn(request, 1000);
   };
 
