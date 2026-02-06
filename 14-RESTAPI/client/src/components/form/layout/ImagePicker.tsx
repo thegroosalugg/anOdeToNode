@@ -16,7 +16,7 @@ export default function ImagePicker({
   const [error, setError] = useState("");
   const imagePicker = useRef<HTMLInputElement>(null);
   const file = imagePicker.current?.files?.[0];
-  const       color = error ? "var(--error)" : "";
+  const       color = error ? "var(--danger)" : "";
   const borderColor = color;
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function ImagePicker({
 
   return (
     <label
-      className={`${css["picker"]} floating-box`}
+      className={`${css["picker"]} box`}
         htmlFor="image"
           style={{ borderColor }}
     >

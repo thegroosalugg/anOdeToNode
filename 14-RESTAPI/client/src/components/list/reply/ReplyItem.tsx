@@ -36,11 +36,11 @@ export default function ReplyItem({
         <NameTag user={creator} bold reverse={isOp} />
         <Time time={createdAt} />
       </header>
-      <p className="floating-box">
+      <p className="box">
         <span>{content}</span>
 
         {isOp && (
-          <Button background="var(--error)" onClick={() => setShowModal(true)}>
+          <Button background="var(--danger)" onClick={() => setShowModal(true)}>
             Delete
           </Button>
         )}

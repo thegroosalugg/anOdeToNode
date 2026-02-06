@@ -25,7 +25,7 @@ export default function ChatBox({
     setError(null);
     animate(
       scope.current, // form must match textarea bg on success, and button bg on error
-      { background: "var(--bg)", scale: [1, 1.01, 1] },
+      { background: "var(--page)", scale: [1, 1.01, 1] },
       {
         background: { duration: 0 }, // ensures animation instant
              scale: { duration: 0.2, delay: 0.2 },
@@ -38,7 +38,7 @@ export default function ChatBox({
     );
     animate(
       "button", // animate colors must be manually reset to default end of animation
-      { background: [null, "var(--accept)", "var(--text)"] },
+      { background: [null, "var(--success)", "var(--text-alt)"] },
       { duration: 1, times: [0, 0.1, 0.85, 1] }
     );
     setTimeout(() => scope.current?.reset(), 100);
@@ -46,8 +46,8 @@ export default function ChatBox({
 
   const onError = () => {
     if (!scope.current) return;
-    animate(scope.current, { background: "var(--error)" }, { duration: 0 });
-    animate("button", { background: "var(--error)" });
+    animate(scope.current, { background: "var(--danger)" }, { duration: 0 });
+    animate("button", { background: "var(--danger)" });
     shake("button");
   };
 

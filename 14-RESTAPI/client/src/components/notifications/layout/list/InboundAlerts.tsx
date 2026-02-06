@@ -39,7 +39,7 @@ export default function InboundAlerts() {
             <motion.li
                  layout
                     key={alertId + initiated}
-              className={`floating-box ${shared["alert"]}`}
+              className={`box ${shared["alert"]}`}
               {...animations}
             >
               <Time time={createdAt} />
@@ -58,13 +58,13 @@ export default function InboundAlerts() {
               {!accepted && (
                 <div className={css["actions"]}>
                   <Button
-                    background="var(--accept)"
+                    background="var(--success)"
                        onClick={() => friendRequest(_id, "accept")}
                   >
                     Accept
                   </Button>
                   <Button
-                    background="var(--error)"
+                    background="var(--danger)"
                        onClick={() => friendRequest(_id, "delete")}
                   >
                     Decline

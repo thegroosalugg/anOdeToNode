@@ -6,7 +6,7 @@
     border: none;
     height: 1px;
     margin-top: 2px;
-    background-color: var(--text);
+    background-color: var(--text-alt);
   }
 
   > header {
@@ -15,6 +15,6 @@
   }
   > p {
     margin-top: 0.2rem;
-    color: var(--text);
+    color: var(--text-alt);
   }
 }

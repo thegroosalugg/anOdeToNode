@@ -12,9 +12,9 @@
     transition: color 0.5s ease;
   }
 
-  /* uses .floating-box */
+  /* uses .box */
   input, textarea {
-    padding: 0.25rem 0.5rem;
+    padding: var(--padding-sm);
     font-size: var(--text-xl);
     resize: none;
     transition: color 0.5s ease, border-color 0.5s ease;
@@ -22,6 +22,6 @@
 }
 
 .error {
-  input, textarea, label { color: var(--error); }
-  input, textarea { border-color: var(--error); }
+  input, textarea, label { color: var(--danger); }
+  input, textarea { border-color: var(--danger); }
 }

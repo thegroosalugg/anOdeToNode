@@ -5,11 +5,11 @@
   text-align: center;
   text-transform: capitalize;
   max-width: 95%;
-  border-radius: var(--radius-lg);
+  border-radius: var(--rounded-lg);
   box-shadow: var(--shadow-2xl);
-  background: var(--error);
-  color: var(--bg);
+  background: var(--danger);
+  color: var(--page);
   cursor: pointer;
 
-  &::-webkit-scrollbar-thumb { background: var(--box); }
+  &::-webkit-scrollbar-thumb { background: var(--page-alt); }
 }

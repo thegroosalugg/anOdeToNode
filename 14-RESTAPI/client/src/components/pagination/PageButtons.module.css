@@ -16,8 +16,8 @@
   > button {
     /* color, border-color & background set as framer animate */
     min-width: 2rem;
-    border: var(--border-accent);
-    border-radius: var(--radius-lg);
+    border: var(--border) var(--accent);
+    border-radius: var(--rounded-lg);
     font-weight: 600;
   }
 }

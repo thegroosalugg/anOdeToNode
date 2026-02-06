@@ -10,14 +10,14 @@
 
   > img {
     width: 100%;
-    border-radius: var(--radius-xl);
+    border-radius: var(--rounded-xl);
     box-shadow: var(--shadow-xl);
   }
 
   > p {
     padding-left: 0.1rem;
     font-size: var(--text-xs);
-    color: var(--text);
+    color: var(--text-alt);
   }
 }
 

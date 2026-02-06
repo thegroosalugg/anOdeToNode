@@ -8,15 +8,15 @@
   background: var(--accent);
   box-shadow: var(--shadow-pop);
 
-  &::-webkit-scrollbar-thumb { background: var(--bg); }
+  &::-webkit-scrollbar-thumb { background: var(--page); }
 
   > h1 {
-    color: var(--bg);
-    border: 2px solid var(--bg);
-    border-radius: var(--radius-xs);
+    color: var(--page);
+    border: 2px solid var(--page);
+    border-radius: var(--rounded-xs);
     font-size: var(--text-xl);
     font-weight: 900;
-    padding: 0.25rem 0.5rem;
+    padding: var(--padding-sm);
     cursor: pointer;
 
     span:last-of-type { display: none; }
@@ -30,7 +30,7 @@
   gap: 0.5rem;
 
   > button {
-    color: var(--bg);
+    color: var(--page);
     &:last-of-type { margin-left: auto; }
   }
 }

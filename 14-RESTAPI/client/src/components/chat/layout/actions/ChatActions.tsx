@@ -17,8 +17,8 @@ export default function ChatActions() {
     closeMenu,
   } = useChat();
   const  canDelete = isMarking || activeChat;
-  const      color = canDelete ?    "var(--bg)" : "var(--fg)";
-  const background = canDelete ? "var(--error)" : "var(--box)";
+  const      color = canDelete ?    "var(--page)" : "var(--text)";
+  const background = canDelete ? "var(--danger)" : "var(--page-alt)";
 
   return (
     <>

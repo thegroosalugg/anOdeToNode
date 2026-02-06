@@ -1,5 +1,5 @@
 .info-tag {
-  color: var(--text);
+  color: var(--text-alt);
   font-size: var(--text-sm);
   overflow-wrap: break-word;
 

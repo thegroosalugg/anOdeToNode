@@ -42,7 +42,7 @@ export default function PageButtons({
     >
       <LayoutGroup>
         {pages.map((page) => {
-          const [accent, bg] = ["var(--accent)", "var(--box)"];
+          const [accent, bg] = ["var(--accent)", "var(--page-alt)"];
           const     isActive = current === page;
           const        color =  isActive ? bg : accent;
           const  borderColor =  color;

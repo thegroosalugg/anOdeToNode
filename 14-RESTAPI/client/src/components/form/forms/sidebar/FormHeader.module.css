@@ -4,7 +4,7 @@
   align-items: start;
   gap: 0.5rem;
   padding: 0.75rem;
-  background: var(--text);
-  color: var(--bg);
+  background: var(--text-alt);
+  color: var(--page);
   box-shadow: var(--shadow-pop);
 }

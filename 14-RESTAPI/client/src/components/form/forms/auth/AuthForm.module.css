@@ -1,6 +1,6 @@
 .auth-form {
-  --color: var(--accent-hover);
-  --background: var(--box);
+  --color: var(--accent-alt);
+  --background: var(--page-alt);
   align-self: center;
   max-width: 250px;
   width: 100%;
@@ -11,8 +11,8 @@
   padding: 0.5rem;
 
   &.is-login {
-    --color: var(--box);
-    --background: var(--accent-hover);
+    --color: var(--page-alt);
+    --background: var(--accent-alt);
   }
 
   /* override functional component CSS */
@@ -28,12 +28,12 @@
     font-weight: 900;
     font-size: var(--text-3xl);
     margin-bottom: -0.5rem;
-    padding: 0.25rem 0.5rem;
+    padding: var(--padding-sm);
     color: var(--color);
     border: 2px solid var(--color);
     background: var(--background);
     box-shadow: var(--shadow-xl);
-    border-radius: var(--radius-xl);
+    border-radius: var(--rounded-xl);
   }
 
   > section {
@@ -48,7 +48,7 @@
     margin-bottom: -0.8rem;
     background: none;
     border: none;
-    color: var(--accent-hover);
+    color: var(--accent-alt);
     text-decoration: underline;
   }
 

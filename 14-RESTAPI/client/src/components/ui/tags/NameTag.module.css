@@ -12,7 +12,7 @@
   text-decoration: underline;
   text-underline-offset: 0.2rem;
 
-  > img { border: 1.5px solid var(--fg); }
+  > img { border: 1.5px solid var(--text); }
 }
 
 .reverse { > img { order: 1; }  }

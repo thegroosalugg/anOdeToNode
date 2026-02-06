@@ -2,7 +2,7 @@
   margin-bottom: 0.25rem;
   font-size: var(--text-lg);
   font-weight: bolder;
-  color: var(--text);
+  color: var(--text-alt);
 }
 
 .list {

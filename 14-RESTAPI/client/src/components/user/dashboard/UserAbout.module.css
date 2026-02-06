@@ -7,7 +7,7 @@
   max-width: 300px;
 
   strong {
-    color: var(--fg);
+    color: var(--text);
     font-weight: 500;
   }
 

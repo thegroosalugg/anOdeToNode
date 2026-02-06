@@ -34,7 +34,7 @@ export default function OutboundAlerts() {
             <motion.li
                  layout
                     key={alertId + initiated}
-              className={`floating-box ${shared["alert"]}`}
+              className={`box ${shared["alert"]}`}
               {...animations}
             >
               <Time time={createdAt} />
@@ -50,7 +50,7 @@ export default function OutboundAlerts() {
                 </NameTag>
                 {!accepted ? (
                   <Button
-                    background="var(--error)"
+                    background="var(--danger)"
                        onClick={() => friendRequest(_id, "delete")}
                   >
                     Cancel

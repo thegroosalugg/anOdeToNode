@@ -14,7 +14,7 @@
   }
 
   > p {
-    color: var(--text);
+    color: var(--text-alt);
     padding: 1rem;
     position: relative;
 

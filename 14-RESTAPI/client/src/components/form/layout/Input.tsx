@@ -33,7 +33,7 @@ export default function Input({
       <Element
                id={name}
              name={name}
-        className="floating-box"
+        className="box"
         {...(control === "password" && { type: "password" })} // does not add Type to textarea
         {...(rows && { rows })}
         {...props}

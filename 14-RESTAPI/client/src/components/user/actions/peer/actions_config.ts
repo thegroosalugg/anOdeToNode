@@ -9,7 +9,7 @@ export const actionsConfig = (connection: Friend | undefined) => {
   let action: ReqAction = 'add';
   let text              = 'Add Friend';
   let icon:    IconProp = 'user-plus';
-  let background        = "var(--accept)"
+  let background        = "var(--success)"
 
   if (accepted) {
         action = undefined;
@@ -20,12 +20,12 @@ export const actionsConfig = (connection: Friend | undefined) => {
         action = 'delete';
           text = 'Cancel';
           icon = 'rectangle-xmark';
-    background = "var(--error)";
+    background = "var(--danger)";
   } else if (connection && !initiated && !accepted) {
         action = 'accept';
           text = 'Accept';
           icon = 'check-to-slot';
-    background = "var(--accept)";
+    background = "var(--success)";
   }
 
   return { action, text, icon, background };

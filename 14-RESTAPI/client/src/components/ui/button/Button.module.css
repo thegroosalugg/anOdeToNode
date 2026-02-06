@@ -1,8 +1,9 @@
 .button {
   padding: 0.25rem 0.5rem;
   width: fit-content;
-  border: var(--border-transparent);
-  border-radius: var(--radius-lg);
+  padding: var(--padding-sm);
+  border: var(--border) var(--transparent);
+  border-radius: var(--rounded-lg);
   color: var(--bg);
   background: var(--accent);
   box-shadow: var(--shadow-pop);

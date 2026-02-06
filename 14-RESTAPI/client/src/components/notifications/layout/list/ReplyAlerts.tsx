@@ -20,7 +20,7 @@ export default function ReplyAlerts() {
           <motion.li
                layout
                   key={_id}
-            className={`floating-box ${shared["alert"]}`}
+            className={`box ${shared["alert"]}`}
             {...animations}
           >
             <Time time={createdAt} />

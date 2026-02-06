@@ -17,7 +17,7 @@ export default function NotifsHeader() {
   return (
     <header className={css["header"]}>
       <XButton onClick={closeMenu} />
-      <nav className="floating-box no-scrollbar-x">
+      <nav className="box no-scrollbar-x">
         {alerts.map((count, i) => {
           const [line1, line2] = labels[i].split("-");
           return (

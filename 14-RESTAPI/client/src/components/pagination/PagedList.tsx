@@ -39,7 +39,7 @@ export default function PagedList<T extends { _id: string }>({
 PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   const      navigate = useNavigate();
   const      hasItems = items.length > 0;
-  const       classes = `scrollbar-accent no-scrollbar-x ${css["list"]} ${className}`;
+  const       classes = `no-scrollbar-x ${css["list"]} ${className}`;
   const       listRef = useRef<HTMLUListElement | null>(null);
   const        height = useRef<number | "auto">("auto");
   const shouldRecount = docCount < limit && items.length < limit;

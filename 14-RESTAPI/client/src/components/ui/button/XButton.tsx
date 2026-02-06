@@ -6,12 +6,12 @@ export default function XButton({
      light,
   ...props
 }: { light?: boolean } & HTMLMotionProps<"button">) {
-  let background = "var(--text)";
-  let      color = "var(--bg)";
+  let background = "var(--text-alt)";
+  let      color = "var(--page)";
 
   if (light) {
-    background = "var(--bg)";
-         color = "var(--fg)";
+    background = "var(--page)";
+         color = "var(--text)";
   }
 
   return (

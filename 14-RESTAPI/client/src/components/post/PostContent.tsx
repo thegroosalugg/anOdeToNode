@@ -41,7 +41,7 @@ export default function PostContent({
 
       <AnimatePresence mode="wait">
         <motion.div
-          className={`floating-box ${css["post-body"]}`}
+          className={`box ${css["post-body"]}`}
            variants={bodyVariants}
               style={{ marginBottom: imgURL ? "" : "1rem" }}
         >
@@ -55,7 +55,7 @@ export default function PostContent({
           {isOp && (
             <motion.div className={css["actions"]} {...{ variants }}>
               <Button onClick={() => setModal("edit")}>Edit</Button>
-              <Button onClick={() => setModal("delete")} background="var(--error)">
+              <Button onClick={() => setModal("delete")} background="var(--danger)">
                 Delete
               </Button>
             </motion.div>
@@ -65,7 +65,7 @@ export default function PostContent({
 
       <AnimatePresence mode="wait">
         {imgURL && (
-          <motion.div className={`floating-box ${css["image"]}`} {...{ variants }}>
+          <motion.div className={`box ${css["image"]}`} {...{ variants }}>
             <motion.img
                   key={imgURL}
                   src={API_URL + imgURL}

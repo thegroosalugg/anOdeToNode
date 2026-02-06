@@ -39,7 +39,7 @@
     --border: 4px;
   }
 
-  &.bg    { --color: var(--bg); }
+  &.bg    { --color: var(--page); }
   &.white { --color: var(--gray-100); }
 }
 
