@@ -21,7 +21,7 @@ export default function UserLogout({ setUser }: { setUser: Auth["setUser"] }) {
       <p className={css["user-logout"]}>
         <Button
           onClick={() => setShowModal(true)}
-          background="var(--danger)"
+          background="danger"
           animations={{ transition: { opacity: { delay: 1.8 } } }}
         >
           Logout

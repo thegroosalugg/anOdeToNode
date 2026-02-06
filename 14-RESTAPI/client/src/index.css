@@ -10,7 +10,7 @@
   --text-alt: var(--stone-600);
   --accent: var(--steel-600);
   --accent-alt: var(--steel-700);
-  --hover: var(--amber-300);
+  --hover: var(--amber-400);
   --danger: var(--rust-600);
   --success: var(--lime-700);
   --transparent: oklch(100% 0.00011 271.152 / 0);
@@ -25,7 +25,7 @@
     --accent-alt: var(--steel-300);
     --hover: var(--gray-100);
     --danger: var(--rust-500);
-    --success: var(--lime-400);
+    --success: var(--lime-500);
     --transparent: oklch(0% 0 0 / 0);
   }
 }

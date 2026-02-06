@@ -16,10 +16,10 @@ export default function ConfirmDialog({
       <div className={css["confirm-dialog"]}>
         <h2>Are you sure?</h2>
         <section>
-          <Button color="var(--page)" background="var(--danger)" onClick={onConfirm}>
+          <Button background="danger" color="page" border="danger" onClick={onConfirm}>
             Probably
           </Button>
-          <Button color="var(--text)" background="var(--page-alt)" border onClick={onCancel}>
+          <Button background="text-alt" color="page-alt" border="page-alt" onClick={onCancel}>
             Probably Not
           </Button>
         </section>

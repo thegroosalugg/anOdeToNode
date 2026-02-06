@@ -71,7 +71,7 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
       <p className="fleeting-pop-up" style={{ top: "1rem", left: "0.5rem" }}>
         No changes
       </p>
-      <Button disabled={deferring} background={`var(--${errors ? "error" : "accent"})`}>
+      <Button disabled={deferring} background={errors ? "danger" : "accent"}>
         {deferring ? <Loader size="xs" color="page" /> : "Update"}
       </Button>
       <Input control="home" {...{ errors }} defaultValue={home}>

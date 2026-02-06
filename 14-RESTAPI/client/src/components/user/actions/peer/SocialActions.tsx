@@ -73,7 +73,7 @@ export default function SocialActions({ user, peer }: { user: User; peer: User }
 
         <AnimatePresence>
           {(accepted || (connection && !initiated)) && (
-            <Button onClick={deleteFriend} background="var(--danger)" exit={{ opacity: 0 }}>
+            <Button onClick={deleteFriend} background="danger" exit={{ opacity: 0 }}>
               {accepted ? (
                 "Remove Friend"
               ) : (

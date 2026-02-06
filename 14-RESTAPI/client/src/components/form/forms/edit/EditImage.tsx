@@ -45,7 +45,7 @@ export default function EditImage({ user, setUser, isOpen, onSuccess: closeModal
   return (
     <form className={css["edit-image"]} ref={scope} onSubmit={submitHandler}>
       <ImagePicker imgURL={displayPic} label="Upload a profile picture" />
-      <Button background={`var(--${error ? "error" : "accent"})`}>
+      <Button background={error ? "danger" : "accent"}>
         {error ? error.message : "Upload"}
       </Button>
     </form>

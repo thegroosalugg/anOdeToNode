@@ -40,7 +40,7 @@ export default function ReplyItem({
         <span>{content}</span>
 
         {isOp && (
-          <Button background="var(--danger)" onClick={() => setShowModal(true)}>
+          <Button background="danger" onClick={() => setShowModal(true)}>
             Delete
           </Button>
         )}

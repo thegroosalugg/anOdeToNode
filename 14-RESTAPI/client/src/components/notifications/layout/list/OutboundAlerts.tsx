@@ -49,10 +49,7 @@ export default function OutboundAlerts() {
                   {text}
                 </NameTag>
                 {!accepted ? (
-                  <Button
-                    background="var(--danger)"
-                       onClick={() => friendRequest(_id, "delete")}
-                  >
+                  <Button background="danger" onClick={() => friendRequest(_id, "delete")}>
                     Cancel
                   </Button>
                 ) : (

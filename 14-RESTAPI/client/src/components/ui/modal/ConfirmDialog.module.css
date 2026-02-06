@@ -15,9 +15,6 @@
     display: flex;
     gap: 0.5rem;
 
-    > button {
-      width: 128px;
-      border: var(--border) var(--transparent);
-    }
+    > button { width: 128px; }
   }
 }

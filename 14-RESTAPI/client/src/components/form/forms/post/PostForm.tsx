@@ -86,7 +86,7 @@ export default function PostForm({
           </p>
           <section>
             <ImagePicker {...{ imgURL }} />
-            <Button disabled={deferring} whileTap={{ scale: deferring ? 1 : 0.9 }}>
+            <Button disabled={deferring} background={error ? "danger" : "accent"}>
               {isLoading ? <Loader size="xs" color="page" /> : "Post"}
             </Button>
           </section>

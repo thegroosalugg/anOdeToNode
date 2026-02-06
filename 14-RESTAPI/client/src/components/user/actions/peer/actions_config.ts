@@ -1,3 +1,4 @@
+import { Color } from '@/lib/types/colors';
 import Friend from '@/models/Friend';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
@@ -9,23 +10,23 @@ export const actionsConfig = (connection: Friend | undefined) => {
   let action: ReqAction = 'add';
   let text              = 'Add Friend';
   let icon:    IconProp = 'user-plus';
-  let background        = "var(--success)"
+  let background: Color = "success"
 
   if (accepted) {
         action = undefined;
           text = 'Message';
           icon = 'comment';
-    background = "var(--accent)";
+    background = "accent";
   } else if (initiated) {
         action = 'delete';
           text = 'Cancel';
           icon = 'rectangle-xmark';
-    background = "var(--danger)";
+    background = "danger";
   } else if (connection && !initiated && !accepted) {
         action = 'accept';
           text = 'Accept';
           icon = 'check-to-slot';
-    background = "var(--success)";
+    background = "success";
   }
 
   return { action, text, icon, background };

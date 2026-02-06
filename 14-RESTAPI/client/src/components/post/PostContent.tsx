@@ -55,7 +55,7 @@ export default function PostContent({
           {isOp && (
             <motion.div className={css["actions"]} {...{ variants }}>
               <Button onClick={() => setModal("edit")}>Edit</Button>
-              <Button onClick={() => setModal("delete")} background="var(--danger)">
+              <Button onClick={() => setModal("delete")} background="danger">
                 Delete
               </Button>
             </motion.div>
