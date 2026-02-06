@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
+import { api } from "@/lib/http/endpoints";
 import Reply from "@/models/Reply";
 import ConfirmDialog from "../../ui/modal/ConfirmDialog";
 import Button from "../../ui/button/Button";
@@ -24,7 +25,7 @@ export default function ReplyItem({
   if (isOp) classes += ` ${css["reverse"]}`;
 
   const deleteReply = async () => {
-    await reqData({ url: `post/delete-reply/${_id}`, method: "DELETE" });
+    await reqData({ url: api.post.deleteReply(_id), method: "DELETE" });
     closeModal();
   };
 
@@ -35,11 +36,11 @@ export default function ReplyItem({
         <NameTag user={creator} bold reverse={isOp} />
         <Time time={createdAt} />
       </header>
-      <p className="floating-box">
+      <p className="box">
         <span>{content}</span>
 
         {isOp && (
-          <Button background="var(--error)" onClick={() => setShowModal(true)}>
+          <Button background="danger" onClick={() => setShowModal(true)}>
             Delete
           </Button>
         )}

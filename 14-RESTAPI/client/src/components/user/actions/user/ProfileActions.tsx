@@ -1,7 +1,7 @@
 import { useState } from "react";
 import FormSideBar from "@/components/form/forms/sidebar/FormSideBar";
 import Button from "@/components/ui/button/Button";
-import { UserState } from "@/lib/types/auth";
+import { UserState } from "@/lib/types/interface";
 import EditImage from "@/components/form/forms/edit/EditImage";
 import EditAbout from "@/components/form/forms/edit/EditAbout";
 import css from "./ProfileActions.module.css";

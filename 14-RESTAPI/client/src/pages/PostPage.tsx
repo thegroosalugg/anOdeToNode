@@ -4,8 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { usePagedFetch } from "@/components/pagination/usePagedFetch";
 import { useSocket } from "@/lib/hooks/useSocket";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
-import { FetchError } from "@/lib/types/common";
-import { Authorized } from "@/lib/types/auth";
+import { ApiError } from "@/lib/http/fetchData";
+import User from "@/models/User";
 import Post from "@/models/Post";
 import Reply from "@/models/Reply";
 import Logger from "@/models/Logger";
@@ -18,8 +18,9 @@ import PagedList from "@/components/pagination/PagedList";
 import FormSideBar from "@/components/form/forms/sidebar/FormSideBar";
 import PostForm from "@/components/form/forms/post/PostForm";
 import { getMeta } from "@/lib/util/getMeta";
+import { api } from "@/lib/http/endpoints";
 
-export default function PostPage({ user, setUser }: Authorized) {
+export default function PostPage({ user }: { user: User }) {
   const {
          data: post,
       setData: setPost,
@@ -31,8 +32,8 @@ export default function PostPage({ user, setUser }: Authorized) {
   const { postId } = useParams();
   const {
     fetcher: { setData: setReplies },
-    ...rest
-  } = usePagedFetch<Reply>(`post/replies/${postId}`, 5, !!postId);
+    ...rest // usePagedFetch won't send request if postId undefined
+  } = usePagedFetch<Reply>(api.post.replies(postId ?? ""), 5, !!postId);
   const [modalState,    setModal] = useState("");
   const [hasLoaded, setHasLoaded] = useState(false);
   const   navigate = useNavigate();
@@ -44,7 +45,7 @@ export default function PostPage({ user, setUser }: Authorized) {
   useEffect(() => {
     const fetchPost = async () => {
       if (!postId || hasLoaded) return;
-      await reqPost({ url: `feed/find/${postId}` });
+      await reqPost({ url: api.feed.find(postId) });
       setTimeout(() => setHasLoaded(true), 1000); // *TEMP FIX FOR STAGGER
     };
 
@@ -94,7 +95,7 @@ export default function PostPage({ user, setUser }: Authorized) {
       logger.event("post:delete", deleted);
       if (deleted.creator !== user._id) {
         setPost(null); // delete actions for viewers. Creator's state automatically set to null
-        setError({ message: "The post was deleted" } as FetchError); // creators redirected without msg
+        setError({ message: "The post was deleted" } as ApiError); // creators redirected without msg
       }
     });
 
@@ -107,22 +108,18 @@ export default function PostPage({ user, setUser }: Authorized) {
     };
   }, [socketRef, user._id, postId, setError, setPost, reqPost, setReplies]);
 
+  const onSuccess = () => {
+    closeModal(); // delete actions for creator
+    navigate("/feed");
+  };
+
+  const onError = () => {
+    closeModal();
+  };
+
   async function deletePost() {
-    await reqPost(
-      { url: `post/delete/${postId}`, method: "DELETE" },
-      {
-        onSuccess: () => {
-          closeModal(); // delete actions for creator
-          navigate("/feed");
-        },
-        onError: (err) => {
-          if (err.status === 401) {
-            setUser(null);
-          }
-          closeModal();
-        },
-      }
-    );
+    if (!postId) return;
+    await reqPost({ url: api.post.delete(postId), method: "DELETE", onSuccess, onError });
   }
 
   const { title, description } = getMeta(
@@ -136,7 +133,7 @@ export default function PostPage({ user, setUser }: Authorized) {
     <>
       <Meta {...{ description }}>{title}</Meta>
       <FormSideBar open={modalState === "edit"} close={closeModal} text="Edit your post...">
-        <PostForm {...{ isOpen: modalState === "edit", setUser, post }} />
+        <PostForm {...{ isOpen: modalState === "edit", post }} />
       </FormSideBar>
       <ConfirmDialog
              open={modalState === "delete"}
@@ -146,7 +143,7 @@ export default function PostPage({ user, setUser }: Authorized) {
       <AsyncAwait {...{ isLoading, error }}>
         {post && (
           <>
-            <PostContent {...{ post, user, setUser, setModal }} />
+            <PostContent {...{ post, user, setModal }} />
             <PagedList<Reply>
               header={{ fallback: ["Reply to this post", "end"] }}
                delay={hasLoaded ? 0 : 2.5} // *TEMP FIX FOR STAGGER

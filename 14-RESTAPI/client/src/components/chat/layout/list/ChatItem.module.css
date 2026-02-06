@@ -1,10 +1,10 @@
-/* uses .floating-box */
+/* uses .box */
 .chat-item {
-  --color: var(--text);
-  --background: var(--box);
-  --header: var(--fg);
+  --color: var(--text-alt);
+  --background: var(--page-alt);
+  --header: var(--text);
   --counter: var(--accent);
-  --img: var(--text);
+  --img: var(--text-alt);
 
   display: flex;
   flex-direction: column;
@@ -77,9 +77,9 @@
 }
 
 .marked {
-  --background: var(--error);
-  --img: var(--error);
-  --color:   var(--bg);
-  --header:  var(--bg);
-  --counter: var(--bg);
+  --background: var(--danger);
+  --img: var(--danger);
+  --color:   var(--page);
+  --header:  var(--page);
+  --counter: var(--page);
 }

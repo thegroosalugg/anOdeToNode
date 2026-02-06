@@ -5,11 +5,15 @@ import Meta from "@/components/meta/Meta";
 import NavBar from "@/components/layout/header/NavBar";
 import Footer from "@/components/layout/footer/Footer";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { Auth } from "@/lib/types/auth";
-import { Dict } from "@/lib/types/common";
-import { getAnalytics } from "@/lib/util/getAnalytics";
+import { api } from "@/lib/http/endpoints";
+import { eventBus } from "@/lib/util/eventBus";
+import { saveTokens } from "@/lib/http/token";
+import { postAnalytics } from "@/lib/http/analytics";
+import User from "@/models/User";
+import { RecordMap } from "@/lib/types/common";
+import { Auth } from "@/lib/types/interface";
 
-const staticMeta: Dict<{ title: string; description: string }> = {
+const staticMeta: RecordMap<{ title: string; description: string }> = {
     "/feed": { title:               "Feed", description: "All user posts"          },
   "/social": { title:             "Social", description: "List of users"           },
    "/about": { title:              "About", description: "About page"              },
@@ -35,21 +39,21 @@ export default function RootLayout({ children }: { children: (props: Auth) => Re
     isLoading,
         error,
      setError,
-  } = useFetch<Auth["user"]>(null, true); // null initial, true loading before useEffect
-  const { reqData: postAnalytics } = useFetch();
+  } = useFetch<User>(); // null initial, true loading before useEffect
   const props = { user, setUser, reqUser, isLoading, error, setError };
   const { title, description } = metadata(pathname, user);
 
   useEffect(() => {
-    reqUser({ url: "user" }, { onError: () => setUser(null) });
-    const data = getAnalytics();
-    if (data) postAnalytics({ url: "analytics", method: "POST", data });
-  }, [reqUser, setUser, postAnalytics]);
+    reqUser({ url: api.user.refresh({ populate: true }), method: "POST", onSuccess: (user) => saveTokens(user) });
+    postAnalytics();
+    const unsubscribe = eventBus.on("logout", () => setUser(null));
+    return unsubscribe; // clean-up - called on dismount
+  }, [reqUser, setUser]);
 
   return (
     <>
       <Meta {...{ description }}>{title}</Meta>
-      <NavBar {...props} />
+      <NavBar {...{ user, setUser }} />
       <AnimatePresence mode="wait">
         <motion.main
                   id="main"

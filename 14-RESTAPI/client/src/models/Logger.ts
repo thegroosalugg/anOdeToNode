@@ -1,11 +1,11 @@
 import { Dependency } from "@/lib/hooks/useDepedencyTracker";
+import { Fetch } from "@/lib/http/fetchData";
 import { captainsLog } from "@/lib/util/captainsLog";
-import { Fetch } from "@/lib/util/fetchData";
 
 export type LogConfig = "feed" | "post" | "social" | "peer" | "user" | "chat" | "alerts";
 
 export default class Logger {
-  private  name: string;
+  private name: string;
   private color: number;
 
   private static CONFIG = {
@@ -32,9 +32,9 @@ export default class Logger {
   }
 
   private connection(config: 0 | 20 = 0) {
-    const msg = config > 0 ? "disconnect" : "connected";
+    const message = config > 0 ? "disconnect" : "connected";
     const color = this.color + config;
-    captainsLog(color, [`SOCKET: ${this.name} [${msg}]`]);
+    captainsLog(color, { [this.name]: message });
   }
 
   connect() {
@@ -46,19 +46,19 @@ export default class Logger {
   }
 
   event(message: string, data: unknown) {
-    captainsLog(this.color, [`SOCKET: ${this.name} :${message}`, data]);
+    captainsLog(this.color, { [this.name]: message, data });
   }
 
   res(res: Response, resData: unknown, { method, url }: Fetch) {
-    const [col, icon] = res.ok ? [this.color, "✓"] : [0, "✕"];
-    captainsLog(col, [`${icon} ${method}:${res.status} ${this.name}\n▧${url}`, resData]);
+    const [color, icon] = res.ok ? [this.color, "✓"] : [0, "✕"];
+    captainsLog(color, { [this.name]: `${icon} ${method}:${res.status} ${url}`, resData });
   }
 
   track(changes: Dependency<{ _old: unknown; _new: unknown }>) {
-    const formatted = Object.entries(changes)
+    const data = Object.entries(changes)
       .map(([key, { _old, _new }], i) => `[${i + 1}] ${key}: ${_old} => ${_new}`)
       .join("\n");
 
-    captainsLog(this.color, [`${this.name} [dependencies]\n${formatted}`]);
+    captainsLog(this.color, { [this.name]: data });
   }
 }

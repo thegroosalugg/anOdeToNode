@@ -11,7 +11,7 @@ export default function PostItem({
   isCreator,
 }: Post & { isCreator?: boolean }) {
   return (
-    <article className={`${css["post"]} floating-box`}>
+    <article className={`${css["post"]} box`}>
       {!isCreator && <NameTag user={creator} align="start" />}
       <header>
         <strong className="truncate">{title}</strong>

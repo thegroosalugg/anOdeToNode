@@ -4,7 +4,7 @@
   gap: 1rem;
   padding-right: 2.25rem;
 
-  /* uses floating-box class & no-scrollbar-x */
+  /* uses box class & no-scrollbar-x */
   > nav {
     margin: 0 auto;
     padding: 0.5rem;

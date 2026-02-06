@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { Auth } from "@/lib/types/auth";
+import { Auth } from "@/lib/types/interface";
 import { motion } from "motion/react";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useAnimations } from "@/lib/hooks/useAnimations";
+import { api } from "@/lib/http/endpoints";
 import Input from "../../layout/Input";
 import Button from "@/components/ui/button/Button";
 import Loader from "@/components/ui/boundary/loader/Loader";
 import { createVariants } from "@/lib/motion/animations";
+import { saveTokens } from "@/lib/http/token";
 import css from "./AuthForm.module.css";
 
 export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) {
@@ -28,15 +30,13 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
 
   const onSuccess = (user: Auth["user"]) => {
     if (user) {
-      const { JWTaccess, JWTrefresh } = user;
+      saveTokens(user);
       setError(null);
-      localStorage.setItem("jwt-access", JWTaccess);
-      localStorage.setItem("jwt-refresh", JWTrefresh);
     }
   };
 
   const onError = () => {
-    if (error && !error.message) shake("p");
+    if (error && !error.message && scope.current) shake("p");
   };
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
@@ -44,14 +44,13 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
     deferFn(async () => {
       const data = new FormData(e.currentTarget); // data parsed by multer
       // const data = Object.fromEntries(formData.entries()); // if application/json
-      await reqUser(
-        {
-             url: isLogin ? "login" : "signup",
-          method: "POST",
-            data,
-        },
-        { onSuccess, onError }
-      );
+      await reqUser({
+              url: isLogin ? api.user.login : api.user.signup,
+           method: "POST",
+             data,
+        onSuccess,
+          onError,
+      });
     }, 1000);
   }
 
@@ -95,7 +94,7 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
         disabled={deferring}
         whileTap={{ scale: deferring ? 1 : 0.9 }}
       >
-        {isLoading ? <Loader size="xs" color="bg" /> : label}
+        {isLoading ? <Loader size="xs" color="page" /> : label}
       </Button>
     </motion.form>
   );

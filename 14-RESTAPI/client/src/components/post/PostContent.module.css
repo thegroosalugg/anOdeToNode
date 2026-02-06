@@ -61,6 +61,6 @@
     aspect-ratio: initial;
     object-fit: contain;
     box-shadow: var(--shadow-pop);
-    border-radius: var(--radius-md);
+    border-radius: var(--rounded-md);
   }
 }

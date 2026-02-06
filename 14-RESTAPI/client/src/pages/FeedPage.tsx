@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { usePagedFetch } from "@/components/pagination/usePagedFetch";
 import { useSocket } from "@/lib/hooks/useSocket";
-import { Authorized } from "@/lib/types/auth";
 import Post from "@/models/Post";
 import Logger from "@/models/Logger";
 import Button from "@/components/ui/button/Button";
@@ -10,12 +9,13 @@ import PagedList from "@/components/pagination/PagedList";
 import PostItem from "@/components/list/post/PostItem";
 import FormSideBar from "@/components/form/forms/sidebar/FormSideBar";
 import PostForm from "@/components/form/forms/post/PostForm";
+import { api } from "@/lib/http/endpoints";
 
-export default function FeedPage({ setUser }: Authorized) {
+export default function FeedPage() {
   const {
     fetcher: { setData, isLoading, error },
     ...rest
-  } = usePagedFetch<Post>("feed/posts", 3);
+  } = usePagedFetch<Post>(api.feed.posts, 3);
   const socketRef = useSocket("feed");
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
@@ -61,7 +61,7 @@ export default function FeedPage({ setUser }: Authorized) {
   return (
     <>
       <FormSideBar open={isOpen} close={closeModal} text="Make a post!">
-        <PostForm {...{ isOpen, setUser, onSuccess: closeModal }} />
+        <PostForm {...{ isOpen, onSuccess: closeModal }} />
       </FormSideBar>
       <Button
            onClick={() => setIsOpen(true)}

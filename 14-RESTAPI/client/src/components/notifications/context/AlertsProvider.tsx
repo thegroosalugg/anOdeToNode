@@ -1,12 +1,12 @@
 import { useState, ReactNode, useCallback, useMemo } from "react";
 import { AlertCounts, AlertsContext } from "./AlertsContext";
+import { api } from "@/lib/http/endpoints";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { usePages } from "@/lib/hooks/usePages";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
-import { UserState } from "@/lib/types/auth";
-import { FetchError } from "@/lib/types/common";
+import { UserState } from "@/lib/types/interface";
 import User from "@/models/User";
 import Reply from "@/models/Reply";
 import Friend from "@/models/Friend";
@@ -61,26 +61,26 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
   const  count = inboundCount + outboundCount + newReplies;
   const alerts = [inboundCount, outboundCount,  newReplies] as AlertCounts;
 
-  const markSocials = useCallback(
+  const readSocials = useCallback(
     async (index = current) =>
-      await reqSocials(
-        { url: `alerts/social?type=${["inbound", "outbound"][index]}` },
-        { onSuccess: (updated) => setUser(updated) }
-      ),
-    [current, reqSocials, setUser]
+      await reqSocials({
+              url:  api.alerts.readSocial({ query: (["inbound", "outbound"] as const)[index] }),
+        onSuccess: (updated) => setUser(updated),
+      }),
+    [current, reqSocials, setUser],
   );
 
-  const markReplies = useCallback(
-    async () => await reqReplies({ url: "alerts/replies?read=true" }),
-    [reqReplies]
+  const readReplies = useCallback(
+    async () => await reqReplies({ url: api.alerts.readReplies({ read: true }) }),
+    [reqReplies],
   );
 
   const handleAlerts = async (index = current) => {
     if (alerts[index] > 0) {
       if (index < 2) {
-        await markSocials(index);
+        await readSocials(index);
       } else {
-        await markReplies();
+        await readReplies();
       }
     }
   };
@@ -104,35 +104,24 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     navigate(path);
   };
 
-  const onError = (err: FetchError) => {
-    if (err.status === 401) setUser(null);
-  };
-
-  const friendRequest = async (_id: string, action: "accept" | "delete") => {
+  const friendRequest = async (id: string, action: "accept" | "delete") => {
     deferFn(async () => {
-      await reqSocials({ url: `social/${_id}/${action}`, method: "POST" }, { onError });
+      await reqSocials({ url: api.social.request({ id, action }), method: "POST" });
     }, 1000);
   };
 
-  const clearSocial = async (_id: string) => {
+  const clearSocial = async (id: string) => {
     deferFn(async () => {
-      await reqSocials(
-        { url: `alerts/social/hide/${_id}` },
-        { onError, onSuccess: (updated) => setUser(updated) }
-      );
+      await reqSocials({ url: api.alerts.clearSocial(id), onSuccess: (updated) => setUser(updated) });
     }, 1000);
   };
 
-  const clearReply = async (_id: string) => {
+  const clearReply = async (id: string) => {
     deferFn(async () => {
-      await reqReply(
-        { url: `alerts/reply/hide/${_id}` },
-        {
-          onError,
-          onSuccess: (updated) =>
-            setReplies((prev) => prev.filter(({ _id }) => updated?._id !== _id)),
-        }
-      );
+      await reqReply({
+              url: api.alerts.clearReply(id),
+        onSuccess: (updated) => setReplies((prev) => prev.filter(({ _id }) => updated?._id !== _id)),
+      });
     }, 1000);
   };
 
@@ -155,8 +144,8 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     replies,
     setReplies,
     reqReplies,
-    markReplies,
-    markSocials,
+    readReplies,
+    readSocials,
     clearSocial,
     clearReply,
     friendRequest,

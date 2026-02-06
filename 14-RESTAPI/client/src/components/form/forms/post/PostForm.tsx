@@ -3,8 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { Auth } from "@/lib/types/auth";
-import { FetchError } from "@/lib/types/common";
+import { api } from "@/lib/http/endpoints";
 import Post from "@/models/Post";
 import Input from "../../layout/Input";
 import ImagePicker from "../../layout/ImagePicker";
@@ -17,21 +16,19 @@ import css from "./PostForm.module.css";
 interface PostForm {
       isOpen: boolean;
   onSuccess?: () => void;
-     setUser: Auth["setUser"];
        post?: Post | null;
 }
 
 export default function PostForm({
       isOpen,
    onSuccess: closeModal = () => console.log("Posted!"),
-     setUser,
         post,
 }: PostForm) {
   const { isLoading, error, reqData, setError } = useFetch<Post | null>();
   const { scope, shake, shoot } = useAnimations();
   const { deferring,  deferFn } = useDebounce();
   const { _id = "", title = "", content = "", imgURL = "" } = post || {};
-  const    url = `post/${_id ? `edit/${_id}` : "new"}`;
+  const    url = _id ? api.post.edit(_id) : api.post.new
   const method = _id ? "PUT" : "POST";
 
   useEffect(() => {
@@ -42,9 +39,8 @@ export default function PostForm({
     }, 500);
   }, [isOpen, scope, setError]);
 
-  const onError = (err: FetchError) => {
-    if (error && !error.message) shake("p");
-    if (err.status === 401) setUser(null);
+  const onError = () => {
+    if (error && !error.message && scope.current) shake("p");
   };
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
@@ -67,7 +63,7 @@ export default function PostForm({
         }
       }
 
-      await reqData({ url, method, data }, { onError, onSuccess: closeModal });
+      await reqData({ url, method, data, onError, onSuccess: closeModal });
     };
 
     deferFn(request, 1000);
@@ -90,8 +86,8 @@ export default function PostForm({
           </p>
           <section>
             <ImagePicker {...{ imgURL }} />
-            <Button disabled={deferring} whileTap={{ scale: deferring ? 1 : 0.9 }}>
-              {isLoading ? <Loader size="xs" color="bg" /> : "Post"}
+            <Button disabled={deferring} background={error ? "danger" : "accent"}>
+              {isLoading ? <Loader size="xs" color="page" /> : "Post"}
             </Button>
           </section>
           <Input control="title"   errors={error} defaultValue={title}>Title</Input>

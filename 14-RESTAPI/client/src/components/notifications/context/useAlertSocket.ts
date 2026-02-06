@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useSocket } from "@/lib/hooks/useSocket";
 import { useAlerts } from "./AlertsContext";
+import { api } from "@/lib/http/endpoints";
 import Logger from "@/models/Logger";
 
 export const useAlertSocket = () => {
@@ -9,15 +10,15 @@ export const useAlertSocket = () => {
         setUser,
      setReplies,
      reqReplies,
-    markReplies,
-    markSocials,
+    readReplies,
+    readSocials,
          isOpen,
       activeTab,
   } = useAlerts();
   const socketRef = useSocket("alerts");
 
   useEffect(() => {
-    reqReplies({ url: "alerts/replies" });
+    reqReplies({ url: api.alerts.readReplies({}) });
   }, [reqReplies]);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export const useAlertSocket = () => {
     socket.on(socialChannel, async (updated) => {
       logger.event("peer:update", updated);
       if (isOpen && activeTab < 2) {
-        await markSocials();
+        await readSocials();
       } else {
         setUser(updated);
       }
@@ -42,7 +43,7 @@ export const useAlertSocket = () => {
     socket.on(replyChannel, async ({ action, reply }) => {
       logger.event(`reply, action: ${action}`, reply);
       if (isOpen && activeTab === 2) {
-        await markReplies();
+        await readReplies();
       } else {
         if (action === "new") {
           setReplies((prev) => [reply, ...prev]);
@@ -65,7 +66,7 @@ export const useAlertSocket = () => {
         setUser,
      setReplies,
      reqReplies,
-    markSocials,
-    markReplies,
+    readSocials,
+    readReplies,
   ]);
 };

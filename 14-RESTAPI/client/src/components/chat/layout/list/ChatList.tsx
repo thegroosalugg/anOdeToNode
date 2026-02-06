@@ -1,13 +1,13 @@
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useChat } from "../../context/ChatContext";
+import { api } from "@/lib/http/endpoints";
 import ChatItem from "./ChatItem";
 import Messages from "../messages/Messages";
 import ChatBox from "@/components/form/layout/ChatBox";
 import css from "./ChatList.module.css";
 
 export default function ChatList() {
-  const { setUser, chats, activeChat } = useChat();
-  const sendTo = (path: string) => `chat/new-msg/${path}`;
+  const { chats, activeChat } = useChat();
 
   return (
     <motion.ul
@@ -24,13 +24,7 @@ export default function ChatList() {
                 activeChat && (
                   <>
                     <Messages {...{ chat }} />
-                    <ChatBox
-                      {...{
-                           setUser,
-                               url: sendTo(recipient._id),
-                        animations: { transition: { delay: 1 } },
-                      }}
-                    />
+                    <ChatBox {...{ url: api.chat.newMsg(recipient._id), animations: { transition: { delay: 1 } } }} />
                   </>
                 )
               }

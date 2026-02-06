@@ -31,7 +31,7 @@ export default function ChatItem({ chat, children }: ChatProps) {
   const    variants = createVariants({ initial: { flex: 0 }, animate: { flex } }); // <li>
   const  translateY = activeChat ?  -6 :   0; // <NameTag> > <span>
   const  fontWeight = activeChat ? 500 : 400; // <NameTag> > <span>
-  let       classes = `floating-box ${css["chat-item"]} `; // <li>
+  let       classes = `box ${css["chat-item"]} `; // <li>
   if (markedMap[chat._id]) classes += css["marked"];
 
   function navTo(path: string) {

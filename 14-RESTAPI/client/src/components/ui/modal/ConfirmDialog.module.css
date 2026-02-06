@@ -1,9 +1,9 @@
 .confirm-dialog {
   padding: 0.5rem;
-  background: var(--bg);
+  background: var(--page);
   overflow-x: scroll;
   width: 280px;
-  border-radius: var(--radius-lg);
+  border-radius: var(--rounded-lg);
 
   > h2 {
     text-align: center;
@@ -15,9 +15,6 @@
     display: flex;
     gap: 0.5rem;
 
-    > button {
-      width: 128px;
-      border: var(--border-transparent);
-    }
+    > button { width: 128px; }
   }
 }

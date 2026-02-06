@@ -3,14 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
-import { FetchError } from "@/lib/types/common";
-import { UserState } from "@/lib/types/auth";
+import { UserState } from "@/lib/types/interface";
 import User from "@/models/User";
 import Button from "@/components/ui/button/Button";
 import Input from "../../layout/Input";
 import Loader from "@/components/ui/boundary/loader/Loader";
 import { getEntry } from "@/lib/util/common";
 import css from "./EditAbout.module.css";
+import { api } from "@/lib/http/endpoints";
 
 interface EditAbout extends UserState {
      isOpen: boolean;
@@ -32,16 +32,14 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
     }, 500);
   }, [isOpen, scope, setError]);
 
-  const onError = (err: FetchError) => {
-    // uses state to animate: avoids trigger on first submit before component renders
-    if (errors) shake("p");
-    // uses reqData immediate return value for user logout
-    if (err.status === 401) {
-      setTimeout(() => {
-        setUser(null);
-      }, 2000);
-    }
+  const onError = () => {
+    if (errors && scope.current) shake("p");
   };
+
+  const onSuccess = (about: User["about"]) => {
+    setUser((prev) => (prev ? { ...prev, about } : prev));
+    closeModal();
+  }
 
   function submitHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -56,24 +54,13 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
           bio: getEntry(data, "bio"),
       };
 
-      const isSame = Object.entries(entries).every(
-        ([key, val]) => val === (about?.[key as keyof typeof about] ?? "")
-      );
+      const isSame = Object.entries(entries).every(([key, val]) => val === (about?.[key as keyof typeof about] ?? ""));
       if (isSame) {
         shoot(".fleeting-pop-up");
         return;
       }
 
-      await reqData(
-        { url: "profile/info", method: "POST", data },
-        {
-          onError,
-          onSuccess: (about) => {
-            setUser((prev) => ({ ...prev!, about }));
-            closeModal(); // triggers effect cleanup
-          },
-        }
-      );
+      await reqData({ url: api.profile.info, method: "POST", data, onError, onSuccess });
     };
 
     deferFn(request, 1000);
@@ -84,8 +71,8 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
       <p className="fleeting-pop-up" style={{ top: "1rem", left: "0.5rem" }}>
         No changes
       </p>
-      <Button disabled={deferring} background={`var(--${errors ? "error" : "accent"})`}>
-        {deferring ? <Loader size="xs" color="bg" /> : "Update"}
+      <Button disabled={deferring} background={errors ? "danger" : "accent"}>
+        {deferring ? <Loader size="xs" color="page" /> : "Update"}
       </Button>
       <Input control="home" {...{ errors }} defaultValue={home}>
         <FontAwesomeIcon icon="house" /> Home

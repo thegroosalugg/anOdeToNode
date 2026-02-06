@@ -2,10 +2,10 @@
   position: relative;
   margin: auto auto 0.75rem;
   width: 94%;
-  border: var(--border-text);
-  border-radius: var(--radius-4xl);
+  border: var(--border) var(--text-alt);
+  border-radius: var(--rounded-4xl);
   box-shadow: var(--shadow-pop);
-  background: var(--bg);
+  background: var(--page);
   overflow: hidden;
 
   > textarea, > button {
@@ -18,12 +18,12 @@
     resize: none;
     padding: 0.75rem 1.5rem;
     text-align: justify;
-    background: var(--bg);
+    background: var(--page);
   }
 
   > button {
-    color: var(--bg);
-    background: var(--text);
+    color: var(--page);
+    background: var(--text-alt);
     font-size: var(--text-sm);
     height: 1.5rem; /* prevent loader/text layout shifts */
     padding: 0 0.4rem; /* padding t/b useless when height set */
@@ -33,16 +33,16 @@
     text-wrap: nowrap;
 
     > span { max-width: 100%; }
-    &::-webkit-scrollbar-thumb { background: var(--bg); }
+    &::-webkit-scrollbar-thumb { background: var(--page); }
   }
 }
 
 @media (max-width: 768px) {
   .chat-box {
-    --radius: var(--radius-xl);
+    --rounded: var(--rounded-xl);
     width: 99%;
     margin-bottom: 0.5%;
-    border-bottom-right-radius: var(--radius);
-    border-bottom-left-radius: var(--radius);
+    border-bottom-right-radius: var(--rounded);
+    border-bottom-left-radius: var(--rounded);
   }
 }

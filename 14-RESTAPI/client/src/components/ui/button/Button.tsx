@@ -1,30 +1,40 @@
 import { ReactNode } from "react";
 import { motion, HTMLMotionProps, TargetAndTransition } from "motion/react";
+import { Color } from "@/lib/types/colors";
 import css from "./Button.module.css";
 
 export default function Button({
-       color = "var(--bg)",
-  background = "var(--accent)",
+       color = "page",
+  background = "accent",
       border,
   animations = {},
+    disabled = false,
     children,
     ...props
 }: {
-         color?: string;
-    background?: string;
-        border?: boolean | string;
+         color?: Color;
+        border?: Color;
+    background?: Color;
     animations?: TargetAndTransition;
        children: ReactNode;
 } & HTMLMotionProps<"button">) {
-  const borderColor = typeof border === "boolean" ? color : border;
+  const toCssVar = (color: Color) => `var(--${color})`;
+  const borderColor = border ? border : background;
 
   return (
     <motion.button
-       className={css["button"]}
-         initial={{ opacity: 0 }}
-         animate={{ opacity: 1, color, background, borderColor, ...animations }}
-        whileTap={{ scale: 0.9 }}
-      transition={{ background: { duration: 0.5 } }}
+      className={css["button"]}
+      style={
+        {
+          "--color":        toCssVar(color),
+          "--background":   toCssVar(background),
+          "--border-color": toCssVar(borderColor),
+        } as React.CSSProperties
+      }
+       initial={{ opacity: 0 }}
+       animate={{ opacity: disabled ? 0.8 :   1, ...animations }}
+      whileTap={{   scale: disabled ?   1 : 0.9 }}
+      disabled={disabled}
       {...props}
     >
       {children}

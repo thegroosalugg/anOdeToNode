@@ -9,7 +9,7 @@
 .link a {
   font-weight: 700;
   text-decoration: underline;
-  transition: 0.5s ease;
+  transition: var(--transition);
 
   &:hover { font-weight: 900; }
 }

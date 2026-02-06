@@ -4,8 +4,9 @@ import { useSearchParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
-import { UserState } from "@/lib/types/auth";
+import { UserState } from "@/lib/types/interface";
 import Chat from "@/models/Chat";
+import { api } from "@/lib/http/endpoints";
 
 interface ChatProvider extends UserState {
   children: ReactNode;
@@ -28,7 +29,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
   const [isMarking,   setIsMarking] = useState(false);
   const [markedMap,      setMarked] = useState<StatusMap>({});
   const [showModal,   setShowModal] = useState(false);
-  const [_,        setSearchParams] = useSearchParams();
+  const [,         setSearchParams] = useSearchParams();
   const { deferring,      deferFn } = useDebounce();
 
   const wasMarked = Object.keys(markedMap).some((key) => markedMap[key]);
@@ -46,9 +47,9 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
 
   const getRecipient = ({ host, guest }: Chat) => (user._id === host._id ? guest : host);
 
-  const clearAlerts = useCallback(
+  const clearMsgs = useCallback(
     async (id: string) => {
-      await reqData({ url: `alerts/chat/${id}` });
+      await reqData({ url: api.alerts.clearMsgs(id) });
     },
     [reqData]
   );
@@ -142,7 +143,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
 
     let data;
     if (wasMarked) {
-      data = Object.fromEntries(Object.entries(markedMap).filter(([_, v]) => v));
+      data = Object.fromEntries(Object.entries(markedMap).filter(([, v]) => v));
     } else if (activeChat) {
       // if temp chat, it will have stored the newly created real chat's ID
       const _id = activeChat.isTemp ? activeChat.chatId : activeChat._id;
@@ -151,7 +152,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
 
     if (!data) return;
 
-    await reqData({ url: "chat/delete", method: "DELETE", data });
+    await reqData({ url: api.chat.delete, method: "DELETE", data });
     if (wasMarked) setMarked({});
     closeModal();
     setIsMarking(false);
@@ -186,7 +187,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
     deleteAction,
     alerts,
     setAlerts,
-    clearAlerts,
+    clearMsgs,
     appendURL,
     destroyURL,
     deferring,

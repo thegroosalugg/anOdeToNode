@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { useEffect, useRef } from "react";
 import { useChat } from "../../context/ChatContext";
 import { useFetch } from "@/lib/hooks/useFetch";
+import { api } from "@/lib/http/endpoints";
 import Chat from "@/models/Chat";
 import Msg from "@/models/Message";
 import AsyncAwait from "../../../ui/boundary/AsyncAwait";
@@ -10,7 +11,7 @@ import { createVariants } from "@/lib/motion/animations";
 import css from "./Messages.module.css";
 
 export default function Messages({ chat }: { chat: Chat }) {
-  const { user, msgsMap, loadedMap, setMsgs, setLoaded, clearAlerts } = useChat();
+  const { user, msgsMap, loadedMap, setMsgs, setLoaded, clearMsgs } = useChat();
   const { reqData, isLoading, error } = useFetch<Msg[]>([]);
   const      msgs =   msgsMap[chat._id] || [];
   const hasLoaded = loadedMap[chat._id];
@@ -21,21 +22,19 @@ export default function Messages({ chat }: { chat: Chat }) {
 
   useEffect(() => {
     if (chat.isTemp || noAlerts) return;
-    clearAlerts(chat._id);
-  }, [chat._id, chat.isTemp, noAlerts, clearAlerts]);
+    clearMsgs(chat._id);
+  }, [chat._id, chat.isTemp, noAlerts, clearMsgs]);
 
   useEffect(() => {
     if (chat.isTemp || hasLoaded) return;
 
-    reqData(
-      { url: `chat/messages/${chat._id}` },
-      {
-        onSuccess: (msgs) => {
-            setMsgs((state) => ({ ...state, [chat._id]: msgs }));
-          setLoaded((state) => ({ ...state, [chat._id]: true }));
-        },
-      }
-    );
+    reqData({
+            url: api.chat.messages(chat._id),
+      onSuccess: (msgs) => {
+          setMsgs((state) => ({ ...state, [chat._id]: msgs }));
+        setLoaded((state) => ({ ...state, [chat._id]: true }));
+      },
+    });
   }, [chat._id, chat.isTemp, hasLoaded, loadedMap, reqData, setMsgs, setLoaded]);
 
   return (

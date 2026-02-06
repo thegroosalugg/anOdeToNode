@@ -4,7 +4,7 @@ import { useFetch } from "@/lib/hooks/useFetch";
 import { useSocket } from "@/lib/hooks/useSocket";
 import { usePagedFetch } from "@/components/pagination/usePagedFetch";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
-import { Authorized } from "@/lib/types/auth";
+import { api } from "@/lib/http/endpoints";
 import User from "@/models/User";
 import Post from "@/models/Post";
 import Logger from "@/models/Logger";
@@ -17,13 +17,13 @@ import PostItem from "@/components/list/post/PostItem";
 import SocialActions from "@/components/user/actions/peer/SocialActions";
 import { getMeta } from "@/lib/util/getMeta";
 
-export default function PeerPage({ user, setUser }: Authorized) {
+export default function PeerPage({ user }: { user: User }) {
   const { data: peer, isLoading, error, reqData } = useFetch<User | null>();
   const { userId } = useParams();
   const {
     fetcher: { setData },
-    ...rest
-  } = usePagedFetch<Post>(`social/posts/${userId}`, 4, !!userId); // refetches only if userId exists
+    ...rest // api returns only string but does not accept undefined. if !userId, usePagedFetch won't send req
+  } = usePagedFetch<Post>(api.social.userPosts(userId ?? ""), 4, !!userId); // refetches only if userId exists
   const navigate = useNavigate();
   const socketRef = useSocket("peer");
   const { pathname } = useLocation();
@@ -43,7 +43,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
       return;
     }
 
-    if (userId) reqData({ url: `social/find/${userId}` });
+    if (userId) reqData({ url: api.social.findUser(userId) });
   }, [isWrongPath, userId, user._id, navigate, reqData]);
 
   useEffect(() => {
@@ -101,7 +101,7 @@ export default function PeerPage({ user, setUser }: Authorized) {
         {peer && (
           <>
             <UserDashboard {...{ target: peer, watcher: user }}>
-              <SocialActions {...{ user, setUser, peer }} />
+              <SocialActions {...{ user, peer }} />
             </UserDashboard>
             <FriendsList target={peer} watcher={user} />
             <PagedList<Post>

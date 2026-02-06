@@ -17,15 +17,16 @@ export default function ChatActions() {
     closeMenu,
   } = useChat();
   const  canDelete = isMarking || activeChat;
-  const      color = canDelete ?    "var(--bg)" : "var(--fg)";
-  const background = canDelete ? "var(--error)" : "var(--box)";
+  const      color = canDelete ?     "page" : "text";
+  const background = canDelete ?   "danger" : "page-alt";
+  const     border = canDelete ? background : color;
 
   return (
     <>
       <ConfirmDialog open={showModal} onCancel={closeModal} onConfirm={deleteAction} />
       <header className={css["chat-actions"]}>
         <div>
-          <Button {...{ color, background }} border onClick={confirmAction}>
+          <Button {...{ color, background, border }} onClick={confirmAction}>
             {canDelete ? "Delete" : "Select"} Chat{!activeChat ? "s" : ""}
           </Button>
           <AnimatePresence>

@@ -3,6 +3,7 @@ import Friend from "@/models/Friend";
 import { useChat } from "./ChatContext";
 import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
+import { api } from "@/lib/http/endpoints";
 
 export const useChatParamsSync = () => {
   const {
@@ -22,7 +23,7 @@ export const useChatParamsSync = () => {
 
   useEffect(() => {
     const initData = async () => {
-      await reqChats({ url: "chat/all" });
+      await reqChats({ url: api.chat.all });
       hasLoaded.current = true;
     };
 

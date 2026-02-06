@@ -1,6 +1,6 @@
 .page-buttons {
   display: flex;
-  margin: 0 auto;
+  margin: auto auto 0;
   padding: 0.5rem;
   gap: 0.2rem;
   overflow-x: scroll;
@@ -16,8 +16,9 @@
   > button {
     /* color, border-color & background set as framer animate */
     min-width: 2rem;
-    border: var(--border-accent);
-    border-radius: var(--radius-lg);
     font-weight: 600;
+    box-shadow: none;
+
+    &[data-active="true"] { pointer-events: none; }
   }
 }

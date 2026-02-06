@@ -1,39 +1,36 @@
 import "./lib/fontawesome/icons";
 import { useRoutes } from "react-router-dom";
-import  RootLayout   from "./pages/layout/RootLayout";
+import  RootLayout   from "./pages/RootLayout";
 import    AuthPage   from "./pages/AuthPage";
 import    FeedPage   from "./pages/FeedPage";
 import    PostPage   from "./pages/PostPage";
 import  SocialPage   from "./pages/SocialPage";
 import    PeerPage   from "./pages/PeerPage";
-import   AboutPage   from "./pages/info/AboutPage";
-import   ErrorPage   from "./pages/boundary/ErrorPage";
-import   TermsPage   from "./pages/info/TermsPage";
+import   ErrorPage   from "./pages/ErrorPage";
+import   AboutPage   from "./pages/static/AboutPage";
+import   TermsPage   from "./pages/static/TermsPage";
+import PrivacyPage   from "./pages/static/PrivacyPage";
 import { captainsLog } from "./lib/util/captainsLog";
-import { Auth, Authorized } from "./lib/types/auth";
+import { Auth } from "./lib/types/interface";
 
 const validate = (path: string, props: Auth) => {
   const { user } = props;
 
   if (!user) return <AuthPage {...props} />;
 
-  const authorized = props as Authorized;
-
   const elements = {
-    "/feed":         <FeedPage   {...authorized} />,
-    "/post/:postId": <PostPage   {...authorized} />,
-    "/social":       <SocialPage {...authorized} />,
-    "/user/:userId": <PeerPage   {...authorized} />,
+    "/feed":         <FeedPage />,
+    "/post/:postId": <PostPage   {...{ user }} />,
+    "/social":       <SocialPage {...{ user }} />,
+    "/user/:userId": <PeerPage   {...{ user }} />,
   };
 
   return elements[path as keyof typeof elements];
 };
 
 const createRoute = (path: string, Component?: () => JSX.Element) => ({
-     path,
-  element: (
-    <RootLayout children={(props) => (Component ? <Component /> : validate(path, props))} />
-  ),
+  path,
+  element: <RootLayout children={(props) => (Component ? <Component /> : validate(path, props))} />,
 });
 
 const routes = [
@@ -42,14 +39,15 @@ const routes = [
   createRoute("/post/:postId"),
   createRoute("/social"),
   createRoute("/user/:userId"),
-  createRoute("/about", AboutPage),
-  createRoute("/terms", TermsPage),
-  createRoute("*",      ErrorPage),
+  createRoute("/about",     AboutPage),
+  createRoute("/terms",     TermsPage),
+  createRoute("/privacy", PrivacyPage),
+  createRoute("*",          ErrorPage),
 ];
 
 export default function App() {
-  captainsLog(-1, ["⇚⇚⇚App⇛⇛⇛"]);
+  captainsLog(-1, { App: "new render cycle" });
 
-  const  element = useRoutes(routes);
+  const element = useRoutes(routes);
   return element || null;
 }

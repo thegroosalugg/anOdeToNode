@@ -22,12 +22,7 @@ export default function Modal({
       {open && (
         <>
           <Backdrop open onClick={close} zIndex={25} />
-          <motion.dialog
-            open
-            {...animations}
-            className={css["modal"]}
-                style={{ translate: "-50% -50%" }} // centers modal. Set inline due to framer's y
-          >
+          <motion.dialog open {...animations} className={css["modal"]}>
             {children}
           </motion.dialog>
         </>

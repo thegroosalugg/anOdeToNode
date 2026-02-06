@@ -1,8 +1,8 @@
 import Logger, { LogConfig } from '@/models/Logger';
 import { useEffect, useRef } from 'react';
-import { Dict } from '../types/common';
+import { RecordMap } from '../types/common';
 
-export type Dependency<T = unknown> = Dict<T>;
+export type Dependency<T = unknown> = RecordMap<T>;
 
 export function useDepedencyTracker(key: LogConfig, deps: Dependency) {
   const prevDeps = useRef<Dependency>({});

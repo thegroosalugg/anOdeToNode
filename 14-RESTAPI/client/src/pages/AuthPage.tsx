@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Auth, Authorized } from '@/lib/types/auth';
+import { Auth } from "@/lib/types/interface";
 import UserProfile from '@/components/user/UserProfile';
 import AuthForm from '@/components/form/forms/auth/AuthForm';
 import AsyncAwait from '@/components/ui/boundary/AsyncAwait';
 
 export default function AuthPage(props: Auth) {
-  const { user, isLoading } = props;
+  const { user, setUser, isLoading } = props;
   const [isInitial, setIsInitial] = useState(true);
 
   useEffect(() => {
@@ -15,11 +15,7 @@ export default function AuthPage(props: Auth) {
 
   return (
     <AsyncAwait {...{ isLoading: isInitial }}>
-      {user ? (
-        <UserProfile key='profile' {...props as Authorized} />
-      ) : (
-        <AuthForm   key='form'    {...props} />
-      )}
+      {user ? <UserProfile key="profile" {...{ user, setUser }} /> : <AuthForm key="form" {...props} />}
     </AsyncAwait>
   );
 }

@@ -1,7 +1,8 @@
 import Button from "@/components/ui/button/Button";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
-import { Auth } from "@/lib/types/auth";
+import { Auth } from "@/lib/types/interface";
 import { useState } from "react";
+import { removeRefreshToken } from "@/lib/http/token";
 import css from "./UserLogout.module.css";
 
 export default function UserLogout({ setUser }: { setUser: Auth["setUser"] }) {
@@ -11,8 +12,7 @@ export default function UserLogout({ setUser }: { setUser: Auth["setUser"] }) {
   function logout() {
     closeModal();
     setUser(null);
-    localStorage.removeItem("jwt-access");
-    localStorage.removeItem("jwt-refresh");
+    removeRefreshToken();
   }
 
   return (
@@ -21,7 +21,7 @@ export default function UserLogout({ setUser }: { setUser: Auth["setUser"] }) {
       <p className={css["user-logout"]}>
         <Button
           onClick={() => setShowModal(true)}
-          background="var(--error)"
+          background="danger"
           animations={{ transition: { opacity: { delay: 1.8 } } }}
         >
           Logout

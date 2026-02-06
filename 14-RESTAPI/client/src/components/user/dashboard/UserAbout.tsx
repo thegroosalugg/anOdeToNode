@@ -13,7 +13,7 @@ export default function UserAbout({
   const { createdAt, about } = target;
   const { bio, home, study, work } = about ?? {};
   let classes = css["user-about"];
-  if (!watcher || acceptedAt) classes +=  " floating-box";
+  if (!watcher || acceptedAt) classes +=  " box";
 
   return (
     <section className={classes}>

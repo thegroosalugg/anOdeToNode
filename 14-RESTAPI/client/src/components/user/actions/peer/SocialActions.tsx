@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { UserState } from "@/lib/types/auth";
+import { api } from "@/lib/http/endpoints";
 import User from "@/models/User";
 import Friend from "@/models/Friend";
 import Loader from "@/components/ui/boundary/loader/Loader";
@@ -13,7 +13,7 @@ import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import { actionsConfig } from "./actions_config";
 import css from "./SocialActions.module.css";
 
-export default function SocialActions({ user, setUser, peer }: UserState & { peer: User }) {
+export default function SocialActions({ user, peer }: { user: User; peer: User }) {
   const { isLoading,    reqData } = useFetch();
   const { deferring,    deferFn } = useDebounce();
   const [showModal, setShowModal] = useState(false);
@@ -29,14 +29,7 @@ export default function SocialActions({ user, setUser, peer }: UserState & { pee
     if (!reqAction) return; // action = undefined if connection accepted
     // in this case an argument must be passed
     const request = async () =>
-      await reqData(
-        { url: `social/${_id}/${reqAction}`, method: "POST" },
-        {
-          onError: (err) => {
-            if (err.status === 401) setUser(null);
-          },
-        }
-      );
+      await reqData({ url: api.social.request({ id: _id, action: reqAction }), method: "POST" });
     deferFn(request, 1000);
   };
 
@@ -69,7 +62,7 @@ export default function SocialActions({ user, setUser, peer }: UserState & { pee
       <div className={css["social-actions"]}>
         <Button onClick={handleAction} {...{ background }} disabled={deferring}>
           {isLoading ? (
-            <Loader size="xs" color="bg" />
+            <Loader size="xs" color="page" />
           ) : (
             <span>
               {text}
@@ -80,7 +73,7 @@ export default function SocialActions({ user, setUser, peer }: UserState & { pee
 
         <AnimatePresence>
           {(accepted || (connection && !initiated)) && (
-            <Button onClick={deleteFriend} background="var(--error)" exit={{ opacity: 0 }}>
+            <Button onClick={deleteFriend} background="danger" exit={{ opacity: 0 }}>
               {accepted ? (
                 "Remove Friend"
               ) : (

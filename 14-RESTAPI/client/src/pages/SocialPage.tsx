@@ -7,14 +7,14 @@ import Logger from "@/models/Logger";
 import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
 import PagedList from "@/components/pagination/PagedList";
 import UserItem from "@/components/list/user/UserItem";
-import { Authorized } from "@/lib/types/auth";
 import css from "@/components/list/user/FriendsList.module.css";
+import { api } from "@/lib/http/endpoints";
 
-export default function SocialPage({ user }: Authorized) {
+export default function SocialPage({ user }: { user: User }) {
   const {
     fetcher: { setData, isLoading, error },
     ...rest
-  } = usePagedFetch<User>("social/users", isMobile ? 8 : 10);
+  } = usePagedFetch<User>(api.social.users, isMobile ? 8 : 10);
   const socketRef = useSocket("social");
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function SocialPage({ user }: Authorized) {
     socket.on("connect", () => logger.connect());
 
     const newChannel = "user:new";
-    
+
     socket.on(newChannel, (newUser) => {
       logger.event(newChannel, newUser);
       setData(({ docCount, items }) => ({

@@ -3,7 +3,7 @@ import { useSocket } from "@/lib/hooks/useSocket";
 import { useChat } from "./ChatContext";
 import Chat from "@/models/Chat";
 import Logger from "@/models/Logger";
-import { Dict } from "@/lib/types/common";
+import { RecordMap } from "@/lib/types/common";
 
 const config = "chat"; // logger/sockets
 
@@ -19,7 +19,7 @@ export const useChatSocket = () => {
     setLoaded,
     setMsgs,
     setAlerts,
-    clearAlerts,
+    clearMsgs,
     appendURL,
   } = useChat();
 
@@ -63,7 +63,7 @@ export const useChatSocket = () => {
           return prev; // do not overwrite temp chat with real => will cause component dismount
         });
       } else if ((isVisible || isTemp) && !isSender) {
-        await clearAlerts(chat._id); // states updated by alerts socket
+        await clearMsgs(chat._id); // states updated by alerts socket
       } else {
         updateChats(chat);
       }
@@ -86,7 +86,7 @@ export const useChatSocket = () => {
 
       setChats((prevChats) => prevChats.filter((chat) => !isDeleted(chat._id)));
 
-      const cleanState = <T extends Dict<unknown>>(state: T) => {
+      const cleanState = <T extends RecordMap<unknown>>(state: T) => {
         const updated = { ...state };
         deletedChats.forEach(({ _id }) => {
           delete updated[_id];
@@ -126,7 +126,7 @@ export const useChatSocket = () => {
     collapse,
     setMsgs,
     setAlerts,
-    clearAlerts,
+    clearMsgs,
     appendURL,
   ]);
 };
