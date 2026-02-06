@@ -13,9 +13,7 @@ interface UseFetch<T> {
   isLoading: boolean;
       error: ApiError | null;
    setError: SetData<ApiError | null>;
-    // reqData: ReqData<T>;
     reqData: ReqData<T>;
-
 }
 
 // Overload 1: initData provided → data is <T>
@@ -46,9 +44,9 @@ export function useFetch<T>(initData?: T) {
       onSuccess?.(response);
       return response;
     } catch (err) {
-      const fetchErr = err as ApiError;
-      setError(fetchErr);
-      onError?.(fetchErr); // i.e. setData of other states
+      const apiError = err as ApiError;
+      setError(apiError);
+      onError?.(apiError); // i.e. setData of other states
     } finally {
       setIsLoading(false);
     }

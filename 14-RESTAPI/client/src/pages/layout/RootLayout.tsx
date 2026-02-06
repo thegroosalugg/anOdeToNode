@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: (props: Auth) => Re
   const { title, description } = metadata(pathname, user);
 
   useEffect(() => {
-    reqUser({ url: "refresh-token/?populate=true", method: "POST", onSuccess: (user) => saveTokens(user) });
+    reqUser({ url: "refresh-token?populate=true", method: "POST", onSuccess: (user) => saveTokens(user) });
     postAnalytics();
     const unsubscribe = eventBus.on("logout", () => setUser(null));
     return unsubscribe; // clean-uo - called on dismount
