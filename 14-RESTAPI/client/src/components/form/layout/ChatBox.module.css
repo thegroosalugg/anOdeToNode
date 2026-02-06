@@ -8,6 +8,14 @@
   background: var(--page);
   overflow: hidden;
 
+  @media (max-width: 768px) {
+    --rounded: var(--rounded-xl);
+    width: 99%;
+    margin-bottom: 0.5%;
+    border-bottom-right-radius: var(--rounded);
+    border-bottom-left-radius: var(--rounded);
+  }
+
   > textarea, > button {
     display: block;
     width: 100%;
@@ -34,15 +42,5 @@
 
     > span { max-width: 100%; }
     &::-webkit-scrollbar-thumb { background: var(--page); }
-  }
-}
-
-@media (max-width: 768px) {
-  .chat-box {
-    --rounded: var(--rounded-xl);
-    width: 99%;
-    margin-bottom: 0.5%;
-    border-bottom-right-radius: var(--rounded);
-    border-bottom-left-radius: var(--rounded);
   }
 }

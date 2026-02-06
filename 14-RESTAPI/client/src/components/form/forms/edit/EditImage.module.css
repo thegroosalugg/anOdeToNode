@@ -12,6 +12,6 @@
   > label {
     max-width: 200px;
 
-    @media screen and (min-width: 768px) { max-width: 280px; }
+    @media (min-width: 768px) { max-width: 280px; }
   }
 }

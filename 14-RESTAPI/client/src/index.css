@@ -84,7 +84,7 @@ body {
 }
 
 /* side navbar on mobile landscape */
-@media screen and (pointer: coarse) and (orientation: landscape) {
+@media (pointer: coarse) and (orientation: landscape) {
   #root { flex-direction: row; }
   /* align main content by width of nav bar (position fixed, not in element flow) */
   #main { margin-left: var(--nav-size); }

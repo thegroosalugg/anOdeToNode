@@ -24,8 +24,6 @@
 .label {
   display: block;
   font-size: var(--text-xs);
-}
 
-@media screen and (max-width: 640px) {
-  .label { display: none; }
+  @media (max-width: 640px) { display: none; }
 }

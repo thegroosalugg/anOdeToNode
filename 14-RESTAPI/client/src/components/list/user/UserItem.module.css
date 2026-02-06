@@ -6,6 +6,8 @@
     padding: 0.1rem 0.2rem 0;
     font-size: 90%;
     font-weight: 600;
+
+    @media (pointer: coarse) { font-size: 60%; }
   }
 
   > img {
@@ -18,12 +20,7 @@
     padding-left: 0.1rem;
     font-size: var(--text-xs);
     color: var(--text-alt);
-  }
-}
 
-@media screen and (pointer: coarse) {
-  .user-item {
-    > h2 { font-size: 60%; }
-    > p  { font-size: 50%; }
+    @media (pointer: coarse) { font-size: 50%; }
   }
 }
