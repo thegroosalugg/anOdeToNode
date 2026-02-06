@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import { motion, LayoutGroup } from 'motion/react';
 import { Paginated } from './usePagedFetch';
+import Button from '../ui/button/Button';
 import css from './PageButtons.module.css';
 
 const Ellipsis = () => (
@@ -32,8 +33,6 @@ export default function PageButtons({
   if (last >= 4) pages.push(middle + 1);
   if (last >= 5) pages.push(last);
 
-  const filter = `brightness(${deferring ? 0.9 : 1})`
-
   return (
     <motion.div
       className={`${css['page-buttons']} no-scrollbar-x`}
@@ -42,32 +41,24 @@ export default function PageButtons({
     >
       <LayoutGroup>
         {pages.map((page) => {
-          const [accent, bg] = ["var(--accent)", "var(--page-alt)"];
+          const [accent, bg] = ["accent", "page-alt"] as const;
           const     isActive = current === page;
           const        color =  isActive ? bg : accent;
-          const  borderColor =  color;
           const   background = !isActive ? bg : accent;
+          const       border =  color;
           return (
             <Fragment key={page}>
-              {last > 5 && page === last && pages[3] !== last - 1 && (
-                <Ellipsis />
-              )}
-              <motion.button
-                    layout
-                  disabled={deferring}
-                   onClick={() => changePage(page)}
-                   initial={{ opacity: 0 }}
-                   animate={{ opacity: 1, background, borderColor, color, filter }}
-                transition={{
-                  opacity: { duration: 0.5, ease: 'linear' },
-                   layout: { duration: 0.3 },
-                }}
+              {last > 5 && page === last && pages[3] !== last - 1 && <Ellipsis />}
+              <Button
+                     layout
+                   disabled={deferring}
+                data-active={isActive}
+                    onClick={() => changePage(page)}
+                {...{ background, border, color }}
               >
                 {page}
-              </motion.button>
-              {last > 5 && page === 1 && pages[1] !== 2 && (
-                <Ellipsis />
-              )}
+              </Button>
+              {last > 5 && page === 1 && pages[1] !== 2 && <Ellipsis />}
             </Fragment>
           );
         })}
