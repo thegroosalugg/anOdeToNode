@@ -12,6 +12,7 @@ import { api } from "@/lib/http/endpoints";
 
 export default function UserProfile({ user, setUser }: UserState) {
   const { fetcher: { isLoading, error }, ...rest } = usePagedFetch<Post>(api.profile.posts, 4);
+  const align = "end";
 
   return (
     <>
@@ -23,8 +24,8 @@ export default function UserProfile({ user, setUser }: UserState) {
         <PagedList<Post>
             path="post"
           header={{
-               title: ["Your Posts",                  "end"],
-            fallback: ["You haven't posted anything", "end"],
+               title: { text: "Your Posts",                  align },
+            fallback: { text: "You haven't posted anything", align },
           }}
           {...rest}
         >

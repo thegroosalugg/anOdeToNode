@@ -9,14 +9,14 @@ import PageButtons from "./PageButtons";
 import Heading from "../ui/layout/Heading";
 import css from "./PagedList.module.css";
 
-type Config = [string, Align?];
+type Config = {   text: string;    align?: Align  };
 type Header = { title?: Config; fallback?: Config };
 
 interface PagedList<T> extends Paginated<T> {
      className?: string;
          delay?: number;
           path?: string;
-        header?: Header;
+         header: Header;
   isFriendList?: boolean;
        children: (item: T) => ReactNode;
 }
@@ -45,7 +45,9 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   const shouldRecount = docCount < limit && items.length < limit;
   const        cursor = deferring ? "wait" : "";
   const       stagger = (index: number) => ({ duration: 0.5, delay: delay + 0.05 * index });
-  const { title = ["", "start"], fallback = ["No results found", "start"] } = header ?? {};
+  const  align: Align = "start";
+  const         title = { text: "",                 align, ...header.title    };
+  const      fallback = { text: "No results found", align, ...header.fallback };
 
   useEffect(() => {
     setTimeout(() => {
@@ -63,11 +65,11 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   return (
     <>
       <Heading
-        className={`${css["header"]} ${hasItems ? css["title"] : ""}`}
-            style={{ textAlign: hasItems && title ? title[1] : fallback[1] }}
+        className={`${css["list-header"]} ${hasItems ? css["title"] : ""}`}
+            style={{ textAlign: hasItems && title ? title.align : fallback.align }}
        transition={{ delay }}
       >
-        {hasItems ? title[0] : `${fallback[0]}...`}
+        {hasItems ? title.text : `${fallback.text}...`}
       </Heading>
       {hasItems && (
         <>

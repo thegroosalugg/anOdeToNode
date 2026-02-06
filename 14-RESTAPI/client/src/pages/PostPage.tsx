@@ -145,7 +145,7 @@ export default function PostPage({ user }: { user: User }) {
           <>
             <PostContent {...{ post, user, setModal }} />
             <PagedList<Reply>
-              header={{ fallback: ["Reply to this post", "end"] }}
+              header={{ fallback: { text: "Reply to this post", align: "end" }}}
                delay={hasLoaded ? 0 : 2.5} // *TEMP FIX FOR STAGGER
               {...rest}
             >

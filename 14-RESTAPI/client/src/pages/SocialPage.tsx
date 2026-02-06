@@ -45,7 +45,7 @@ export default function SocialPage({ user }: { user: User }) {
       <PagedList<User>
         className={css["user-list"]}
              path="user"
-           header={{ title: ["Users"], fallback: ["Nobody here", "center"] }}
+           header={{ title: { text: "Users" }, fallback: { text: "Nobody here", align: "center" }}}
         {...rest}
         whileHover={{ y: -2, transition: { ease: "linear", duration: 0.2 } }}
       >

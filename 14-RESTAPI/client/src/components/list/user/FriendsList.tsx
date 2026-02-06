@@ -24,7 +24,7 @@ export default function FriendsList({ target, watcher }: { target: User; watcher
   useEffect(() => {
     setPagedData((prev) => {
       const newPage = paginate(friendsList, current, limit);
-      // .some fails on reference mismatch, always triggering newPage.
+      // .some returns false on reference mismatch, always triggering newPage.
       // React re-renders only on prop value changes, not new refs.
       // therefore if a new friend is added, this will also updated pagedData, not just removals
       return prev.length > newPage.length || prev.some((f) => !friendsList.includes(f))
@@ -48,16 +48,15 @@ export default function FriendsList({ target, watcher }: { target: User; watcher
          limit,
   };
 
-  const [fallback, title] =
-    watcher === target
-      ? ["Your friends will appear here", "Your friends"]
-      : ["No mutual friends", `${target.name}'s friends`];
+  const isSelf   = watcher === target;
+  const title    = { text: isSelf ? "Your friends"                  : `${target.name}'s friends` };
+  const fallback = { text: isSelf ? "Your friends will appear here" : "No mutual friends"        };
 
   return (
     <PagedList<Friend>
       className={`${css["user-list"]} no-scrollbar-y`}
            path="user"
-         header={{ fallback: [fallback], title: [title] }}
+         header={{ title, fallback }}
       isFriendList
       {...props}
     >

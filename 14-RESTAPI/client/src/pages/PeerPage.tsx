@@ -94,6 +94,8 @@ export default function PeerPage({ user }: { user: User }) {
     "User"
   );
 
+  const align = "end";
+
   return (
     <>
       <Meta {...{ description }}>{title}</Meta>
@@ -107,8 +109,8 @@ export default function PeerPage({ user }: { user: User }) {
             <PagedList<Post>
               path="post"
               header={{
-                title: [`${peer.name}'s posts`, "end"],
-                fallback: [`${peer.name} hasn't posted anything yet`, "end"],
+                   title: { text: `${peer.name}'s posts`,                    align },
+                fallback: { text: `${peer.name} hasn't posted anything yet`, align },
               }}
               {...rest}
             >
