@@ -62,7 +62,7 @@ export default function SocialActions({ user, peer }: { user: User; peer: User }
       <div className={css["social-actions"]}>
         <Button onClick={handleAction} {...{ background }} disabled={deferring}>
           {isLoading ? (
-            <Loader size="xs" color="bg" />
+            <Loader size="xs" color="page" />
           ) : (
             <span>
               {text}

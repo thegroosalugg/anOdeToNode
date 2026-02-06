@@ -87,7 +87,7 @@ export default function PostForm({
           <section>
             <ImagePicker {...{ imgURL }} />
             <Button disabled={deferring} whileTap={{ scale: deferring ? 1 : 0.9 }}>
-              {isLoading ? <Loader size="xs" color="bg" /> : "Post"}
+              {isLoading ? <Loader size="xs" color="page" /> : "Post"}
             </Button>
           </section>
           <Input control="title"   errors={error} defaultValue={title}>Title</Input>

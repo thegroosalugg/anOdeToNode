@@ -72,7 +72,7 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
         No changes
       </p>
       <Button disabled={deferring} background={`var(--${errors ? "error" : "accent"})`}>
-        {deferring ? <Loader size="xs" color="bg" /> : "Update"}
+        {deferring ? <Loader size="xs" color="page" /> : "Update"}
       </Button>
       <Input control="home" {...{ errors }} defaultValue={home}>
         <FontAwesomeIcon icon="house" /> Home

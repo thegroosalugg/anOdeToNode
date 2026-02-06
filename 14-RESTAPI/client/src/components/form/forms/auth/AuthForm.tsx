@@ -94,7 +94,7 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
         disabled={deferring}
         whileTap={{ scale: deferring ? 1 : 0.9 }}
       >
-        {isLoading ? <Loader size="xs" color="bg" /> : label}
+        {isLoading ? <Loader size="xs" color="page" /> : label}
       </Button>
     </motion.form>
   );

@@ -1,9 +1,10 @@
 import { motion, HTMLMotionProps } from 'motion/react';
 import css from './Loader.module.css';
+import { Color } from '@/lib/types/colors';
 
 interface LoaderProps {
    size?: "xs" | "sm";
-  color?: "bg" | "white";
+  color?: Color;
 }
 
 export default function Loader({
@@ -13,12 +14,12 @@ export default function Loader({
 }: LoaderProps & HTMLMotionProps<'div'>) {
   let classes = css["loader"];
   if (size)  classes += ` ${css[size]}`;
-  if (color) classes += ` ${css[color]}`;
 
   return (
     <motion.div
       {...props}
        className={classes}
+           style={{ "--color": `var(--${color})` } as React.CSSProperties}
          initial={{ scale: 0, opacity: 0 }}
          animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}

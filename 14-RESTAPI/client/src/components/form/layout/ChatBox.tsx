@@ -71,7 +71,7 @@ export default function ChatBox({
       <motion.button disabled={deferring}>
         <AnimatePresence mode="wait">
           {isLoading ? (
-            <Loader key="loader" size="xs" color="bg" />
+            <Loader key="loader" size="xs" color="page" />
           ) : (
             <motion.span {...createAnimations({ transition: { delay: 0.2 } })}>
               {/* content = 422 form errors, message = all other errors */}
