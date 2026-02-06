@@ -1,62 +1,68 @@
 .footer {
-  margin-top: 0.5rem;
-  text-align: center;
-  overflow-x: auto;
   background: var(--accent);
   color: var(--page);
+  box-shadow: var(--shadow-top);
+  transition: var(--transition);
 
-  a {
-    transition: var(--transition);
-    &:hover { color: var(--hover); }
+  a, p { transition: var(--transition); }
+  a:hover { font-weight: 700; }
+}
+
+.top-section, .bottom-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  border-top: 2px solid var(--page-alt);
+  overflow-x: scroll;
+  font-size: var(--text-sm);
+}
+
+.top-section {
+  text-align: center; /* @column: <a> at center */
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-start; /* @row: align <p> content at top */
+    text-align: start; /* & align <a> on left */
+    gap: 3rem;
   }
 
-  hr {
-    border: var(--border) var(--text-alt);
-    box-shadow: var(--shadow-xl);
+  p {
+    font-size: var(--text-2xl);
+    font-weight: 900;
+    max-width: 100%;
+
+    &:last-of-type {
+      font-weight: 500;
+
+      @media (min-width: 768px) { margin-left: auto; }
+    }
   }
 
-  > section {
+  nav {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 0.5rem;
-    padding: 1.5rem 1rem;
-    font-size: var(--text-sm);
 
-    &:nth-of-type(1) {
-      @media (min-width: 768px) {
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 3rem;
-        text-align: start;
-      }
+    @media (min-width: 768px) { gap: 1rem; }
+  }
+}
 
-      h1 {
-        font-size: var(--text-xl);
-        font-weight: 900;
-        max-width: 100%;
+.bottom-section {
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  box-shadow: var(--shadow-top);
+  text-align: center;
 
-        &:last-of-type {
-          font-weight: 500;
-          @media (min-width: 768px) { margin-left: auto; }
-        }
-      }
+  > * { flex-basis: 33.3333%; }
 
-      nav {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+  @media (min-width: 768px) {
+    flex-direction: row;
 
-        @media (min-width: 768px) { gap: 1rem; }
-      }
-    }
-
-    &:nth-of-type(2) {
-      justify-content: space-between;
-      font-size: var(--text-xs);
-
-      @media (min-width: 768px) { flex-direction: row; }
-    }
+    :nth-child(1) { text-align: start; }
+    :nth-child(3) { text-align: end;   }
   }
 }
 
