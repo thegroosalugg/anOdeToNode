@@ -5,6 +5,7 @@ import Meta from "@/components/meta/Meta";
 import NavBar from "@/components/layout/header/NavBar";
 import Footer from "@/components/layout/footer/Footer";
 import { useFetch } from "@/lib/hooks/useFetch";
+import { api } from "@/lib/http/endpoints";
 import { eventBus } from "@/lib/util/eventBus";
 import { saveTokens } from "@/lib/http/token";
 import { postAnalytics } from "@/lib/http/analytics";
@@ -43,10 +44,10 @@ export default function RootLayout({ children }: { children: (props: Auth) => Re
   const { title, description } = metadata(pathname, user);
 
   useEffect(() => {
-    reqUser({ url: "refresh-token?populate=true", method: "POST", onSuccess: (user) => saveTokens(user) });
+    reqUser({ url: api.user.refresh({ populate: true }), method: "POST", onSuccess: (user) => saveTokens(user) });
     postAnalytics();
     const unsubscribe = eventBus.on("logout", () => setUser(null));
-    return unsubscribe; // clean-uo - called on dismount
+    return unsubscribe; // clean-up - called on dismount
   }, [reqUser, setUser]);
 
   return (

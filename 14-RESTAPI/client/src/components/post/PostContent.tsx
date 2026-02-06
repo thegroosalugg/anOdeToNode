@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "@/lib/http/fetchData";
+import { api } from "@/lib/http/endpoints";
 import User from "@/models/User";
 import Post from "@/models/Post";
 import Button from "../ui/button/Button";
@@ -36,13 +37,7 @@ export default function PostContent({
          animate="visible"
       transition={{ staggerChildren: 0.5, delayChildren: 0.5 }}
     >
-      <NameTag
-           user={creator}
-        onClick={() => navigate("/user/" + creator._id)}
-           bold
-          align="end"
-        {...{ variants }}
-      />
+      <NameTag user={creator} onClick={() => navigate("/user/" + creator._id)} bold align="end" {...{ variants }} />
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -51,9 +46,7 @@ export default function PostContent({
               style={{ marginBottom: imgURL ? "" : "1rem" }}
         >
           <motion.h2 key={title} {...{ variants }}>
-            <Truncate className="underline">
-              {title}
-            </Truncate>
+            <Truncate className="underline">{title}</Truncate>
             <Time time={updatedAt} />
           </motion.h2>
           <ResizeDiv className={css["content"]} {...{ variants }}>
@@ -88,7 +81,7 @@ export default function PostContent({
         )}
       </AnimatePresence>
 
-      <ChatBox {...{ url: `post/reply/${post._id}`, variants }} />
+      <ChatBox {...{ url: api.post.reply(post._id), variants }} />
     </motion.section>
   );
 }

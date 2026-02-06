@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { api } from "@/lib/http/endpoints";
 import User from "@/models/User";
 import Friend from "@/models/Friend";
 import Loader from "@/components/ui/boundary/loader/Loader";
@@ -28,7 +29,7 @@ export default function SocialActions({ user, peer }: { user: User; peer: User }
     if (!reqAction) return; // action = undefined if connection accepted
     // in this case an argument must be passed
     const request = async () =>
-      await reqData({ url: `social/${_id}/${reqAction}`, method: "POST" });
+      await reqData({ url: api.social.request({ id: _id, action: reqAction }), method: "POST" });
     deferFn(request, 1000);
   };
 

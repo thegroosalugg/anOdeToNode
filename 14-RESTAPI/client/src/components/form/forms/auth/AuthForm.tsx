@@ -3,6 +3,7 @@ import { Auth } from "@/lib/types/interface";
 import { motion } from "motion/react";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useAnimations } from "@/lib/hooks/useAnimations";
+import { api } from "@/lib/http/endpoints";
 import Input from "../../layout/Input";
 import Button from "@/components/ui/button/Button";
 import Loader from "@/components/ui/boundary/loader/Loader";
@@ -44,7 +45,7 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
       const data = new FormData(e.currentTarget); // data parsed by multer
       // const data = Object.fromEntries(formData.entries()); // if application/json
       await reqUser({
-              url: isLogin ? "login" : "signup",
+              url: isLogin ? api.user.login : api.user.signup,
            method: "POST",
              data,
         onSuccess,

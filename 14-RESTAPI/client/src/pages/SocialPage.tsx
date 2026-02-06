@@ -8,12 +8,13 @@ import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
 import PagedList from "@/components/pagination/PagedList";
 import UserItem from "@/components/list/user/UserItem";
 import css from "@/components/list/user/FriendsList.module.css";
+import { api } from "@/lib/http/endpoints";
 
 export default function SocialPage({ user }: { user: User }) {
   const {
     fetcher: { setData, isLoading, error },
     ...rest
-  } = usePagedFetch<User>("social/users", isMobile ? 8 : 10);
+  } = usePagedFetch<User>(api.social.users, isMobile ? 8 : 10);
   const socketRef = useSocket("social");
 
   useEffect(() => {

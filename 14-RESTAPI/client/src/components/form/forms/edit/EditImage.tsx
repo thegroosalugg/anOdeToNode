@@ -1,6 +1,7 @@
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useEffect, useState } from "react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
+import { api } from "@/lib/http/endpoints";
 import { UserState } from "@/lib/types/interface";
 import ImagePicker from "../../layout/ImagePicker";
 import Button from "@/components/ui/button/Button";
@@ -38,7 +39,7 @@ export default function EditImage({ user, setUser, isOpen, onSuccess: closeModal
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    await reqData({ url: "profile/set-pic", method: "POST", data, onError, onSuccess });
+    await reqData({ url: api.profile.setPic, method: "POST", data, onError, onSuccess });
   }
 
   return (

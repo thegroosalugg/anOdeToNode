@@ -18,6 +18,7 @@ import PagedList from "@/components/pagination/PagedList";
 import FormSideBar from "@/components/form/forms/sidebar/FormSideBar";
 import PostForm from "@/components/form/forms/post/PostForm";
 import { getMeta } from "@/lib/util/getMeta";
+import { api } from "@/lib/http/endpoints";
 
 export default function PostPage({ user }: { user: User }) {
   const {
@@ -31,8 +32,8 @@ export default function PostPage({ user }: { user: User }) {
   const { postId } = useParams();
   const {
     fetcher: { setData: setReplies },
-    ...rest
-  } = usePagedFetch<Reply>(`post/replies/${postId}`, 5, !!postId);
+    ...rest // usePagedFetch won't send request if postId undefined
+  } = usePagedFetch<Reply>(api.post.replies(postId ?? ""), 5, !!postId);
   const [modalState,    setModal] = useState("");
   const [hasLoaded, setHasLoaded] = useState(false);
   const   navigate = useNavigate();
@@ -44,7 +45,7 @@ export default function PostPage({ user }: { user: User }) {
   useEffect(() => {
     const fetchPost = async () => {
       if (!postId || hasLoaded) return;
-      await reqPost({ url: `feed/find/${postId}` });
+      await reqPost({ url: api.feed.find(postId) });
       setTimeout(() => setHasLoaded(true), 1000); // *TEMP FIX FOR STAGGER
     };
 
@@ -117,7 +118,8 @@ export default function PostPage({ user }: { user: User }) {
   };
 
   async function deletePost() {
-    await reqPost({ url: `post/delete/${postId}`, method: "DELETE", onSuccess, onError });
+    if (!postId) return;
+    await reqPost({ url: api.post.delete(postId), method: "DELETE", onSuccess, onError });
   }
 
   const { title, description } = getMeta(

@@ -19,7 +19,7 @@ export const useChatSocket = () => {
     setLoaded,
     setMsgs,
     setAlerts,
-    clearAlerts,
+    clearMsgs,
     appendURL,
   } = useChat();
 
@@ -63,7 +63,7 @@ export const useChatSocket = () => {
           return prev; // do not overwrite temp chat with real => will cause component dismount
         });
       } else if ((isVisible || isTemp) && !isSender) {
-        await clearAlerts(chat._id); // states updated by alerts socket
+        await clearMsgs(chat._id); // states updated by alerts socket
       } else {
         updateChats(chat);
       }
@@ -126,7 +126,7 @@ export const useChatSocket = () => {
     collapse,
     setMsgs,
     setAlerts,
-    clearAlerts,
+    clearMsgs,
     appendURL,
   ]);
 };

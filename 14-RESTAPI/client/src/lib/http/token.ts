@@ -1,5 +1,6 @@
 import User from "@/models/User";
 import { API_URL } from "./fetchData";
+import { api } from "./endpoints";
 
 let accessToken: string;
 export const setAccessToken = (t: string) => (accessToken = t);
@@ -31,7 +32,7 @@ export const refreshToken = async () => {
   const savedToken = getRefreshToken();
   if (!savedToken) return;
 
-  const response = await fetch(API_URL + "refresh-token", {
+  const response = await fetch(API_URL + api.user.refresh({}), {
      method: "POST",
     headers: { Authorization: `Bearer ${savedToken}` },
   });

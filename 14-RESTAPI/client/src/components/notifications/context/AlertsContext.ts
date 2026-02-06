@@ -26,8 +26,8 @@ type AlertsContext = {
           count: number;
          alerts: AlertCounts;
           navTo: (path:   string) => void;
-    markSocials: (              ) => Promise<User    | void>;
-    markReplies: (index?: number) => Promise<Reply[] | void>;
+    readSocials: (              ) => Promise<User    | void>;
+    readReplies: (index?: number) => Promise<Reply[] | void>;
     clearSocial: (_id:    string) => void;
      clearReply: (_id:    string) => void;
   friendRequest: (_id: string, action: "accept" | "delete") => void;

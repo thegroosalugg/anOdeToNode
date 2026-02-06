@@ -8,9 +8,10 @@ import PagedList from "../pagination/PagedList";
 import PostItem from "../list/post/PostItem";
 import UserLogout from "./actions/user/UserLogout";
 import ProfileActions from "./actions/user/ProfileActions";
+import { api } from "@/lib/http/endpoints";
 
 export default function UserProfile({ user, setUser }: UserState) {
-  const { fetcher: { isLoading, error }, ...rest } = usePagedFetch<Post>("profile/posts", 4);
+  const { fetcher: { isLoading, error }, ...rest } = usePagedFetch<Post>(api.profile.posts, 4);
 
   return (
     <>

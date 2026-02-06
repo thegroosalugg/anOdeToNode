@@ -10,6 +10,7 @@ import Input from "../../layout/Input";
 import Loader from "@/components/ui/boundary/loader/Loader";
 import { getEntry } from "@/lib/util/common";
 import css from "./EditAbout.module.css";
+import { api } from "@/lib/http/endpoints";
 
 interface EditAbout extends UserState {
      isOpen: boolean;
@@ -59,7 +60,7 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
         return;
       }
 
-      await reqData({ url: "profile/info", method: "POST", data, onError, onSuccess });
+      await reqData({ url: api.profile.info, method: "POST", data, onError, onSuccess });
     };
 
     deferFn(request, 1000);

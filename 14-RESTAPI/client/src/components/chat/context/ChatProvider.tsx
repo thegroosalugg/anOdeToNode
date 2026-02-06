@@ -6,6 +6,7 @@ import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
 import { UserState } from "@/lib/types/interface";
 import Chat from "@/models/Chat";
+import { api } from "@/lib/http/endpoints";
 
 interface ChatProvider extends UserState {
   children: ReactNode;
@@ -46,9 +47,9 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
 
   const getRecipient = ({ host, guest }: Chat) => (user._id === host._id ? guest : host);
 
-  const clearAlerts = useCallback(
+  const clearMsgs = useCallback(
     async (id: string) => {
-      await reqData({ url: `alerts/chat/${id}` });
+      await reqData({ url: api.alerts.clearMsgs(id) });
     },
     [reqData]
   );
@@ -151,7 +152,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
 
     if (!data) return;
 
-    await reqData({ url: "chat/delete", method: "DELETE", data });
+    await reqData({ url: api.chat.delete, method: "DELETE", data });
     if (wasMarked) setMarked({});
     closeModal();
     setIsMarking(false);
@@ -186,7 +187,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
     deleteAction,
     alerts,
     setAlerts,
-    clearAlerts,
+    clearMsgs,
     appendURL,
     destroyURL,
     deferring,

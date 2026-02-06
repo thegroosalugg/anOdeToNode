@@ -9,12 +9,13 @@ import PagedList from "@/components/pagination/PagedList";
 import PostItem from "@/components/list/post/PostItem";
 import FormSideBar from "@/components/form/forms/sidebar/FormSideBar";
 import PostForm from "@/components/form/forms/post/PostForm";
+import { api } from "@/lib/http/endpoints";
 
 export default function FeedPage() {
   const {
     fetcher: { setData, isLoading, error },
     ...rest
-  } = usePagedFetch<Post>("feed/posts", 3);
+  } = usePagedFetch<Post>(api.feed.posts, 3);
   const socketRef = useSocket("feed");
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);

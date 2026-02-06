@@ -4,6 +4,7 @@ import { useFetch } from "@/lib/hooks/useFetch";
 import { useSocket } from "@/lib/hooks/useSocket";
 import { usePagedFetch } from "@/components/pagination/usePagedFetch";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
+import { api } from "@/lib/http/endpoints";
 import User from "@/models/User";
 import Post from "@/models/Post";
 import Logger from "@/models/Logger";
@@ -21,8 +22,8 @@ export default function PeerPage({ user }: { user: User }) {
   const { userId } = useParams();
   const {
     fetcher: { setData },
-    ...rest
-  } = usePagedFetch<Post>(`social/posts/${userId}`, 4, !!userId); // refetches only if userId exists
+    ...rest // api returns only string but does not accept undefined. if !userId, usePagedFetch won't send req
+  } = usePagedFetch<Post>(api.social.userPosts(userId ?? ""), 4, !!userId); // refetches only if userId exists
   const navigate = useNavigate();
   const socketRef = useSocket("peer");
   const { pathname } = useLocation();
@@ -42,7 +43,7 @@ export default function PeerPage({ user }: { user: User }) {
       return;
     }
 
-    if (userId) reqData({ url: `social/find/${userId}` });
+    if (userId) reqData({ url: api.social.findUser(userId) });
   }, [isWrongPath, userId, user._id, navigate, reqData]);
 
   useEffect(() => {

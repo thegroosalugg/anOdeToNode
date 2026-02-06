@@ -45,9 +45,9 @@ type ActionControl = {
 };
 
 type AlertsControl = {
-       alerts: number;
-    setAlerts: SetData<number>;
-  clearAlerts: (id: string) => Promise<void>;
+     alerts: number;
+  setAlerts: SetData<number>;
+  clearMsgs: (id: string) => Promise<void>;
 }
 
 type ParamsControl = {
