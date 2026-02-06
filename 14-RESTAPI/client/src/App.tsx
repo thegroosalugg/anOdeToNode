@@ -1,14 +1,15 @@
 import "./lib/fontawesome/icons";
 import { useRoutes } from "react-router-dom";
-import  RootLayout   from "./pages/layout/RootLayout";
+import  RootLayout   from "./pages/RootLayout";
 import    AuthPage   from "./pages/AuthPage";
 import    FeedPage   from "./pages/FeedPage";
 import    PostPage   from "./pages/PostPage";
 import  SocialPage   from "./pages/SocialPage";
 import    PeerPage   from "./pages/PeerPage";
-import   AboutPage   from "./pages/info/AboutPage";
-import   ErrorPage   from "./pages/boundary/ErrorPage";
-import   TermsPage   from "./pages/info/TermsPage";
+import   ErrorPage   from "./pages/ErrorPage";
+import   AboutPage   from "./pages/static/AboutPage";
+import   TermsPage   from "./pages/static/TermsPage";
+import PrivacyPage   from "./pages/static/PrivacyPage";
 import { captainsLog } from "./lib/util/captainsLog";
 import { Auth } from "./lib/types/interface";
 
@@ -38,9 +39,10 @@ const routes = [
   createRoute("/post/:postId"),
   createRoute("/social"),
   createRoute("/user/:userId"),
-  createRoute("/about", AboutPage),
-  createRoute("/terms", TermsPage),
-  createRoute("*",      ErrorPage),
+  createRoute("/about",     AboutPage),
+  createRoute("/terms",     TermsPage),
+  createRoute("/privacy", PrivacyPage),
+  createRoute("*",          ErrorPage),
 ];
 
 export default function App() {
