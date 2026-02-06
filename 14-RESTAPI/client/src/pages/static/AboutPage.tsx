@@ -10,13 +10,13 @@ const variants = createVariants();
 export default function AboutPage() {
   return (
     <PageWrapper>
-      <motion.h1 className={css["header"]}    {...{ variants }}>About</motion.h1>
-      <motion.p  className={css["paragraph"]} {...{ variants }}>
-        I'm a junior web developer based in Berlin. This demo app is a full-stack social
-        platform built with React 18, Express 4, and Mongoose 8. It's styled using CSS
-        Modules and animated with Framer Motion. I implemented real-time features,
-        authentication, and responsive UI to demonstrate best practices in modern web
-        development.
+      <motion.h1 className={css["header"]} {...{ variants }}>
+        About
+      </motion.h1>
+      <motion.p className={css["paragraph"]} {...{ variants }}>
+        I'm a full-stack developer based in Berlin. I built this social media demo to explore features like real-time
+        chat via Socket.IO, JWT authentication, query-based pagination, and user relationship management. All features
+        and logic were designed from scratch.
       </motion.p>
       <TextList
         items={[
@@ -28,11 +28,14 @@ export default function AboutPage() {
       >
         Key Features:
       </TextList>
-      <TextList items={["React 18", "Express 4", "Mongoose 8"]}>
-        Built With:
-      </TextList>
+      <TextList items={["React 18", "Express 4", "Mongoose 8"]}>Tech Stack:</TextList>
       <motion.div className={css["link"]} {...{ variants }}>
         <Link to="/terms">See instructions for using this site</Link>
+      </motion.div>
+      <motion.div className={css["link"]} {...{ variants }} style={{ marginTop: "0.25rem" }}>
+        <a href="https://victor-loginov.vercel.app/portfolio" target="_blank">
+          More from me
+        </a>
       </motion.div>
     </PageWrapper>
   );

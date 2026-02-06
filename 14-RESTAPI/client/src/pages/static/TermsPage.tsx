@@ -19,6 +19,7 @@ export default function TermsPage() {
       </motion.p>
       <TextList
         items={[
+          "Render's server takes about 90 seconds to wake up",
           "To use the app you must create a dummy account",
           "Do not use real information, just make it up",
           "Passwords are hashed with bcrypt",

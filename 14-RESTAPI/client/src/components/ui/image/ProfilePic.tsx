@@ -18,6 +18,7 @@ export default function ProfilePic({
             src={src}
             alt={name}
         onError={(e) => ((e.target as HTMLImageElement).src = fallback)}
+        loading="lazy"
       {...props}
     />
   );
