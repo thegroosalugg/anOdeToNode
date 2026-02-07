@@ -1,11 +1,14 @@
+.resize-container {
+  width: 100%;
+  max-width: var(--screen-sm);
+  margin: 0 auto;
+}
+
 .list {
   position: relative; /* prevents out of viewport <li> shooting across screen on transition */
   display: flex;
   flex-direction: column;
   align-items: center;
-  align-self: center;
-  width: 100%;
-  max-width: var(--screen-sm);
   gap: 0.5rem;
   padding: 0.5rem;
   overflow-y: scroll;
@@ -15,8 +18,8 @@
 }
 
 .list-header {
-  max-width: var(--screen-sm);
   width: 100%;
+  max-width: var(--screen-sm);
   margin: 0 auto;
   padding: 1rem;
 

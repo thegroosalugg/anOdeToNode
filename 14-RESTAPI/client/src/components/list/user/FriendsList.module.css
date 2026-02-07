@@ -3,8 +3,9 @@
   --min: 100px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--min), 1fr));
-  align-items: start; /* not required, however will overwrite Default's center alignement */
+  align-items: start;
   align-content: start; /* forces rows to stack at top */
+  height: auto !important; /* opt out of <PagedList> inline style fixed height lock */
 
   @media (pointer: coarse) { --min: 80px; }
 }

@@ -1,10 +1,11 @@
 import { motion, AnimatePresence, HTMLMotionProps } from "motion/react";
-import { useEffect, useRef, ReactNode } from "react";
+import { useRef, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Paginated } from "./usePagedFetch";
 import { custom } from "@/lib/hooks/usePages";
 import { Align } from "@/lib/types/common";
 import Friend from "@/models/Friend";
+import ResizeDiv from "../ui/layout/ResizeDiv";
 import PageButtons from "./PageButtons";
 import Heading from "../ui/layout/Heading";
 import css from "./PagedList.module.css";
@@ -18,7 +19,7 @@ interface PagedList<T> extends Paginated<T> {
           path?: string;
          header: Header;
   isFriendList?: boolean;
-       children: (item: T) => ReactNode;
+       children: (item: T) => React.ReactNode;
 }
 
 export default function PagedList<T extends { _id: string }>({
@@ -49,11 +50,11 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   const         title = { text: "",                 align, ...header.title    };
   const      fallback = { text: "No results found", align, ...header.fallback };
 
-  useEffect(() => {
-    setTimeout(() => {
-      if (listRef.current) height.current = listRef.current.offsetHeight;
-      if ( shouldRecount ) height.current = "auto";
-    }, 1000);
+  // list fixes height by default to prevent layout shifts on pagination. .user-list (grid) opts out of this via CSS
+  useLayoutEffect(() => {
+    if (!listRef.current) return;
+
+    height.current = shouldRecount ? "auto" : listRef.current.offsetHeight;
   }, [shouldRecount]);
 
   function navTo(item: T) {
@@ -65,45 +66,46 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
   return (
     <>
       <Heading
-        className={`${css["list-header"]} ${hasItems ? css["title"] : ""}`}
-            style={{ textAlign: hasItems && title ? title.align : fallback.align }}
-       transition={{ delay }}
+         className={`${css["list-header"]} ${hasItems ? css["title"] : ""}`}
+             style={{ textAlign: hasItems && title ? title.align : fallback.align }}
+        transition={{ delay }}
       >
         {hasItems ? title.text : `${fallback.text}...`}
       </Heading>
       {hasItems && (
         <>
-          <motion.ul
-              initial="enter"
-              animate="center"
-                 exit="exit"
-                  ref={listRef}
-            className={classes}
-                style={{ height: height.current }}
-          >
-            <AnimatePresence mode="popLayout" custom={direction}>
-              {items.map((item, i) => (
-                <motion.li
-                      layout
-                     initial="enter"
-                     animate="center"
-                        exit="exit"
-                         key={item._id}
-                     onClick={() => navTo(item)}
-                       style={{ cursor }}
-                      custom={direction}
-                    variants={{ ...custom }}
-                  transition={{ x: stagger(i), opacity: stagger(i) }}
-                  {...props}
-                >
-                  {children(item)}
-                </motion.li>
-              ))}
-            </AnimatePresence>
-          </motion.ul>
-          {docCount > limit && (
-            <PageButtons {...{ docCount, limit, current, changePage, deferring, delay }} />
-          )}
+        {/* .user-list use <ResizeDiv> to animate layout shifts on pagination. Default lists will not resize */}
+          <ResizeDiv className={css["resize-container"]}>
+            <motion.ul
+                initial="enter"
+                animate="center"
+                   exit="exit"
+                    ref={listRef}
+              className={classes}
+                  style={{ height: height.current }}
+            >
+              <AnimatePresence mode="popLayout" custom={direction}>
+                {items.map((item, i) => (
+                  <motion.li
+                        layout
+                       initial="enter"
+                       animate="center"
+                          exit="exit"
+                           key={item._id}
+                       onClick={() => navTo(item)}
+                         style={{ cursor }}
+                        custom={direction}
+                      variants={{ ...custom }}
+                    transition={{ x: stagger(i), opacity: stagger(i) }}
+                    {...props}
+                  >
+                    {children(item)}
+                  </motion.li>
+                ))}
+              </AnimatePresence>
+            </motion.ul>
+          </ResizeDiv>
+          {docCount > limit && <PageButtons {...{ docCount, limit, current, changePage, deferring, delay }} />}
         </>
       )}
     </>
