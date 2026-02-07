@@ -16,11 +16,11 @@ interface AlertsProvider extends UserState {
 }
 
 export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
+  const { currentPage,        direction,         setPageDirection } = usePages();
   const { data: replies, setData: setReplies, reqData: reqReplies } = useFetch<Reply[]>([]);
   const {            reqData: reqReply   } = useFetch<Reply | null>();
   const { error,     reqData: reqSocials } = useFetch<User>();
   const { deferring,             deferFn } = useDebounce();
-  const { current, direction, changePage } = usePages();
   const [isOpen,                setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -62,12 +62,12 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
   const alerts = [inboundCount, outboundCount,  newReplies] as AlertCounts;
 
   const readSocials = useCallback(
-    async (index = current) =>
+    async (index = currentPage) =>
       await reqSocials({
               url:  api.alerts.readSocial({ query: (["inbound", "outbound"] as const)[index] }),
         onSuccess: (updated) => setUser(updated),
       }),
-    [current, reqSocials, setUser],
+    [currentPage, reqSocials, setUser],
   );
 
   const readReplies = useCallback(
@@ -75,7 +75,7 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     [reqReplies],
   );
 
-  const handleAlerts = async (index = current) => {
+  const handleAlerts = async (index = currentPage) => {
     if (alerts[index] > 0) {
       if (index < 2) {
         await readSocials(index);
@@ -95,7 +95,7 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
   const closeMenu = () => setIsOpen(false);
 
   const changeTab = async (index: number) => {
-    changePage(((index % 3) + 3) % 3); // clamps between 0-2
+    setPageDirection(((index % 3) + 3) % 3); // clamps between 0-2
     await handleAlerts(index);
   };
 
@@ -127,7 +127,7 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
 
   useDepedencyTracker("alerts", {
            isOpen,
-          current,
+      currentPage,
       inboundReqs,
      outboundReqs,
      inboundCount,
@@ -155,7 +155,7 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     isOpen,
     openMenu,
     closeMenu,
-    activeTab: current,
+    activeTab: currentPage,
     direction,
     changeTab,
     navTo,

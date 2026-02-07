@@ -7,12 +7,17 @@ export function usePages() {
   const [currentPage,    setPage] = useState(1);
   const [direction, setDirection] = useState<Direction>(1)
 
-  const changePage = (page: number) => {
+  const setPageDirection = (page: number) => {
     deferFn(() => {
       setPage(page);
       setDirection(page > currentPage ? 1 : -1);
     }, 500);
   };
 
-  return { currentPage, direction, changePage, deferring };
+  function createArraySlice<T>(arr: T[], page: number, limit: number): T[] {
+    const start = (page - 1) * limit;
+    return arr.slice(start, start + limit);
+  }
+
+  return { currentPage, direction, setPageDirection, createArraySlice, deferring };
 }

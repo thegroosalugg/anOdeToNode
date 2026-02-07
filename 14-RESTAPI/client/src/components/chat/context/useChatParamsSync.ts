@@ -48,15 +48,13 @@ export const useChatParamsSync = () => {
     let chat = chats.find(({ guest, host }) => [host._id, guest._id].includes(peerId));
     if (!chat) {
       const peer = user.friends.find((friend) => Friend.getId(friend) === peerId)?.user;
-      if (typeof peer === "string") return;
-      if (peer) chat = new Chat(user, peer);
+      if (!peer || !Friend.isUser(peer)) return;
+      chat = new Chat(user, peer);
     }
     // !chat = new Chat(dummy) => send 1st msg => socket updates chats & retriggers this effect
     // this time chat is found, and if it replaces prev, it changes ID and causes dismount
     // therefore, if chat is temp, prev state is preserved instead
-    if (chat) {
-      setActiveChat((prev) => (prev?.isTemp ? prev : chat));
-      setIsOpen(true);
-    }
+    setActiveChat((prev) => (prev?.isTemp ? prev : chat));
+    setIsOpen(true);
   }, [peerId, deferring, user, chats, isOpen, setIsOpen, setActiveChat, destroyURL]);
 };
