@@ -30,7 +30,7 @@ export default function PostContent({
 }) {
   const { title, content, imgURL, creator, updatedAt } = post;
   const navigate = useNavigate();
-  const isOp = user._id === creator?._id;
+  const isCreator = user._id === creator?._id;
 
   return (
     <motion.section
@@ -55,7 +55,7 @@ export default function PostContent({
           <ResizeDiv className={css["content"]} {...{ variants }}>
             {content}
           </ResizeDiv>
-          {isOp && (
+          {isCreator && (
             <motion.div className={css["actions"]} {...{ variants }}>
               <Button onClick={() => setModal("edit")}>Edit</Button>
               <Button onClick={() => setModal("delete")} background="danger">
