@@ -2,8 +2,13 @@ import { RecordMap } from "@/lib/types/common";
 import Msg from "./Message";
 import User from "./User";
 
+const generateId = () => {
+  if (crypto.randomUUID) return crypto.randomUUID(); // doesn't work when port forwarding to mobile device
+  return Math.random().toString(36).slice(2);
+};
+
 class Chat {
-         _id: string = crypto.randomUUID();
+         _id: string = generateId();
         host: User;
        guest: User;
      lastMsg: Msg = new Msg();
