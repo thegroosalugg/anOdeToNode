@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useIsPresent } from "motion/react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useSocket } from "@/lib/hooks/useSocket";
@@ -19,33 +20,34 @@ import { getMeta } from "@/lib/util/getMeta";
 
 export default function PeerPage({ user }: { user: User }) {
   const { data: peer, isLoading, error, reqData } = useFetch<User | null>();
-  const { userId } = useParams();
-  // api returns only string but does not accept undefined. if !userId, usePagedFetch won't send req
-  const { setData, ...rest } = usePagedFetch<Post>(api.social.userPosts(userId ?? ""), 4, !!userId); // refetches only if userId exists
-  const navigate = useNavigate();
-  const socketRef = useSocket("peer");
+  const {  userId  } = useParams();
   const { pathname } = useLocation();
-  const isWrongPath = !pathname.startsWith("/user"); // <AnimatePresence> dismounts
+  const    isPresent = useIsPresent(); // returns false when component is exiting with <AnimatePresense>
+  const    socketRef = useSocket("peer");
+  const     navigate = useNavigate();
+  // shouldFetch is userId defined and component isPresent (not exiting with <AnimatePresense>)
+  const { setData, ...rest } = usePagedFetch<Post>(api.social.userPosts(userId ?? ""), 4, !!userId && isPresent);
 
   useDepedencyTracker("peer", {
     pathname,
       userId,
      reqUser: user._id,
         peer: peer?._id,
+    isPresent,
   });
 
   useEffect(() => {
-    if (isWrongPath) return;
+    if (!isPresent) return;
     if (userId === user._id) {
       navigate("/");
       return;
     }
 
     if (userId) reqData({ url: api.social.findUser(userId) });
-  }, [isWrongPath, userId, user._id, navigate, reqData]);
+  }, [isPresent, userId, user._id, navigate, reqData]);
 
   useEffect(() => {
-    if (isWrongPath || !peer?._id) return; // cancel effects on dismount (AnimatePresense)
+    if (!isPresent || !peer?._id) return; // cancel effects on dismount (AnimatePresense)
 
     const socket = socketRef.current;
     if (!socket) return;
@@ -59,9 +61,7 @@ export default function PeerPage({ user }: { user: User }) {
     socket.on(updateChannel, ({ post, isNew }) => {
       logger.event(`update, action: ${isNew ? "New" : "Edit"}`, post);
       setData(({ docCount: prevCount, items: prevPosts }) => {
-        const items = isNew
-          ? [post, ...prevPosts]
-          : prevPosts.map((prev) => (post._id === prev._id ? post : prev));
+        const items = isNew ? [post, ...prevPosts] : prevPosts.map((prev) => (post._id === prev._id ? post : prev));
 
         const docCount = prevCount + (isNew ? 1 : 0);
         return { docCount, items };
@@ -83,13 +83,13 @@ export default function PeerPage({ user }: { user: User }) {
         socket.off(deleteChannel);
       }
     };
-  }, [isWrongPath, socketRef, peer?._id, setData]);
+  }, [isPresent, socketRef, peer?._id, setData]);
 
   const { title, description } = getMeta(
     isLoading,
     peer,
     (peer) => ({ title: peer.name, description: `${peer.name}'s profile` }),
-    "User"
+    "User",
   );
 
   const align = "end";
