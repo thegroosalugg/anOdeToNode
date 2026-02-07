@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { useDebounce } from './useDebounce';
+import { useDefer } from './useDefer';
 import { Direction } from '../types/common';
 
 export function usePages() {
-  const { deferring,    deferFn } = useDebounce();
+  const { deferring,      defer } = useDefer();
   const [currentPage,    setPage] = useState(1);
   const [direction, setDirection] = useState<Direction>(1)
 
   const setPageDirection = (page: number) => {
-    deferFn(() => {
+    defer(() => {
       setPage(page);
       setDirection(page > currentPage ? 1 : -1);
     }, 500);

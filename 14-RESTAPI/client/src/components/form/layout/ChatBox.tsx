@@ -2,7 +2,7 @@ import { FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useDefer } from "@/lib/hooks/useDefer";
 import Loader from "../../ui/boundary/loader/Loader";
 import { Animations, createAnimations } from "@/lib/motion/animations";
 import css from "./ChatBox.module.css";
@@ -19,7 +19,7 @@ export default function ChatBox({
 }) {
   const { reqData, isLoading, error, setError } = useFetch();
   const { scope, animate, shake } = useAnimations();
-  const { deferring, deferFn } = useDebounce();
+  const { deferring, defer } = useDefer();
 
   const onSuccess = () => {
     setError(null);
@@ -63,7 +63,7 @@ export default function ChatBox({
       {...createAnimations({...animations})}
       onSubmit={(e) => {
         e.preventDefault();
-        deferFn(() => submitHandler(e), 1500);
+        defer(() => submitHandler(e), 1500);
       }}
       {...props}
     >

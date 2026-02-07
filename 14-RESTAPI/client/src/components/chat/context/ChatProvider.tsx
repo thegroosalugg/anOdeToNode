@@ -2,7 +2,7 @@ import { useState, ReactNode, useCallback } from "react";
 import { ChatContext, MsgsMap, StatusMap } from "./ChatContext";
 import { useSearchParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useDefer } from "@/lib/hooks/useDefer";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
 import { UserState } from "@/lib/types/interface";
 import Chat from "@/models/Chat";
@@ -30,7 +30,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
   const [markedMap,      setMarked] = useState<StatusMap>({});
   const [showModal,   setShowModal] = useState(false);
   const [,         setSearchParams] = useSearchParams();
-  const { deferring,      deferFn } = useDebounce();
+  const { deferring,        defer } = useDefer();
 
   const wasMarked = Object.keys(markedMap).some((key) => markedMap[key]);
 
@@ -76,13 +76,13 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
 
   const openMenu = () => {
     setIsOpen(true);
-    deferFn(() => {
+    defer(() => {
       if (activeChat) appendURL(getRecipient(activeChat)._id);
     }, 500);
   };
 
   const closeMenu = () => {
-    deferFn(() => {
+    defer(() => {
       destroyURL(); // async URL update
       setIsOpen(false);
       cancelAction();
@@ -98,7 +98,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
 
   const expand = (chat: Chat, path: string) => {
     if (activeChat) return;
-    deferFn(() => {
+    defer(() => {
       setActiveChat(chat);
       appendURL(path);
     }, 2500);

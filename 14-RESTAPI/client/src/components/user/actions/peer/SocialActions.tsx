@@ -2,7 +2,7 @@ import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useDefer } from "@/lib/hooks/useDefer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { api } from "@/lib/http/endpoints";
 import User from "@/models/User";
@@ -15,7 +15,7 @@ import css from "./SocialActions.module.css";
 
 export default function SocialActions({ user, peer }: { user: User; peer: User }) {
   const { isLoading,    reqData } = useFetch();
-  const { deferring,    deferFn } = useDebounce();
+  const { deferring,      defer } = useDefer();
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const { _id } = peer;
@@ -30,7 +30,7 @@ export default function SocialActions({ user, peer }: { user: User; peer: User }
     // in this case an argument must be passed
     const request = async () =>
       await reqData({ url: api.social.request({ id: _id, action: reqAction }), method: "POST" });
-    deferFn(request, 1000);
+    defer(request, 1000);
   };
 
   async function handleAction() {

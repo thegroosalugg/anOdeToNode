@@ -28,12 +28,12 @@ export default function PagedList<T extends { _id: string }>({
      deferring,
       children,
 }: PagedList<T>) {
-  const      hasItems = items.length > 0;
+  const      hasItems = items.length;
   const       classes = `no-scrollbar-x ${css["list"]} ${className}`;
   const       listRef = useRef<HTMLUListElement | null>(null);
   const        height = useRef<number | "auto">("auto");
   const shouldRecount = docCount < limit && items.length < limit;
-  const        cursor = deferring ? "wait" : "";
+  const pointerEvents = deferring ? "none" : "auto";
   const       stagger = (index: number) => ({ duration: 0.5, delay: 0.05 * index });
   const  align: Align = "start";
   const         title = { text: "",                 align, ...header.title    };
@@ -74,7 +74,7 @@ export default function PagedList<T extends { _id: string }>({
                        animate="center"
                           exit="exit"
                            key={item._id}
-                         style={{ cursor }}
+                         style={{ pointerEvents }}
                         custom={direction}
                       variants={{ ...custom }}
                     transition={{ x: stagger(i), opacity: stagger(i) }}

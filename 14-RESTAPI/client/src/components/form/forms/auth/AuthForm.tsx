@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Auth } from "@/lib/types/interface";
 import { motion } from "motion/react";
-import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useDefer } from "@/lib/hooks/useDefer";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { api } from "@/lib/http/endpoints";
 import Input from "../../layout/Input";
@@ -12,14 +12,14 @@ import { saveTokens } from "@/lib/http/token";
 import css from "./AuthForm.module.css";
 
 export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) {
-  const { deferring,    deferFn } = useDebounce();
+  const { deferring,      defer } = useDefer();
   const [isLogin,     setIsLogin] = useState(true);
   const { scope, animate, shake } = useAnimations();
   const label = isLogin ? "Login" : "Sign Up";
   const variants = createVariants({ transition: { duration: 0.2 } });
 
   function switchForm() {
-    deferFn(() => {
+    defer(() => {
       animate(scope.current, { opacity: [1, 0, 1] }, { duration: 1 });
       setTimeout(() => {
         setError(null);
@@ -41,7 +41,7 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    deferFn(async () => {
+    defer(async () => {
       const data = new FormData(e.currentTarget); // data parsed by multer
       // const data = Object.fromEntries(formData.entries()); // if application/json
       await reqUser({

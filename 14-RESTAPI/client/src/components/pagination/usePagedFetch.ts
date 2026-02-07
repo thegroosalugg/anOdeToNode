@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { Debounce, useDebounce } from "@/lib/hooks/useDebounce";
+import { UseDefer, useDefer } from "@/lib/hooks/useDefer";
 import { Direction } from "@/lib/types/common";
 
 export type InitState<T> = {
@@ -15,7 +15,7 @@ export type Paginated<T = null> = {
         limit: number;
   currentPage: number;
     direction: Direction;
-    deferring: Debounce["deferring"];
+    deferring: UseDefer["deferring"];
 };
 
 export function usePagedFetch<T>(baseURL: string, limit: number, shouldFetch = true) {
@@ -23,14 +23,14 @@ export function usePagedFetch<T>(baseURL: string, limit: number, shouldFetch = t
   const { data,    reqData,   ...rest } = useFetch(initState);
   const [searchParams, setSearchParams] = useSearchParams();
   const [direction,       setDirection] = useState<Direction>(1)
-  const { deferring,          deferFn } = useDebounce();
+  const { deferring,            defer } = useDefer();
   const isInitial = useRef(true);
 
   const currentPage = +(searchParams.get("page") ?? 1);
   const url = `${baseURL}?page=${currentPage}&limit=${limit}`;
 
   function changePage(nextPage: number) {
-    deferFn(() => {
+    defer(() => {
       setSearchParams({ page: String(nextPage) });
       setDirection(nextPage > currentPage ? 1 : -1);
     }, 500);

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
-import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useDefer } from "@/lib/hooks/useDefer";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { api } from "@/lib/http/endpoints";
 import Post from "@/models/Post";
@@ -26,7 +26,7 @@ export default function PostForm({
 }: PostForm) {
   const { isLoading, error, reqData, setError } = useFetch<Post | null>();
   const { scope, shake, shoot } = useAnimations();
-  const { deferring,  deferFn } = useDebounce();
+  const { deferring,  defer } = useDefer();
   const { _id = "", title = "", content = "", imgURL = "" } = post || {};
   const    url = _id ? api.post.edit(_id) : api.post.new
   const method = _id ? "PUT" : "POST";
@@ -66,7 +66,7 @@ export default function PostForm({
       await reqData({ url, method, data, onError, onSuccess: closeModal });
     };
 
-    deferFn(request, 1000);
+    defer(request, 1000);
   }
 
   return (
