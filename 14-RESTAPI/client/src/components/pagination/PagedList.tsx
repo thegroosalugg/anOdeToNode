@@ -1,10 +1,8 @@
-import { motion, AnimatePresence, HTMLMotionProps } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useRef, useLayoutEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Paginated } from "./usePagedFetch";
-import { custom } from "@/lib/hooks/usePages";
+import { custom } from "@/lib/motion/animations";
 import { Align } from "@/lib/types/common";
-import Friend from "@/models/Friend";
 import ResizeDiv from "../ui/layout/ResizeDiv";
 import PageButtons from "./PageButtons";
 import Heading from "../ui/layout/Heading";
@@ -14,31 +12,24 @@ type Config = {   text: string;    align?: Align  };
 type Header = { title?: Config; fallback?: Config };
 
 interface PagedList<T> extends Paginated<T> {
-     className?: string;
-         delay?: number;
-          path?: string;
-         header: Header;
-  isFriendList?: boolean;
-       children: (item: T) => React.ReactNode;
+  className?: string;
+      delay?: number;
+      header: Header;
+    children: (item: T) => React.ReactNode;
 }
 
 export default function PagedList<T extends { _id: string }>({
      className = "",
          delay = 0,
-          path,
         header,
-  isFriendList,
           data: { docCount, items },
          limit,
-       current,
+   currentPage,
      direction,
     changePage,
      deferring,
       children,
-      ...props
-}: // merges PagedList & <motion.li> props; excluding common duplicates: [key, children, ...etc]
-PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
-  const      navigate = useNavigate();
+}: PagedList<T>) {
   const      hasItems = items.length > 0;
   const       classes = `no-scrollbar-x ${css["list"]} ${className}`;
   const       listRef = useRef<HTMLUListElement | null>(null);
@@ -56,12 +47,6 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
 
     height.current = shouldRecount ? "auto" : listRef.current.offsetHeight;
   }, [shouldRecount]);
-
-  function navTo(item: T) {
-    if (deferring || !path) return;
-    const _id = isFriendList ? Friend.getId(item) : item._id;
-    navigate(`/${path}/${_id}`);
-  }
 
   return (
     <>
@@ -92,12 +77,10 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
                        animate="center"
                           exit="exit"
                            key={item._id}
-                       onClick={() => navTo(item)}
                          style={{ cursor }}
                         custom={direction}
                       variants={{ ...custom }}
                     transition={{ x: stagger(i), opacity: stagger(i) }}
-                    {...props}
                   >
                     {children(item)}
                   </motion.li>
@@ -105,7 +88,7 @@ PagedList<T> & Omit<HTMLMotionProps<"li">, keyof PagedList<T>>) {
               </AnimatePresence>
             </motion.ul>
           </ResizeDiv>
-          {docCount > limit && <PageButtons {...{ docCount, limit, current, changePage, deferring, delay }} />}
+          {docCount > limit && <PageButtons {...{ docCount, limit, currentPage, changePage, deferring, delay }} />}
         </>
       )}
     </>

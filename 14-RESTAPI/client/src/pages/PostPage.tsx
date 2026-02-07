@@ -30,10 +30,8 @@ export default function PostPage({ user }: { user: User }) {
      setError,
   } = useFetch<Post | null>();
   const { postId } = useParams();
-  const {
-    fetcher: { setData: setReplies },
-    ...rest // usePagedFetch won't send request if postId undefined
-  } = usePagedFetch<Reply>(api.post.replies(postId ?? ""), 5, !!postId);
+  // usePagedFetch won't send request if postId undefined
+  const { setData: setReplies, ...rest } = usePagedFetch<Reply>(api.post.replies(postId ?? ""), 5, !!postId);
   const [modalState,    setModal] = useState("");
   const [hasLoaded, setHasLoaded] = useState(false);
   const   navigate = useNavigate();

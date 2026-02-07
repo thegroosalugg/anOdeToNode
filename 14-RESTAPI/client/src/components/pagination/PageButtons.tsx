@@ -18,13 +18,13 @@ const Ellipsis = () => (
 export default function PageButtons({
      docCount,
         limit,
-      current,
+  currentPage,
    changePage,
     deferring,
         delay,
 }: Omit<Paginated, 'data' | 'direction'> & { docCount: number; delay: number }) {
   const   last = Math.ceil(docCount / limit);
-  const middle = last < 5 ? 3 : Math.min(Math.max(current, 3), last - 2);
+  const middle = last < 5 ? 3 : Math.min(Math.max(currentPage, 3), last - 2);
   const  pages: number[] = [];
 
   if (last >= 1) pages.push(1);
@@ -42,7 +42,7 @@ export default function PageButtons({
       <LayoutGroup>
         {pages.map((page) => {
           const [accent, bg] = ["accent", "page-alt"] as const;
-          const     isActive = current === page;
+          const     isActive = currentPage === page;
           const        color =  isActive ? bg : accent;
           const   background = !isActive ? bg : accent;
           const       border =  color;

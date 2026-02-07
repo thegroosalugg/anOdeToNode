@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react';
-import { useFetch } from '@/lib/hooks/useFetch';
-import { usePages } from '@/lib/hooks/usePages';
-import { Debounce } from "@/lib/hooks/useDebounce";
-import { Direction } from '@/lib/types/common';
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useFetch } from "@/lib/hooks/useFetch";
+import { Debounce, useDebounce } from "@/lib/hooks/useDebounce";
+import { Direction } from "@/lib/types/common";
 
 export type InitState<T> = {
   docCount: number;
@@ -10,32 +10,39 @@ export type InitState<T> = {
 };
 
 export type Paginated<T = null> = {
-        data: InitState<T>;
-  changePage: (page: number) => void;
-       limit: number;
-     current: number;
-   direction: Direction;
-   deferring: Debounce['deferring'];
+         data: InitState<T>;
+   changePage: (page: number) => void;
+        limit: number;
+  currentPage: number;
+    direction: Direction;
+    deferring: Debounce["deferring"];
 };
 
 export function usePagedFetch<T>(baseURL: string, limit: number, shouldFetch = true) {
-  const initState: InitState<T> = { docCount: 0, items: [] };
-  const { data, reqData, ...rest } = useFetch(initState);
-  const   isInitial = useRef(true);
-  const  pagedProps = usePages();
-  const { current } = pagedProps;
-  const     url     = baseURL + `?page=${current}&limit=${limit}`;
+  const initState: InitState<T>         = { docCount: 0, items: [] };
+  const { data,    reqData,   ...rest } = useFetch(initState);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [direction,       setDirection] = useState<Direction>(1)
+  const { deferring,          deferFn } = useDebounce();
+  const isInitial = useRef(true);
+
+  const currentPage = +(searchParams.get("page") ?? 1);
+  const url = `${baseURL}?page=${currentPage}&limit=${limit}`;
+
+  function changePage(nextPage: number) {
+    deferFn(() => {
+      setSearchParams({ page: String(nextPage) });
+      setDirection(nextPage > currentPage ? 1 : -1);
+    }, 500);
+  }
 
   useEffect(() => {
-    const initData = async () => {
-      // guard request with optional conditions to prevent FC dismount requests
-      if (!shouldFetch) return;
-      await reqData({ url }); // ref required to disable loaders on page swap after initial
-      if (isInitial.current) isInitial.current = false;
-    };
-    
-    initData();
-  }, [reqData, url, shouldFetch]);
+    if (!shouldFetch) return;
 
-  return { ...pagedProps, limit, data, fetcher: { ...rest, isLoading: isInitial.current } };
+    reqData({ url }).finally(() => {
+      if (isInitial.current) isInitial.current = false; // loader only on initial render; thereafter disabled
+    });
+  }, [url, shouldFetch, reqData]);
+
+  return { ...rest, data, limit, currentPage, direction, changePage, deferring, isLoading: isInitial.current };
 }

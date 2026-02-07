@@ -5,7 +5,7 @@ import AsyncAwait from "../../ui/boundary/AsyncAwait";
 import InboundAlerts from "./list/InboundAlerts";
 import OutboundAlerts from "./list/OutboundAlerts";
 import ReplyAlerts from "./list/ReplyAlerts";
-import { custom } from "@/lib/hooks/usePages";
+import { custom } from "@/lib/motion/animations";
 import css from "./NotifsBody.module.css";
 
 const tabs = [<InboundAlerts />, <OutboundAlerts />, <ReplyAlerts />];

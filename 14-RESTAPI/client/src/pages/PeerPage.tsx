@@ -20,10 +20,8 @@ import { getMeta } from "@/lib/util/getMeta";
 export default function PeerPage({ user }: { user: User }) {
   const { data: peer, isLoading, error, reqData } = useFetch<User | null>();
   const { userId } = useParams();
-  const {
-    fetcher: { setData },
-    ...rest // api returns only string but does not accept undefined. if !userId, usePagedFetch won't send req
-  } = usePagedFetch<Post>(api.social.userPosts(userId ?? ""), 4, !!userId); // refetches only if userId exists
+  // api returns only string but does not accept undefined. if !userId, usePagedFetch won't send req
+  const { setData, ...rest } = usePagedFetch<Post>(api.social.userPosts(userId ?? ""), 4, !!userId); // refetches only if userId exists
   const navigate = useNavigate();
   const socketRef = useSocket("peer");
   const { pathname } = useLocation();
@@ -107,7 +105,6 @@ export default function PeerPage({ user }: { user: User }) {
             </UserDashboard>
             <FriendsList target={peer} watcher={user} />
             <PagedList<Post>
-              path="post"
               header={{
                    title: { text: `${peer.name}'s posts`,                    align },
                 fallback: { text: `${peer.name} hasn't posted anything yet`, align },

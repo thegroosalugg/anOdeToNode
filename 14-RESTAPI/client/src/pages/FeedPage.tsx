@@ -12,10 +12,7 @@ import PostForm from "@/components/form/forms/post/PostForm";
 import { api } from "@/lib/http/endpoints";
 
 export default function FeedPage() {
-  const {
-    fetcher: { setData, isLoading, error },
-    ...rest
-  } = usePagedFetch<Post>(api.feed.posts, 3);
+  const { setData, isLoading, error, ...rest } = usePagedFetch<Post>(api.feed.posts, 3);
   const socketRef = useSocket("feed");
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
@@ -58,6 +55,9 @@ export default function FeedPage() {
     };
   }, [socketRef, setData]);
 
+  const    title = { text: "User posts" };
+  const fallback = { text: "Slow news day", align: "center" as const };
+
   return (
     <>
       <FormSideBar open={isOpen} close={closeModal} text="Make a post!">
@@ -71,11 +71,7 @@ export default function FeedPage() {
         New Post
       </Button>
       <AsyncAwait {...{ isLoading, error }}>
-        <PagedList<Post>
-            path="post"
-          header={{ title: { text: "User posts" }, fallback: { text: "Slow news day", align: "center" }}}
-          {...rest}
-        >
+        <PagedList<Post> header={{ title, fallback }} {...rest}>
           {(post) => <PostItem {...post} />}
         </PagedList>
       </AsyncAwait>

@@ -14,7 +14,6 @@
   overflow-y: scroll;
 
   > li { width: 100%; position: relative; } /* must be set on <li> too*/
-  &::-webkit-scrollbar-thumb { background: var(--accent); }
 }
 
 .list-header {

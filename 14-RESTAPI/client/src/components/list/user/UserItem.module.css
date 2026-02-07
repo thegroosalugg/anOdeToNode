@@ -1,5 +1,8 @@
 .user-item {
   cursor: pointer;
+  transition: var(--transition);
+
+  &:hover { transform: translateY(-5px); }
 
   /* uses .truncate class */
   > h2 {

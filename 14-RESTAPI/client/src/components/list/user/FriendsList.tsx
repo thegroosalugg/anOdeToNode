@@ -13,17 +13,17 @@ function paginate<T>(arr: T[], page: number, limit: number): T[] {
 }
 
 export default function FriendsList({ target, watcher }: { target: User; watcher?: User }) {
-  const { deferring, current, direction, changePage: setPage } = usePages();
+  const { deferring, currentPage, direction, changePage: setPage } = usePages();
 
   if (!watcher) watcher = target;
   const friendsList = Friend.getMutuals({ target, watcher });
 
   const limit = isMobile ? 4 : 5;
-  const [pagedData, setPagedData] = useState(paginate(friendsList, current, limit));
+  const [pagedData, setPagedData] = useState(paginate(friendsList, currentPage, limit));
 
   useEffect(() => {
     setPagedData((prev) => {
-      const newPage = paginate(friendsList, current, limit);
+      const newPage = paginate(friendsList, currentPage, limit);
       // .some returns false on reference mismatch, always triggering newPage.
       // React re-renders only on prop value changes, not new refs.
       // therefore if a new friend is added, this will also updated pagedData, not just removals
@@ -31,7 +31,7 @@ export default function FriendsList({ target, watcher }: { target: User; watcher
         ? newPage
         : prev;
     });
-  }, [friendsList, current, limit]);
+  }, [friendsList, currentPage, limit]);
 
   // hook function renamed & redefined with extra step setPagedData
   const changePage = (page: number) => {
@@ -40,12 +40,12 @@ export default function FriendsList({ target, watcher }: { target: User; watcher
   };
 
   const props = {
-          data: { docCount: friendsList.length, items: pagedData },
-       current,
-     direction,
-    changePage,
-     deferring,
-         limit,
+           data: { docCount: friendsList.length, items: pagedData },
+    currentPage,
+      direction,
+     changePage,
+      deferring,
+          limit,
   };
 
   const isSelf   = watcher === target;
@@ -55,9 +55,7 @@ export default function FriendsList({ target, watcher }: { target: User; watcher
   return (
     <PagedList<Friend>
       className={`${css["user-list"]} no-scrollbar-y`}
-           path="user"
          header={{ title, fallback }}
-      isFriendList
       {...props}
     >
       {({ user }) =>
