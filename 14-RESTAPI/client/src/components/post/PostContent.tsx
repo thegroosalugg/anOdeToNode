@@ -21,10 +21,12 @@ export default function PostContent({
       post,
       user,
   setModal,
+  callback = () => console.log('on animation complete!'),
 }: {
-      user: User;
-      post: Post;
-  setModal: (modal: string) => void;
+       user: User;
+       post: Post;
+   setModal: (modal: string) => void;
+  callback?: () => void;
 }) {
   const { title, content, imgURL, creator, updatedAt } = post;
   const navigate = useNavigate();
@@ -36,6 +38,7 @@ export default function PostContent({
          initial="hidden"
          animate="visible"
       transition={{ staggerChildren: 0.5, delayChildren: 0.5 }}
+      onAnimationComplete={callback}
     >
       <NameTag user={creator} onClick={() => navigate("/user/" + creator._id)} bold align="end" {...{ variants }} />
 

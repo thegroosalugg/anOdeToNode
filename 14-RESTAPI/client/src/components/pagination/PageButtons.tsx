@@ -21,8 +21,7 @@ export default function PageButtons({
   currentPage,
    changePage,
     deferring,
-        delay,
-}: Omit<Paginated, 'data' | 'direction'> & { docCount: number; delay: number }) {
+}: Omit<Paginated, 'data' | 'direction'> & { docCount: number }) {
   const   last = Math.ceil(docCount / limit);
   const middle = last < 5 ? 3 : Math.min(Math.max(currentPage, 3), last - 2);
   const  pages: number[] = [];
@@ -37,7 +36,7 @@ export default function PageButtons({
     <motion.div
       className={`${css['page-buttons']} no-scrollbar-x`}
         initial={{ opacity: 0 }} // 2nd component in line using this value, adds .5
-        animate={{ opacity: 1, transition: { delay: delay + 0.5, duration: 0.5 } }}
+        animate={{ opacity: 1, transition: { delay: 0.5, duration: 0.5 } }}
     >
       <LayoutGroup>
         {pages.map((page) => {

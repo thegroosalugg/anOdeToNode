@@ -13,14 +13,12 @@ type Header = { title?: Config; fallback?: Config };
 
 interface PagedList<T> extends Paginated<T> {
   className?: string;
-      delay?: number;
       header: Header;
     children: (item: T) => React.ReactNode;
 }
 
 export default function PagedList<T extends { _id: string }>({
      className = "",
-         delay = 0,
         header,
           data: { docCount, items },
          limit,
@@ -36,7 +34,7 @@ export default function PagedList<T extends { _id: string }>({
   const        height = useRef<number | "auto">("auto");
   const shouldRecount = docCount < limit && items.length < limit;
   const        cursor = deferring ? "wait" : "";
-  const       stagger = (index: number) => ({ duration: 0.5, delay: delay + 0.05 * index });
+  const       stagger = (index: number) => ({ duration: 0.5, delay: 0.05 * index });
   const  align: Align = "start";
   const         title = { text: "",                 align, ...header.title    };
   const      fallback = { text: "No results found", align, ...header.fallback };
@@ -53,7 +51,6 @@ export default function PagedList<T extends { _id: string }>({
       <Heading
          className={`${css["list-header"]} ${hasItems ? css["title"] : ""}`}
              style={{ textAlign: hasItems && title ? title.align : fallback.align }}
-        transition={{ delay }}
       >
         {hasItems ? title.text : `${fallback.text}...`}
       </Heading>
@@ -88,7 +85,7 @@ export default function PagedList<T extends { _id: string }>({
               </AnimatePresence>
             </motion.ul>
           </ResizeDiv>
-          {docCount > limit && <PageButtons {...{ docCount, limit, currentPage, changePage, deferring, delay }} />}
+          {docCount > limit && <PageButtons {...{ docCount, limit, currentPage, changePage, deferring }} />}
         </>
       )}
     </>

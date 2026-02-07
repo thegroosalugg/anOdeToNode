@@ -21,34 +21,25 @@ import { getMeta } from "@/lib/util/getMeta";
 import { api } from "@/lib/http/endpoints";
 
 export default function PostPage({ user }: { user: User }) {
-  const {
-         data: post,
-      setData: setPost,
-      reqData: reqPost,
-    isLoading,
-        error,
-     setError,
-  } = useFetch<Post | null>();
+  const { data: post, setData: setPost, reqData: reqPost, isLoading, error, setError } = useFetch<Post | null>();
   const { postId } = useParams();
-  // usePagedFetch won't send request if postId undefined
-  const { setData: setReplies, ...rest } = usePagedFetch<Reply>(api.post.replies(postId ?? ""), 5, !!postId);
+  const { setData: setReplies, ...rest } = usePagedFetch<Reply>(
+    api.post.replies(postId ?? ""), // if !postId, req will not fire anyway due to 3rd guard
+    5, // posts per page
+    !!postId && !!post, // !shouldFetch if !postId or post hasn't finished loading
+  );
+  const [hasLoaded, setHasLoaded] = useState(false); // trigger for post state
   const [modalState,    setModal] = useState("");
-  const [hasLoaded, setHasLoaded] = useState(false);
-  const   navigate = useNavigate();
-  const  socketRef = useSocket("post");
+  const navigate   = useNavigate();
+  const socketRef  = useSocket("post");
   const closeModal = () => setModal("");
 
   useDepedencyTracker("post", { reqUser: user._id, postId });
 
   useEffect(() => {
-    const fetchPost = async () => {
-      if (!postId || hasLoaded) return;
-      await reqPost({ url: api.feed.find(postId) });
-      setTimeout(() => setHasLoaded(true), 1000); // *TEMP FIX FOR STAGGER
-    };
-
-    fetchPost();
-  }, [postId, hasLoaded, reqPost]);
+    if (!postId) return;
+    reqPost({ url: api.feed.find(postId) });
+  }, [postId, reqPost]);
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -57,28 +48,8 @@ export default function PostPage({ user }: { user: User }) {
     const logger = new Logger("post");
     socket.on("connect", () => logger.connect());
 
-    const    newReplyChannel = `post:${postId}:reply:new`;
-    const deleteReplyChannel = `post:${postId}:reply:delete`;
-    const  updatePostChannel = `post:${postId}:update`;
-    const  deletePostChannel = `post:${postId}:delete`;
-
-    socket.on(newReplyChannel, (reply) => {
-      logger.event("reply:new", reply);
-      setTimeout(() => {
-        setReplies(({ docCount, items }) => {
-          return { docCount: docCount + 1, items: [reply, ...items] };
-        });
-      }, 500); // delay so the <ChatBox> animates first, then this.
-    });
-
-    socket.on(deleteReplyChannel, (deleted) => {
-      logger.event("reply:delete", deleted);
-      setReplies(({ docCount: prevCount, items: prevReplies }) => {
-        const items = prevReplies.filter(({ _id }) => _id !== deleted._id);
-        const docCount = prevCount - 1;
-        return { docCount, items };
-      });
-    });
+    const updatePostChannel = `post:${postId}:update`;
+    const deletePostChannel = `post:${postId}:delete`;
 
     socket.on(updatePostChannel, (post) => {
       logger.event("post:update", post);
@@ -99,12 +70,43 @@ export default function PostPage({ user }: { user: User }) {
 
     return () => {
       socket.off("connect");
-      socket.off(newReplyChannel);
-      socket.off(deleteReplyChannel); // deletes a reply to post
       socket.off(updatePostChannel);
       socket.off(deletePostChannel); // deletes the post (& all replies)
     };
-  }, [socketRef, user._id, postId, setError, setPost, reqPost, setReplies]);
+  }, [socketRef, user._id, postId, setError, setPost]);
+
+  useEffect(() => {
+    const socket = socketRef.current;
+    if (!socket || !postId || !hasLoaded) return;
+
+    const logger = new Logger("post");
+
+    const    newReplyChannel = `post:${postId}:reply:new`;
+    const deleteReplyChannel = `post:${postId}:reply:delete`;
+
+    socket.on(newReplyChannel, (reply) => {
+      logger.event("reply:new", reply);
+      setTimeout(() => {
+        setReplies(({ docCount, items }) => {
+          return { docCount: docCount + 1, items: [reply, ...items] };
+        });
+      }, 500); // delay so the <ChatBox> animates first, then this.
+    });
+
+    socket.on(deleteReplyChannel, (deleted) => {
+      logger.event("reply:delete", deleted);
+      setReplies(({ docCount: prevCount, items: prevReplies }) => {
+        const items = prevReplies.filter(({ _id }) => _id !== deleted._id);
+        const docCount = prevCount - 1;
+        return { docCount, items };
+      });
+    });
+
+    return () => {
+      socket.off(newReplyChannel);
+      socket.off(deleteReplyChannel); // deletes a reply to post
+    };
+  }, [hasLoaded, socketRef, postId, setReplies]);
 
   const onSuccess = () => {
     closeModal(); // delete actions for creator
@@ -124,7 +126,7 @@ export default function PostPage({ user }: { user: User }) {
     isLoading,
     post,
     (post) => ({ title: post.title, description: post.title }),
-    "Post"
+    "Post",
   );
 
   return (
@@ -133,25 +135,15 @@ export default function PostPage({ user }: { user: User }) {
       <FormSideBar open={modalState === "edit"} close={closeModal} text="Edit your post...">
         <PostForm {...{ isOpen: modalState === "edit", post }} />
       </FormSideBar>
-      <ConfirmDialog
-             open={modalState === "delete"}
-        onConfirm={deletePost}
-         onCancel={closeModal}
-      />
+      <ConfirmDialog open={modalState === "delete"} onConfirm={deletePost} onCancel={closeModal} />
       <AsyncAwait {...{ isLoading, error }}>
-        {post && (
-          <>
-            <PostContent {...{ post, user, setModal }} />
-            <PagedList<Reply>
-              header={{ fallback: { text: "Reply to this post", align: "end" }}}
-               delay={hasLoaded ? 0 : 2.5} // *TEMP FIX FOR STAGGER
-              {...rest}
-            >
-              {(reply) => <ReplyItem {...reply } userId={user._id} />}
-            </PagedList>
-          </>
-        )}
+        {post && <PostContent {...{ post, user, setModal, callback: () => setHasLoaded(true) }} />}
       </AsyncAwait>
+      {hasLoaded && (
+        <PagedList<Reply> header={{ fallback: { text: "Reply to this post", align: "end" } }} {...rest}>
+          {(reply) => <ReplyItem {...reply} userId={user._id} />}
+        </PagedList>
+      )}
     </>
   );
 }
