@@ -18,9 +18,9 @@ export async function postAnalytics() {
   const date    = new Date().toISOString();
   const headers = { ["Content-Type"]: "application/json", ["x-analytics"]: "true" };
   const body    = JSON.stringify({
-        date,
-         url: location.href,
-      screen: { width, height },
+         date,
+          url: location.href,
+       screen: { width, height },
     userAgent: navigator.userAgent,
   });
 

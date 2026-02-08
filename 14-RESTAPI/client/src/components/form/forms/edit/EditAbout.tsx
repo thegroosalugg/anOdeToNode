@@ -6,7 +6,7 @@ import { useDefer } from "@/lib/hooks/useDefer";
 import { UserState } from "@/lib/types/interface";
 import User from "@/models/User";
 import Button from "@/components/ui/button/Button";
-import Input from "../../layout/Input";
+import Input from "../../primitives/Input";
 import Loader from "@/components/ui/boundary/loader/Loader";
 import { getEntry } from "@/lib/util/common";
 import css from "./EditAbout.module.css";

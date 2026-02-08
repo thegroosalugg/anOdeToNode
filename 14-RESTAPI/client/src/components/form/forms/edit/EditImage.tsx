@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { api } from "@/lib/http/endpoints";
 import { UserState } from "@/lib/types/interface";
-import ImagePicker from "../../layout/ImagePicker";
+import ImagePicker from "../../primitives/ImagePicker";
 import Button from "@/components/ui/button/Button";
 import css from "./EditImage.module.css";
 

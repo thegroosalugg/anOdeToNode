@@ -5,7 +5,7 @@ import { api } from "@/lib/http/endpoints";
 import User from "@/models/User";
 import Post from "@/models/Post";
 import Button from "../ui/button/Button";
-import ChatBox from "../form/layout/ChatBox";
+import ChatBox from "../form/primitives/ChatBox";
 import NameTag from "../ui/tags/NameTag";
 import Time from "../ui/tags/Time";
 import Truncate from "../ui/tags/Truncate";
