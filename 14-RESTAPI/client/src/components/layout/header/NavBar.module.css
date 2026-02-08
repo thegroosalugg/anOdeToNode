@@ -26,6 +26,7 @@
     font-weight: 900;
     padding: var(--padding-sm);
     cursor: pointer;
+    
     span {
       &:last-of-type { display: none; }
       @media (max-width: 768px), (pointer: coarse) and (orientation: landscape) {

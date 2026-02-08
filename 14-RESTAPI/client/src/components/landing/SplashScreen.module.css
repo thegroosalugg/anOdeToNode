@@ -1,0 +1,20 @@
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  padding: 1rem;
+  background: var(--page);
+}
+
+.splash-content {
+  margin: auto;
+  text-align: center;
+
+  h1 {
+    color: var(--accent);
+    font-size: var(--text-4xl);
+    font-weight: 900;
+  }
+
+  p { margin-bottom: 1rem; }
+}
