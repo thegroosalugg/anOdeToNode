@@ -18,6 +18,9 @@
       background-color: var(--color);
       color: var(--background);
       border-color: var(--background);
+
+      /* on this hover change css variable prop of all child elements to bg of this element -- */
+      * { --color: var(--background); } /* forces nested spinners to invert on button:hover by changing their --color */
     }
   }
 
