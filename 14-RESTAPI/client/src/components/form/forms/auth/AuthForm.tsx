@@ -5,7 +5,7 @@ import { useDefer } from "@/lib/hooks/useDefer";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { api } from "@/lib/http/endpoints";
 import User from "@/models/User";
-import Input from "../../layout/Input";
+import Input from "../../primitives/Input";
 import Button from "@/components/ui/button/Button";
 import Loader from "@/components/ui/boundary/loader/Loader";
 import { createVariants } from "@/lib/motion/animations";

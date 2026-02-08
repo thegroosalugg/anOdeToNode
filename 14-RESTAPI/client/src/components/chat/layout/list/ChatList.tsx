@@ -3,7 +3,7 @@ import { useChat } from "../../context/ChatContext";
 import { api } from "@/lib/http/endpoints";
 import ChatItem from "./ChatItem";
 import Messages from "../messages/Messages";
-import ChatBox from "@/components/form/layout/ChatBox";
+import ChatBox from "@/components/form/primitives/ChatBox";
 import css from "./ChatList.module.css";
 
 export default function ChatList() {
