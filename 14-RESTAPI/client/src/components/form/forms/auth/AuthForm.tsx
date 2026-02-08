@@ -8,7 +8,7 @@ import { SetUser } from "@/lib/types/interface";
 import User from "@/models/User";
 import Input from "../../primitives/Input";
 import Button from "@/components/ui/button/Button";
-import Loader from "@/components/ui/boundary/loader/Loader";
+import Spinner from "@/components/ui/boundary/loader/Spinner";
 import { createVariants } from "@/lib/motion/animations";
 import { saveTokens } from "@/lib/http/token";
 import css from "./AuthForm.module.css";
@@ -96,7 +96,7 @@ export default function AuthForm({ setUser }: { setUser: SetUser }) {
         disabled={deferring}
         whileTap={{ scale: deferring ? 1 : 0.9 }}
       >
-        {isLoading ? <Loader size="xs" color="page" /> : label}
+        {isLoading ? <Spinner size="xs" color="page" /> : label}
       </Button>
     </motion.form>
   );

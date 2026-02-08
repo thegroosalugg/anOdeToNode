@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDefer } from "@/lib/hooks/useDefer";
-import Loader from "../../ui/boundary/loader/Loader";
+import Spinner from "../../ui/boundary/loader/Spinner";
 import { Animations, createAnimations } from "@/lib/motion/animations";
 import css from "./ChatBox.module.css";
 
@@ -71,7 +71,7 @@ export default function ChatBox({
       <motion.button disabled={deferring}>
         <AnimatePresence mode="wait">
           {isLoading ? (
-            <Loader key="loader" size="xs" color="page" />
+            <Spinner key="loader" size="xs" color="page" />
           ) : (
             <motion.span {...createAnimations({ transition: { delay: 0.2 } })}>
               {/* content = 422 form errors, message = all other errors */}

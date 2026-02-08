@@ -9,7 +9,7 @@ import Input from "../../primitives/Input";
 import ImagePicker from "../../primitives/ImagePicker";
 import Button from "@/components/ui/button/Button";
 import Error from "@/components/ui/boundary/error/Error";
-import Loader from "@/components/ui/boundary/loader/Loader";
+import Spinner from "@/components/ui/boundary/loader/Spinner";
 import { getEntry } from "@/lib/util/common";
 import css from "./PostForm.module.css";
 
@@ -87,7 +87,7 @@ export default function PostForm({
           <section>
             <ImagePicker {...{ imgURL }} />
             <Button disabled={deferring} background={error ? "danger" : "accent"}>
-              {isLoading ? <Loader size="xs" color="page" /> : "Post"}
+              {isLoading ? <Spinner size="xs" color="page" /> : "Post"}
             </Button>
           </section>
           <Input control="title"   errors={error} defaultValue={title}>Title</Input>

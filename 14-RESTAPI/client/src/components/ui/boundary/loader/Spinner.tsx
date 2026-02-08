@@ -1,14 +1,14 @@
 import { motion, HTMLMotionProps } from 'motion/react';
-import css from './Loader.module.css';
+import css from './Spinner.module.css';
 import { Color } from '@/lib/types/colors';
 
-interface LoaderProps {
+interface SpinnerProps {
    size?: "xs" | "sm";
   color?: Color;
 }
 
-export default function Loader({ size, color = "accent", ...props }: LoaderProps & HTMLMotionProps<"div">) {
-  let classes = css["loader"];
+export default function Spinner({ size, color = "accent", ...props }: SpinnerProps & HTMLMotionProps<"div">) {
+  let classes = css["spinner"];
   if (size) classes += ` ${css[size]}`;
 
   return (

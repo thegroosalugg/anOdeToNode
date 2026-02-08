@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { api } from "@/lib/http/endpoints";
 import User from "@/models/User";
 import Friend from "@/models/Friend";
-import Loader from "@/components/ui/boundary/loader/Loader";
+import Spinner from "@/components/ui/boundary/loader/Spinner";
 import Button from "@/components/ui/button/Button";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import { actionsConfig } from "./actions_config";
@@ -62,7 +62,7 @@ export default function SocialActions({ user, peer }: { user: User; peer: User }
       <div className={css["social-actions"]}>
         <Button onClick={handleAction} {...{ background }} disabled={deferring}>
           {isLoading ? (
-            <Loader size="xs" color="page" />
+            <Spinner size="xs" color="page" />
           ) : (
             <span>
               {text}

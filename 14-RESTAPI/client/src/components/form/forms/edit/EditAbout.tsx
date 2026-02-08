@@ -7,7 +7,7 @@ import { UserState } from "@/lib/types/interface";
 import User from "@/models/User";
 import Button from "@/components/ui/button/Button";
 import Input from "../../primitives/Input";
-import Loader from "@/components/ui/boundary/loader/Loader";
+import Spinner from "@/components/ui/boundary/loader/Spinner";
 import { getEntry } from "@/lib/util/common";
 import css from "./EditAbout.module.css";
 import { api } from "@/lib/http/endpoints";
@@ -72,7 +72,7 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
         No changes
       </p>
       <Button disabled={deferring} background={errors ? "danger" : "accent"}>
-        {deferring ? <Loader size="xs" color="page" /> : "Update"}
+        {deferring ? <Spinner size="xs" color="page" /> : "Update"}
       </Button>
       <Input control="home" {...{ errors }} defaultValue={home}>
         <FontAwesomeIcon icon="house" /> Home

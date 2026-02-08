@@ -1,0 +1,27 @@
+.bouncing-dots {
+  --background: var(--accent); /* Controlled by inline-style. Set here for reference only */
+  --size: 20px;
+  display: flex;
+  gap: 0.5rem;
+  width: fit-content;
+  margin: 0 auto;
+
+  > div {
+    border-radius: 50px;
+    background-color: var(--background);
+    width: var(--size);
+    aspect-ratio: 1;
+    animation: bounce 0.9s infinite ease-in-out;
+
+    &:nth-child(1) { animation-delay:   0ms; }
+    &:nth-child(2) { animation-delay: 120ms; }
+    &:nth-child(3) { animation-delay: 240ms; }
+  }
+}
+
+@keyframes bounce {
+  0%   { transform: translateY(0);    }
+  20%  { transform: translateY(-40%); }
+  40%  { transform: translateY(0);    }
+  100% { transform: translateY(0);    }
+}

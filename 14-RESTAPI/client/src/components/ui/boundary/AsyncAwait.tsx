@@ -3,7 +3,7 @@ import { Fragment } from "react/jsx-runtime";
 import { ReactNode } from "react";
 import { ApiError } from "@/lib/http/fetchData";
 import Error from "./error/Error";
-import Loader from "./loader/Loader";
+import Spinner from "./loader/Spinner";
 
 interface AsyncAwait {
   isLoading: boolean;
@@ -15,7 +15,7 @@ export default function AsyncAwait({ isLoading, error, children }: AsyncAwait) {
   return (
     <AnimatePresence mode="wait">
       {isLoading ? (
-        <Loader key="loader" />
+        <Spinner key="spinner" />
       ) : error ? (
         <Error key="error" {...{ error }} />
       ) : (
