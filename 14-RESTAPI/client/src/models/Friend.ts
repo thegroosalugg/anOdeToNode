@@ -15,9 +15,12 @@ export default class Friend {
         user!: User | string;
         meta!: Meta;
 
+  static isUser = (user: Friend["user"]): user is User =>
+    typeof user === "object" && user !== null && "_id" in user;
+
   static getId = (friend: { _id: string; user?: Friend["user"] }): string => {
     const { user = "" } = friend;
-    return typeof user === "object" && "_id" in user ? user._id : user;
+    return Friend.isUser(user) ? user._id : user;
   };
 
   static getConnection = ({ target, watcher } : UserPairExt) =>

@@ -2,7 +2,7 @@ import { FormEvent, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useDefer } from "@/lib/hooks/useDefer";
 import { UserState } from "@/lib/types/interface";
 import User from "@/models/User";
 import Button from "@/components/ui/button/Button";
@@ -20,7 +20,7 @@ interface EditAbout extends UserState {
 export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal }: EditAbout) {
   const { reqData, error: errors, setError } = useFetch<User["about"]>();
   const { scope, shake, shoot } = useAnimations();
-  const { deferring, deferFn } = useDebounce();
+  const { deferring,    defer } = useDefer();
   const { about } = user;
   const { home, work, study, bio } = about ?? {};
 
@@ -63,7 +63,7 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
       await reqData({ url: api.profile.info, method: "POST", data, onError, onSuccess });
     };
 
-    deferFn(request, 1000);
+    defer(request, 1000);
   }
 
   return (

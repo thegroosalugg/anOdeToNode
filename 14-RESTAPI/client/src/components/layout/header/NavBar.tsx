@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useDefer } from "@/lib/hooks/useDefer";
 import { Auth } from "@/lib/types/interface";
 import { AlertsProvider } from "@/components/notifications/context/AlertsProvider";
 import { ChatProvider } from "@/components/chat/context/ChatProvider";
@@ -10,14 +10,14 @@ import IconButton from "../../ui/button/IconButton";
 import css from "./NavBar.module.css";
 
 export default function NavBar({ user, setUser }: Pick<Auth, "user" | "setUser">) {
-  const { deferring, deferFn } = useDebounce();
+  const { deferring, defer } = useDefer();
   const   navigate   = useNavigate();
   const { pathname } = useLocation();
   const   segments   = pathname.split("/");
   const isActivePath = (paths: string[]) => paths.includes(segments[1]);
 
   function navTo(path: string) {
-    deferFn(() => navigate(path), 1200);
+    defer(() => navigate(path), 1200);
   }
 
   const navProps = { disabled: deferring, layoutId: "nav-group" };

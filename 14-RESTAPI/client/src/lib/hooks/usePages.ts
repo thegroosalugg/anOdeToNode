@@ -1,24 +1,23 @@
 import { useState } from 'react';
-import { useDebounce } from './useDebounce';
+import { useDefer } from './useDefer';
 import { Direction } from '../types/common';
 
-export const custom = ({
-   enter: (direction: Direction) => ({ opacity: 0, x: direction > 0 ? 50 : -50 }),
-  center: { opacity: 1, x: 0 },
-    exit: (direction: Direction) => ({ opacity: 0, x: direction < 0 ? 50 : -50 }),
-});
-
 export function usePages() {
-  const { deferring,    deferFn } = useDebounce();
-  const [current,        setPage] = useState(1);
+  const { deferring,      defer } = useDefer();
+  const [currentPage,    setPage] = useState(1);
   const [direction, setDirection] = useState<Direction>(1)
 
-  const changePage = (page: number) => {
-    deferFn(() => {
+  const setPageDirection = (page: number) => {
+    defer(() => {
       setPage(page);
-      setDirection(page > current ? 1 : -1);
+      setDirection(page > currentPage ? 1 : -1);
     }, 500);
   };
 
-  return { current, direction, changePage, deferring };
+  function createArraySlice<T>(arr: T[], page: number, limit: number): T[] {
+    const start = (page - 1) * limit;
+    return arr.slice(start, start + limit);
+  }
+
+  return { currentPage, direction, setPageDirection, createArraySlice, deferring };
 }

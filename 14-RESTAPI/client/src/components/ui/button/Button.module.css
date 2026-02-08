@@ -13,10 +13,12 @@
   font-weight: 600;
   transition: color var(--transition), background-color var(--transition), border-color var(--transition);
 
-  &:hover {
-    background-color: var(--color);
-    color: var(--background);
-    border-color: var(--background);
+  @media (pointer: fine) {
+    &:hover {
+      background-color: var(--color);
+      color: var(--background);
+      border-color: var(--background);
+    }
   }
 
   &:disabled {

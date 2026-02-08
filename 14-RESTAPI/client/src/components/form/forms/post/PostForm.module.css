@@ -14,6 +14,7 @@
 
     > label {
       max-width: 200px;
+      @media (min-width: 768px) { max-width: 280px; }
     }
 
     > button {
@@ -21,11 +22,5 @@
       align-self: start;
       min-width: 56px;
     }
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .post-form > section > label {
-    max-width: 280px;
   }
 }

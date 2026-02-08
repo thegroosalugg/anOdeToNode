@@ -17,7 +17,7 @@ export interface Fetch {
 
 export const API_URL = import.meta.env.VITE_SERVER_URL;
 
-const fetchData = async ({ url, method = "GET", data }: Fetch) => {
+const fetchData = async <T>({ url, method = "GET", data }: Fetch): Promise<NonNullable<T>> => {
   const isFile = data instanceof FormData; // multipart/form-data
   const body   = data ? (isFile ? data : JSON.stringify(data)) : null;
   const headers: HeadersInit = {};

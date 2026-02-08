@@ -21,14 +21,16 @@ export default function PostContent({
       post,
       user,
   setModal,
+  callback = () => console.log('on animation complete!'),
 }: {
-      user: User;
-      post: Post;
-  setModal: (modal: string) => void;
+       user: User;
+       post: Post;
+   setModal: (modal: string) => void;
+  callback?: () => void;
 }) {
   const { title, content, imgURL, creator, updatedAt } = post;
   const navigate = useNavigate();
-  const isOp = user._id === creator?._id;
+  const isCreator = user._id === creator?._id;
 
   return (
     <motion.section
@@ -36,6 +38,7 @@ export default function PostContent({
          initial="hidden"
          animate="visible"
       transition={{ staggerChildren: 0.5, delayChildren: 0.5 }}
+      onAnimationComplete={callback}
     >
       <NameTag user={creator} onClick={() => navigate("/user/" + creator._id)} bold align="end" {...{ variants }} />
 
@@ -52,7 +55,7 @@ export default function PostContent({
           <ResizeDiv className={css["content"]} {...{ variants }}>
             {content}
           </ResizeDiv>
-          {isOp && (
+          {isCreator && (
             <motion.div className={css["actions"]} {...{ variants }}>
               <Button onClick={() => setModal("edit")}>Edit</Button>
               <Button onClick={() => setModal("delete")} background="danger">

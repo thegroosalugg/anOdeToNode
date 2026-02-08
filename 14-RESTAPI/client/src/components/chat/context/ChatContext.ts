@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { RecordMap, SetData } from "@/lib/types/common";
 import { UserState, FetchState } from "@/lib/types/interface";
-import { Debounce } from "@/lib/hooks/useDebounce";
+import { UseDefer } from "@/lib/hooks/useDefer";
 import Chat from "@/models/Chat";
 import Msg from "@/models/Message";
 
@@ -65,7 +65,7 @@ type ChatContext =
   ActionControl &
   AlertsControl &
   ParamsControl &
-  Pick<Debounce, "deferring">;
+  Pick<UseDefer, "deferring">;
 
 export const ChatContext = createContext<ChatContext | null>(null);
 

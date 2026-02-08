@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useAlerts } from "../../context/AlertsContext";
 import User from "@/models/User";
+import Friend from "@/models/Friend";
 import Time from "@/components/ui/tags/Time";
 import Button from "@/components/ui/button/Button";
 import NameTag from "@/components/ui/tags/NameTag";
@@ -23,7 +24,7 @@ export default function InboundAlerts() {
       {inboundReqs.length > 0 ? (
         inboundReqs.map((connection) => {
           const { _id: alertId, accepted, initiated, user, createdAt } = connection;
-          const peer = typeof user === "object" ? user : ({} as User); // user should be populated
+          const peer = Friend.isUser(user) ? user : ({} as User); // user should be populated
           const { _id, name, surname } = peer;
           const onClick = () => navTo("/user/" + _id);
           const text = accepted ? (
@@ -46,7 +47,7 @@ export default function InboundAlerts() {
               <div className={shared["content"]}>
                 <NameTag
                     layout
-                       key={accepted + ""}
+                       key={accepted.toString()}
                       user={peer}
                      align="center"
                   overflow="line-clamp"

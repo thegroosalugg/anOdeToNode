@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Debounce } from "@/lib/hooks/useDebounce";
+import { UseDefer } from "@/lib/hooks/useDefer";
 import { ApiError } from "@/lib/http/fetchData";
 import { FetchState, UserState } from "@/lib/types/interface";
 import { Direction } from "@/lib/types/common";
@@ -35,7 +35,7 @@ type AlertsContext = {
 } &   UserState &
       ReplyData &
     MenuControl &
-    Pick<Debounce, "deferring">;
+    Pick<UseDefer, "deferring">;
 
 export const AlertsContext = createContext<AlertsContext | null>(null);
 

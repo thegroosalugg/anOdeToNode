@@ -21,8 +21,8 @@ export default function ReplyItem({
   const navigate = useNavigate();
   const closeModal = () => setShowModal(false);
   let classes = css["reply"];
-  const isOp = userId === creator._id;
-  if (isOp) classes += ` ${css["reverse"]}`;
+  const isCreator = userId === creator._id;
+  if (isCreator) classes += ` ${css["reverse"]}`;
 
   const deleteReply = async () => {
     await reqData({ url: api.post.deleteReply(_id), method: "DELETE" });
@@ -33,13 +33,13 @@ export default function ReplyItem({
     <div className={classes}>
       <ConfirmDialog open={showModal} onCancel={closeModal} onConfirm={deleteReply} />
       <header onClick={() => navigate("/user/" + creator._id)}>
-        <NameTag user={creator} bold reverse={isOp} />
+        <NameTag user={creator} bold reverse={isCreator} />
         <Time time={createdAt} />
       </header>
       <p className="box">
         <span>{content}</span>
 
-        {isOp && (
+        {isCreator && (
           <Button background="danger" onClick={() => setShowModal(true)}>
             Delete
           </Button>

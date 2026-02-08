@@ -28,7 +28,7 @@
 }
 
 .user-photo {
-  cursor: auto; /* overwrite default */
+  pointer-events: none; /* overwrite default */
 
   > h2 { font-size: var(--text-2xl); }
   > p  { font-size: var(--text-xl);  }

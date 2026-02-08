@@ -11,10 +11,7 @@ import css from "@/components/list/user/FriendsList.module.css";
 import { api } from "@/lib/http/endpoints";
 
 export default function SocialPage({ user }: { user: User }) {
-  const {
-    fetcher: { setData, isLoading, error },
-    ...rest
-  } = usePagedFetch<User>(api.social.users, isMobile ? 8 : 10);
+  const { setData, isLoading, error, ...rest } = usePagedFetch<User>(api.social.users, isMobile ? 8 : 10);
   const socketRef = useSocket("social");
 
   useEffect(() => {
@@ -44,10 +41,8 @@ export default function SocialPage({ user }: { user: User }) {
     <AsyncAwait {...{ isLoading, error }}>
       <PagedList<User>
         className={css["user-list"]}
-             path="user"
-           header={{ title: ["Users"], fallback: ["Nobody here", "center"] }}
+           header={{ title: { text: "Users" }, fallback: { text: "Nobody here", align: "center" }}}
         {...rest}
-        whileHover={{ y: -2, transition: { ease: "linear", duration: 0.2 } }}
       >
         {(peer) => <UserItem target={peer} watcher={user} />}
       </PagedList>

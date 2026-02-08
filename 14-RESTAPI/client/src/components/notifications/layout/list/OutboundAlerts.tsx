@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useAlerts } from "../../context/AlertsContext";
 import User from "@/models/User";
+import Friend from "@/models/Friend";
 import Button from "@/components/ui/button/Button";
 import Time from "@/components/ui/tags/Time";
 import NameTag from "@/components/ui/tags/NameTag";
@@ -19,7 +20,7 @@ export default function OutboundAlerts() {
       {outboundReqs.length > 0 ? (
         outboundReqs.map((connection) => {
           const { _id: alertId, accepted, initiated, user, createdAt } = connection;
-          const peer = typeof user === "object" ? user : ({} as User); // user should be populated
+          const peer = Friend.isUser(user) ? user : ({} as User); // user should be populated
           const { _id, name, surname } = peer;
           const onClick = () => navTo("/user/" + _id);
           const text = !accepted ? (
