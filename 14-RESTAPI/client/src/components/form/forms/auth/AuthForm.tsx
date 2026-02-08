@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Auth } from "@/lib/types/interface";
 import { motion } from "motion/react";
+import { useFetch } from "@/lib/hooks/useFetch";
 import { useDefer } from "@/lib/hooks/useDefer";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { api } from "@/lib/http/endpoints";
+import { SetUser } from "@/lib/types/interface";
 import User from "@/models/User";
 import Input from "../../primitives/Input";
 import Button from "@/components/ui/button/Button";
@@ -12,10 +13,11 @@ import { createVariants } from "@/lib/motion/animations";
 import { saveTokens } from "@/lib/http/token";
 import css from "./AuthForm.module.css";
 
-export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) {
+export default function AuthForm({ setUser }: { setUser: SetUser }) {
   const { deferring,      defer } = useDefer();
   const [isLogin,     setIsLogin] = useState(true);
   const { scope, animate, shake } = useAnimations();
+  const { isLoading, error, setError, reqData } = useFetch<User>(); // reqUser is avail from props, but a 2nd isLoading state is needed
   const label = isLogin ? "Login" : "Sign Up";
   const variants = createVariants({ transition: { duration: 0.2 } });
 
@@ -31,6 +33,7 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
 
   const onSuccess = (user: User) => {
     saveTokens(user);
+    setUser(user);
     setError(null);
   };
 
@@ -43,7 +46,7 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
     defer(async () => {
       const data = new FormData(e.currentTarget); // data parsed by multer
       // const data = Object.fromEntries(formData.entries()); // if application/json
-      await reqUser({
+      await reqData({
               url: isLogin ? api.user.login : api.user.signup,
            method: "POST",
              data,

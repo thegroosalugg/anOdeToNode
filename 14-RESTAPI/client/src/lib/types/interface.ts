@@ -16,11 +16,17 @@ export type FetchState<T, K extends string = "data"> = {
    setError: SetData<ApiError | null>;
 };
 
-export type Auth = FetchState<User | null, "user">
+export type SetUser = SetData<User | null>;
+
+export interface Auth {
+       user: User | null;
+    setUser: SetUser;
+  isLoading: boolean;
+}
 
 export interface UserState {
      user: User;
-  setUser: SetData<User | null>
+  setUser: SetUser;
 };
 
 export interface UserPair {

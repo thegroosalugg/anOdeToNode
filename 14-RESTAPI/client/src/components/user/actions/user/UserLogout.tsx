@@ -1,11 +1,11 @@
 import Button from "@/components/ui/button/Button";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
-import { Auth } from "@/lib/types/interface";
+import { SetUser } from "@/lib/types/interface";
 import { useState } from "react";
 import { removeRefreshToken } from "@/lib/http/token";
 import css from "./UserLogout.module.css";
 
-export default function UserLogout({ setUser }: { setUser: Auth["setUser"] }) {
+export default function UserLogout({ setUser }: { setUser: SetUser }) {
   const [showModal, setShowModal] = useState(false);
   const closeModal = () => setShowModal(false);
 

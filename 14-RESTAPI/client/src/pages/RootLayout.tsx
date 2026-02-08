@@ -20,7 +20,7 @@ const staticMeta: RecordMap<{ title: string; description: string }> = {
    "/terms": { title: "Terms & Conditions", description: "Terms & conditions page" },
 };
 
-const metadata = (path: string, user: Auth["user"]) => {
+const metadata = (path: string, user: User | null) => {
   if (path === "/") {
     return user
       ? { title: user.name, description: `${user.name}'s profile` }
@@ -32,23 +32,16 @@ const metadata = (path: string, user: Auth["user"]) => {
 
 export default function RootLayout({ children }: { children: (props: Auth) => ReactNode }) {
   const { pathname } = useLocation();
-  const {
-         data: user,
-      setData: setUser,
-      reqData: reqUser,
-    isLoading,
-        error,
-     setError,
-  } = useFetch<User>(); // null initial, true loading before useEffect
-  const props = { user, setUser, reqUser, isLoading, error, setError };
+  const { data: user, setData: setUser, reqData, isLoading } = useFetch<User>();
+  const props = { user, setUser, isLoading };
   const { title, description } = metadata(pathname, user);
 
   useEffect(() => {
-    reqUser({ url: api.user.refresh({ populate: true }), method: "POST", onSuccess: (user) => saveTokens(user) });
+    reqData({ url: api.user.refresh({ populate: true }), method: "POST", onSuccess: (user) => saveTokens(user) });
     postAnalytics();
     const unsubscribe = eventBus.on("logout", () => setUser(null));
     return unsubscribe; // clean-up - called on dismount
-  }, [reqUser, setUser]);
+  }, [reqData, setUser]);
 
   return (
     <>
