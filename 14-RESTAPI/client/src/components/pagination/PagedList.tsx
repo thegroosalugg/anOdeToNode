@@ -28,7 +28,7 @@ export default function PagedList<T extends { _id: string }>({
      deferring,
       children,
 }: PagedList<T>) {
-  const      hasItems = items.length;
+  const      hasItems = !!items.length;
   const       classes = `no-scrollbar-x ${css["list"]} ${className}`;
   const       listRef = useRef<HTMLUListElement | null>(null);
   const        height = useRef<number | "auto">("auto");
