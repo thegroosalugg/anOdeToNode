@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { useDefer } from "@/lib/hooks/useDefer";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { api } from "@/lib/http/endpoints";
+import User from "@/models/User";
 import Input from "../../layout/Input";
 import Button from "@/components/ui/button/Button";
 import Loader from "@/components/ui/boundary/loader/Loader";
@@ -28,11 +29,9 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
     }, 1000);
   }
 
-  const onSuccess = (user: Auth["user"]) => {
-    if (user) {
-      saveTokens(user);
-      setError(null);
-    }
+  const onSuccess = (user: User) => {
+    saveTokens(user);
+    setError(null);
   };
 
   const onError = () => {
