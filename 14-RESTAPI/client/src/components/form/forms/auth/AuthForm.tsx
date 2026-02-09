@@ -23,7 +23,7 @@ export default function AuthForm({ setUser }: { setUser: SetUser }) {
 
   function switchForm() {
     defer(() => {
-      animate(scope.current, { opacity: [1, 0, 1] }, { duration: 1 });
+      if (scope.current) animate(scope.current, { opacity: [1, 0, 1] }, { duration: 1 });
       setTimeout(() => {
         setError(null);
         setIsLogin((prev) => !prev);
@@ -64,7 +64,6 @@ export default function AuthForm({ setUser }: { setUser: SetUser }) {
        className={`${css["auth-form"]} ${isLogin ? css["is-login"] : ""}`}
          initial="hidden"
          animate="visible"
-            exit={{ opacity: 0, transition: { duration: 0.8 } }}
       transition={{ staggerChildren: 0.2 }}
     >
       <motion.h2 className="truncate" {...{ variants }}>

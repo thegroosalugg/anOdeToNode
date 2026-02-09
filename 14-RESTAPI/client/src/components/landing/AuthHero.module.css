@@ -1,0 +1,31 @@
+.auth-hero {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 100%;
+  max-height: calc(100dvh - 2rem); /* offset #main padding: 1rem; (top + bottom) */
+  margin: 0 auto;
+}
+
+.auth-hero-banner, .auth-hero-content-wrapper {
+  width: 275px;
+  max-width: 100%;
+}
+
+.auth-hero-banner {
+  display: none;
+  padding: 0.5rem;
+
+  @media (min-width: 768px) { display: block; }
+
+  h1 {
+    font-size: var(--text-4xl);
+    font-weight: 900;
+  }
+
+  p { color: var(--accent); }
+}
+
+.auth-hero-content-wrapper {
+  overflow-y: scroll;
+  padding: 0.5rem;
+}
