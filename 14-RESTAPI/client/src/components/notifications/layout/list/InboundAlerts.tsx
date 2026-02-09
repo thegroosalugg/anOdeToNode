@@ -23,7 +23,7 @@ export default function InboundAlerts() {
     <AnimatePresence mode="popLayout">
       {inboundReqs.length > 0 ? (
         inboundReqs.map((connection) => {
-          const { _id: alertId, accepted, initiated, user, createdAt } = connection;
+          const { _id: alertId, accepted, initiated, user, createdAt, acceptedAt } = connection;
           const peer = Friend.isUser(user) ? user : ({} as User); // user should be populated
           const { _id, name, surname } = peer;
           const onClick = () => navTo("/user/" + _id);
@@ -37,21 +37,10 @@ export default function InboundAlerts() {
           );
 
           return (
-            <motion.li
-                 layout
-                    key={alertId + initiated}
-              className={`box ${shared["alert"]}`}
-              {...animations}
-            >
-              <Time time={createdAt} />
+            <motion.li layout key={alertId + initiated} className={`box ${shared["alert"]}`} {...animations}>
+              <Time time={accepted ? acceptedAt : createdAt} />
               <div className={shared["content"]}>
-                <NameTag
-                    layout
-                       key={accepted.toString()}
-                      user={peer}
-                     align="center"
-                  overflow="line-clamp"
-                >
+                <NameTag layout key={accepted.toString()} user={peer} align="center" overflow="line-clamp">
                   {text}
                 </NameTag>
                 {accepted && <XButton light onClick={() => clearSocial(alertId)} />}
@@ -61,7 +50,7 @@ export default function InboundAlerts() {
                   <Button background="success" onClick={() => friendRequest(_id, "accept")}>
                     Accept
                   </Button>
-                  <Button background="danger"  onClick={() => friendRequest(_id, "delete")}>
+                  <Button background="danger" onClick={() => friendRequest(_id, "delete")}>
                     Decline
                   </Button>
                 </div>

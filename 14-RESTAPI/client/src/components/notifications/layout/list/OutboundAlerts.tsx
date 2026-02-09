@@ -19,7 +19,7 @@ export default function OutboundAlerts() {
     <AnimatePresence mode="popLayout">
       {outboundReqs.length > 0 ? (
         outboundReqs.map((connection) => {
-          const { _id: alertId, accepted, initiated, user, createdAt } = connection;
+          const { _id: alertId, accepted, initiated, user, createdAt, acceptedAt } = connection;
           const peer = Friend.isUser(user) ? user : ({} as User); // user should be populated
           const { _id, name, surname } = peer;
           const onClick = () => navTo("/user/" + _id);
@@ -38,7 +38,7 @@ export default function OutboundAlerts() {
               className={`box ${shared["alert"]}`}
               {...animations}
             >
-              <Time time={createdAt} />
+              <Time time={accepted ? acceptedAt : createdAt} />
               <div className={shared["content"]}>
                 <NameTag
                        key={accepted + ""}
