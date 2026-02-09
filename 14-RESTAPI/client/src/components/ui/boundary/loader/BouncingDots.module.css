@@ -2,12 +2,12 @@
   --background: var(--accent); /* Controlled by inline-style. Set here for reference only */
   --size: 20px;
   display: flex;
-  gap: 0.5rem;
+  gap: calc(var(--size) / 4);
   width: fit-content;
   margin: 0 auto;
 
   > div {
-    border-radius: 50px;
+    border-radius: 50%;
     background-color: var(--background);
     width: var(--size);
     aspect-ratio: 1;
