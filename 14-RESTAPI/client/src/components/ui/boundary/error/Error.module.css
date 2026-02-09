@@ -1,11 +1,9 @@
 .error {
-  margin: 0 auto;
   text-align: center;
   background: var(--danger);
   color: var(--page);
-  padding: 0.75rem;
-  width: 240px;
-  max-width: 100%;
+  padding: var(--padding-sm);
+  width: 90%;
   border-radius: var(--rounded-xl);
   box-shadow: var(--shadow-pop);
 }

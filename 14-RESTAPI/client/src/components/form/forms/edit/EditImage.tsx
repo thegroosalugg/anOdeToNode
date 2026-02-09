@@ -5,6 +5,7 @@ import { api } from "@/lib/http/endpoints";
 import { UserState } from "@/lib/types/interface";
 import ImagePicker from "../../primitives/ImagePicker";
 import Button from "@/components/ui/button/Button";
+import BouncingDots from "@/components/ui/boundary/loader/BouncingDots";
 import css from "./EditImage.module.css";
 
 interface EditImage extends UserState {
@@ -47,7 +48,7 @@ export default function EditImage({ user, setUser, isOpen, onSuccess: closeModal
     <form className={css["edit-image"]} ref={scope} onSubmit={submitHandler}>
       <ImagePicker imgURL={displayPic} label="Upload a profile picture" />
       <Button background={error ? "danger" : "accent"} disabled={isLoading}>
-        {error ? error.message : "Upload"}
+        {isLoading ? <BouncingDots color="page" size={8} /> : error ? error.message : "Upload"}
       </Button>
     </form>
   );
