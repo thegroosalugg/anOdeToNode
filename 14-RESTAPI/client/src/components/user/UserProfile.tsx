@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import { usePagedFetch } from "../pagination/usePagedFetch";
 import { UserState } from "@/lib/types/interface";
 import Post from "@/models/Post";
@@ -9,6 +10,7 @@ import PostItem from "../list/post/PostItem";
 import UserLogout from "./actions/user/UserLogout";
 import ProfileActions from "./actions/user/ProfileActions";
 import { api } from "@/lib/http/endpoints";
+import css from "./UserProfile.module.css";
 
 export default function UserProfile({ user, setUser }: UserState) {
   const { isLoading, error, ...rest } = usePagedFetch<Post>(api.profile.posts, 4);
@@ -17,7 +19,7 @@ export default function UserProfile({ user, setUser }: UserState) {
   const fallback = { text: "You haven't posted anything", align };
 
   return (
-    <>
+    <motion.div className={css["user-profile"]} exit={{ opacity: 0, transition: { duration: 0.8 } }}>
       <UserDashboard target={user}>
         <ProfileActions {...{ user, setUser }} />
       </UserDashboard>
@@ -28,6 +30,6 @@ export default function UserProfile({ user, setUser }: UserState) {
         </PagedList>
       </AsyncAwait>
       <UserLogout {...{ setUser }} />
-    </>
+    </motion.div>
   );
 }
