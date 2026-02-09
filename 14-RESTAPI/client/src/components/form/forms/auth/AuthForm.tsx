@@ -43,17 +43,16 @@ export default function AuthForm({ setUser }: { setUser: SetUser }) {
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    defer(async () => {
-      const data = new FormData(e.currentTarget); // data parsed by multer
-      // const data = Object.fromEntries(formData.entries()); // if application/json
-      await reqData({
-              url: isLogin ? api.user.login : api.user.signup,
-           method: "POST",
-             data,
-        onSuccess,
-          onError,
-      });
-    }, 1000);
+    if (isLoading) return;
+    const data = new FormData(e.currentTarget); // data parsed by multer
+    // const data = Object.fromEntries(formData.entries()); // if application/json
+    await reqData({
+            url: isLogin ? api.user.login : api.user.signup,
+          method: "POST",
+            data,
+      onSuccess,
+        onError,
+    });
   }
 
   return (
@@ -90,11 +89,7 @@ export default function AuthForm({ setUser }: { setUser: SetUser }) {
       >
         {isLogin ? "Switch to Sign Up" : "Already have an account? Login"}
       </motion.button>
-      <Button
-        {...{ variants }}
-        disabled={deferring}
-        whileTap={{ scale: deferring ? 1 : 0.9 }}
-      >
+      <Button {...{ variants }} disabled={isLoading} whileTap={{ scale: deferring ? 1 : 0.9 }}>
         {isLoading ? <Spinner size="xs" color="page" /> : label}
       </Button>
     </motion.form>
