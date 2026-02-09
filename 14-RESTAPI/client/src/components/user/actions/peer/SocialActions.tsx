@@ -58,7 +58,7 @@ export default function SocialActions({ user, peer }: { user: User; peer: User }
         onCancel={closeModal}
       />
 
-      <Error {...{ error }} />
+      <Error {...{ error }} style={{ margin: 0 }} />
 
       <div className={css["social-actions"]}>
         <Button onClick={handleAction} {...{ background }} disabled={isLoading}>

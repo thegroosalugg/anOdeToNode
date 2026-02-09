@@ -63,7 +63,7 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
 
   return (
     <form className={css["edit-about"]} ref={scope} onSubmit={submitHandler}>
-      <p className="fleeting-pop-up" style={{ top: "1rem", left: "0.5rem" }}>
+      <p className="fleeting-pop-up" style={{ top: 0, right: 0 }}>
         No changes
       </p>
       <Button disabled={isLoading} background={errors ? "danger" : "accent"}>

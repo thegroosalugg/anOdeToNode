@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { api } from "@/lib/http/endpoints";
@@ -26,7 +26,7 @@ export default function PostForm({
   const { isLoading, error, reqData, setError } = useFetch<Post | null>();
   const { scope, shake, shoot } = useAnimations();
   const { _id = "", title = "", content = "", imgURL = "" } = post || {};
-  const    url = _id ? api.post.edit(_id) : api.post.new
+  const url = _id ? api.post.edit(_id) : api.post.new;
   const method = _id ? "PUT" : "POST";
 
   useEffect(() => {
@@ -51,11 +51,10 @@ export default function PostForm({
       const contentEntry = getEntry(data, "content");
       const file = data.get("image") as File | null;
 
-      const isSame =
-        titleEntry === title && contentEntry === content && (!file || file.size === 0);
+      const isSame = titleEntry === title && contentEntry === content && (!file || file.size === 0);
 
       if (isSame) {
-        shoot(".fleeting-pop-up");
+        shoot(".fleeting-pop-up", { dir: 1 });
         return;
       }
     }
@@ -64,30 +63,23 @@ export default function PostForm({
   }
 
   return (
-    <AnimatePresence mode="wait">
-      {error?.message ? (
-        <Error key="error" {...{ error }} />
-      ) : (
-        <motion.form
-                key="form"
-                ref={scope}
-          className={css["post-form"]}
-           onSubmit={submitHandler}
-               exit={{ opacity: 0, scale: 0.8 }}
-        >
-          <p className="fleeting-pop-up" style={{ top: "17rem", left: "7rem" }}>
-            No changes
-          </p>
-          <section>
-            <ImagePicker {...{ imgURL }} />
-            <Button disabled={isLoading} background={error ? "danger" : "accent"}>
-              {isLoading ? <Spinner size="xs" color="page" /> : "Post"}
-            </Button>
-          </section>
-          <Input control="title"   errors={error} defaultValue={title}>Title</Input>
-          <Input control="content" errors={error} defaultValue={content} rows={5}>Post</Input>
-        </motion.form>
-      )}
-    </AnimatePresence>
+    <motion.form ref={scope} className={css["post-form"]} onSubmit={submitHandler}>
+      <p className="fleeting-pop-up" style={{ top: "2rem", right: "0.5rem" }}>
+        No changes
+      </p>
+      <Error {...{ error }} />
+      <section>
+        <ImagePicker {...{ imgURL }} />
+        <Button disabled={isLoading} background={error ? "danger" : "accent"}>
+          {isLoading ? <Spinner size="xs" color="page" /> : "Post"}
+        </Button>
+      </section>
+      <Input control="title" errors={error} defaultValue={title}>
+        Title
+      </Input>
+      <Input control="content" errors={error} defaultValue={content} rows={5}>
+        Post
+      </Input>
+    </motion.form>
   );
 }
