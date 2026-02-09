@@ -16,7 +16,7 @@ export default function EditImage({ user, setUser, isOpen, onSuccess: closeModal
   const { imgURL } = user;
   const [displayPic,  setDisplayPic] = useState(imgURL);
   const { scope,             shake } = useAnimations();
-  const { reqData, error, setError } = useFetch<{ imgURL: string }>();
+  const { reqData, isLoading, error, setError } = useFetch<{ imgURL: string }>();
 
   useEffect(() => {
     if (isOpen) return;
@@ -36,16 +36,17 @@ export default function EditImage({ user, setUser, isOpen, onSuccess: closeModal
     closeModal(); // triggers effect cleanup
   };
 
-  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+  function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (isLoading) return;
     const data = new FormData(e.currentTarget);
-    await reqData({ url: api.profile.setPic, method: "POST", data, onError, onSuccess });
+    reqData({ url: api.profile.setPic, method: "POST", data, onError, onSuccess });
   }
 
   return (
     <form className={css["edit-image"]} ref={scope} onSubmit={submitHandler}>
       <ImagePicker imgURL={displayPic} label="Upload a profile picture" />
-      <Button background={error ? "danger" : "accent"}>
+      <Button background={error ? "danger" : "accent"} disabled={isLoading}>
         {error ? error.message : "Upload"}
       </Button>
     </form>

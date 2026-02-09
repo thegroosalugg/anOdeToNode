@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
-import { useDefer } from "@/lib/hooks/useDefer";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { api } from "@/lib/http/endpoints";
 import Post from "@/models/Post";
@@ -26,7 +25,6 @@ export default function PostForm({
 }: PostForm) {
   const { isLoading, error, reqData, setError } = useFetch<Post | null>();
   const { scope, shake, shoot } = useAnimations();
-  const { deferring,  defer } = useDefer();
   const { _id = "", title = "", content = "", imgURL = "" } = post || {};
   const    url = _id ? api.post.edit(_id) : api.post.new
   const method = _id ? "PUT" : "POST";
@@ -43,30 +41,26 @@ export default function PostForm({
     if (error && !error.message && scope.current) shake("p");
   };
 
-  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+  function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (isLoading) return;
+    const data = new FormData(scope.current);
 
-    const request = async () => {
-      const data = new FormData(scope.current);
+    if (_id) {
+      const titleEntry = getEntry(data, "title");
+      const contentEntry = getEntry(data, "content");
+      const file = data.get("image") as File | null;
 
-      if (_id) {
-        const titleEntry = getEntry(data, "title");
-        const contentEntry = getEntry(data, "content");
-        const file = data.get("image") as File | null;
+      const isSame =
+        titleEntry === title && contentEntry === content && (!file || file.size === 0);
 
-        const isSame =
-          titleEntry === title && contentEntry === content && (!file || file.size === 0);
-
-        if (isSame) {
-          shoot(".fleeting-pop-up");
-          return;
-        }
+      if (isSame) {
+        shoot(".fleeting-pop-up");
+        return;
       }
+    }
 
-      await reqData({ url, method, data, onError, onSuccess: closeModal });
-    };
-
-    defer(request, 1000);
+    reqData({ url, method, data, onError, onSuccess: closeModal });
   }
 
   return (
@@ -86,7 +80,7 @@ export default function PostForm({
           </p>
           <section>
             <ImagePicker {...{ imgURL }} />
-            <Button disabled={deferring} background={error ? "danger" : "accent"}>
+            <Button disabled={isLoading} background={error ? "danger" : "accent"}>
               {isLoading ? <Spinner size="xs" color="page" /> : "Post"}
             </Button>
           </section>
