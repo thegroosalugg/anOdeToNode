@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { UseDefer, useDefer } from "@/lib/hooks/useDefer";
 import { Direction } from "@/lib/types/common";
 
 export type InitState<T> = {
@@ -15,25 +14,23 @@ export type Paginated<T = null> = {
         limit: number;
   currentPage: number;
     direction: Direction;
-    deferring: UseDefer["deferring"];
+    deferring: boolean;
 };
 
 export function usePagedFetch<T>(baseURL: string, limit: number, shouldFetch = true) {
-  const initState: InitState<T>         = { docCount: 0, items: [] };
-  const { data,    reqData,   ...rest } = useFetch(initState);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [direction,       setDirection] = useState<Direction>(1)
-  const { deferring,            defer } = useDefer();
+  const initState: InitState<T>               = { docCount: 0, items: [] };
+  const { data, isLoading, reqData, ...rest } = useFetch(initState);
+  const [searchParams,       setSearchParams] = useSearchParams();
+  const [direction,             setDirection] = useState<Direction>(1)
   const isInitial = useRef(true);
 
   const currentPage = +(searchParams.get("page") ?? 1);
   const url = `${baseURL}?page=${currentPage}&limit=${limit}`;
 
   function changePage(nextPage: number) {
-    defer(() => {
-      setSearchParams({ page: String(nextPage) });
-      setDirection(nextPage > currentPage ? 1 : -1);
-    }, 500);
+    if (isLoading) return; // deferring tied to request progress state
+    setSearchParams({ page: String(nextPage) });
+    setDirection(nextPage > currentPage ? 1 : -1);
   }
 
   useEffect(() => {
@@ -44,5 +41,15 @@ export function usePagedFetch<T>(baseURL: string, limit: number, shouldFetch = t
     });
   }, [url, shouldFetch, reqData]);
 
-  return { ...rest, data, limit, currentPage, direction, changePage, deferring, isLoading: isInitial.current };
+  return {
+        ...rest,
+           data,
+          limit,
+    currentPage,
+      direction,
+     changePage,
+     // renamed: <PagedList> expects a deferring prop; usePages hook exports deferring only, no loading state
+      deferring: isLoading,
+      isLoading: isInitial.current, // shows initial loader only
+  };
 }
