@@ -20,9 +20,9 @@ export default function UserLogout({ setUser }: { setUser: SetUser }) {
       <ConfirmDialog open={showModal} onConfirm={logout} onCancel={closeModal} />
       <p className={css["user-logout"]}>
         <Button
-          onClick={() => setShowModal(true)}
+             onClick={() => setShowModal(true)}
           background="danger"
-          animations={{ transition: { opacity: { delay: 1.8 } } }}
+          transition={{ opacity: { delay: 1.5 } }}
         >
           Logout
         </Button>

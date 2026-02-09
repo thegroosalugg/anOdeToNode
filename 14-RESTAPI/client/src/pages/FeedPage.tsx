@@ -66,7 +66,7 @@ export default function FeedPage() {
       <Button
            onClick={() => setIsOpen(true)}
              style={{ margin: "0 auto 0.5rem" }}
-        animations={{ transition: { opacity: { delay: 0.5 } } }}
+        transition={{ opacity: { delay: 0.5 } }}
       >
         New Post
       </Button>

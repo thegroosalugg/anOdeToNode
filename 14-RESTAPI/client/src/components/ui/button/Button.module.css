@@ -7,11 +7,15 @@
   border-radius: var(--rounded-lg);
   border: var(--border) var(--border-color);
   background-color: var(--background);
-  /* background-clip: padding-box; */
   color: var(--color);
   box-shadow: var(--shadow-pop);
   font-weight: 600;
-  transition: color var(--transition), background-color var(--transition), border-color var(--transition);
+  /* all transitions set explicitly to avoid framer-motion conflicts */
+  transition:
+    color            var(--transition),
+    background-color var(--transition),
+    border-color     var(--transition),
+    box-shadow       var(--transition);
 
   @media (pointer: fine) {
     &:hover {
@@ -25,7 +29,6 @@
   }
 
   &:disabled {
-    /* opacity: 0.8; */ /* controlled by framer-motion: CSS opacity doesn't work if opacity is part of motion-animations */
     pointer-events: none;
     box-shadow: none;
   }
