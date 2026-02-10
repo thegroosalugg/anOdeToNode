@@ -26,7 +26,7 @@ export default function PeerPage({ user }: { user: User }) {
   const    socketRef = useSocket("peer");
   const     navigate = useNavigate();
   // shouldFetch is userId defined and component isPresent (not exiting with <AnimatePresense>)
-  const { setData, ...rest } = usePagedFetch<Post>(api.social.userPosts(userId ?? ""), 4, !!userId && isPresent);
+  const { setData, ...rest } = usePagedFetch<Post>(api.social.userPosts(userId), 4, !!userId && isPresent);
 
   useDepedencyTracker("peer", {
     pathname,

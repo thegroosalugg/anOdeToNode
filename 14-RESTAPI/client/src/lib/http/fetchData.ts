@@ -9,15 +9,21 @@ export type ApiError = {
    status: number;
 };
 
+export type ApiUrl = string | null;
+
 export interface Fetch {
-      url: string;
+      url: ApiUrl;
   method?: "GET" | "POST" | "PUT" | "DELETE";
     data?: FormData | Record<string, unknown>;
 }
 
 export const API_URL = import.meta.env.VITE_SERVER_URL;
 
+const error = (status: number, err: Record<string, unknown>) => ({ status, ...err }) as ApiError;
+
 const fetchData = async <T>({ url, method = "GET", data }: Fetch): Promise<NonNullable<T>> => {
+  if (!url) throw error(0, { message: "Missing URL" });
+
   const isFile = data instanceof FormData; // multipart/form-data
   const body   = data ? (isFile ? data : JSON.stringify(data)) : null;
   const headers: HeadersInit = {};
@@ -43,9 +49,7 @@ const fetchData = async <T>({ url, method = "GET", data }: Fetch): Promise<NonNu
   const logger = new Logger(config);
   logger.res(response, resData, { method, url });
 
-  if (!response.ok) {
-    throw { ...resData, status: response.status } as ApiError;
-  }
+  if (!response.ok) throw error(response.status, resData);
 
   return resData;
 };

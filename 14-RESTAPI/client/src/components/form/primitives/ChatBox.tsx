@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { Animations, createAnimations } from "@/lib/motion/animations";
+import { ApiUrl } from "@/lib/http/fetchData";
 import BouncingDots from "@/components/ui/boundary/loader/BouncingDots";
 import css from "./ChatBox.module.css";
 
@@ -12,7 +13,7 @@ export default function ChatBox({
   animations = {},
    ...props
 }: {
-          url: string;
+          url: ApiUrl;
         rows?: number;
   animations?: Animations
 }) {

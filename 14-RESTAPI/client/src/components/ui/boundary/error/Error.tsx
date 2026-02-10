@@ -8,7 +8,7 @@ const initial = { scale: 0.8 };
 const animate = { scale:   1 };
 const animations = createAnimations({ initial, animate });
 
-export default function Error({ error, ...props }: { error: ApiError | null } & HTMLMotionProps<"p">) {
+export default function Error({ error, ...props }: { error?: ApiError | null } & HTMLMotionProps<"p">) {
   const { message } = error ?? {};
   return (
     // hide ResiseDiv when no message; flex gap creates space unless element fully hidden

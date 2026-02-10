@@ -22,12 +22,8 @@ import { api } from "@/lib/http/endpoints";
 
 export default function PostPage({ user }: { user: User }) {
   const { data: post, setData: setPost, reqData: reqPost, isLoading, error, setError } = useFetch<Post | null>();
-  const { postId } = useParams();
-  const { setData: setReplies, ...rest } = usePagedFetch<Reply>(
-    api.post.replies(postId ?? ""), // if !postId, req will not fire anyway due to 3rd guard
-    5, // posts per page
-    !!postId && !!post, // !shouldFetch if !postId or post hasn't finished loading
-  );
+  const { postId } = useParams();                     // !shouldFetch if !postId or post hasn't finished loading
+  const { setData: setReplies, ...rest } = usePagedFetch<Reply>(api.post.replies(postId), 5, !!postId && !!post);
   const [hasLoaded, setHasLoaded] = useState(false); // trigger for post state
   const [modalState,    setModal] = useState("");
   const navigate   = useNavigate();
@@ -108,18 +104,10 @@ export default function PostPage({ user }: { user: User }) {
     };
   }, [hasLoaded, socketRef, postId, setReplies]);
 
-  const onSuccess = () => {
-    closeModal(); // delete actions for creator
-    navigate("/feed");
-  };
-
-  const onError = () => {
-    closeModal();
-  };
-
-  async function deletePost() {
+  function deletePost() {
     if (!postId) return;
-    await reqPost({ url: api.post.delete(postId), method: "DELETE", onSuccess, onError });
+    reqPost({ url: api.post.delete(postId), method: "DELETE", onSuccess: () => navigate("/feed") });
+    closeModal();
   }
 
   const { title, description } = getMeta(

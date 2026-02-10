@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { Direction } from "@/lib/types/common";
+import { ApiUrl } from "@/lib/http/fetchData";
 
 export type InitState<T> = {
   docCount: number;
@@ -17,7 +18,7 @@ export type Paginated<T = null> = {
     isLoading: boolean;
 };
 
-export function usePagedFetch<T>(baseURL: string, limit: number, shouldFetch = true) {
+export function usePagedFetch<T>(apiURL: ApiUrl, limit: number, shouldFetch = true) {
   const initState: InitState<T>               = { docCount: 0, items: [] };
   const { data, isLoading, reqData, ...rest } = useFetch(initState);
   const [searchParams,       setSearchParams] = useSearchParams();
@@ -25,7 +26,7 @@ export function usePagedFetch<T>(baseURL: string, limit: number, shouldFetch = t
   const isInitial = useRef(true);
 
   const currentPage = +(searchParams.get("page") ?? 1);
-  const url = `${baseURL}?page=${currentPage}&limit=${limit}`;
+  const url = `${apiURL}?page=${currentPage}&limit=${limit}`;
 
   function changePage(nextPage: number) {
     if (isLoading) return; // deferring tied to request progress state
