@@ -20,7 +20,7 @@ export default function PageButtons({
         limit,
   currentPage,
    changePage,
-    deferring,
+    isLoading,
 }: Omit<Paginated, 'data' | 'direction'> & { docCount: number }) {
   const   last = Math.ceil(docCount / limit);
   const middle = last < 5 ? 3 : Math.min(Math.max(currentPage, 3), last - 2);
@@ -50,7 +50,7 @@ export default function PageButtons({
               {last > 5 && page === last && pages[3] !== last - 1 && <Ellipsis />}
               <Button
                      layout
-                   disabled={deferring}
+                   disabled={isLoading}
                 data-active={isActive}
                     onClick={() => changePage(page)}
                 {...{ background, border, color }}

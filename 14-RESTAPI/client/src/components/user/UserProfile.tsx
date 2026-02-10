@@ -13,7 +13,7 @@ import { api } from "@/lib/http/endpoints";
 import css from "./UserProfile.module.css";
 
 export default function UserProfile({ user, setUser }: UserState) {
-  const { isLoading, error, ...rest } = usePagedFetch<Post>(api.profile.posts, 4);
+  const { isInitial, error, ...rest } = usePagedFetch<Post>(api.profile.posts, 4);
   const    align = "end" as const;
   const    title = { text: "Your Posts",                  align };
   const fallback = { text: "You haven't posted anything", align };
@@ -24,7 +24,7 @@ export default function UserProfile({ user, setUser }: UserState) {
         <ProfileActions {...{ user, setUser }} />
       </UserDashboard>
       <FriendsList target={user} />
-      <AsyncAwait {...{ isLoading, error }}>
+      <AsyncAwait {...{ isLoading: isInitial, error }}>
         <PagedList<Post> header={{ title, fallback }} {...rest}>
           {(post) => <PostItem {...post} isCreator />}
         </PagedList>

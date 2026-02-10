@@ -11,7 +11,7 @@ import css from "@/components/list/user/FriendsList.module.css";
 import { api } from "@/lib/http/endpoints";
 
 export default function SocialPage({ user }: { user: User }) {
-  const { setData, isLoading, error, ...rest } = usePagedFetch<User>(api.social.users, isMobile ? 8 : 10);
+  const { setData, isInitial, error, ...rest } = usePagedFetch<User>(api.social.users, isMobile ? 8 : 10);
   const socketRef = useSocket("social");
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function SocialPage({ user }: { user: User }) {
   }, [socketRef, setData]);
 
   return (
-    <AsyncAwait {...{ isLoading, error }}>
+    <AsyncAwait {...{ isLoading: isInitial, error }}>
       <PagedList<User>
         className={css["user-list"]}
            header={{ title: { text: "Users" }, fallback: { text: "Nobody here", align: "center" }}}

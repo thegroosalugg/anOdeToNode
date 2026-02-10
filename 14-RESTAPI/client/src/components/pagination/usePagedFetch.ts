@@ -14,7 +14,7 @@ export type Paginated<T = null> = {
         limit: number;
   currentPage: number;
     direction: Direction;
-    deferring: boolean;
+    isLoading: boolean;
 };
 
 export function usePagedFetch<T>(baseURL: string, limit: number, shouldFetch = true) {
@@ -48,8 +48,7 @@ export function usePagedFetch<T>(baseURL: string, limit: number, shouldFetch = t
     currentPage,
       direction,
      changePage,
-     // renamed: <PagedList> expects a deferring prop; usePages hook exports deferring only, no loading state
-      deferring: isLoading,
-      isLoading: isInitial.current, // shows initial loader only
+      isInitial: isInitial.current,
+      isLoading,
   };
 }

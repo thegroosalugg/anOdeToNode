@@ -49,7 +49,7 @@ export default function FriendsList({ target, watcher }: { target: User; watcher
     currentPage,
       direction,
      changePage,
-      deferring,
+      isLoading: deferring,
           limit,
   };
 
