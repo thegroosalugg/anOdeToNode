@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDefer } from "@/lib/hooks/useDefer";
-import { Auth } from "@/lib/types/interface";
+import { UserNullState } from "@/lib/types/interface";
 import { AlertsProvider } from "@/components/alerts/context/AlertsProvider";
 import { ChatProvider } from "@/components/chat/context/ChatProvider";
 import AlertsMenu from "../../alerts/AlertsMenu";
@@ -9,7 +9,7 @@ import ChatMenu from "../../chat/ChatMenu";
 import IconButton from "../../ui/button/IconButton";
 import css from "./NavBar.module.css";
 
-export default function NavBar({ user, setUser }: Pick<Auth, "user" | "setUser">) {
+export default function NavBar({ user, setUser }: UserNullState) {
   const { deferring, defer } = useDefer();
   const   navigate   = useNavigate();
   const { pathname } = useLocation();

@@ -12,9 +12,9 @@ import   TermsPage   from "./pages/static/TermsPage";
 import PrivacyPage   from "./pages/static/PrivacyPage";
 import    TestPage   from "./pages/TestPage";
 import { captainsLog } from "./lib/util/captainsLog";
-import { Auth } from "./lib/types/interface";
+import { UserNullState } from "./lib/types/interface";
 
-const validate = (path: string, props: Auth) => {
+const validate = (path: string, props: UserNullState) => {
   const { user } = props;
 
   if (!user) return <AuthPage {...props} />;

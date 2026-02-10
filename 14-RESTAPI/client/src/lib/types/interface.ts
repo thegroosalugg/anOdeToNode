@@ -19,10 +19,9 @@ export type FetchState<T, K extends string = "data"> = {
 
 export type SetUser = SetData<User | null>;
 
-export interface Auth {
+export interface UserNullState {
        user: User | null;
     setUser: SetUser;
-  isLoading: boolean;
 }
 
 export interface UserState {
