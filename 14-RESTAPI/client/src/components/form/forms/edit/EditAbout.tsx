@@ -67,7 +67,7 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
         No changes
       </p>
       <Button disabled={isLoading} background={errors ? "danger" : "accent"}>
-        {isLoading ? <Spinner size="xs" color="page" /> : "Update"}
+        {isLoading ? <Spinner size={20} color="page" /> : "Update"}
       </Button>
       <Input control="home" {...{ errors }} defaultValue={home}>
         <FontAwesomeIcon icon="house" /> Home

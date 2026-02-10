@@ -13,7 +13,7 @@ import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import { actionsConfig } from "./actions_config";
 import css from "./SocialActions.module.css";
 
-const Loader = <Spinner size="xs" color="page" />;
+const Loader = <Spinner size={20} color="page" />;
 
 export default function SocialActions({ user, peer }: { user: User; peer: User }) {
   const { isLoading, error, setError, reqData } = useFetch();

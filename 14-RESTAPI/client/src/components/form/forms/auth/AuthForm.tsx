@@ -90,7 +90,7 @@ export default function AuthForm({ setUser }: { setUser: SetUser }) {
         {isLogin ? "Switch to Sign Up" : "Already have an account? Login"}
       </motion.button>
       <Button {...{ variants }} disabled={isLoading} whileTap={{ scale: deferring ? 1 : 0.9 }}>
-        {isLoading ? <Spinner size="xs" color="page" /> : label}
+        {isLoading ? <Spinner size={20} color="page" /> : label}
       </Button>
     </motion.form>
   );

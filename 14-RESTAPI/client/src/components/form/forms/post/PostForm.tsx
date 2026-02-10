@@ -71,7 +71,7 @@ export default function PostForm({
       <section>
         <ImagePicker {...{ imgURL }} />
         <Button disabled={isLoading} background={error ? "danger" : "accent"}>
-          {isLoading ? <Spinner size="xs" color="page" /> : "Post"}
+          {isLoading ? <Spinner size={20} color="page" /> : "Post"}
         </Button>
       </section>
       <Input control="title" errors={error} defaultValue={title}>
