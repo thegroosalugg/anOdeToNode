@@ -4,7 +4,7 @@ import { isMobile } from 'react-device-detect';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { createVariants } from '@/lib/motion/animations';
-import css from './IconButton.module.css';
+import css from './NavButton.module.css';
 
 interface ButtonProps extends HTMLMotionProps<"button"> {
         icon: IconProp;
@@ -14,7 +14,7 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
     children: ReactNode;
 }
 
-export default function IconButton({
+export default function NavButton({
        icon,
    isActive,
    layoutId,
@@ -22,7 +22,7 @@ export default function IconButton({
    children,
     ...props
 }: ButtonProps) {
-  let classes = css['icon-button'];
+  let classes = css['nav-button'];
   if (isActive) classes += ` ${css['active']}`;
 
   const isLandscape = window.matchMedia('(orientation: landscape)').matches && isMobile;

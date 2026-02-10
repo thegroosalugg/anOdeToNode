@@ -3,7 +3,7 @@ import { useChatSocket } from './context/useChatSocket';
 import { useChatParamsSync } from './context/useChatParamsSync';
 import SideBar from '@/components/ui/menu/SideBar';
 import ChatBody from './layout/ChatBody';
-import IconButton from '@/components/ui/button/IconButton';
+import NavButton from '@/components/layout/header/NavButton';
 import Counter from '@/components/ui/tags/Counter';
 
 export default function ChatMenu() {
@@ -16,10 +16,10 @@ export default function ChatMenu() {
       <SideBar onRight open={isOpen} close={closeMenu}>
         <ChatBody />
       </SideBar>
-      <IconButton icon="comments" onClick={openMenu} disabled={deferring}>
+      <NavButton icon="comments" onClick={openMenu} disabled={deferring}>
         <Counter count={alerts} />
         Chat
-      </IconButton>
+      </NavButton>
     </>
   );
 }

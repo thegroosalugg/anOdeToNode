@@ -14,7 +14,6 @@
   --danger: var(--rust-600);
   --success: var(--lime-700);
   --transparent: oklch(100% 0.00011 271.152 / 0);
-  --nav-size: 68px;
 
   @media (prefers-color-scheme: dark) {
     --page: var(--stone-800);
@@ -74,6 +73,8 @@ body {
   display: flex; /* Flex set on first available wrapper around header/main/footer */
   flex-direction: column;
   min-height: 100dvh; /* content fits between browser UI elements */
+
+  @media (pointer: coarse) and (orientation: landscape) { flex-direction: row; } /* side navbar on mobile landscape */
 }
 
 #main {
@@ -81,11 +82,4 @@ body {
   display: flex;
   flex-direction: column;
   padding: 1rem;
-}
-
-/* side navbar on mobile landscape */
-@media (pointer: coarse) and (orientation: landscape) {
-  #root { flex-direction: row; }
-  /* align main content by width of nav bar (position fixed, not in element flow) */
-  #main { margin-left: var(--nav-size); }
 }

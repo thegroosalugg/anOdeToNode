@@ -1,4 +1,4 @@
-import AsyncAwait from "@/components/ui/boundary/AsyncAwait";
+/* eslint-disable */
 import { useFetch } from "@/lib/hooks/useFetch";
 import { api } from "@/lib/http/endpoints";
 import { useEffect } from "react";

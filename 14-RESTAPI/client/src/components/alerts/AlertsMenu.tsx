@@ -2,7 +2,7 @@ import { useAlerts } from "./context/AlertsContext";
 import { useAlertSocket } from "./context/useAlertSocket";
 import SideBar from "../ui/menu/SideBar";
 import AlertsBody from "./layout/AlertsBody";
-import IconButton from "../ui/button/IconButton";
+import NavButton from "../layout/header/NavButton";
 import Counter from "../ui/tags/Counter";
 
 export default function AlertsMenu() {
@@ -14,10 +14,10 @@ export default function AlertsMenu() {
       <SideBar open={isOpen} close={closeMenu}>
         <AlertsBody />
       </SideBar>
-      <IconButton icon="bell" onClick={openMenu} disabled={deferring}>
+      <NavButton icon="bell" onClick={openMenu} disabled={deferring}>
         <Counter {...{ count }} />
         Alerts
-      </IconButton>
+      </NavButton>
     </>
   );
 }

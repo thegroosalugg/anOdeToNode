@@ -7,7 +7,6 @@ import AsyncAwait from "../ui/boundary/AsyncAwait";
 import FriendsList from "../list/user/FriendsList";
 import PagedList from "../pagination/PagedList";
 import PostItem from "../list/post/PostItem";
-import UserLogout from "./actions/user/UserLogout";
 import ProfileActions from "./actions/user/ProfileActions";
 import { api } from "@/lib/http/endpoints";
 import css from "./UserProfile.module.css";
@@ -29,7 +28,6 @@ export default function UserProfile({ user, setUser }: UserState) {
           {(post) => <PostItem {...post} isCreator />}
         </PagedList>
       </AsyncAwait>
-      <UserLogout {...{ setUser }} />
     </motion.div>
   );
 }
