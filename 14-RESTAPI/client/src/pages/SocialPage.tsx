@@ -38,7 +38,7 @@ export default function SocialPage({ user }: { user: User }) {
   }, [socketRef, setData]);
 
   return (
-    <AsyncAwait {...{ isLoading: isInitial, error }}>
+    <AsyncAwait {...{ isInitial, error }}>
       <PagedList<User>
         className={css["user-list"]}
            header={{ title: { text: "Users" }, fallback: { text: "Nobody here", align: "center" }}}

@@ -70,7 +70,7 @@ export default function FeedPage() {
       >
         New Post
       </Button>
-      <AsyncAwait {...{ isLoading: isInitial, error }}>
+      <AsyncAwait {...{ isInitial, error }}>
         <PagedList<Post> header={{ title, fallback }} {...rest}>
           {(post) => <PostItem {...post} />}
         </PagedList>

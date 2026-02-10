@@ -17,7 +17,7 @@
   > h2 {
     display: flex;
     justify-content: space-between;
-    padding-left: 1rem;
+    padding: 0 0.5rem;
   }
 }
 
@@ -38,7 +38,7 @@
   align-items: end;
   gap: 0.5rem;
   overflow-x: scroll;
-  padding: 0.2rem;
+  padding: 0 0.5rem 0.5rem;
 
   > button { width: 80px; }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { Direction } from "@/lib/types/common";
@@ -11,11 +11,11 @@ export type InitState<T> = {
 
 export type Paginated<T = null> = {
          data: InitState<T>;
-   changePage: (page: number) => void;
+    isLoading: boolean;
         limit: number;
   currentPage: number;
+   changePage: (page: number) => void;
     direction: Direction;
-    isLoading: boolean;
 };
 
 export function usePagedFetch<T>(apiURL: ApiUrl, limit: number, shouldFetch = true) {
@@ -23,7 +23,6 @@ export function usePagedFetch<T>(apiURL: ApiUrl, limit: number, shouldFetch = tr
   const { data, isLoading, reqData, ...rest } = useFetch(initState);
   const [searchParams,       setSearchParams] = useSearchParams();
   const [direction,             setDirection] = useState<Direction>(1)
-  const isInitial = useRef(true);
 
   const currentPage = +(searchParams.get("page") ?? 1);
   const url = `${apiURL}?page=${currentPage}&limit=${limit}`;
@@ -35,21 +34,16 @@ export function usePagedFetch<T>(apiURL: ApiUrl, limit: number, shouldFetch = tr
   }
 
   useEffect(() => {
-    if (!shouldFetch) return;
-
-    reqData({ url }).finally(() => {
-      if (isInitial.current) isInitial.current = false; // loader only on initial render; thereafter disabled
-    });
+    if (shouldFetch) reqData({ url });
   }, [url, shouldFetch, reqData]);
 
   return {
         ...rest,
            data,
+      isLoading,
           limit,
     currentPage,
-      direction,
      changePage,
-      isInitial: isInitial.current,
-      isLoading,
+      direction,
   };
 }

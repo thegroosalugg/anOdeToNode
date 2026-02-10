@@ -24,7 +24,7 @@ export default function UserProfile({ user, setUser }: UserState) {
         <ProfileActions {...{ user, setUser }} />
       </UserDashboard>
       <FriendsList target={user} />
-      <AsyncAwait {...{ isLoading: isInitial, error }}>
+      <AsyncAwait {...{ isInitial, error }}>
         <PagedList<Post> header={{ title, fallback }} {...rest}>
           {(post) => <PostItem {...post} isCreator />}
         </PagedList>

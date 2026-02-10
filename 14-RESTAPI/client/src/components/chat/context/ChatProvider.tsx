@@ -17,6 +17,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
          data: chats,
       setData: setChats,
       reqData: reqChats,
+    isInitial,
     isLoading,
         error,
   } = useFetch<Chat[]>([]);
@@ -164,6 +165,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
     chats,
     setChats,
     reqChats,
+    isInitial,
     isLoading,
     error,
     msgsMap,

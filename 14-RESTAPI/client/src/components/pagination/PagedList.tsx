@@ -22,11 +22,11 @@ export default function PagedList<T extends { _id: string }>({
      className = "",
         header,
           data: { docCount, items },
+     isLoading,
          limit,
    currentPage,
      direction,
     changePage,
-     isLoading,
       children,
 }: PagedList<T>) {
   const       classes = `no-scrollbar-x ${css["list"]} ${className}`;

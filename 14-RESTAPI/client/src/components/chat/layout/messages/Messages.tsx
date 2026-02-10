@@ -38,7 +38,8 @@ export default function Messages({ chat }: { chat: Chat }) {
   }, [chat._id, chat.isTemp, hasLoaded, loadedMap, reqData, setMsgs, setLoaded]);
 
   return (
-    <AsyncAwait {...{ isLoading, error }}>
+    // fetching occurs only once, loaded msgs are saved in state, isInitial resets on open|close, use isLoading instead
+    <AsyncAwait {...{ isInitial: isLoading, error }}>
       <motion.ul
          className={css["messages"]}
            initial="hidden"

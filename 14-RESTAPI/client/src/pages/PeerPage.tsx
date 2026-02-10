@@ -19,7 +19,7 @@ import SocialActions from "@/components/user/actions/peer/SocialActions";
 import { getMeta } from "@/lib/util/getMeta";
 
 export default function PeerPage({ user }: { user: User }) {
-  const { data: peer, isLoading, error, reqData } = useFetch<User | null>();
+  const { data: peer, isInitial, error, reqData } = useFetch<User | null>();
   const {  userId  } = useParams();
   const { pathname } = useLocation();
   const    isPresent = useIsPresent(); // returns false when component is exiting with <AnimatePresense>
@@ -86,7 +86,7 @@ export default function PeerPage({ user }: { user: User }) {
   }, [isPresent, socketRef, peer?._id, setData]);
 
   const { title, description } = getMeta(
-    isLoading,
+    isInitial,
     peer,
     (peer) => ({ title: peer.name, description: `${peer.name}'s profile` }),
     "User",
@@ -97,7 +97,7 @@ export default function PeerPage({ user }: { user: User }) {
   return (
     <>
       <Meta {...{ description }}>{title}</Meta>
-      <AsyncAwait {...{ isLoading, error }}>
+      <AsyncAwait {...{ isInitial, error }}>
         {peer && (
           <>
             <UserDashboard {...{ target: peer, watcher: user }}>

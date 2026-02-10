@@ -10,6 +10,7 @@ import   ErrorPage   from "./pages/ErrorPage";
 import   AboutPage   from "./pages/static/AboutPage";
 import   TermsPage   from "./pages/static/TermsPage";
 import PrivacyPage   from "./pages/static/PrivacyPage";
+import    TestPage   from "./pages/TestPage";
 import { captainsLog } from "./lib/util/captainsLog";
 import { Auth } from "./lib/types/interface";
 
@@ -34,7 +35,8 @@ const createRoute = (path: string, Component?: () => JSX.Element) => ({
 });
 
 const routes = [
-  { path: "/", element: <RootLayout children={(props) => <AuthPage {...props} />} /> },
+  { path: "/",     element: <RootLayout children={(props) => <AuthPage {...props} />} /> },
+  { path: "/test", element: <TestPage />},
   createRoute("/feed"),
   createRoute("/post/:postId"),
   createRoute("/social"),

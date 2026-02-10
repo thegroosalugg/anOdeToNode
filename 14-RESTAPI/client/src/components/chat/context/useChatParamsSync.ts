@@ -10,6 +10,7 @@ export const useChatParamsSync = () => {
     user,
     chats,
     reqChats,
+    isInitial,
     isOpen,
     setIsOpen,
     setActiveChat,
@@ -18,20 +19,14 @@ export const useChatParamsSync = () => {
   } = useChat();
   const [searchParams] = useSearchParams();
   const       peerId = searchParams.get("chat");
-  const    hasLoaded = useRef(false);
   const lastChatsRef = useRef(0);
 
   useEffect(() => {
-    const initData = async () => {
-      await reqChats({ url: api.chat.all });
-      hasLoaded.current = true;
-    };
-
-    initData();
+    reqChats({ url: api.chat.all });
   }, [reqChats]);
 
   useEffect(() => {
-    if (!peerId || !hasLoaded.current) return;
+    if (!peerId || isInitial) return;
 
     // delete URL if user tries to open menu via new message as soon as close triggered
     if (deferring && !isOpen) {
@@ -56,5 +51,5 @@ export const useChatParamsSync = () => {
     // therefore, if chat is temp, prev state is preserved instead
     setActiveChat((prev) => (prev?.isTemp ? prev : chat));
     setIsOpen(true);
-  }, [peerId, deferring, user, chats, isOpen, setIsOpen, setActiveChat, destroyURL]);
+  }, [peerId, deferring, user, chats, isOpen, isInitial, setIsOpen, setActiveChat, destroyURL]);
 };

@@ -6,6 +6,7 @@
   max-height: 85%;
   max-width: 90%;
   overflow: auto;
+  padding: 0.5rem; /* required for content shadows */
   border: none;
   background: none;
   /* Set as inline style. Framer motion disables transform with x/y animations */

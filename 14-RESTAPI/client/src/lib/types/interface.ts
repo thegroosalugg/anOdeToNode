@@ -11,6 +11,7 @@ export type FetchState<T, K extends string = "data"> = {
 } & {
   [P in `req${Capitalize<K>}`]: ReqData<T>;
 } & {
+  isInitial: boolean;
   isLoading: boolean;
       error: ApiError | null;
    setError: SetData<ApiError | null>;

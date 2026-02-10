@@ -6,12 +6,12 @@ import Heading from "@/components/ui/layout/Heading";
 import css from "./ChatBody.module.css";
 
 export default function ChatBody() {
-  const { isLoading, error, chats, activeChat } = useChat();
+  const { isInitial, error, chats, activeChat } = useChat();
 
   return (
     <div className={css["chat-body"]}>
       <ChatActions />
-      <AsyncAwait {...{ isLoading, error }}>
+      <AsyncAwait {...{ isInitial, error }}>
         {!chats.length && !activeChat ? (
           <Heading className={css["fallback"]}>
             You haven't started any chats
