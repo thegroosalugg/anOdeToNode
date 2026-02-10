@@ -3,13 +3,13 @@ import { useAlerts } from "../../context/AlertsContext";
 import Counter from "@/components/ui/tags/Counter";
 import XButton from "@/components/ui/button/XButton";
 import IconButton from "@/components/ui/button/IconButton";
-import css from "./NotifsHeader.module.css";
+import css from "./AlertsHeader.module.css";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <span className={css["label"]}>{children}</span>
 );
 
-export default function NotifsHeader() {
+export default function AlertsHeader() {
   const { alerts, activeTab, changeTab, closeMenu } = useAlerts();
   const labels = ["Friend-requests",          "Sent-requests", "Post-replies"];
   const  icons = [      "user-plus",  "envelope-circle-check",        "reply"] as const;
