@@ -12,31 +12,13 @@ import { useTheme } from "@/lib/hooks/useTheme";
 import { saveTokens } from "@/lib/http/token";
 import { postAnalytics } from "@/lib/http/analytics";
 import User from "@/models/User";
-import { RecordMap } from "@/lib/types/common";
 import { UserNullState } from "@/lib/types/interface";
-
-const staticMeta: RecordMap<{ title: string; description: string }> = {
-      "/feed": { title:               "Feed", description: "All user posts"          },
-    "/social": { title:             "Social", description: "List of users"           },
-     "/about": { title:              "About", description: "About page"              },
-     "/terms": { title: "Terms & Conditions", description: "Terms & conditions page" },
-   "/privacy": { title:     "Privacy Policy", description: "Privacy policy page"     },
-};
-
-const metadata = (path: string, user: User | null) => {
-  if (path === "/") {
-    return user
-      ? { title: user.name, description: `${user.name}'s profile` }
-      : { title: "Login",   description: "Sign up page"           };
-  }
-
-  return staticMeta[path] ?? { title: "", description: "" };
-};
+import { getStaticMetadata } from "@/lib/meta/meta";
 
 export default function RootLayout({ children }: { children: (props: UserNullState) => ReactNode }) {
   const { pathname } = useLocation();
   const { data: user, setData: setUser, reqData, isInitial } = useFetch<User>();
-  const { title, description } = metadata(pathname, user);
+  const { title, description } = getStaticMetadata(pathname, user);
   useTheme();
 
   useEffect(() => {

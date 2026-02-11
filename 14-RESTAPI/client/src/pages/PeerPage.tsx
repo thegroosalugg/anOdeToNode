@@ -16,7 +16,7 @@ import FriendsList from "@/components/list/user/FriendsList";
 import PagedList from "@/components/pagination/PagedList";
 import PostItem from "@/components/list/post/PostItem";
 import SocialActions from "@/components/user/actions/peer/SocialActions";
-import { getMeta } from "@/lib/util/getMeta";
+import { getDynamicMetadata } from "@/lib/meta/meta";
 
 export default function PeerPage({ user }: { user: User }) {
   const { data: peer, isInitial, error, reqData } = useFetch<User | null>();
@@ -85,7 +85,7 @@ export default function PeerPage({ user }: { user: User }) {
     };
   }, [isPresent, socketRef, peer?._id, setData]);
 
-  const { title, description } = getMeta(
+  const { title, description } = getDynamicMetadata(
     isInitial,
     peer,
     (peer) => ({ title: peer.name, description: `${peer.name}'s profile` }),

@@ -17,7 +17,7 @@ import ReplyItem from "@/components/list/reply/ReplyItem";
 import PagedList from "@/components/pagination/PagedList";
 import FormSideBar from "@/components/form/forms/sidebar/FormSideBar";
 import PostForm from "@/components/form/forms/post/PostForm";
-import { getMeta } from "@/lib/util/getMeta";
+import { getDynamicMetadata } from "@/lib/meta/meta";
 import { api } from "@/lib/http/endpoints";
 
 export default function PostPage({ user }: { user: User }) {
@@ -117,7 +117,7 @@ export default function PostPage({ user }: { user: User }) {
     closeModal();
   }
 
-  const { title, description } = getMeta(
+  const { title, description } = getDynamicMetadata(
     isInitial,
     post,
     (post) => ({ title: post.title, description: post.title }),
