@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useLocation } from "react-router-dom";
 import Meta from "@/components/meta/Meta";
@@ -19,6 +19,7 @@ export default function RootLayout({ children }: { children: (props: UserNullSta
   const { pathname } = useLocation();
   const { data: user, setData: setUser, reqData, isInitial } = useFetch<User>();
   const { title, description } = getStaticMetadata(pathname, user);
+  const [offset,    setOffset] = useState({ width: 0, height: 0 });
   useTheme();
 
   useEffect(() => {
@@ -35,14 +36,19 @@ export default function RootLayout({ children }: { children: (props: UserNullSta
 
   if (isInitial) return <SplashScreen />;
 
+  const isLandscapeMobile = window.matchMedia(
+    "(pointer: coarse) and (orientation: landscape)",
+  ).matches;
+
   return (
     <>
       <Meta {...{ description }}>{title}</Meta>
-      <NavBar {...{ user, setUser }} />
+      <NavBar {...{ user, setUser, offset, setOffset }} />
       <AnimatePresence mode="wait">
         <motion.main
                   id="main"
                  key={pathname}
+               style={{ marginLeft: isLandscapeMobile ? offset.width : 0 }}
                 exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         >

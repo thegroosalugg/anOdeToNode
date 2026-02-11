@@ -4,6 +4,7 @@
   --rounded: var(--rounded-sm);
   position: absolute;
   inset: var(--offset) 0 auto auto;
+  z-index: 2; /* higher than <Heading .title>, lower than <NavBar> */
   display: flex;
   flex-direction: column;
   align-items: start;

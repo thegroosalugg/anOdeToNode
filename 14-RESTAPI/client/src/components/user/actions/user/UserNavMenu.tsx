@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { UserState } from "@/lib/types/interface";
 import { createPortal } from "react-dom";
+import { OffSet } from "@/components/layout/header/NavBar";
 import NavButton from "@/components/layout/header/NavButton";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
@@ -14,7 +15,7 @@ interface UserNavMenu extends UserState {
       navTo: (path: string) => void;
   deferring: boolean;
    layoutId: string;
-     offset: number;
+     offset: OffSet;
 }
 
 export default function UserNavMenu({
@@ -64,11 +65,18 @@ export default function UserNavMenu({
     return () => document.removeEventListener("mousedown", handle);
   }, []);
 
+  const getOffset = () => {
+    const isLandscapeMobile = window.matchMedia(
+      "(pointer: coarse) and (orientation: landscape)",
+    ).matches; // + 16px for 1rem of padding offset to hide element behind header
+    return offset[isLandscapeMobile ? "width" : "height"] - 16 + "px";
+  };
+
   const element = (
     <div
              id={userNavMenu}
       className={classes}
-          style={{ "--offset": `${offset - 16}px` } as React.CSSProperties}
+          style={{ "--offset": getOffset() } as React.CSSProperties}
     >
       <ThemeToggle />
       <button onClick={navToProfile}>Profile</button>
@@ -84,7 +92,7 @@ export default function UserNavMenu({
       <ConfirmDialog open={showModal} onConfirm={logout} onCancel={closeModal} />
       {Menu}
       <NavButton
-        icon="user"
+            icon="user"
         isActive={pathname === "/"}
         disabled={deferring}
         onClick={openMenu}
