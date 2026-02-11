@@ -8,6 +8,7 @@ import Footer from "@/components/layout/footer/Footer";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { api } from "@/lib/http/endpoints";
 import { eventBus } from "@/lib/util/eventBus";
+import { useTheme } from "@/lib/hooks/useTheme";
 import { saveTokens } from "@/lib/http/token";
 import { postAnalytics } from "@/lib/http/analytics";
 import User from "@/models/User";
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: (props: UserNullSta
   const { pathname } = useLocation();
   const { data: user, setData: setUser, reqData, isInitial } = useFetch<User>();
   const { title, description } = metadata(pathname, user);
+  useTheme();
 
   useEffect(() => {
     reqData({
@@ -43,9 +45,10 @@ export default function RootLayout({ children }: { children: (props: UserNullSta
          method: "POST",
       onSuccess: (user) => saveTokens(user),
     });
+
     postAnalytics();
-    const unsubscribe = eventBus.on("logout", () => setUser(null));
-    return unsubscribe; // clean-up - called on dismount
+    const logout = eventBus.on("logout", () => setUser(null));
+    return logout(); // clean-up - called on dismount
   }, [reqData, setUser]);
 
   if (isInitial) return <SplashScreen />;

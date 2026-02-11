@@ -5,6 +5,7 @@ import { useDefer } from "@/lib/hooks/useDefer";
 import { UserNullState } from "@/lib/types/interface";
 import { AlertsProvider } from "@/components/alerts/context/AlertsProvider";
 import { ChatProvider } from "@/components/chat/context/ChatProvider";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 import AlertsMenu from "../../alerts/AlertsMenu";
 import ChatMenu from "../../chat/ChatMenu";
 import UserNavMenu from "@/components/user/actions/user/UserNavMenu";
@@ -27,12 +28,14 @@ export default function NavBar({ user, setUser }: UserNullState) {
   }
 
   useLayoutEffect(() => {
-    const nav = headerRef.current;
+    const  nav = headerRef.current;
     const main = document.getElementById("main");
     if (!nav || !main) return;
 
     const updateOffset = () => {
-      const isLandscapeMobile = window.matchMedia("(pointer: coarse) and (orientation: landscape)").matches;
+      const isLandscapeMobile = window.matchMedia(
+        "(pointer: coarse) and (orientation: landscape)",
+      ).matches;
       setOffset(nav[`offset${isLandscapeMobile ? "Width" : "Height"}`]);
       main.style.marginLeft = `${isLandscapeMobile ? nav.offsetWidth : 0}px`;
     };
@@ -51,7 +54,9 @@ export default function NavBar({ user, setUser }: UserNullState) {
         <span>F</span>
       </h1>
       <AnimatePresence>
-        {user && (
+        {!user ? (
+          <ThemeToggle style={{ marginLeft: "auto" }} />
+        ) : (
           <motion.nav
              className={css["nav"]}
                initial="hidden"
