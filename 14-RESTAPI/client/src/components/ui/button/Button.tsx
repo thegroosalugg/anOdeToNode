@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { motion, HTMLMotionProps } from "motion/react";
 import { Color } from "@/lib/types/colors";
-import css from "./Button.module.css";
 import { createAnimations } from "@/lib/motion/animations";
+import css from "./Button.module.css";
 
 const animations = createAnimations();
 

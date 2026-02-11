@@ -7,14 +7,13 @@ import { api } from "@/lib/http/endpoints";
 import { SetUser } from "@/lib/types/interface";
 import User from "@/models/User";
 import Input from "../../primitives/Input";
-import Button from "@/components/ui/button/Button";
-import Spinner from "@/components/ui/boundary/loader/Spinner";
+import SpinnerButton from "@/components/ui/button/SpinnerButton";
 import { createVariants } from "@/lib/motion/animations";
 import { saveTokens } from "@/lib/http/token";
 import css from "./AuthForm.module.css";
 
 export default function AuthForm({ setUser }: { setUser: SetUser }) {
-  const { deferring,      defer } = useDefer();
+  const { defer } = useDefer();
   const [isLogin,     setIsLogin] = useState(true);
   const { scope, animate, shake } = useAnimations();
   const { isLoading, error, setError, reqData } = useFetch<User>(); // reqUser is avail from props, but a 2nd isLoading state is needed
@@ -89,9 +88,9 @@ export default function AuthForm({ setUser }: { setUser: SetUser }) {
       >
         {isLogin ? "Switch to Sign Up" : "Already have an account? Login"}
       </motion.button>
-      <Button {...{ variants }} disabled={isLoading} whileTap={{ scale: deferring ? 1 : 0.9 }}>
-        {isLoading ? <Spinner size={20} color="page" /> : label}
-      </Button>
+      <SpinnerButton {...{ variants, isLoading }}>
+        {label}
+      </SpinnerButton>
     </motion.form>
   );
 }

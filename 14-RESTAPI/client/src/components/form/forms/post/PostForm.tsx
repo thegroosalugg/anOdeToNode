@@ -6,10 +6,10 @@ import { api } from "@/lib/http/endpoints";
 import Post from "@/models/Post";
 import Input from "../../primitives/Input";
 import ImagePicker from "../../primitives/ImagePicker";
-import Button from "@/components/ui/button/Button";
+import SpinnerButton from "@/components/ui/button/SpinnerButton";
 import Error from "@/components/ui/boundary/error/Error";
-import Spinner from "@/components/ui/boundary/loader/Spinner";
 import { getEntry } from "@/lib/util/common";
+import { fleetingPopUp } from "@/lib/runtime/runtime";
 import css from "./PostForm.module.css";
 
 interface PostForm {
@@ -54,7 +54,7 @@ export default function PostForm({
       const isSame = titleEntry === title && contentEntry === content && (!file || file.size === 0);
 
       if (isSame) {
-        shoot(".fleeting-pop-up", { dir: 1 });
+        shoot(fleetingPopUp, { dir: 1 });
         return;
       }
     }
@@ -70,9 +70,9 @@ export default function PostForm({
       <Error {...{ error }} />
       <section>
         <ImagePicker {...{ imgURL }} />
-        <Button disabled={isLoading} background={error ? "danger" : "accent"}>
-          {isLoading ? <Spinner size={20} color="page" /> : "Post"}
-        </Button>
+        <SpinnerButton background={error ? "danger" : "accent"} {...{ isLoading }}>
+          Post
+        </SpinnerButton>
       </section>
       <Input control="title" errors={error} defaultValue={title}>
         Title
