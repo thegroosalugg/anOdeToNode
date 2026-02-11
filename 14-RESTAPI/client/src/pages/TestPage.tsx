@@ -10,5 +10,5 @@ export default function TestPage() {
     reqData({ url: api.feed.posts });
   }, [reqData]);
 
-  return <AsyncAwait {...{ isInitial }}>"Content"</AsyncAwait>;
+  return null;
 }
