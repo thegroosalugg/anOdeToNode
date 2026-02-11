@@ -15,7 +15,7 @@
 
   > p {
     color: var(--text-alt);
-    padding: 1rem;
+    padding: 1rem 0.5rem 0.5rem;
     position: relative;
 
     > span {
@@ -29,7 +29,6 @@
 
     > button {
       display: block;
-      margin: -0.5rem;
       margin-left: auto;
       font-size: var(--text-sm);
     }

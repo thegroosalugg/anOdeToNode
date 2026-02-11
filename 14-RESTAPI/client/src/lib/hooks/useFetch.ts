@@ -1,5 +1,5 @@
 import fetchData, { ApiError, Fetch } from "@/lib/http/fetchData";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { SetData } from "../types/common";
 
 interface ReqDataProps<T> extends Fetch {
@@ -11,6 +11,7 @@ export type ReqData<T> = (config: ReqDataProps<T>) => Promise<T | void>;
 
 interface UseFetch<T> {
   isLoading: boolean;
+  isInitial: boolean;
       error:         ApiError | null;
    setError: SetData<ApiError | null>;
     reqData: ReqData<T>;
@@ -32,6 +33,7 @@ export function useFetch<T>(initData?: T) {
   const [data,           setData] = useState<T | null>(initData ?? null);
   const [isLoading, setIsLoading] = useState(false);
   const [error,         setError] = useState<ApiError | null>(null);
+  const isInitial = useRef(true);
 
   const reqData = useCallback(async (config: ReqDataProps<T>) => {
     const { onSuccess, onError, ...fetchConfig } = config;
@@ -48,9 +50,10 @@ export function useFetch<T>(initData?: T) {
       setError(apiError);
       onError?.(apiError); // i.e. setData of other states
     } finally {
+      isInitial.current = false;
       setIsLoading(false);
     }
   }, []);
 
-  return { data, setData, reqData, isLoading, error, setError };
+  return { data, setData, reqData, isLoading, isInitial: isInitial.current, error, setError };
 }

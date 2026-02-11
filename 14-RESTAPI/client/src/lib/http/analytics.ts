@@ -3,7 +3,10 @@ import { captainsLog } from "../util/captainsLog";
 const storageKey = "analytics";
 
 export async function postAnalytics() {
-  if (navigator.webdriver) return;
+  const url = location.href;
+  const { webdriver, userAgent } = navigator;
+  const { width, height } = screen;
+  if (webdriver || url.startsWith("http://") || !width || !height) return;
 
   const localData = localStorage.getItem(storageKey);
   if (localData) {
@@ -12,17 +15,9 @@ export async function postAnalytics() {
     if (isLessThan24Hrs) return;
   }
 
-  const { width, height } = window.screen;
-  if (!width || !height) return;
-
   const date    = new Date().toISOString();
   const headers = { ["Content-Type"]: "application/json", ["x-analytics"]: "true" };
-  const body    = JSON.stringify({
-         date,
-          url: location.href,
-       screen: { width, height },
-    userAgent: navigator.userAgent,
-  });
+  const body    = JSON.stringify({ date, url, screen: { width, height }, userAgent });
 
   try {
     await fetch(import.meta.env.VITE_ANALYTICS_URL, { method: "POST", headers, body });

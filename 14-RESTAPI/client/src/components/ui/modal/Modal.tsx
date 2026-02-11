@@ -4,6 +4,10 @@ import css from "./Modal.module.css";
 import Backdrop from "./Backdrop";
 import { createAnimations } from "@/lib/motion/animations";
 
+const initial = { y: -50 };
+const animate = { y:   0 };
+const animations = createAnimations({ initial, animate });
+
 export default function Modal({
   children,
       open,
@@ -13,9 +17,8 @@ export default function Modal({
       open: boolean;
      close: () => void;
 }) {
-  const    initial = { y: -50 };
-  const    animate = { y:   0 };
-  const animations = createAnimations({ initial, animate });
+  const root = document.getElementById("root");
+  if (!root) return null;
 
   const Element = (
     <AnimatePresence>
@@ -30,5 +33,5 @@ export default function Modal({
     </AnimatePresence>
   );
 
-  return createPortal(Element, document.getElementById("modal-root")!);
+  return createPortal(Element, root);
 }

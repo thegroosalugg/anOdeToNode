@@ -1,9 +1,7 @@
 const createEndpoints = <T extends string>(prefix: T) => ({
    static: <K extends string>(endpoint: K) => `${prefix}/${endpoint}` as const,
   dynamic: <K extends string>(segment?: K) =>
-    segment
-      ? (id: string) => `${prefix}/${segment}/${id}` as const
-      : (id: string) => `${prefix}/${id}`            as const,
+    (id?: string) => id ? `${prefix}/${segment ? `${segment}/` : ""}${id}` as const : null
 });
 
 const feed    = createEndpoints("feed");

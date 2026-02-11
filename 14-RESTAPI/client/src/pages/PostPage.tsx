@@ -17,17 +17,21 @@ import ReplyItem from "@/components/list/reply/ReplyItem";
 import PagedList from "@/components/pagination/PagedList";
 import FormSideBar from "@/components/form/forms/sidebar/FormSideBar";
 import PostForm from "@/components/form/forms/post/PostForm";
-import { getMeta } from "@/lib/util/getMeta";
+import { getDynamicMetadata } from "@/lib/meta/meta";
 import { api } from "@/lib/http/endpoints";
 
 export default function PostPage({ user }: { user: User }) {
-  const { data: post, setData: setPost, reqData: reqPost, isLoading, error, setError } = useFetch<Post | null>();
+  const {
+         data: post,
+      setData: setPost,
+      reqData: reqPost,
+    isInitial,
+    isLoading,
+        error,
+     setError, // !shouldFetch if !postId or post hasn't finished loading
+  } = useFetch<Post | null>();
   const { postId } = useParams();
-  const { setData: setReplies, ...rest } = usePagedFetch<Reply>(
-    api.post.replies(postId ?? ""), // if !postId, req will not fire anyway due to 3rd guard
-    5, // posts per page
-    !!postId && !!post, // !shouldFetch if !postId or post hasn't finished loading
-  );
+  const { setData: setReplies, ...rest } = usePagedFetch<Reply>(api.post.replies(postId), 5, !!postId && !!post);
   const [hasLoaded, setHasLoaded] = useState(false); // trigger for post state
   const [modalState,    setModal] = useState("");
   const navigate   = useNavigate();
@@ -37,8 +41,7 @@ export default function PostPage({ user }: { user: User }) {
   useDepedencyTracker("post", { reqUser: user._id, postId });
 
   useEffect(() => {
-    if (!postId) return;
-    reqPost({ url: api.feed.find(postId) });
+    if (postId) reqPost({ url: api.feed.find(postId) });
   }, [postId, reqPost]);
 
   useEffect(() => {
@@ -108,22 +111,14 @@ export default function PostPage({ user }: { user: User }) {
     };
   }, [hasLoaded, socketRef, postId, setReplies]);
 
-  const onSuccess = () => {
-    closeModal(); // delete actions for creator
-    navigate("/feed");
-  };
-
-  const onError = () => {
-    closeModal();
-  };
-
-  async function deletePost() {
+  function deletePost() {
     if (!postId) return;
-    await reqPost({ url: api.post.delete(postId), method: "DELETE", onSuccess, onError });
+    reqPost({ url: api.post.delete(postId), method: "DELETE", onSuccess: () => navigate("/feed") });
+    closeModal();
   }
 
-  const { title, description } = getMeta(
-    isLoading,
+  const { title, description } = getDynamicMetadata(
+    isInitial,
     post,
     (post) => ({ title: post.title, description: post.title }),
     "Post",
@@ -136,7 +131,7 @@ export default function PostPage({ user }: { user: User }) {
         <PostForm {...{ isOpen: modalState === "edit", post }} />
       </FormSideBar>
       <ConfirmDialog open={modalState === "delete"} onConfirm={deletePost} onCancel={closeModal} />
-      <AsyncAwait {...{ isLoading, error }}>
+      <AsyncAwait {...{ isInitial, isLoading, error }}>
         {post && <PostContent {...{ post, user, setModal, callback: () => setHasLoaded(true) }} />}
       </AsyncAwait>
       {hasLoaded && (

@@ -1,35 +1,62 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useDefer } from "@/lib/hooks/useDefer";
-import { Auth } from "@/lib/types/interface";
-import { AlertsProvider } from "@/components/notifications/context/AlertsProvider";
+import { UserNullState } from "@/lib/types/interface";
+import { AlertsProvider } from "@/components/alerts/context/AlertsProvider";
 import { ChatProvider } from "@/components/chat/context/ChatProvider";
-import Notifications from "../../notifications/Notifications";
+import ThemeToggle from "@/components/theme/ThemeToggle";
+import AlertsMenu from "../../alerts/AlertsMenu";
 import ChatMenu from "../../chat/ChatMenu";
-import IconButton from "../../ui/button/IconButton";
+import UserNavMenu from "@/components/user/actions/user/UserNavMenu";
+import NavButton from "./NavButton";
 import css from "./NavBar.module.css";
 
-export default function NavBar({ user, setUser }: Pick<Auth, "user" | "setUser">) {
+const layoutId = "nav-group";
+
+export default function NavBar({ user, setUser }: UserNullState) {
   const { deferring, defer } = useDefer();
+  const [offset,  setOffset] = useState(0);
   const   navigate   = useNavigate();
   const { pathname } = useLocation();
   const   segments   = pathname.split("/");
   const isActivePath = (paths: string[]) => paths.includes(segments[1]);
+  const    headerRef = useRef<HTMLDivElement>(null);
 
   function navTo(path: string) {
     defer(() => navigate(path), 1200);
   }
 
-  const navProps = { disabled: deferring, layoutId: "nav-group" };
+  useLayoutEffect(() => {
+    const  nav = headerRef.current;
+    const main = document.getElementById("main");
+    if (!nav || !main) return;
+
+    const updateOffset = () => {
+      const isLandscapeMobile = window.matchMedia(
+        "(pointer: coarse) and (orientation: landscape)",
+      ).matches;
+      setOffset(nav[`offset${isLandscapeMobile ? "Width" : "Height"}`]);
+      main.style.marginLeft = `${isLandscapeMobile ? nav.offsetWidth : 0}px`;
+    };
+
+    const observer = new ResizeObserver(updateOffset);
+    observer.observe(nav);
+    updateOffset();
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <header className={css["header"]}>
+    <header className={css["header"]} ref={headerRef}>
       <h1 onClick={() => navTo("/")}>
         <span>Friendface</span> {/* large display swap */}
         <span>F</span>
       </h1>
       <AnimatePresence>
-        {user && (
+        {!user ? (
+          <ThemeToggle style={{ marginLeft: "auto" }} />
+        ) : (
           <motion.nav
              className={css["nav"]}
                initial="hidden"
@@ -37,36 +64,31 @@ export default function NavBar({ user, setUser }: Pick<Auth, "user" | "setUser">
                   exit={{ opacity: 0 }}
             transition={{ staggerChildren: 0.2 }}
           >
-            <IconButton
+            <NavButton
                   icon="rss"
               isActive={isActivePath(["feed", "post"])}
                onClick={() => navTo("/feed")}
-              {...navProps}
+              disabled={deferring}
+              {...{ layoutId }}
             >
               Feed
-            </IconButton>
-            <IconButton
+            </NavButton>
+            <NavButton
                   icon="users"
               isActive={isActivePath(["social", "user"])}
                onClick={() => navTo("/social")}
-              {...navProps}
+              disabled={deferring}
+              {...{ layoutId }}
             >
               Social
-            </IconButton>
+            </NavButton>
             <AlertsProvider {...{ user, setUser }}>
-              <Notifications />
+              <AlertsMenu />
             </AlertsProvider>
-            <ChatProvider   {...{ user, setUser }}>
+            <ChatProvider {...{ user, setUser }}>
               <ChatMenu />
             </ChatProvider>
-            <IconButton
-                  icon="user"
-              isActive={pathname === "/"}
-               onClick={() => navTo("/")}
-              {...navProps}
-            >
-              {user.name}
-            </IconButton>
+            <UserNavMenu {...{ user, setUser, pathname, navTo, deferring, layoutId, offset }} />
           </motion.nav>
         )}
       </AnimatePresence>

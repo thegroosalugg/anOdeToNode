@@ -2,15 +2,14 @@ import { FormEvent, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { useDefer } from "@/lib/hooks/useDefer";
 import { UserState } from "@/lib/types/interface";
 import User from "@/models/User";
 import Button from "@/components/ui/button/Button";
 import Input from "../../primitives/Input";
-import Loader from "@/components/ui/boundary/loader/Loader";
+import Spinner from "@/components/ui/boundary/loader/Spinner";
 import { getEntry } from "@/lib/util/common";
-import css from "./EditAbout.module.css";
 import { api } from "@/lib/http/endpoints";
+import css from "./EditAbout.module.css";
 
 interface EditAbout extends UserState {
      isOpen: boolean;
@@ -18,9 +17,8 @@ interface EditAbout extends UserState {
 }
 
 export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal }: EditAbout) {
-  const { reqData, error: errors, setError } = useFetch<User["about"]>();
+  const { reqData, isLoading, error: errors, setError } = useFetch<User["about"]>();
   const { scope, shake, shoot } = useAnimations();
-  const { deferring,    defer } = useDefer();
   const { about } = user;
   const { home, work, study, bio } = about ?? {};
 
@@ -44,35 +42,32 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
   function submitHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const request = async () => {
-      const data = new FormData(scope.current);
+    if (isLoading) return;
+    const data = new FormData(scope.current);
 
-      const entries = {
-         home: getEntry(data, "home"),
-         work: getEntry(data, "work"),
-        study: getEntry(data, "study"),
-          bio: getEntry(data, "bio"),
-      };
-
-      const isSame = Object.entries(entries).every(([key, val]) => val === (about?.[key as keyof typeof about] ?? ""));
-      if (isSame) {
-        shoot(".fleeting-pop-up");
-        return;
-      }
-
-      await reqData({ url: api.profile.info, method: "POST", data, onError, onSuccess });
+    const entries = {
+        home: getEntry(data, "home"),
+        work: getEntry(data, "work"),
+       study: getEntry(data, "study"),
+         bio: getEntry(data, "bio"),
     };
 
-    defer(request, 1000);
+    const isSame = Object.entries(entries).every(([key, val]) => val === (about?.[key as keyof typeof about] ?? ""));
+    if (isSame) {
+      shoot(".fleeting-pop-up");
+      return;
+    }
+
+    reqData({ url: api.profile.info, method: "POST", data, onError, onSuccess });
   }
 
   return (
     <form className={css["edit-about"]} ref={scope} onSubmit={submitHandler}>
-      <p className="fleeting-pop-up" style={{ top: "1rem", left: "0.5rem" }}>
+      <p className="fleeting-pop-up" style={{ top: 0, right: 0 }}>
         No changes
       </p>
-      <Button disabled={deferring} background={errors ? "danger" : "accent"}>
-        {deferring ? <Loader size="xs" color="page" /> : "Update"}
+      <Button disabled={isLoading} background={errors ? "danger" : "accent"}>
+        {isLoading ? <Spinner size={20} color="page" /> : "Update"}
       </Button>
       <Input control="home" {...{ errors }} defaultValue={home}>
         <FontAwesomeIcon icon="house" /> Home

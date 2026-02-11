@@ -423,14 +423,14 @@
   position: absolute; /* set position per component */
   z-index: 2;
   opacity: 0;
-  padding: 0.125rem 0.5rem;
-  height: fit-content;
   width: fit-content;
-  background: var(--text);
-  color: var(--page);
-  font-weight: 600;
+  padding: var(--padding-xs);
   border-radius: var(--rounded-lg);
+  border: var(--border);
+  color: var(--text);
+  font-weight: 600;
   box-shadow: var(--shadow-pop);
+  pointer-events: none;
 }
 
 .no-scrollbars  { &::-webkit-scrollbar { height: 0px !important; width: 0px !important; }}

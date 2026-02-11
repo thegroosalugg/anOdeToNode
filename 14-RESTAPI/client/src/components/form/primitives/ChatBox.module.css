@@ -42,5 +42,6 @@
 
     > span { max-width: 100%; }
     &::-webkit-scrollbar-thumb { background: var(--page); }
+    &:disabled { pointer-events: none; }
   }
 }

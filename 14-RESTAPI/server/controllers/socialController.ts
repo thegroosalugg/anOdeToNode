@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import socket from '../socket';
-import User, { _friends, _full, IFriend } from '../models/User';
+import User, { _friends, _full, FriendAction } from '../models/User';
 import AppError from '../models/Error';
 
 const getUsers: RequestHandler = async (req, res, next) => {
@@ -42,39 +42,17 @@ const friendRequest: RequestHandler = async (req, res, next) => {
   const user = req.user;
   if (!user) return next(AppError.devErr());
 
-  try {
-    const { userId, action } = req.params;
-    const peer = await User.findById(userId);
+  const { userId, action } = req.params;
 
+  const isFriendAction = (value: string): value is FriendAction => ['add', 'accept', 'delete'].includes(value);
+  if (!isFriendAction(action)) return next(new AppError(400, 'Invalid action'));
+
+  try {
+    const peer = await User.findById(userId);
     if (!peer) return next(new AppError(404, 'User not found'));
 
-    const peerIndex = peer.friends.findIndex(
-      (friend) => friend.user.toString() === user._id.toString()
-    );
-
-    const userIndex = user.friends.findIndex(
-      (friend) => friend.user.toString() === peer._id.toString()
-    );
-
-    switch (action) {
-      case 'add': // meta is created by Mongoose, but required here, therefore type asserted
-        peer.friends.push({ user: user._id, initiated: false } as IFriend);
-        user.friends.push({ user: peer._id, initiated: true  } as IFriend);
-        break;
-      case 'accept':
-        const date = new Date();
-        peer.friends[peerIndex].accepted   = true;
-        user.friends[userIndex].accepted   = true;
-        peer.friends[peerIndex].acceptedAt = date;
-        user.friends[userIndex].acceptedAt = date;
-        break;
-      case 'delete':
-        peer.friends.splice(peerIndex, 1);
-        user.friends.splice(userIndex, 1);
-        break;
-      default:
-        return next(new AppError(400, 'Invalid action'));
-    }
+    const error = user.request(peer, action);
+    if (error) return next(new AppError(400, 'Request invalid', error));
 
     await peer.save();
     await user.save();

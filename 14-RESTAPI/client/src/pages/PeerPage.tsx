@@ -16,17 +16,17 @@ import FriendsList from "@/components/list/user/FriendsList";
 import PagedList from "@/components/pagination/PagedList";
 import PostItem from "@/components/list/post/PostItem";
 import SocialActions from "@/components/user/actions/peer/SocialActions";
-import { getMeta } from "@/lib/util/getMeta";
+import { getDynamicMetadata } from "@/lib/meta/meta";
 
 export default function PeerPage({ user }: { user: User }) {
-  const { data: peer, isLoading, error, reqData } = useFetch<User | null>();
+  const { data: peer, isInitial, error, reqData } = useFetch<User | null>();
   const {  userId  } = useParams();
   const { pathname } = useLocation();
   const    isPresent = useIsPresent(); // returns false when component is exiting with <AnimatePresense>
   const    socketRef = useSocket("peer");
   const     navigate = useNavigate();
   // shouldFetch is userId defined and component isPresent (not exiting with <AnimatePresense>)
-  const { setData, ...rest } = usePagedFetch<Post>(api.social.userPosts(userId ?? ""), 4, !!userId && isPresent);
+  const { setData, ...rest } = usePagedFetch<Post>(api.social.userPosts(userId), 4, !!userId && isPresent);
 
   useDepedencyTracker("peer", {
     pathname,
@@ -85,8 +85,8 @@ export default function PeerPage({ user }: { user: User }) {
     };
   }, [isPresent, socketRef, peer?._id, setData]);
 
-  const { title, description } = getMeta(
-    isLoading,
+  const { title, description } = getDynamicMetadata(
+    isInitial,
     peer,
     (peer) => ({ title: peer.name, description: `${peer.name}'s profile` }),
     "User",
@@ -97,7 +97,7 @@ export default function PeerPage({ user }: { user: User }) {
   return (
     <>
       <Meta {...{ description }}>{title}</Meta>
-      <AsyncAwait {...{ isLoading, error }}>
+      <AsyncAwait {...{ isInitial, error }}>
         {peer && (
           <>
             <UserDashboard {...{ target: peer, watcher: user }}>

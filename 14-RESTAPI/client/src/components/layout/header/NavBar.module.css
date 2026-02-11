@@ -1,9 +1,9 @@
 .header {
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem;
-  height: var(--nav-size);
   overflow-x: scroll;
   background: var(--accent);
   box-shadow: var(--shadow-pop);
@@ -14,8 +14,6 @@
     flex-direction: column;
     position: fixed;
     height: 100vh;
-    width: var(--nav-size);
-    overflow-x: hidden;
   }
 
   > h1 {
@@ -26,6 +24,7 @@
     font-weight: 900;
     padding: var(--padding-sm);
     cursor: pointer;
+
     span {
       &:last-of-type { display: none; }
       @media (max-width: 768px), (pointer: coarse) and (orientation: landscape) {
@@ -43,7 +42,11 @@
   align-items: center;
   gap: 0.5rem;
 
-  @media (pointer: coarse) and (orientation: landscape) { flex-direction: column; --margin: 0; }
+  @media (pointer: coarse) and (orientation: landscape) {
+    --margin: auto;
+    flex-direction: column;
+  }
+
   > button {
     color: var(--page);
     &:last-of-type { margin-left: var(--margin); }

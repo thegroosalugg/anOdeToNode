@@ -11,16 +11,22 @@ export type FetchState<T, K extends string = "data"> = {
 } & {
   [P in `req${Capitalize<K>}`]: ReqData<T>;
 } & {
+  isInitial: boolean;
   isLoading: boolean;
       error: ApiError | null;
    setError: SetData<ApiError | null>;
 };
 
-export type Auth = FetchState<User | null, "user">
+export type SetUser = SetData<User | null>;
+
+export interface UserNullState {
+       user: User | null;
+    setUser: SetUser;
+}
 
 export interface UserState {
      user: User;
-  setUser: SetData<User | null>
+  setUser: SetUser;
 };
 
 export interface UserPair {

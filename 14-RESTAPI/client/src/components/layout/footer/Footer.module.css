@@ -5,7 +5,9 @@
   transition: var(--transition);
 
   a, p { transition: var(--transition); }
-  a:hover { font-weight: 700; }
+  a:hover:not(.no-hover) { font-weight: 700; }
+
+  @media screen and (pointer: coarse) and (orientation: landscape) { display: none; }
 }
 
 .top-section, .bottom-section {
@@ -35,7 +37,7 @@
     max-width: 100%;
 
     &:last-of-type {
-      font-weight: 500;
+      font-weight: 600;
 
       @media (min-width: 768px) { margin-left: auto; }
     }
@@ -64,8 +66,4 @@
     :nth-child(1) { text-align: start; }
     :nth-child(3) { text-align: end;   }
   }
-}
-
-@media screen and (pointer: coarse) and (orientation: landscape) {
-  .footer { display: none; }
 }

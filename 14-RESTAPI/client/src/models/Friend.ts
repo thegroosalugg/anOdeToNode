@@ -1,8 +1,8 @@
 import { Meta } from "@/lib/types/common";
-import { UserPair } from "@/lib/types/interface";
 import User from "./User";
 
-interface UserPairExt extends UserPair {
+interface UserPair {
+   target: User;
   watcher: User; // remove optional here
 }
 
@@ -23,10 +23,10 @@ export default class Friend {
     return Friend.isUser(user) ? user._id : user;
   };
 
-  static getConnection = ({ target, watcher } : UserPairExt) =>
+  static getConnection = ({ target, watcher }: UserPair) =>
     target.friends.find((friend) => Friend.getId(friend) === watcher._id);
 
-  static getMutuals = ({ target, watcher } : UserPairExt) =>
+  static getMutuals = ({ target, watcher }: UserPair) =>
     target.friends.filter(
       (their) =>
         Friend.getId(their) !== watcher._id &&

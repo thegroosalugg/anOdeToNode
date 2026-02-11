@@ -35,5 +35,8 @@ export default function SideBar({
     </>
   );
 
-  return createPortal(Element, document.getElementById("modal-root")!);
+  const root = document.getElementById("root");
+  if (!root) return null;
+  
+  return createPortal(Element, root);
 }

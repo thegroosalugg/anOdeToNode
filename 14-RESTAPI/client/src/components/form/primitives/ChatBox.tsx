@@ -2,9 +2,9 @@ import { FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { useDefer } from "@/lib/hooks/useDefer";
-import Loader from "../../ui/boundary/loader/Loader";
 import { Animations, createAnimations } from "@/lib/motion/animations";
+import { ApiUrl } from "@/lib/http/fetchData";
+import BouncingDots from "@/components/ui/boundary/loader/BouncingDots";
 import css from "./ChatBox.module.css";
 
 export default function ChatBox({
@@ -13,13 +13,12 @@ export default function ChatBox({
   animations = {},
    ...props
 }: {
-          url: string;
+          url: ApiUrl;
         rows?: number;
   animations?: Animations
 }) {
   const { reqData, isLoading, error, setError } = useFetch();
   const { scope, animate, shake } = useAnimations();
-  const { deferring, defer } = useDefer();
 
   const onSuccess = () => {
     setError(null);
@@ -51,9 +50,11 @@ export default function ChatBox({
     shake("button");
   };
 
-  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isLoading) return;
     const data = new FormData(e.currentTarget);
-    await reqData({ url, method: "POST", data, onSuccess, onError });
+    reqData({ url, method: "POST", data, onSuccess, onError });
   };
 
   return (
@@ -61,17 +62,14 @@ export default function ChatBox({
             ref={scope}
       className={css["chat-box"]}
       {...createAnimations({...animations})}
-      onSubmit={(e) => {
-        e.preventDefault();
-        defer(() => submitHandler(e), 1500);
-      }}
+      onSubmit={submitHandler}
       {...props}
     >
       <textarea name="content" aria-label="Chat message" {...{ rows }} />
-      <motion.button disabled={deferring}>
+      <motion.button disabled={isLoading}>
         <AnimatePresence mode="wait">
           {isLoading ? (
-            <Loader key="loader" size="xs" color="page" />
+            <BouncingDots key="loader" size={5} color="page" />
           ) : (
             <motion.span {...createAnimations({ transition: { delay: 0.2 } })}>
               {/* content = 422 form errors, message = all other errors */}

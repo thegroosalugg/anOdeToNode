@@ -5,7 +5,9 @@ export default function Footer() {
   return (
     <footer className={css["footer"]}>
       <section className={css["top-section"]}>
-        <p>FriendFace</p>
+        <p>
+          <Link to="/" className={css["no-hover"]}>FriendFace</Link>
+        </p>
         <nav>
           <Link to="/about">About</Link>
           <Link to="/terms">Terms & Conditions</Link>

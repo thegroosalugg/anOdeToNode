@@ -2,8 +2,8 @@
   --color: var(--accent-alt);
   --background: var(--page-alt);
   align-self: center;
-  max-width: 250px;
-  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
   overflow-x: scroll;
   display: flex;
   flex-direction: column;

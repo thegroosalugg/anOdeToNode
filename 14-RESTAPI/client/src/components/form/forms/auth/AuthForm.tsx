@@ -1,27 +1,29 @@
 import { useState } from "react";
-import { Auth } from "@/lib/types/interface";
 import { motion } from "motion/react";
+import { useFetch } from "@/lib/hooks/useFetch";
 import { useDefer } from "@/lib/hooks/useDefer";
 import { useAnimations } from "@/lib/hooks/useAnimations";
 import { api } from "@/lib/http/endpoints";
+import { SetUser } from "@/lib/types/interface";
 import User from "@/models/User";
 import Input from "../../primitives/Input";
 import Button from "@/components/ui/button/Button";
-import Loader from "@/components/ui/boundary/loader/Loader";
+import Spinner from "@/components/ui/boundary/loader/Spinner";
 import { createVariants } from "@/lib/motion/animations";
 import { saveTokens } from "@/lib/http/token";
 import css from "./AuthForm.module.css";
 
-export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) {
+export default function AuthForm({ setUser }: { setUser: SetUser }) {
   const { deferring,      defer } = useDefer();
   const [isLogin,     setIsLogin] = useState(true);
   const { scope, animate, shake } = useAnimations();
+  const { isLoading, error, setError, reqData } = useFetch<User>(); // reqUser is avail from props, but a 2nd isLoading state is needed
   const label = isLogin ? "Login" : "Sign Up";
   const variants = createVariants({ transition: { duration: 0.2 } });
 
   function switchForm() {
     defer(() => {
-      animate(scope.current, { opacity: [1, 0, 1] }, { duration: 1 });
+      if (scope.current) animate(scope.current, { opacity: [1, 0, 1] }, { duration: 1 });
       setTimeout(() => {
         setError(null);
         setIsLogin((prev) => !prev);
@@ -31,6 +33,7 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
 
   const onSuccess = (user: User) => {
     saveTokens(user);
+    setUser(user);
     setError(null);
   };
 
@@ -40,17 +43,16 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    defer(async () => {
-      const data = new FormData(e.currentTarget); // data parsed by multer
-      // const data = Object.fromEntries(formData.entries()); // if application/json
-      await reqUser({
-              url: isLogin ? api.user.login : api.user.signup,
-           method: "POST",
-             data,
-        onSuccess,
-          onError,
-      });
-    }, 1000);
+    if (isLoading) return;
+    const data = new FormData(e.currentTarget); // data parsed by multer
+    // const data = Object.fromEntries(formData.entries()); // if application/json
+    await reqData({
+            url: isLogin ? api.user.login : api.user.signup,
+          method: "POST",
+            data,
+      onSuccess,
+        onError,
+    });
   }
 
   return (
@@ -61,7 +63,6 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
        className={`${css["auth-form"]} ${isLogin ? css["is-login"] : ""}`}
          initial="hidden"
          animate="visible"
-            exit={{ opacity: 0, transition: { duration: 0.8 } }}
       transition={{ staggerChildren: 0.2 }}
     >
       <motion.h2 className="truncate" {...{ variants }}>
@@ -88,12 +89,8 @@ export default function AuthForm({ isLoading, error, setError, reqUser }: Auth) 
       >
         {isLogin ? "Switch to Sign Up" : "Already have an account? Login"}
       </motion.button>
-      <Button
-        {...{ variants }}
-        disabled={deferring}
-        whileTap={{ scale: deferring ? 1 : 0.9 }}
-      >
-        {isLoading ? <Loader size="xs" color="page" /> : label}
+      <Button {...{ variants }} disabled={isLoading} whileTap={{ scale: deferring ? 1 : 0.9 }}>
+        {isLoading ? <Spinner size={20} color="page" /> : label}
       </Button>
     </motion.form>
   );

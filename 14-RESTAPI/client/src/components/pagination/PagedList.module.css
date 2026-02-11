@@ -5,7 +5,6 @@
 }
 
 .list {
-  position: relative; /* prevents out of viewport <li> shooting across screen on transition */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,7 +12,7 @@
   padding: 0.5rem;
   overflow-y: scroll;
 
-  > li { width: 100%; position: relative; } /* must be set on <li> too*/
+  > li { width: 100%; }
 }
 
 .list-header {
@@ -22,13 +21,16 @@
   margin: 0 auto;
   padding: 1rem;
 
-  &.title {
+  &.header-title {
     position: relative; /* enable stacking relative to .list */
     z-index: 1; /* stack on top of .list */
+    display: flex;
+    gap: 0.125rem;
+    align-items: flex-end;
+    padding: 0 1.25rem;
     text-decoration: underline;
     text-underline-offset: 0.2rem;
     text-decoration-thickness: 1px;
-    padding: 0 1.5rem;
     transform: translateY(0.2rem);
   }
 }

@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
-import { UseDefer, useDefer } from "@/lib/hooks/useDefer";
 import { Direction } from "@/lib/types/common";
+import { ApiUrl } from "@/lib/http/fetchData";
 
 export type InitState<T> = {
   docCount: number;
@@ -11,38 +11,39 @@ export type InitState<T> = {
 
 export type Paginated<T = null> = {
          data: InitState<T>;
-   changePage: (page: number) => void;
+    isLoading: boolean;
         limit: number;
   currentPage: number;
+   changePage: (page: number) => void;
     direction: Direction;
-    deferring: UseDefer["deferring"];
 };
 
-export function usePagedFetch<T>(baseURL: string, limit: number, shouldFetch = true) {
-  const initState: InitState<T>         = { docCount: 0, items: [] };
-  const { data,    reqData,   ...rest } = useFetch(initState);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [direction,       setDirection] = useState<Direction>(1)
-  const { deferring,            defer } = useDefer();
-  const isInitial = useRef(true);
+export function usePagedFetch<T>(apiURL: ApiUrl, limit: number, shouldFetch = true) {
+  const initState: InitState<T>               = { docCount: 0, items: [] };
+  const { data, isLoading, reqData, ...rest } = useFetch(initState);
+  const [searchParams,       setSearchParams] = useSearchParams();
+  const [direction,             setDirection] = useState<Direction>(1)
 
   const currentPage = +(searchParams.get("page") ?? 1);
-  const url = `${baseURL}?page=${currentPage}&limit=${limit}`;
+  const url = `${apiURL}?page=${currentPage}&limit=${limit}`;
 
   function changePage(nextPage: number) {
-    defer(() => {
-      setSearchParams({ page: String(nextPage) });
-      setDirection(nextPage > currentPage ? 1 : -1);
-    }, 500);
+    if (isLoading) return; // deferring tied to request progress state
+    setSearchParams({ page: String(nextPage) });
+    setDirection(nextPage > currentPage ? 1 : -1);
   }
 
   useEffect(() => {
-    if (!shouldFetch) return;
-
-    reqData({ url }).finally(() => {
-      if (isInitial.current) isInitial.current = false; // loader only on initial render; thereafter disabled
-    });
+    if (shouldFetch) reqData({ url });
   }, [url, shouldFetch, reqData]);
 
-  return { ...rest, data, limit, currentPage, direction, changePage, deferring, isLoading: isInitial.current };
+  return {
+        ...rest,
+           data,
+      isLoading,
+          limit,
+    currentPage,
+     changePage,
+      direction,
+  };
 }
