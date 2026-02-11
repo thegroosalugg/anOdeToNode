@@ -1,8 +1,9 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { useDefer } from "@/lib/hooks/useDefer";
 import { UserNullState } from "@/lib/types/interface";
+import { SetData } from "@/lib/types/common";
 import { AlertsProvider } from "@/components/alerts/context/AlertsProvider";
 import { ChatProvider } from "@/components/chat/context/ChatProvider";
 import ThemeToggle from "@/components/theme/ThemeToggle";
@@ -12,32 +13,33 @@ import UserNavMenu from "@/components/user/actions/user/UserNavMenu";
 import NavButton from "./NavButton";
 import css from "./NavBar.module.css";
 
+export type OffSet = { width: number, height: number };
+
+interface NavBar extends UserNullState {
+     offset: OffSet;
+  setOffset: SetData<OffSet>;
+}
+
 const layoutId = "nav-group";
 
-export default function NavBar({ user, setUser }: UserNullState) {
+export default function NavBar({ user, setUser, offset, setOffset }: NavBar) {
   const { deferring, defer } = useDefer();
-  const [offset,  setOffset] = useState(0);
   const   navigate   = useNavigate();
   const { pathname } = useLocation();
   const   segments   = pathname.split("/");
   const isActivePath = (paths: string[]) => paths.includes(segments[1]);
-  const    headerRef = useRef<HTMLDivElement>(null);
+  const   headerRef  = useRef<HTMLDivElement>(null);
 
   function navTo(path: string) {
     defer(() => navigate(path), 1200);
   }
 
   useLayoutEffect(() => {
-    const  nav = headerRef.current;
-    const main = document.getElementById("main");
-    if (!nav || !main) return;
+    const nav = headerRef.current;
+    if (!nav) return;
 
     const updateOffset = () => {
-      const isLandscapeMobile = window.matchMedia(
-        "(pointer: coarse) and (orientation: landscape)",
-      ).matches;
-      setOffset(nav[`offset${isLandscapeMobile ? "Width" : "Height"}`]);
-      main.style.marginLeft = `${isLandscapeMobile ? nav.offsetWidth : 0}px`;
+      setOffset({ height: nav.offsetHeight, width: nav.offsetWidth });
     };
 
     const observer = new ResizeObserver(updateOffset);
@@ -45,7 +47,7 @@ export default function NavBar({ user, setUser }: UserNullState) {
     updateOffset();
 
     return () => observer.disconnect();
-  }, []);
+  }, [setOffset]);
 
   return (
     <header className={css["header"]} ref={headerRef}>
