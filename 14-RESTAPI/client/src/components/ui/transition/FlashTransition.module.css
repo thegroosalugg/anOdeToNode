@@ -4,4 +4,6 @@
   z-index: 40;
   pointer-events: none;
   background: var(--page);
+
+  @media (pointer: coarse) and (orientation: landscape) { background: var(--accent);}
 }

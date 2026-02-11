@@ -14,6 +14,7 @@ import { postAnalytics } from "@/lib/http/analytics";
 import User from "@/models/User";
 import { UserNullState } from "@/lib/types/interface";
 import { getStaticMetadata } from "@/lib/meta/meta";
+import { isLandscapeMobile } from "@/lib/runtime/runtime";
 
 export default function RootLayout({ children }: { children: (props: UserNullState) => ReactNode }) {
   const { pathname } = useLocation();
@@ -36,16 +37,13 @@ export default function RootLayout({ children }: { children: (props: UserNullSta
 
   if (isInitial) return <SplashScreen />;
 
-  const isLandscapeMobile = window.matchMedia(
-    "(pointer: coarse) and (orientation: landscape)",
-  ).matches;
-
   return (
     <>
       <Meta {...{ description }}>{title}</Meta>
-      <FlashTransition trigger={pathname} />
+      {/* user to user have own page transitions and are excluded from flash triggers */}
+      <FlashTransition trigger={pathname.startsWith("/user") ? "static" : pathname} />
       <NavBar {...{ user, setUser, offset, setOffset }} />
-      <main id="main" style={{ marginLeft: isLandscapeMobile ? offset.width : 0 }}>
+      <main id="main" style={{ marginLeft: isLandscapeMobile() ? offset.width : 0 }}>
         {children({ user, setUser })}
       </main>
       <Footer />
