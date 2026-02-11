@@ -1,0 +1,7 @@
+.flash-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background: var(--page);
+}

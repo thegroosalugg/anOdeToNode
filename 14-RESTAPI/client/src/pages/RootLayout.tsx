@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Meta from "@/components/meta/Meta";
 import SplashScreen from "@/components/landing/SplashScreen";
+import FlashTransition from "@/components/ui/transition/FlashTransition";
 import NavBar from "@/components/layout/header/NavBar";
 import Footer from "@/components/layout/footer/Footer";
 import { useFetch } from "@/lib/hooks/useFetch";
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: (props: UserNullSta
   return (
     <>
       <Meta {...{ description }}>{title}</Meta>
+      <FlashTransition trigger={pathname} />
       <NavBar {...{ user, setUser, offset, setOffset }} />
       <main id="main" style={{ marginLeft: isLandscapeMobile ? offset.width : 0 }}>
         {children({ user, setUser })}
