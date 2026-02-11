@@ -14,26 +14,22 @@
   --danger: var(--rust-600);
   --success: var(--lime-700);
   --transparent: oklch(100% 0.00011 271.152 / 0);
-
-  @media (prefers-color-scheme: dark) {
-    --page: var(--stone-800);
-    --page-alt: var(--stone-700);
-    --text: var(--stone-100);
-    --text-alt: var(--stone-300);
-    --accent: var(--steel-400);
-    --accent-alt: var(--steel-300);
-    --hover: var(--gray-100);
-    --danger: var(--rust-500);
-    --success: var(--lime-500);
-    --transparent: oklch(0% 0 0 / 0);
-  }
 }
 
-@media (prefers-color-scheme: dark) {
-  html { color-scheme: dark; }
+[data-theme='dark'] {
+  --page: var(--stone-800);
+  --page-alt: var(--stone-700);
+  --text: var(--stone-100);
+  --text-alt: var(--stone-300);
+  --accent: var(--steel-400);
+  --accent-alt: var(--steel-300);
+  --hover: var(--gray-100);
+  --danger: var(--rust-500);
+  --success: var(--lime-500);
+  --transparent: oklch(0% 0 0 / 0);
 }
 
-/* <CSSReset> */
+/* ### CSSReset */
 *, *::before, *::after { box-sizing: border-box; }
 *                      { margin: 0; padding: 0;  }
 
@@ -44,7 +40,7 @@ img, picture, video, canvas, svg {         display:      block; }
 button                           {          cursor:    pointer; }
 a, button, article  { -webkit-tap-highlight-color: transparent; } /* removes mobile tap highlight */
 
-a, p, h1, h2, h3, h4, h5, h6, button, label, input, textarea, select, option {
+a, p, h1, h2, h3, h4, h5, h6, button, label, input, textarea, select, option, dialog {
   overflow-wrap: break-word;
            font: inherit;
           color: inherit;
@@ -60,7 +56,7 @@ input[type='number'] { appearance: textfield;   -moz-appearance: textfield; }
 @supports (scrollbar-color: auto) and (not selector(::-webkit-scrollbar)) {
   * { scrollbar-width: thin; scrollbar-color: var(--text) transparent; }
 }
-/* </CSSReset> */
+/* CSSReset ### */
 
 body {
   color: var(--text);
