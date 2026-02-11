@@ -37,7 +37,7 @@ export default function PostContent({
        className={css["post-content"]}
          initial="hidden"
          animate="visible"
-      transition={{ staggerChildren: 0.5, delayChildren: 0.5 }}
+      transition={{ staggerChildren: 0.5 }}
       onAnimationComplete={callback}
     >
       <NameTag user={creator} onClick={() => navigate("/user/" + creator._id)} bold align="end" {...{ variants }} />

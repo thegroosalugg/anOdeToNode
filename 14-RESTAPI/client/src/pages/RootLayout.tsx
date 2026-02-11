@@ -1,5 +1,4 @@
 import { ReactNode, useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
 import { useLocation } from "react-router-dom";
 import Meta from "@/components/meta/Meta";
 import SplashScreen from "@/components/landing/SplashScreen";
@@ -44,17 +43,9 @@ export default function RootLayout({ children }: { children: (props: UserNullSta
     <>
       <Meta {...{ description }}>{title}</Meta>
       <NavBar {...{ user, setUser, offset, setOffset }} />
-      <AnimatePresence mode="wait">
-        <motion.main
-                  id="main"
-                 key={pathname}
-               style={{ marginLeft: isLandscapeMobile ? offset.width : 0 }}
-                exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        >
-          {children({ user, setUser })}
-        </motion.main>
-      </AnimatePresence>
+      <main id="main" style={{ marginLeft: isLandscapeMobile ? offset.width : 0 }}>
+        {children({ user, setUser })}
+      </main>
       <Footer />
     </>
   );
