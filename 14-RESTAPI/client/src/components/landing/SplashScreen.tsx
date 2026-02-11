@@ -1,17 +1,18 @@
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { createVariants } from "@/lib/motion/animations";
+import { createAnimations, createVariants } from "@/lib/motion/animations";
 import BouncingDots from "../ui/boundary/loader/BouncingDots";
 import css from "./SplashScreen.module.css";
 
-const variants = createVariants()
+const variants = createVariants();
+const animations = createAnimations();
 
 export default function SplashScreen() {
   const [index, setIndex] = useState(0);
 
   const messages = [
     "Please wait while Render's server wakes",
-    "This should take approximatels 90 seconds"
+    "This should take approximately 90 seconds"
   ];
 
   useEffect(() => {
@@ -31,9 +32,11 @@ export default function SplashScreen() {
         transition={{ staggerChildren: 0.25 }}
       >
         <motion.h1 {...{ variants }}>FriendFace</motion.h1>
-        <motion.p key={index} {...{ variants }} animate={{ opacity: [0, 1], transition: { duration: 1 } }}>
-          {messages[index]}
-        </motion.p>
+        <AnimatePresence mode="wait">
+          <motion.p key={index} {...{ variants }} {...animations}>
+            {messages[index]}
+          </motion.p>
+        </AnimatePresence>
         <BouncingDots {...{ variants }} />
       </motion.div>
     </motion.div>
