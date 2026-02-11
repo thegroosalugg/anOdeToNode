@@ -1,0 +1,9 @@
+.theme-toggle {
+  display: flex;
+  align-self: center;
+  width: 40px;
+  padding: 0.1rem;
+  border: var(--border);
+  border-radius: 50px;
+  background: var(--page);
+}

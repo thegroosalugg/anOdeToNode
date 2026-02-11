@@ -30,9 +30,10 @@
     border-radius: var(--rounded) 0 var(--rounded) var(--rounded);
   }
 
-  button {
-    width: 100%;
+  button:not([data-theme-toggle]) {
+    width: 64px;
     font-weight: 600;
+    text-align: left;
     transition: font-weight var(--transition);
     background: none;
     border: none;
