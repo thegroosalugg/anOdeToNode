@@ -88,8 +88,8 @@ export default function UserNavMenu({
     </div>
   );
 
-  const rootElement = document.getElementById("root");
-  const Menu = rootElement ? createPortal(element, rootElement) : element;
+  const root = document.getElementById("root");
+  const Menu = root ? createPortal(element, root) : element;
 
   return (
     <>

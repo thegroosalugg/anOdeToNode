@@ -17,8 +17,8 @@ export default function Modal({
       open: boolean;
      close: () => void;
 }) {
-  const modalRoot = document.getElementById("modal-root");
-  if (!modalRoot) return null;
+  const root = document.getElementById("root");
+  if (!root) return null;
 
   const Element = (
     <AnimatePresence>
@@ -33,5 +33,5 @@ export default function Modal({
     </AnimatePresence>
   );
 
-  return createPortal(Element, modalRoot);
+  return createPortal(Element, root);
 }
