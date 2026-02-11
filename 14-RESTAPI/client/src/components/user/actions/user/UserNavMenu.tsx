@@ -6,14 +6,15 @@ import NavButton from "@/components/layout/header/NavButton";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import { removeRefreshToken } from "@/lib/http/token";
-import css from "./UserNavMenu.module.css";
 import { isLandscapeMobile } from "@/lib/runtime/runtime";
+import { Routes, ROUTES } from "@/routes/paths";
+import css from "./UserNavMenu.module.css";
 
 const userNavMenu = "user-nav-menu";
 
 interface UserNavMenu extends UserState {
    pathname: string;
-      navTo: (path: string) => void;
+      navTo: (path: Routes) => void;
   deferring: boolean;
    layoutId: string;
      offset: OffSet;
@@ -47,7 +48,7 @@ export default function UserNavMenu({
 
   const navToProfile = () => {
     closeMenu();
-    navTo("/");
+    navTo(ROUTES.home);
   };
 
   const confirmLogout = () => {

@@ -19,6 +19,7 @@ import FormSideBar from "@/components/form/forms/sidebar/FormSideBar";
 import PostForm from "@/components/form/forms/post/PostForm";
 import { getDynamicMetadata } from "@/lib/meta/meta";
 import { api } from "@/lib/http/endpoints";
+import { ROUTES } from "@/routes/paths";
 
 export default function PostPage({ user }: { user: User }) {
   const {
@@ -113,7 +114,7 @@ export default function PostPage({ user }: { user: User }) {
 
   function deletePost() {
     if (!postId) return;
-    reqPost({ url: api.post.delete(postId), method: "DELETE", onSuccess: () => navigate("/feed") });
+    reqPost({ url: api.post.delete(postId), method: "DELETE", onSuccess: () => navigate(ROUTES.feed) });
     closeModal();
   }
 

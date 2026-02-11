@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { UserPair } from "@/lib/types/interface";
 import { createAnimations } from "@/lib/motion/animations";
+import { ROUTES } from "@/routes/paths";
 import Friend from "@/models/Friend";
 import ProfilePic from "../../ui/image/ProfilePic";
 import css from "./UserItem.module.css";
@@ -26,7 +27,7 @@ export default function UserItem({
   if (watcher) count = Friend.getMutuals({ target, watcher }).length;
 
   return (
-    <article className={`${css["user-item"]} ${className}`} onClick={() => navigate("/user/" + _id)}>
+    <article className={`${css["user-item"]} ${className}`} onClick={() => navigate(ROUTES.toUser(_id))}>
       {/* PEER-PAGE-TRANSITION: should trigger only from user to user page */}
       <ProfilePic user={target} key={_id} {...animations} />
       <h2 className={overflow}>

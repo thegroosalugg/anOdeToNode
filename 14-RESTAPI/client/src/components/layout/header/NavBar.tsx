@@ -6,6 +6,7 @@ import { UserNullState } from "@/lib/types/interface";
 import { SetData } from "@/lib/types/common";
 import { AlertsProvider } from "@/components/alerts/context/AlertsProvider";
 import { ChatProvider } from "@/components/chat/context/ChatProvider";
+import { Routes, ROUTES } from "@/routes/paths";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import AlertsMenu from "../../alerts/AlertsMenu";
 import ChatMenu from "../../chat/ChatMenu";
@@ -21,6 +22,7 @@ interface NavBar extends UserNullState {
 }
 
 const layoutId = "nav-group";
+const { home, feed, social } = ROUTES;
 
 export default function NavBar({ user, setUser, offset, setOffset }: NavBar) {
   const { deferring, defer } = useDefer();
@@ -30,7 +32,7 @@ export default function NavBar({ user, setUser, offset, setOffset }: NavBar) {
   const isActivePath = (paths: string[]) => paths.includes(segments[1]);
   const   headerRef  = useRef<HTMLDivElement>(null);
 
-  function navTo(path: string) {
+  function navTo(path: Routes) {
     defer(() => navigate(path), 1200);
   }
 
@@ -51,7 +53,7 @@ export default function NavBar({ user, setUser, offset, setOffset }: NavBar) {
 
   return (
     <header className={css["header"]} ref={headerRef}>
-      <h1 onClick={() => navTo("/")}>
+      <h1 onClick={() => navTo(home)}>
         <span>Friendface</span> {/* large display swap */}
         <span>F</span>
       </h1>
@@ -69,7 +71,7 @@ export default function NavBar({ user, setUser, offset, setOffset }: NavBar) {
             <NavButton
                   icon="rss"
               isActive={isActivePath(["feed", "post"])}
-               onClick={() => navTo("/feed")}
+               onClick={() => navTo(feed)}
               disabled={deferring}
               {...{ layoutId }}
             >
@@ -78,7 +80,7 @@ export default function NavBar({ user, setUser, offset, setOffset }: NavBar) {
             <NavButton
                   icon="users"
               isActive={isActivePath(["social", "user"])}
-               onClick={() => navTo("/social")}
+               onClick={() => navTo(social)}
               disabled={deferring}
               {...{ layoutId }}
             >

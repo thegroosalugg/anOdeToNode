@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { api } from "@/lib/http/endpoints";
+import { ROUTES } from "@/routes/paths";
 import Reply from "@/models/Reply";
 import ConfirmDialog from "../../ui/modal/ConfirmDialog";
 import Button from "../../ui/button/Button";
@@ -33,7 +34,7 @@ export default function ReplyItem({
   return (
     <div className={classes}>
       <ConfirmDialog open={showModal} onCancel={closeModal} onConfirm={deleteReply} />
-      <header onClick={() => navigate("/user/" + creator._id)}>
+      <header onClick={() => navigate(ROUTES.toUser(creator._id))}>
         <NameTag user={creator} bold reverse={isCreator} />
         <Time time={createdAt} />
       </header>

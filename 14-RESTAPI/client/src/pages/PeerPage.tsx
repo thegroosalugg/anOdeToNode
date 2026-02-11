@@ -6,6 +6,7 @@ import { useSocket } from "@/lib/hooks/useSocket";
 import { usePagedFetch } from "@/components/pagination/usePagedFetch";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
 import { api } from "@/lib/http/endpoints";
+import { ROUTES } from "@/routes/paths";
 import User from "@/models/User";
 import Post from "@/models/Post";
 import Logger from "@/models/Logger";
@@ -39,7 +40,7 @@ export default function PeerPage({ user }: { user: User }) {
   useEffect(() => {
     if (!isPresent) return;
     if (userId === user._id) {
-      navigate("/");
+      navigate(ROUTES.home);
       return;
     }
 

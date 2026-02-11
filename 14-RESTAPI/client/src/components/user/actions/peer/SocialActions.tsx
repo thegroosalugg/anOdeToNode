@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ROUTES } from "@/routes/paths";
 import { api } from "@/lib/http/endpoints";
 import User from "@/models/User";
 import Friend from "@/models/Friend";
@@ -38,7 +39,7 @@ export default function SocialActions({ user, peer }: { user: User; peer: User }
   function handleAction() {
     setIsPrimaryAction(true); // tells loader in left side button to spin
     if (!accepted) friendRequest();
-    else           navigate("?chat=" + _id);
+    else           navigate(ROUTES.toChat(_id));
   }
 
   function deleteFriend() {

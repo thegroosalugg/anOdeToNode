@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/routes/paths";
 import Post from "@/models/Post";
 import NameTag from "../../ui/tags/NameTag";
 import Time from "../../ui/tags/Time";
@@ -15,7 +16,7 @@ export default function PostItem({
   const navigate = useNavigate();
 
   return (
-    <article className={`${css["post"]} box`} onClick={() => navigate("/post/" + _id)}>
+    <article className={`${css["post"]} box`} onClick={() => navigate(ROUTES.toPost(_id))}>
       {!isCreator && <NameTag user={creator} align="start" />}
       <header>
         <strong className="truncate">{title}</strong>

@@ -1,6 +1,7 @@
 import { createVariants } from "@/lib/motion/animations";
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
+import { ROUTES } from "@/routes/paths";
 import PageWrapper from "@/components/ui/layout/PageWrapper";
 import TextList from "@/components/ui/layout/TextList";
 import css from "./StaticPages.module.css";
@@ -30,7 +31,7 @@ export default function AboutPage() {
       </TextList>
       <TextList items={["React 18", "Express 4", "Mongoose 8"]}>Tech Stack:</TextList>
       <motion.div className={css["link"]} {...{ variants }}>
-        <Link to="/terms">See instructions for using this site</Link>
+        <Link to={ROUTES.terms}>See instructions for using this site</Link>
       </motion.div>
       <motion.div className={css["link"]} {...{ variants }} style={{ marginTop: "0.25rem" }}>
         <a href="https://victor-loginov.vercel.app/portfolio" target="_blank">
