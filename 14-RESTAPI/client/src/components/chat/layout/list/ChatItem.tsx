@@ -2,15 +2,16 @@ import { motion, AnimatePresence } from "motion/react";
 import { ReactNode } from "react";
 import { useChat } from "../../context/ChatContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { createAnimations, createVariants } from "@/lib/motion/animations";
+import { ROUTES } from "@/routes/paths";
 import User from "@/models/User";
 import Chat from "@/models/Chat";
 import Button from "@/components/ui/button/Button";
 import Counter from "@/components/ui/tags/Counter";
-import { createAnimations, createVariants } from "@/lib/motion/animations";
 import NameTag from "@/components/ui/tags/NameTag";
 import Time from "@/components/ui/tags/Time";
-import css from "./ChatItem.module.css";
 import Truncate from "@/components/ui/tags/Truncate";
+import css from "./ChatItem.module.css";
 
 interface ChatProps {
       chat: Chat;
@@ -37,7 +38,7 @@ export default function ChatItem({ chat, children }: ChatProps) {
   function navTo(path: string) {
     if (!activeChat) return;
     navigate({
-      pathname: `/user/${path}`,
+      pathname: ROUTES.toUser(path),
         search: searchParams.toString(),
     });
   }

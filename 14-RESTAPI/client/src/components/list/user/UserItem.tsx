@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { UserPair } from "@/lib/types/interface";
+import { createAnimations } from "@/lib/motion/animations";
+import { ROUTES } from "@/routes/paths";
 import Friend from "@/models/Friend";
 import ProfilePic from "../../ui/image/ProfilePic";
 import css from "./UserItem.module.css";
@@ -8,6 +10,8 @@ interface UserItem extends UserPair {
   className?: string;
    overflow?: "truncate" | "line-clamp";
 }
+
+const animations = createAnimations();
 
 // user = the one being viewed | peer = the comparison filter
 export default function UserItem({
@@ -23,8 +27,9 @@ export default function UserItem({
   if (watcher) count = Friend.getMutuals({ target, watcher }).length;
 
   return (
-    <article className={`${css["user-item"]} ${className}`} onClick={() => navigate("/user/" + _id)}>
-      <ProfilePic user={target} />
+    <article className={`${css["user-item"]} ${className}`} onClick={() => navigate(ROUTES.toUser(_id))}>
+      {/* PEER-PAGE-TRANSITION: should trigger only from user to user page */}
+      <ProfilePic user={target} key={_id} {...animations} />
       <h2 className={overflow}>
         {name} {surname}
       </h2>

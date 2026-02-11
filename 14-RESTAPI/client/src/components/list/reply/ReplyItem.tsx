@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { api } from "@/lib/http/endpoints";
+import { ROUTES } from "@/routes/paths";
 import Reply from "@/models/Reply";
 import ConfirmDialog from "../../ui/modal/ConfirmDialog";
-import Button from "../../ui/button/Button";
-import Spinner from "@/components/ui/boundary/loader/Spinner";
 import NameTag from "../../ui/tags/NameTag";
 import Time from "../../ui/tags/Time";
+import SpinnerButton from "@/components/ui/button/SpinnerButton";
 import css from "./ReplyItem.module.css";
 
 export default function ReplyItem({
@@ -33,7 +33,7 @@ export default function ReplyItem({
   return (
     <div className={classes}>
       <ConfirmDialog open={showModal} onCancel={closeModal} onConfirm={deleteReply} />
-      <header onClick={() => navigate("/user/" + creator._id)}>
+      <header onClick={() => navigate(ROUTES.toUser(creator._id))}>
         <NameTag user={creator} bold reverse={isCreator} />
         <Time time={createdAt} />
       </header>
@@ -41,9 +41,9 @@ export default function ReplyItem({
         <span>{content}</span>
 
         {isCreator && (
-          <Button background="danger" onClick={() => setShowModal(true)} disabled={isLoading}>
-            {isLoading ? <Spinner size={20} color="page" /> : error ? error.message : "Delete"}
-          </Button>
+          <SpinnerButton background="danger" onClick={() => setShowModal(true)} {...{ isLoading }}>
+            {error ? error.message : "Delete"}
+          </SpinnerButton>
         )}
       </p>
     </div>

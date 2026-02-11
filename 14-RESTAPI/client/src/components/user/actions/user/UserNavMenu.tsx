@@ -6,13 +6,15 @@ import NavButton from "@/components/layout/header/NavButton";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
 import { removeRefreshToken } from "@/lib/http/token";
+import { isLandscapeMobile } from "@/lib/runtime/runtime";
+import { Routes, ROUTES } from "@/routes/paths";
 import css from "./UserNavMenu.module.css";
 
 const userNavMenu = "user-nav-menu";
 
 interface UserNavMenu extends UserState {
    pathname: string;
-      navTo: (path: string) => void;
+      navTo: (path: Routes) => void;
   deferring: boolean;
    layoutId: string;
      offset: OffSet;
@@ -46,7 +48,7 @@ export default function UserNavMenu({
 
   const navToProfile = () => {
     closeMenu();
-    navTo("/");
+    navTo(ROUTES.home);
   };
 
   const confirmLogout = () => {
@@ -65,12 +67,8 @@ export default function UserNavMenu({
     return () => document.removeEventListener("mousedown", handle);
   }, []);
 
-  const getOffset = () => {
-    const isLandscapeMobile = window.matchMedia(
-      "(pointer: coarse) and (orientation: landscape)",
-    ).matches; // + 16px for 1rem of padding offset to hide element behind header
-    return offset[isLandscapeMobile ? "width" : "height"] - 16 + "px";
-  };
+  // + 16px for 1rem of padding offset to hide element behind header
+  const getOffset = () => offset[isLandscapeMobile() ? "width" : "height"] - 16 + "px";
 
   const element = (
     <div

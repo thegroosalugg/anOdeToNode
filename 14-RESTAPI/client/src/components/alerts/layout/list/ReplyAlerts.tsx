@@ -5,10 +5,12 @@ import XButton from "@/components/ui/button/XButton";
 import NameTag from "@/components/ui/tags/NameTag";
 import Heading from "@/components/ui/layout/Heading";
 import { createAnimations } from "@/lib/motion/animations";
+import { ROUTES } from "@/routes/paths";
 import css from "./ReplyAlerts.module.css";
 import shared from "./Shared.module.css";
 
 const animations = createAnimations({ initial: { x: -20 }, animate: { x: 0 } });
+const { toUser, toPost } = ROUTES;
 
 export default function ReplyAlerts() {
   const { replies, clearReply, navTo } = useAlerts();
@@ -27,13 +29,13 @@ export default function ReplyAlerts() {
             <div>
               <div className={shared["content"]}>
                 <NameTag user={creator} align="center" overflow="line-clamp">
-                  <strong onClick={() => navTo("/user/" + creator._id)}>
+                  <strong onClick={() => navTo(toUser(creator._id))}>
                     {creator.name}
                   </strong>
                   {" replied to your post "}
                   <strong
                     className={`truncate ${css["post"]}`}
-                      onClick={() => navTo("/post/" + post._id)}
+                      onClick={() => navTo(toPost(post._id))}
                   >
                     {post.title}
                   </strong>

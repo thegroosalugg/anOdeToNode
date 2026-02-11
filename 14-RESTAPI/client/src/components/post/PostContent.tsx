@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/routes/paths";
 import { API_URL } from "@/lib/http/fetchData";
 import { api } from "@/lib/http/endpoints";
 import User from "@/models/User";
@@ -37,10 +38,10 @@ export default function PostContent({
        className={css["post-content"]}
          initial="hidden"
          animate="visible"
-      transition={{ staggerChildren: 0.5, delayChildren: 0.5 }}
+      transition={{ staggerChildren: 0.5 }}
       onAnimationComplete={callback}
     >
-      <NameTag user={creator} onClick={() => navigate("/user/" + creator._id)} bold align="end" {...{ variants }} />
+      <NameTag user={creator} onClick={() => navigate(ROUTES.toUser(creator._id))} bold align="end" {...{ variants }} />
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -76,8 +77,9 @@ export default function PostContent({
               loading="eager"
                  exit={variants.hidden}
               onError={(e) => {
-                (e.target as HTMLImageElement).src = fallback;
-                (e.target as HTMLImageElement).style.boxShadow = "none";
+                const element = e.target as HTMLIFrameElement;
+                element.src = fallback;
+                element.style.boxShadow = "none";
               }}
             />
           </motion.div>

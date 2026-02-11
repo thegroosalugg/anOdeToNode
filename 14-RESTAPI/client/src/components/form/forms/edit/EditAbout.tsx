@@ -4,11 +4,11 @@ import { useAnimations } from "@/lib/hooks/useAnimations";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { UserState } from "@/lib/types/interface";
 import User from "@/models/User";
-import Button from "@/components/ui/button/Button";
 import Input from "../../primitives/Input";
-import Spinner from "@/components/ui/boundary/loader/Spinner";
+import SpinnerButton from "@/components/ui/button/SpinnerButton";
 import { getEntry } from "@/lib/util/common";
 import { api } from "@/lib/http/endpoints";
+import { fleetingPopUp } from "@/lib/runtime/runtime";
 import css from "./EditAbout.module.css";
 
 interface EditAbout extends UserState {
@@ -54,7 +54,7 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
 
     const isSame = Object.entries(entries).every(([key, val]) => val === (about?.[key as keyof typeof about] ?? ""));
     if (isSame) {
-      shoot(".fleeting-pop-up");
+      shoot(fleetingPopUp);
       return;
     }
 
@@ -66,9 +66,9 @@ export default function EditAbout({ user, setUser, isOpen, onSuccess: closeModal
       <p className="fleeting-pop-up" style={{ top: 0, right: 0 }}>
         No changes
       </p>
-      <Button disabled={isLoading} background={errors ? "danger" : "accent"}>
-        {isLoading ? <Spinner size={20} color="page" /> : "Update"}
-      </Button>
+      <SpinnerButton background={errors ? "danger" : "accent"} {...{ isLoading }}>
+        Update
+      </SpinnerButton>
       <Input control="home" {...{ errors }} defaultValue={home}>
         <FontAwesomeIcon icon="house" /> Home
       </Input>

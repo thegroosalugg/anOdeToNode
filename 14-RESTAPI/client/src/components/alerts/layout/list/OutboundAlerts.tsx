@@ -7,6 +7,7 @@ import Time from "@/components/ui/tags/Time";
 import NameTag from "@/components/ui/tags/NameTag";
 import XButton from "@/components/ui/button/XButton";
 import Heading from "@/components/ui/layout/Heading";
+import { ROUTES } from "@/routes/paths";
 import { createAnimations } from "@/lib/motion/animations";
 import shared from "./Shared.module.css";
 
@@ -22,7 +23,7 @@ export default function OutboundAlerts() {
           const { _id: alertId, accepted, initiated, user, createdAt, acceptedAt } = connection;
           const peer = Friend.isUser(user) ? user : ({} as User); // user should be populated
           const { _id, name, surname } = peer;
-          const onClick = () => navTo("/user/" + _id);
+          const onClick = () => navTo(ROUTES.toUser(_id));
           const text = !accepted ? (
             <strong {...{ onClick }}>{name} {surname}</strong>
           ) : (

@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useAlerts } from "../../context/AlertsContext";
+import { ROUTES } from "@/routes/paths";
 import User from "@/models/User";
 import Friend from "@/models/Friend";
 import Time from "@/components/ui/tags/Time";
@@ -13,7 +14,6 @@ import shared from "./Shared.module.css";
 
 // popLayout breaks if I abstract logic anymore
 // such as outsourcing li{...props} | li>Heading to a smaller reusable component
-
 const animations = createAnimations({ initial: { x: -20 }, animate: { x: 0 } });
 
 export default function InboundAlerts() {
@@ -26,7 +26,7 @@ export default function InboundAlerts() {
           const { _id: alertId, accepted, initiated, user, createdAt, acceptedAt } = connection;
           const peer = Friend.isUser(user) ? user : ({} as User); // user should be populated
           const { _id, name, surname } = peer;
-          const onClick = () => navTo("/user/" + _id);
+          const onClick = () => navTo(ROUTES.toUser(_id));
           const text = accepted ? (
             <>You accepted <strong {...{ onClick }}>{name}'s</strong> friend request</>
           ) : (

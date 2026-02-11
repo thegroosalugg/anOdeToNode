@@ -6,6 +6,7 @@ import { Direction } from "@/lib/types/common";
 import Reply from "@/models/Reply";
 import User from "@/models/User";
 import Friend from "@/models/Friend";
+import { Routes } from "@/routes/paths";
 
 type ReplyData = Pick<FetchState<Reply[], "replies">, "replies" | "setReplies" | "reqReplies">;
 
@@ -25,7 +26,7 @@ type AlertsContext = {
    outboundReqs: Friend[];
           count: number;
          alerts: AlertCounts;
-          navTo: (path:   string) => void;
+          navTo: (path:   Routes) => void;
     readSocials: (              ) => Promise<User    | void>;
     readReplies: (index?: number) => Promise<Reply[] | void>;
     clearSocial: (_id:    string) => void;

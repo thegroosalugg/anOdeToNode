@@ -1,17 +1,20 @@
 import { Link } from "react-router-dom";
+import { ROUTES } from "@/routes/paths";
 import css from "./Footer.module.css";
+
+const { home, about, terms, privacy } = ROUTES;
 
 export default function Footer() {
   return (
     <footer className={css["footer"]}>
       <section className={css["top-section"]}>
         <p>
-          <Link to="/" className={css["no-hover"]}>FriendFace</Link>
+          <Link to={home} className={css["no-hover"]}>FriendFace</Link>
         </p>
         <nav>
-          <Link to="/about">About</Link>
-          <Link to="/terms">Terms & Conditions</Link>
-          <Link to="/privacy">Privacy Policy</Link>
+          <Link to={about}>About</Link>
+          <Link to={terms}>Terms & Conditions</Link>
+          <Link to={privacy}>Privacy Policy</Link>
         </nav>
         <p>M.E.R.N.</p>
       </section>

@@ -7,6 +7,7 @@ import { usePages } from "@/lib/hooks/usePages";
 import { useDefer } from "@/lib/hooks/useDefer";
 import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
 import { UserState } from "@/lib/types/interface";
+import { Routes } from "@/routes/paths";
 import User from "@/models/User";
 import Reply from "@/models/Reply";
 import Friend from "@/models/Friend";
@@ -99,7 +100,7 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     await handleAlerts(index);
   };
 
-  const navTo = (path: string) => {
+  const navTo = (path: Routes) => {
     setIsOpen(false);
     navigate(path);
   };

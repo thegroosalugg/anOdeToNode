@@ -3,17 +3,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ROUTES } from "@/routes/paths";
 import { api } from "@/lib/http/endpoints";
 import User from "@/models/User";
 import Friend from "@/models/Friend";
-import Spinner from "@/components/ui/boundary/loader/Spinner";
-import Button from "@/components/ui/button/Button";
 import Error from "@/components/ui/boundary/error/Error";
 import ConfirmDialog from "@/components/ui/modal/ConfirmDialog";
+import SpinnerButton from "@/components/ui/button/SpinnerButton";
 import { actionsConfig } from "./actions_config";
 import css from "./SocialActions.module.css";
-
-const Loader = <Spinner size={20} color="page" />;
 
 export default function SocialActions({ user, peer }: { user: User; peer: User }) {
   const { isLoading, error, setError, reqData } = useFetch();
@@ -38,7 +36,7 @@ export default function SocialActions({ user, peer }: { user: User; peer: User }
   function handleAction() {
     setIsPrimaryAction(true); // tells loader in left side button to spin
     if (!accepted) friendRequest();
-    else           navigate("?chat=" + _id);
+    else           navigate(ROUTES.toChat(_id));
   }
 
   function deleteFriend() {
@@ -47,10 +45,10 @@ export default function SocialActions({ user, peer }: { user: User; peer: User }
     else if (connection && !initiated) friendRequest("delete");
   }
 
-   return (
+  return (
     <>
       <ConfirmDialog
-        open={showModal}
+             open={showModal}
         onConfirm={() => {
           friendRequest("delete");
           closeModal();
@@ -61,30 +59,33 @@ export default function SocialActions({ user, peer }: { user: User; peer: User }
       <Error {...{ error }} style={{ margin: 0 }} />
 
       <div className={css["social-actions"]}>
-        <Button onClick={handleAction} {...{ background }} disabled={isLoading}>
-          {isLoading && isPrimaryAction ? (
-            Loader
-          ) : (
-            <span>
-              {text}
-              <FontAwesomeIcon {...{ icon }} size="xs" />
-            </span>
-          )}
-        </Button>
+        <SpinnerButton
+            onClick={handleAction}
+          isLoading={isLoading && isPrimaryAction}
+          {...{ background }}
+        >
+          <span>
+            {text}
+            <FontAwesomeIcon {...{ icon }} size="xs" />
+          </span>
+        </SpinnerButton>
 
         <AnimatePresence>
           {(accepted || (connection && !initiated)) && (
-            <Button onClick={deleteFriend} background="danger" disabled={isLoading} exit={{ opacity: 0 }}>
-              {isLoading && !isPrimaryAction ? (
-                Loader
-              ) : accepted ? (
+            <SpinnerButton
+                 onClick={deleteFriend}
+              background="danger"
+               isLoading={isLoading && !isPrimaryAction}
+                    exit={{ opacity: 0 }}
+            >
+              {accepted ? (
                 "Remove Friend"
               ) : (
                 <span>
                   Decline <FontAwesomeIcon icon="rectangle-xmark" size="xs" />
                 </span>
               )}
-            </Button>
+            </SpinnerButton>
           )}
         </AnimatePresence>
       </div>
