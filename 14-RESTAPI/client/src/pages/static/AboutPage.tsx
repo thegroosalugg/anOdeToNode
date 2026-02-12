@@ -34,7 +34,7 @@ export default function AboutPage() {
         <Link to={ROUTES.terms}>See instructions for using this site</Link>
       </motion.div>
       <motion.div className={css["link"]} {...{ variants }} style={{ marginTop: "0.25rem" }}>
-        <a href="https://victor-loginov.vercel.app/portfolio" target="_blank">
+        <a href={import.meta.env.VITE_PORTFOLIO_URL} target="_blank">
           More from me
         </a>
       </motion.div>

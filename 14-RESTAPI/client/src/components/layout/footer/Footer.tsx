@@ -20,7 +20,7 @@ export default function Footer() {
       </section>
       <section className={css["bottom-section"]}>
         <p>© 2025 Social Media Demo. All rights reserved.</p>
-        <a href="https://github.com/thegroosalugg/anOdeToNode/tree/main/14-RESTAPI" target="_blank">
+        <a href={import.meta.env.VITE_SOURCE_URL} target="_blank">
           View Source Code
         </a>
         <p>Designed with React 18, Express 4, Mongoose 8 & Socket.IO</p>

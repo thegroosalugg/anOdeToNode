@@ -59,7 +59,7 @@ export default function NavBar({ user, setUser, offset, setOffset }: NavBar) {
       </h1>
       <AnimatePresence>
         {!user ? (
-          <ThemeToggle style={{ marginLeft: "auto" }} />
+          <ThemeToggle style={{ marginLeft: "auto", borderColor: "var(--accent)" }} />
         ) : (
           <motion.nav
              className={css["nav"]}
