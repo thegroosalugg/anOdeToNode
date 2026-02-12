@@ -1,33 +1,25 @@
-async function postAnalytics() {
-  if (navigator.webdriver) return;
-  const localData = localStorage.getItem('analytics');
+const storageKey = 'analytics';
 
+async function postAnalytics() {
+  const url = location.href;
+  const { webdriver, userAgent } = navigator;
+  const { width, height } = screen;
+  if (webdriver || url.startsWith('http://') || !width || !height) return;
+
+  const localData = localStorage.getItem(storageKey);
   if (localData) {
     const savedData = JSON.parse(localData);
     const isLessThan24Hrs = Date.now() - new Date(savedData).getTime() < 24 * 60 * 60 * 1000;
     if (isLessThan24Hrs) return;
   }
 
-  const { width, height } = window.screen;
-  if (!width || !height) return;
-
   const date = new Date().toISOString();
-  const body = JSON.stringify({
-         date,
-          url: location.href,
-       screen: { width, height },
-    userAgent: navigator.userAgent,
-  });
-
-  const headers = {
-    ['Content-Type']: 'application/json',
-     ['x-analytics']: 'true',
-  };
+  const headers = { ['Content-Type']: 'application/json', ['x-analytics']: 'true' };
+  const body = JSON.stringify({ date, url, screen: { width, height }, userAgent });
 
   try {
     await fetch(window.ANALYTICS_URL, { method: 'POST', headers, body });
-
-    localStorage.setItem('analytics', JSON.stringify(date));
+    localStorage.setItem(storageKey, JSON.stringify(date));
   } catch (error) {
     console.log(error);
   }
