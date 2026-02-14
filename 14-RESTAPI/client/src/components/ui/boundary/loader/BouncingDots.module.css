@@ -1,6 +1,6 @@
 .bouncing-dots {
-  --background: var(--accent); /* Controlled by inline-style. Set here for reference only */
-  --size: 20px;
+  --color: var(--accent); /* Controlled by inline-style. Set here for reference only */
+  --size: 15px;
   display: flex;
   gap: calc(var(--size) / 4);
   width: fit-content;
@@ -8,7 +8,7 @@
 
   > div {
     border-radius: 50%;
-    background-color: var(--background);
+    background-color: var(--color);
     width: var(--size);
     aspect-ratio: 1;
     animation: bounce 0.9s infinite ease-in-out;
