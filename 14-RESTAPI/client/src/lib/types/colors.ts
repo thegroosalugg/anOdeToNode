@@ -1,6 +1,6 @@
 type Colors =
   | "slate"   | "gray"   | "zinc"    | "neutral" | "stone"
-  | "red "    | "orange" | "amber"   | "yellow"
+  | "red"     | "orange" | "amber"   | "yellow"
   | "lime"    | "green"  | "emerald" | "teal"
   | "cyan"    | "sky"    | "blue"
   | "indigo"  | "violet" | "purple"
