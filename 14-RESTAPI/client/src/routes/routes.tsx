@@ -8,12 +8,12 @@ import   ErrorPage from "@/pages/ErrorPage";
 import   AboutPage from "@/pages/static/AboutPage";
 import   TermsPage from "@/pages/static/TermsPage";
 import PrivacyPage from "@/pages/static/PrivacyPage";
-import {  ROUTES } from "./paths";
+import {  Routes, ROUTES } from "./paths";
 import { UserNullState } from "@/lib/types/interface";
 
 const { home, feed, postId, social, userId, about, terms, privacy, error } = ROUTES;
 
-const validate = (path: string, props: UserNullState) => {
+const validate = (path: Routes, props: UserNullState) => {
   const { user } = props;
 
   if (!user) return <AuthPage {...props} />;
@@ -28,7 +28,7 @@ const validate = (path: string, props: UserNullState) => {
   return elements[path as keyof typeof elements];
 };
 
-const createRoute = (path: string, Component?: () => JSX.Element) => ({
+const createRoute = (path: Routes, Component?: () => JSX.Element) => ({
      path,
   element: <RootLayout children={(props) => (Component ? <Component /> : validate(path, props))} />,
 });
