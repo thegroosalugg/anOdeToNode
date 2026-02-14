@@ -28,17 +28,16 @@ const getRootComponent = () => {
 
 export function captainsLog(hue: number, items: Record<string, unknown>) {
   const style = getStyles(hue)
-  const time = getTime()
-  const root = getRootComponent()
+  console.log(`\n%c${getRootComponent()} ${getTime()}`, style)
 
   Object.entries(items).forEach(([key, value]) => {
-    const message = `%c${key} @${time} ${root}`
+    const message  = `  %c${key}:::`
     const isObject = typeof value === 'object' && value !== null
     if (isObject) {
       console.log(message, style)
       console.dir(value)
     } else {
-      console.log(`${message}\n${value}`, style)
+      console.log(`${message} ${value}`, style)
     }
   })
 }
