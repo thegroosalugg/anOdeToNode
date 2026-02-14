@@ -4,17 +4,17 @@ import { RecordMap } from '../types/common';
 
 export type Dependency<T = unknown> = RecordMap<T>;
 
-export function useDepedencyTracker(key: LogConfig, deps: Dependency) {
+export function useDependencyTracker(key: LogConfig, deps: Dependency) {
   const prevDeps = useRef<Dependency>({});
 
   useEffect(() => {
-    const changes: Dependency<{ _old: unknown; _new: unknown }> = {};
+    const changes: Dependency<{ prev: unknown; next: unknown }> = {};
     const logger = new Logger(key);
 
     Object.keys(deps).forEach(key => {
-      const _old = prevDeps.current[key];
-      const _new = deps[key];
-      if (_old !== _new) changes[key] = { _old, _new };
+      const prev = prevDeps.current[key];
+      const next = deps[key];
+      if (prev !== next) changes[key] = { prev, next };
     });
 
     if (Object.keys(changes).length > 0) logger.track(changes);

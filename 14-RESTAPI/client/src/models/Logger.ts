@@ -1,4 +1,4 @@
-import { Dependency } from "@/lib/hooks/useDepedencyTracker";
+import { Dependency } from "@/lib/hooks/useDependencyTracker";
 import { Fetch } from "@/lib/http/fetchData";
 import { captainsLog } from "@/lib/util/captainsLog";
 
@@ -31,9 +31,9 @@ export default class Logger {
     return (match?.[0] as LogConfig) || fallback;
   }
 
-  private connection(config: 0 | 20 = 0) {
-    const message = config > 0 ? "disconnect" : "connected";
-    const color = this.color + config;
+  private connection(on: boolean = true) {
+    const message = `🔌socket ${on ? '' : 'dis'}connected`;
+    const color = on ? this.color : 10;
     captainsLog(color, { [this.name]: message });
   }
 
@@ -42,23 +42,35 @@ export default class Logger {
   }
 
   disconnect() {
-    this.connection(20);
+    this.connection(false);
   }
 
   event(message: string, data: unknown) {
     captainsLog(this.color, { [this.name]: message, data });
   }
 
-  res(res: Response, resData: unknown, { method, url }: Fetch) {
-    const [color, icon] = res.ok ? [this.color, "✓"] : [0, "✕"];
-    captainsLog(color, { [this.name]: `${icon} ${method}:${res.status} ${url}`, resData });
+  res({ response, resData, method, url }: Pick<Fetch, "url" | "method"> & { response: Response, resData: unknown }) {
+    const { ok, status } = response;
+    const [color, icon] = ok ? [this.color, '✔️'] : [5, '✖️'];
+    captainsLog(color, { [this.name]: `${icon} ${method}:${status}`, url, resData });
   }
 
-  track(changes: Dependency<{ _old: unknown; _new: unknown }>) {
-    const data = Object.entries(changes)
-      .map(([key, { _old, _new }], i) => `[${i + 1}] ${key}: ${_old} => ${_new}`)
-      .join("\n");
+  private summarize(value: unknown) {
+    if (Array.isArray(value))               return `Array(${value.length})`;
+    if (value && typeof value === "object") return `Object(${Object.keys(value).length})`;
+    return value;
+  }
 
-    captainsLog(this.color, { [this.name]: data });
+  track(changes: Dependency<{ prev: unknown; next: unknown }>) {
+    const formatted: Record<string, unknown> = {};
+    let i = 0;
+
+    for (const key in changes) {
+      i++;
+      const { prev, next } = changes[key];
+      formatted[`[${i}] ${key}`] = `${this.summarize(prev)} => ${this.summarize(next)}`;
+    }
+
+    captainsLog(this.color, { [this.name]: "📦dependencies", ...formatted });
   }
 }

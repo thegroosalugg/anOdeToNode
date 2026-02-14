@@ -1,4 +1,4 @@
-export type Routes = "/" | "/feed" | `/post/${string}` | "/social" | `/user/${string}` | "/about" | "/terms" | "/privacy";
+export type Routes = "/" | "/feed" | `/post/${string}` | "/social" | `/user/${string}` | "/about" | "/terms" | "/privacy" | "*";
 
 export const ROUTES = {
      home: "/",

@@ -3,7 +3,7 @@ import { ChatContext, MsgsMap, StatusMap } from "./ChatContext";
 import { useSearchParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useDefer } from "@/lib/hooks/useDefer";
-import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
+import { useDependencyTracker } from "@/lib/hooks/useDependencyTracker";
 import { UserState } from "@/lib/types/interface";
 import Chat from "@/models/Chat";
 import { api } from "@/lib/http/endpoints";
@@ -36,7 +36,7 @@ export function ChatProvider({ user, setUser, children }: ChatProvider) {
   const wasMarked = Object.keys(markedMap).some((key) => markedMap[key]);
 
   const activeId = activeChat?._id + "";
-  useDepedencyTracker("chat", {
+  useDependencyTracker("chat", {
     currentChat: activeId,
          istemp: activeChat?.isTemp,
     savedChatId: activeChat?.chatId,
