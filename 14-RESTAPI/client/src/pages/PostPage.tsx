@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { usePagedFetch } from "@/components/pagination/usePagedFetch";
 import { useSocket } from "@/lib/hooks/useSocket";
-import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
+import { useDependencyTracker } from "@/lib/hooks/useDependencyTracker";
 import { ApiError } from "@/lib/http/fetchData";
 import User from "@/models/User";
 import Post from "@/models/Post";
@@ -39,7 +39,7 @@ export default function PostPage({ user }: { user: User }) {
   const socketRef  = useSocket("post");
   const closeModal = () => setModal("");
 
-  useDepedencyTracker("post", { reqUser: user._id, postId });
+  useDependencyTracker("post", { reqUser: user._id, postId });
 
   useEffect(() => {
     if (postId) reqPost({ url: api.feed.find(postId) });

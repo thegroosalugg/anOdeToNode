@@ -27,11 +27,12 @@ const getRootComponent = () => {
 }
 
 export function captainsLog(hue: number, items: Record<string, unknown>) {
-  const style = getStyles(hue)
-  console.log(`\n%c${getRootComponent()} ${getTime()}`, style)
+  const style  = getStyles(hue)
+  const prefix = import.meta.env.DEV ? `${getRootComponent()} ` : ''
+  console.log(`\n%c${prefix}${getTime()}`, style)
 
   Object.entries(items).forEach(([key, value]) => {
-    const message  = `  %c${key}:::`
+    const message = `  %c${key}:::`
     const isObject = typeof value === 'object' && value !== null
     if (isObject) {
       console.log(message, style)

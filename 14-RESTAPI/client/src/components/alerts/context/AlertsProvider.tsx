@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { usePages } from "@/lib/hooks/usePages";
 import { useDefer } from "@/lib/hooks/useDefer";
-import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
+import { useDependencyTracker } from "@/lib/hooks/useDependencyTracker";
 import { UserState } from "@/lib/types/interface";
 import { Routes } from "@/routes/paths";
 import User from "@/models/User";
@@ -126,7 +126,7 @@ export function AlertsProvider({ user, setUser, children }: AlertsProvider) {
     }, 1000);
   };
 
-  useDepedencyTracker("alerts", {
+  useDependencyTracker("alerts", {
            isOpen,
       currentPage,
       inboundReqs,

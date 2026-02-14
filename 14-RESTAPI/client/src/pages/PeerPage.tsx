@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useFetch } from "@/lib/hooks/useFetch";
 import { useSocket } from "@/lib/hooks/useSocket";
 import { usePagedFetch } from "@/components/pagination/usePagedFetch";
-import { useDepedencyTracker } from "@/lib/hooks/useDepedencyTracker";
+import { useDependencyTracker } from "@/lib/hooks/useDependencyTracker";
 import { api } from "@/lib/http/endpoints";
 import { ROUTES } from "@/routes/paths";
 import User from "@/models/User";
@@ -29,7 +29,7 @@ export default function PeerPage({ user }: { user: User }) {
   // shouldFetch is userId defined and component isPresent (not exiting with <AnimatePresense>)
   const { setData, ...rest } = usePagedFetch<Post>(api.social.userPosts(userId), 4, !!userId && isPresent);
 
-  useDepedencyTracker("peer", {
+  useDependencyTracker("peer", {
     pathname,
       userId,
      reqUser: user._id,

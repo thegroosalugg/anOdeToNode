@@ -47,7 +47,7 @@ const fetchData = async <T>({ url, method = "GET", data }: Fetch): Promise<NonNu
 
   const config = Logger.getKeyFromUrl(url);
   const logger = new Logger(config);
-  logger.res(response, resData, { method, url });
+  logger.res({ response, resData, method, url });
 
   if (!response.ok) throw error(response.status, resData);
 
