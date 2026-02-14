@@ -13,7 +13,7 @@ export default function BouncingDots({
     <motion.div
       {...props} // cannot change className or overwrite style
       className={css["bouncing-dots"]}
-          style={{ "--background": `var(--${color})`, "--size": `${size}px`, ...style } as CSSProperties}
+          style={{ "--color": `var(--${color})`, "--size": `${size}px`, ...style } as CSSProperties}
     >
       <div />
       <div />
