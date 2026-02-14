@@ -32,7 +32,7 @@ export default function AsyncAwait({ isInitial, isLoading, error, children }: As
         {isInitial ? <Spinner key="spinner" /> : <Fragment key="children">{children}</Fragment>}
       </AnimatePresence>
       <Modal open={showModal} close={() => setShowModal(false)}>
-        <Error {...{ error }} style={{ maxWidth: 250, padding: "var(--padding-lg)" }} />
+        <Error {...{ error }} style={{ width: "100%", maxWidth: 250, padding: "var(--padding-lg)" }} />
       </Modal>
       <ResizeDiv>
         <AnimatePresence>
