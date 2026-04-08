@@ -40,20 +40,22 @@
     display: flex;
     gap: 0.5rem;
   }
+}
 
-  .form-link {
-    font-size: var(--text-sm);
-    font-weight: 900;
-    margin-top: 0.2rem;
-    margin-bottom: -0.8rem;
-    background: none;
-    border: none;
-    color: var(--accent-alt);
-    text-decoration: underline;
-  }
+.button-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
 
-  > button:last-of-type {
-    align-self: end;
-    width: 84px;
-  }
+
+.form-link {
+  font-size: var(--text-sm);
+  font-weight: 900;
+  margin-top: 0.2rem;
+  margin-bottom: -0.8rem;
+  background: none;
+  border: none;
+  color: var(--accent-alt);
+  text-decoration: underline;
 }
