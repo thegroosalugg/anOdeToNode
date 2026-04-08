@@ -7,6 +7,7 @@ import { api } from "@/lib/http/endpoints";
 import { SetUser } from "@/lib/types/interface";
 import User from "@/models/User";
 import Input from "../../primitives/Input";
+import Button from '@/components/ui/button/Button'
 import SpinnerButton from "@/components/ui/button/SpinnerButton";
 import { createVariants } from "@/lib/motion/animations";
 import { saveTokens } from "@/lib/http/token";
@@ -40,18 +41,28 @@ export default function AuthForm({ setUser }: { setUser: SetUser }) {
     if (error && !error.message && scope.current) shake("p");
   };
 
-  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function submitData(data: FormData) {
     if (isLoading) return;
-    const data = new FormData(e.currentTarget); // data parsed by multer
-    // const data = Object.fromEntries(formData.entries()); // if application/json
     await reqData({
             url: isLogin ? api.user.login : api.user.signup,
-          method: "POST",
-            data,
+         method: "POST",
+           data,
       onSuccess,
         onError,
     });
+  }
+
+  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    await submitData(data);
+  }
+
+  function demoHandler() {
+    const data = new FormData();
+    data.set("email", import.meta.env.VITE_DEMO_USER);
+    data.set("password", import.meta.env.VITE_DEMO_PASSWORD);
+    submitData(data);
   }
 
   return (
@@ -88,9 +99,10 @@ export default function AuthForm({ setUser }: { setUser: SetUser }) {
       >
         {isLogin ? "Switch to Sign Up" : "Already have an account? Login"}
       </motion.button>
-      <SpinnerButton {...{ variants, isLoading }}>
-        {label}
-      </SpinnerButton>
+      <motion.div className={css["button-row"]} {...{ variants }}>
+        {isLogin && <Button background="danger" type="button" onClick={demoHandler}>Demo</Button>}
+        <SpinnerButton {...{ isLoading }}>{label}</SpinnerButton>
+      </motion.div>
     </motion.form>
   );
 }
